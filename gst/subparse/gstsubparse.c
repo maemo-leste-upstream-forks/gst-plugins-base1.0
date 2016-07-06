@@ -2,6 +2,8 @@
  * Copyright (C) <1999> Erik Walthinsen <omega@cse.ogi.edu>
  * Copyright (C) 2004 Ronald S. Bultje <rbultje@ronald.bitfreak.net>
  * Copyright (C) 2006 Tim-Philipp Müller <tim centricular net>
+ * Copyright (C) 2016 Philippe Normand <pnormand@igalia.com>
+ * Copyright (C) 2016 Jan Schmidt <jan@centricular.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -39,6 +41,10 @@
 GST_DEBUG_CATEGORY (sub_parse_debug);
 
 #define DEFAULT_ENCODING   NULL
+#define ATTRIBUTE_REGEX "\\s?[a-zA-Z0-9\\. \t\\(\\)]*"
+static const gchar *allowed_srt_tags[] = { "i", "b", "u", NULL };
+static const gchar *allowed_vtt_tags[] =
+    { "i", "b", "c", "u", "v", "ruby", "rt", NULL };
 
 enum
 {
@@ -61,7 +67,7 @@ static GstStaticPadTemplate sink_templ = GST_STATIC_PAD_TEMPLATE ("sink",
     GST_STATIC_CAPS ("application/x-subtitle; application/x-subtitle-sami; "
         "application/x-subtitle-tmplayer; application/x-subtitle-mpl2; "
         "application/x-subtitle-dks; application/x-subtitle-qttext;"
-        "application/x-subtitle-lrc;")
+        "application/x-subtitle-lrc; application/x-subtitle-vtt")
     );
 
 static GstStaticPadTemplate src_templ = GST_STATIC_PAD_TEMPLATE ("src",
@@ -127,10 +133,8 @@ gst_sub_parse_class_init (GstSubParseClass * klass)
   object_class->set_property = gst_sub_parse_set_property;
   object_class->get_property = gst_sub_parse_get_property;
 
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&sink_templ));
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&src_templ));
+  gst_element_class_add_static_pad_template (element_class, &sink_templ);
+  gst_element_class_add_static_pad_template (element_class, &src_templ);
   gst_element_class_set_static_metadata (element_class,
       "Subtitle parser", "Codec/Parser/Subtitle",
       "Parses subtitle (.sub) files into text streams",
@@ -372,6 +376,8 @@ gst_sub_parse_get_format_description (GstSubParseFormat format)
       return "SubViewer";
     case GST_SUB_PARSE_FORMAT_DKS:
       return "DKS";
+    case GST_SUB_PARSE_FORMAT_VTT:
+      return "WebVTT";
     case GST_SUB_PARSE_FORMAT_QTTEXT:
       return "QTtext";
     case GST_SUB_PARSE_FORMAT_LRC:
@@ -665,45 +671,42 @@ strip_trailing_newlines (gchar * txt)
  * escaping everything (the text between these simple markers isn't
  * necessarily escaped, so it seems best to do it like this) */
 static void
-subrip_unescape_formatting (gchar * txt)
+subrip_unescape_formatting (gchar * txt, gconstpointer allowed_tags_ptr,
+    gboolean allows_tag_attributes)
 {
-  gchar *pos;
+  gchar *res;
+  GRegex *tag_regex;
+  gchar *allowed_tags_pattern, *search_pattern;
+  const gchar *replace_pattern;
 
-  for (pos = txt; pos != NULL && *pos != '\0'; ++pos) {
-    if (g_ascii_strncasecmp (pos, "&lt;u&gt;", 9) == 0 ||
-        g_ascii_strncasecmp (pos, "&lt;i&gt;", 9) == 0 ||
-        g_ascii_strncasecmp (pos, "&lt;b&gt;", 9) == 0) {
-      pos[0] = '<';
-      pos[1] = g_ascii_tolower (pos[4]);
-      pos[2] = '>';
-      /* move NUL terminator as well */
-      memmove (pos + 3, pos + 9, strlen (pos + 9) + 1);
-      pos += 2;
-    }
+  /* No processing needed if no escaped tag marker found in the string. */
+  if (strstr (txt, "&lt;") == NULL)
+    return;
+
+  /* Build a list of alternates for our regexp.
+   * FIXME: Could be built once and stored */
+  allowed_tags_pattern = g_strjoinv ("|", (gchar **) allowed_tags_ptr);
+  /* Look for starting/ending escaped tags with optional attributes. */
+  search_pattern = g_strdup_printf ("&lt;(/)?\\ *(%s)(%s)&gt;",
+      allowed_tags_pattern, ATTRIBUTE_REGEX);
+  /* And unescape appropriately */
+  if (allows_tag_attributes) {
+    replace_pattern = "<\\1\\2\\3>";
+  } else {
+    replace_pattern = "<\\1\\2>";
   }
 
-  for (pos = txt; pos != NULL && *pos != '\0'; ++pos) {
-    gchar *tag;
+  tag_regex = g_regex_new (search_pattern, 0, 0, NULL);
+  res = g_regex_replace (tag_regex, txt, strlen (txt), 0,
+      replace_pattern, 0, NULL);
 
-    /* look for start of an escaped closing tag */
-    if (g_ascii_strncasecmp (pos, "&lt;/", 5) != 0)
-      continue;
-    tag = pos + 5;
-    while (*tag == ' ')
-      ++tag;
-    if ((*tag == 'u' || *tag == 'i' || *tag == 'b') &&
-        g_ascii_strncasecmp (tag + 1, "&gt;", 4) == 0) {
-      gsize tag_len = (guintptr) (tag + 1 + 4 - pos);
+  /* res will always be shorter than the input or identical, so this
+   * copy is OK */
+  strcpy (txt, res);
 
-      pos[0] = '<';
-      pos[1] = '/';
-      pos[2] = g_ascii_tolower (*tag);
-      pos[3] = '>';
-      /* move NUL terminator as well */
-      memmove (pos + 4, pos + tag_len, strlen (pos + tag_len) + 1);
-      pos += 3;
-    }
-  }
+  g_free (res);
+  g_free (search_pattern);
+  g_free (allowed_tags_pattern);
 }
 
 
@@ -742,16 +745,25 @@ subrip_remove_unhandled_tags (gchar * txt)
   }
 }
 
-/* we only allow <i>, <u> and <b>, so let's take a simple approach. This code
- * assumes the input has been escaped and subrip_unescape_formatting() has then
- * been run over the input! This function adds missing closing markup tags and
- * removes broken closing tags for tags that have never been opened. */
+/* we only allow a fixed set of tags like <i>, <u> and <b>, so let's
+ * take a simple approach. This code assumes the input has been
+ * escaped and subrip_unescape_formatting() has then been run over the
+ * input! This function adds missing closing markup tags and removes
+ * broken closing tags for tags that have never been opened. */
 static void
-subrip_fix_up_markup (gchar ** p_txt)
+subrip_fix_up_markup (gchar ** p_txt, gconstpointer allowed_tags_ptr)
 {
   gchar *cur, *next_tag;
-  gchar open_tags[32];
+  gchar *open_tags[32];
   guint num_open_tags = 0;
+  const gchar *iter_tag;
+  guint offset = 0;
+  guint index;
+  gchar *cur_tag;
+  gchar *end_tag;
+  GRegex *tag_regex;
+  GMatchInfo *match_info;
+  gchar **allowed_tags = (gchar **) allowed_tags_ptr;
 
   g_assert (*p_txt != NULL);
 
@@ -760,33 +772,58 @@ subrip_fix_up_markup (gchar ** p_txt)
     next_tag = strchr (cur, '<');
     if (next_tag == NULL)
       break;
-    ++next_tag;
-    switch (*next_tag) {
-      case '/':{
-        ++next_tag;
-        if (num_open_tags == 0 || open_tags[num_open_tags - 1] != *next_tag) {
-          GST_LOG ("broken input, closing tag '%c' is not open", *next_tag);
-          memmove (next_tag - 2, next_tag + 2, strlen (next_tag + 2) + 1);
-          next_tag -= 2;
-        } else {
-          /* it's all good, closing tag which is open */
-          --num_open_tags;
+    offset = 0;
+    index = 0;
+    while (index < g_strv_length (allowed_tags)) {
+      iter_tag = allowed_tags[index];
+      /* Look for a white listed tag */
+      cur_tag = g_strconcat ("<", iter_tag, ATTRIBUTE_REGEX, ">", NULL);
+      tag_regex = g_regex_new (cur_tag, 0, 0, NULL);
+      (void) g_regex_match (tag_regex, next_tag, 0, &match_info);
+
+      if (g_match_info_matches (match_info)) {
+        gint start_pos, end_pos;
+        gchar *word = g_match_info_fetch (match_info, 0);
+        g_match_info_fetch_pos (match_info, 0, &start_pos, &end_pos);
+        if (start_pos == 0) {
+          offset = strlen (word);
         }
-        break;
+        g_free (word);
       }
-      case 'i':
-      case 'b':
-      case 'u':
-        if (num_open_tags == G_N_ELEMENTS (open_tags))
-          return;               /* something dodgy is going on, stop parsing */
-        open_tags[num_open_tags] = *next_tag;
+      g_match_info_free (match_info);
+      g_regex_unref (tag_regex);
+      g_free (cur_tag);
+      index++;
+      if (offset) {
+        /* OK we found a tag, let's keep track of it */
+        open_tags[num_open_tags] = g_strdup (iter_tag);
         ++num_open_tags;
         break;
-      default:
-        GST_ERROR ("unexpected tag '%c' (%s)", *next_tag, next_tag);
-        g_assert_not_reached ();
-        break;
+      }
     }
+
+    if (offset) {
+      next_tag += offset;
+      cur = next_tag;
+      continue;
+    }
+
+    if (*next_tag == '<' && *(next_tag + 1) == '/') {
+      end_tag = strchr (cur, '>');
+      if (end_tag) {
+        if (num_open_tags == 0
+            || g_ascii_strncasecmp (end_tag - 1, open_tags[num_open_tags - 1],
+                strlen (open_tags[num_open_tags - 1]))) {
+          GST_LOG ("broken input, closing tag '%s' is not open", next_tag);
+          memmove (next_tag, end_tag + 1, strlen (end_tag) + 1);
+          next_tag -= strlen (end_tag);
+        } else {
+          --num_open_tags;
+          g_free (open_tags[num_open_tags]);
+        }
+      }
+    }
+    ++next_tag;
     cur = next_tag;
   }
 
@@ -795,11 +832,12 @@ subrip_fix_up_markup (gchar ** p_txt)
 
     s = g_string_new (*p_txt);
     while (num_open_tags > 0) {
-      GST_LOG ("adding missing closing tag '%c'", open_tags[num_open_tags - 1]);
+      GST_LOG ("adding missing closing tag '%s'", open_tags[num_open_tags - 1]);
       g_string_append_c (s, '<');
       g_string_append_c (s, '/');
-      g_string_append_c (s, open_tags[num_open_tags - 1]);
+      g_string_append (s, open_tags[num_open_tags - 1]);
       g_string_append_c (s, '>');
+      g_free (open_tags[num_open_tags - 1]);
       --num_open_tags;
     }
     g_free (*p_txt);
@@ -859,18 +897,105 @@ parse_subrip_time (const gchar * ts_string, GstClockTime * t)
   return TRUE;
 }
 
+/* cue settings are part of the WebVTT specification. They are
+ * declared after the time interval in the first line of the
+ * cue. Example: 00:00:01,000 --> 00:00:02,000 D:vertical-lr A:start
+ * See also http://www.whatwg.org/specs/web-apps/current-work/webvtt.html
+ */
+static void
+parse_webvtt_cue_settings (ParserState * state, const gchar * settings)
+{
+  gchar **splitted_settings = g_strsplit_set (settings, " \t", -1);
+  gint i = 0;
+  gint16 text_position, text_size;
+  gint16 line_position;
+  gboolean vertical_found = FALSE;
+  gboolean alignment_found = FALSE;
+
+  while (i < g_strv_length (splitted_settings)) {
+    gboolean valid_tag = FALSE;
+    switch (splitted_settings[i][0]) {
+      case 'T':
+        if (sscanf (splitted_settings[i], "T:%" G_GINT16_FORMAT "%%",
+                &text_position) > 0) {
+          state->text_position = (guint8) text_position;
+          valid_tag = TRUE;
+        }
+        break;
+      case 'D':
+        if (strlen (splitted_settings[i]) > 2) {
+          vertical_found = TRUE;
+          state->vertical = g_strdup (splitted_settings[i] + 2);
+          valid_tag = TRUE;
+        }
+        break;
+      case 'L':
+        if (g_str_has_suffix (splitted_settings[i], "%")) {
+          if (sscanf (splitted_settings[i], "L:%" G_GINT16_FORMAT "%%",
+                  &line_position) > 0) {
+            state->line_position = line_position;
+            valid_tag = TRUE;
+          }
+        } else {
+          if (sscanf (splitted_settings[i], "L:%" G_GINT16_FORMAT,
+                  &line_position) > 0) {
+            state->line_number = line_position;
+            valid_tag = TRUE;
+          }
+        }
+        break;
+      case 'S':
+        if (sscanf (splitted_settings[i], "S:%" G_GINT16_FORMAT "%%",
+                &text_size) > 0) {
+          state->text_size = (guint8) text_size;
+          valid_tag = TRUE;
+        }
+        break;
+      case 'A':
+        if (strlen (splitted_settings[i]) > 2) {
+          state->alignment = g_strdup (splitted_settings[i] + 2);
+          alignment_found = TRUE;
+          valid_tag = TRUE;
+        }
+        break;
+      default:
+        break;
+    }
+    if (!valid_tag) {
+      GST_LOG ("Invalid or unrecognised setting found: %s",
+          splitted_settings[i]);
+    }
+    i++;
+  }
+  g_strfreev (splitted_settings);
+  if (!vertical_found)
+    state->vertical = g_strdup ("");
+  if (!alignment_found)
+    state->alignment = g_strdup ("");
+}
+
 static gchar *
 parse_subrip (ParserState * state, const gchar * line)
 {
-  int subnum;
   gchar *ret;
 
   switch (state->state) {
-    case 0:
-      /* looking for a single integer */
-      if (sscanf (line, "%u", &subnum) == 1)
+    case 0:{
+      char *endptr;
+      guint64 id;
+
+      /* looking for a single integer as a Cue ID, but we
+       * don't actually use it */
+      errno = 0;
+      id = g_ascii_strtoull (line, &endptr, 10);
+      if (id == G_MAXUINT64 && errno == ERANGE)
+        state->state = 1;
+      else if (id == 0 && errno == EINVAL)
+        state->state = 1;
+      else if (endptr != line && *endptr == '\0')
         state->state = 1;
       return NULL;
+    }
     case 1:
     {
       GstClockTime ts_start, ts_end;
@@ -917,10 +1042,11 @@ parse_subrip (ParserState * state, const gchar * line)
         ret = g_markup_escape_text (state->buf->str, state->buf->len);
         g_string_truncate (state->buf, 0);
         state->state = 0;
-        subrip_unescape_formatting (ret);
+        subrip_unescape_formatting (ret, state->allowed_tags,
+            state->allows_tag_attributes);
         subrip_remove_unhandled_tags (ret);
         strip_trailing_newlines (ret);
-        subrip_fix_up_markup (&ret);
+        subrip_fix_up_markup (&ret, state->allowed_tags);
         return ret;
       }
       return NULL;
@@ -955,6 +1081,54 @@ parse_lrc (ParserState * state, const gchar * line)
   state->duration = GST_CLOCK_TIME_NONE;
 
   return g_strdup (start + 1);
+}
+
+/* WebVTT is a new subtitle format for the upcoming HTML5 video track
+ * element. This format is similar to Subrip, the biggest differences
+ * are that there can be cue settings detailing how to display the cue
+ * text and more markup tags are allowed.
+ * See also http://www.whatwg.org/specs/web-apps/current-work/webvtt.html
+ */
+static gchar *
+parse_webvtt (ParserState * state, const gchar * line)
+{
+  /* Cue IDs are optional in WebVTT, but not in subrip,
+   * so when in state 0 (cue ID), also check if we're
+   * already at the start --> end time marker */
+  if (state->state == 0 || state->state == 1) {
+    GstClockTime ts_start, ts_end;
+    gchar *end_time;
+    gchar *cue_settings = NULL;
+
+    /* looking for start_time --> end_time */
+    if ((end_time = strstr (line, " --> ")) &&
+        parse_subrip_time (line, &ts_start) &&
+        parse_subrip_time (end_time + strlen (" --> "), &ts_end) &&
+        state->start_time <= ts_end) {
+      state->state = 2;
+      state->start_time = ts_start;
+      state->duration = ts_end - ts_start;
+      cue_settings = strstr (end_time + strlen (" --> "), " ");
+    } else {
+      GST_DEBUG ("error parsing subrip time line '%s'", line);
+      state->state = 0;
+    }
+
+    state->text_position = 0;
+    state->text_size = 0;
+    state->line_position = 0;
+    state->line_number = 0;
+
+    if (cue_settings)
+      parse_webvtt_cue_settings (state, cue_settings + 1);
+    else {
+      state->vertical = g_strdup ("");
+      state->alignment = g_strdup ("");
+    }
+
+    return NULL;
+  } else
+    return parse_subrip (state, line);
 }
 
 static void
@@ -1179,6 +1353,7 @@ parser_state_init (ParserState * state)
   state->max_duration = 0;      /* no limit */
   state->state = 0;
   state->segment = NULL;
+  state->allowed_tags = NULL;
 }
 
 static void
@@ -1200,6 +1375,7 @@ parser_state_dispose (GstSubParse * self, ParserState * state)
         break;
     }
   }
+  state->allowed_tags = NULL;
 }
 
 /* regex type enum */
@@ -1209,6 +1385,7 @@ typedef enum
   GST_SUB_PARSE_REGEX_MDVDSUB = 1,
   GST_SUB_PARSE_REGEX_SUBRIP = 2,
   GST_SUB_PARSE_REGEX_DKS = 3,
+  GST_SUB_PARSE_REGEX_VTT = 4,
 } GstSubParseRegex;
 
 static gpointer
@@ -1245,6 +1422,16 @@ gst_sub_parse_data_format_autodetect_regex_once (GstSubParseRegex regtype)
         g_clear_error (&gerr);
       }
       break;
+    case GST_SUB_PARSE_REGEX_VTT:
+      result = (gpointer)
+          g_regex_new ("^(\\xef\\xbb\\xbf)?WEBVTT[\\xa\\xd\\x20\\x9]", 0, 0,
+          &gerr);
+      if (result == NULL) {
+        g_warning ("Compilation of vtt regex failed: %s", gerr->message);
+        g_error_free (gerr);
+      }
+      break;
+
     default:
       GST_WARNING ("Trying to allocate regex of unknown type %u", regtype);
   }
@@ -1265,10 +1452,12 @@ gst_sub_parse_data_format_autodetect (gchar * match_str)
   static GOnce mdvd_rx_once = G_ONCE_INIT;
   static GOnce subrip_rx_once = G_ONCE_INIT;
   static GOnce dks_rx_once = G_ONCE_INIT;
+  static GOnce vtt_rx_once = G_ONCE_INIT;
 
   GRegex *mdvd_grx;
   GRegex *subrip_grx;
   GRegex *dks_grx;
+  GRegex *vtt_grx;
 
   g_once (&mdvd_rx_once,
       (GThreadFunc) gst_sub_parse_data_format_autodetect_regex_once,
@@ -1279,10 +1468,14 @@ gst_sub_parse_data_format_autodetect (gchar * match_str)
   g_once (&dks_rx_once,
       (GThreadFunc) gst_sub_parse_data_format_autodetect_regex_once,
       (gpointer) GST_SUB_PARSE_REGEX_DKS);
+  g_once (&vtt_rx_once,
+      (GThreadFunc) gst_sub_parse_data_format_autodetect_regex_once,
+      (gpointer) GST_SUB_PARSE_REGEX_VTT);
 
   mdvd_grx = (GRegex *) mdvd_rx_once.retval;
   subrip_grx = (GRegex *) subrip_rx_once.retval;
   dks_grx = (GRegex *) dks_rx_once.retval;
+  vtt_grx = (GRegex *) vtt_rx_once.retval;
 
   if (g_regex_match (mdvd_grx, match_str, 0, NULL)) {
     GST_LOG ("MicroDVD (frame based) format detected");
@@ -1295,6 +1488,10 @@ gst_sub_parse_data_format_autodetect (gchar * match_str)
   if (g_regex_match (dks_grx, match_str, 0, NULL)) {
     GST_LOG ("DKS (time based) format detected");
     return GST_SUB_PARSE_FORMAT_DKS;
+  }
+  if (g_regex_match (vtt_grx, match_str, 0, NULL) == TRUE) {
+    GST_LOG ("WebVTT (time based) format detected");
+    return GST_SUB_PARSE_FORMAT_VTT;
   }
 
   if (!strncmp (match_str, "FORMAT=TIME", 11)) {
@@ -1385,6 +1582,8 @@ gst_sub_parse_format_autodetect (GstSubParse * self)
       return gst_caps_new_simple ("text/x-raw",
           "format", G_TYPE_STRING, "pango-markup", NULL);
     case GST_SUB_PARSE_FORMAT_SUBRIP:
+      self->state.allowed_tags = (gpointer) allowed_srt_tags;
+      self->state.allows_tag_attributes = FALSE;
       self->parse_line = parse_subrip;
       return gst_caps_new_simple ("text/x-raw",
           "format", G_TYPE_STRING, "pango-markup", NULL);
@@ -1410,6 +1609,12 @@ gst_sub_parse_format_autodetect (GstSubParse * self)
       self->parse_line = parse_dks;
       return gst_caps_new_simple ("text/x-raw",
           "format", G_TYPE_STRING, "utf8", NULL);
+    case GST_SUB_PARSE_FORMAT_VTT:
+      self->state.allowed_tags = (gpointer) allowed_vtt_tags;
+      self->state.allows_tag_attributes = TRUE;
+      self->parse_line = parse_webvtt;
+      return gst_caps_new_simple ("text/x-raw",
+          "format", G_TYPE_STRING, "pango-markup", NULL);
     case GST_SUB_PARSE_FORMAT_SUBVIEWER:
       self->parse_line = parse_subviewer;
       return gst_caps_new_simple ("text/x-raw",
@@ -1541,7 +1746,8 @@ handle_buffer (GstSubParse * self, GstBuffer * buf)
     /* Set segment on our parser state machine */
     self->state.segment = &self->segment;
     /* Now parse the line, out of segment lines will just return NULL */
-    GST_LOG_OBJECT (self, "Parsing line '%s'", line + offset);
+    GST_LOG_OBJECT (self, "State %d. Parsing line '%s'", self->state.state,
+        line + offset);
     subtitle = self->parse_line (&self->state, line + offset);
     g_free (line);
 
@@ -1574,6 +1780,8 @@ handle_buffer (GstSubParse * self, GstBuffer * buf)
           GST_TIME_FORMAT, subtitle, GST_TIME_ARGS (self->state.start_time),
           GST_TIME_ARGS (self->state.duration));
 
+      g_free (self->state.vertical);
+      g_free (self->state.alignment);
       ret = gst_pad_push (self->srcpad, buf);
 
       /* move this forward (the tmplayer parser needs this) */
@@ -1740,6 +1948,9 @@ static GstStaticCaps smi_caps = GST_STATIC_CAPS ("application/x-subtitle-sami");
 static GstStaticCaps dks_caps = GST_STATIC_CAPS ("application/x-subtitle-dks");
 #define DKS_CAPS (gst_static_caps_get (&dks_caps))
 
+static GstStaticCaps vtt_caps = GST_STATIC_CAPS ("application/x-subtitle-vtt");
+#define VTT_CAPS (gst_static_caps_get (&vtt_caps))
+
 static GstStaticCaps qttext_caps =
 GST_STATIC_CAPS ("application/x-subtitle-qttext");
 #define QTTEXT_CAPS (gst_static_caps_get (&qttext_caps))
@@ -1851,6 +2062,10 @@ gst_subparse_type_find (GstTypeFind * tf, gpointer private)
       GST_DEBUG ("LRC format detected");
       caps = LRC_CAPS;
       break;
+    case GST_SUB_PARSE_FORMAT_VTT:
+      GST_DEBUG ("WebVTT format detected");
+      caps = VTT_CAPS;
+      break;
     default:
     case GST_SUB_PARSE_FORMAT_UNKNOWN:
       GST_DEBUG ("no subtitle format detected");
@@ -1867,8 +2082,8 @@ plugin_init (GstPlugin * plugin)
   GST_DEBUG_CATEGORY_INIT (sub_parse_debug, "subparse", 0, ".sub parser");
 
   if (!gst_type_find_register (plugin, "subparse_typefind", GST_RANK_MARGINAL,
-          gst_subparse_type_find, "srt,sub,mpsub,mdvd,smi,txt,dks", SUB_CAPS,
-          NULL, NULL))
+          gst_subparse_type_find, "srt,sub,mpsub,mdvd,smi,txt,dks,vtt",
+          SUB_CAPS, NULL, NULL))
     return FALSE;
 
   if (!gst_element_register (plugin, "subparse",

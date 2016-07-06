@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gst-plugins-base Elements">
 <link rel="prev" href="gst-plugins-base-plugins-alsamidisrc.html" title="alsamidisrc">
-<link rel="next" href="gst-plugins-base-plugins-alsasrc.html" title="alsasrc">
+<link rel="next" href="gst-plugins-base-plugins-appsink.html" title="appsink">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -22,7 +22,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gst-plugins-base-plugins-alsamidisrc.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-plugins-alsasrc.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-plugins-appsink.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-plugins-alsasink"></a><div class="titlepage"></div>
@@ -90,10 +90,25 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-plugins-alsasink.description"></a><h2>Description</h2>
+<p>This element renders audio samples using the ALSA audio API.</p>
+<div class="refsect2">
+<a name="id-1.2.4.7.3"></a><h3>Example pipelines</h3>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> <span class="gtkdoc opt">-</span>v uridecodebin uri<span class="gtkdoc opt">=</span>file<span class="gtkdoc opt">:</span><span class="gtkdoc slc">///path/to/audio.ogg ! audioconvert ! audioresample ! autoaudiosink</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+ Play an Ogg/Vorbis file and output audio via ALSA.
+</div>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.4.7.2.1"></a><h3>Element Information</h3>
+<a name="id-1.2.4.7.4.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -119,7 +134,7 @@
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.4.7.2.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.4.7.4.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -172,6 +187,7 @@
 <div class="refsect2">
 <a name="GstAlsaSink-struct"></a><h3>struct GstAlsaSink</h3>
 <pre class="programlisting">struct GstAlsaSink;</pre>
+<p>Opaque data structure</p>
 </div>
 </div>
 <div class="refsect1">
@@ -199,6 +215,10 @@
 <p>Flags: Read</p>
 <p>Default value: ""</p>
 </div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-alsasink.see-also"></a><h2>See Also</h2>
+<p>alsasrc</p>
 </div>
 </div>
 <div class="footer">

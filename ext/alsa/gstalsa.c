@@ -750,6 +750,7 @@ alsa_chmap_to_channel_positions (const snd_pcm_chmap_t * chmap,
     GstAudioChannelPosition * pos)
 {
   int c;
+  gboolean all_mono = TRUE;
 
   for (c = 0; c < chmap->channels; c++) {
     if (chmap->pos[c] > SND_CHMAP_LAST)
@@ -758,7 +759,64 @@ alsa_chmap_to_channel_positions (const snd_pcm_chmap_t * chmap,
     if (!pos[c])
       return FALSE;
     pos[c]--;
+
+    if (pos[c] != GST_AUDIO_CHANNEL_POSITION_MONO)
+      all_mono = FALSE;
   }
+
+  if (all_mono && chmap->channels > 1) {
+    /* GST_AUDIO_CHANNEL_POSITION_MONO can only be used with 1 channel and
+     * GST_AUDIO_CHANNEL_POSITION_NONE is meant to be used for position-less
+     * multi channels.
+     * Converting as ALSA can only express such configuration by using an array
+     * full of SND_CHMAP_MONO.
+     */
+    for (c = 0; c < chmap->channels; c++)
+      pos[c] = GST_AUDIO_CHANNEL_POSITION_NONE;
+  }
+
   return TRUE;
+}
+
+void
+alsa_detect_channels_mapping (GstObject * obj, snd_pcm_t * handle,
+    GstAudioRingBufferSpec * spec, guint channels, GstAudioRingBuffer * buf)
+{
+  snd_pcm_chmap_t *chmap;
+  GstAudioChannelPosition pos[8];
+
+  if (spec->type != GST_AUDIO_RING_BUFFER_FORMAT_TYPE_RAW || channels >= 9)
+    return;
+
+  chmap = snd_pcm_get_chmap (handle);
+  if (!chmap) {
+    GST_LOG_OBJECT (obj, "ALSA driver does not implement channels mapping API");
+    return;
+  }
+
+  if (chmap->channels != channels) {
+    GST_LOG_OBJECT (obj,
+        "got channels mapping for %u channels but stream has %u channels; ignoring",
+        chmap->channels, channels);
+    goto out;
+  }
+
+  if (alsa_chmap_to_channel_positions (chmap, pos)) {
+#ifndef GST_DISABLE_GST_DEBUG
+    {
+      gchar *tmp = gst_audio_channel_positions_to_string (pos, channels);
+
+      GST_LOG_OBJECT (obj, "got channels mapping %s", tmp);
+      g_free (tmp);
+    }
+#endif /* GST_DISABLE_GST_DEBUG */
+
+    gst_audio_ring_buffer_set_channel_positions (buf, pos);
+  } else {
+    GST_LOG_OBJECT (obj, "failed to convert ALSA channels mapping");
+  }
+
+out:
+  free (chmap);
 }
 #endif /* SND_CHMAP_API_VERSION */

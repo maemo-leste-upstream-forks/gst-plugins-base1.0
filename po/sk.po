@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base 1.7.90\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-06-09 11:16+0300\n"
+"POT-Creation-Date: 2016-07-06 11:39+0300\n"
 "PO-Revision-Date: 2016-05-20 12:24+0100\n"
 "Last-Translator: Peter Tuhársky <tuharsky@misbb.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -222,6 +222,10 @@ msgstr "Formát titulkov TMPlayer"
 msgid "Kate subtitle format"
 msgstr "Formát titulkov Kate"
 
+#, fuzzy
+msgid "WebVTT subtitle format"
+msgstr "Formát titulkov Kate"
+
 msgid "Uncompressed video"
 msgstr "Nekomprimované video"
 
@@ -386,6 +390,15 @@ msgid "capturing focal length"
 msgstr "ohnisková vzdialenosť"
 
 msgid "Focal length of the lens used capturing the image, in mm"
+msgstr "Ohnisková vzdialenosť objektívu pri zachytávaní obrázku, v mm"
+
+#, fuzzy
+msgid "capturing 35 mm equivalent focal length"
+msgstr "ohnisková vzdialenosť"
+
+#, fuzzy
+msgid ""
+"35 mm equivalent focal length of the lens used capturing the image, in mm"
 msgstr "Ohnisková vzdialenosť objektívu pri zachytávaní obrázku, v mm"
 
 msgid "capturing digital zoom ratio"

@@ -29,6 +29,15 @@
 typedef struct _GstAudioConverter GstAudioConverter;
 
 /**
+ * GST_AUDIO_CONVERTER_OPT_RESAMPLER_METHOD:
+ *
+ * #GST_TYPE_AUDIO_RESAMPLER_METHOD, The resampler method to use when
+ * changing sample rates.
+ * Default is #GST_AUDIO_RESAMPLER_METHOD_BLACKMAN_NUTTALL.
+ */
+#define GST_AUDIO_CONVERTER_OPT_RESAMPLER_METHOD   "GstAudioConverter.resampler-method"
+
+/**
  * GST_AUDIO_CONVERTER_OPT_DITHER_METHOD:
  *
  * #GST_TYPE_AUDIO_DITHER_METHOD, The dither method to use when
@@ -93,7 +102,6 @@ gsize                gst_audio_converter_get_in_frames   (GstAudioConverter *con
                                                           gsize out_frames);
 
 gsize                gst_audio_converter_get_max_latency (GstAudioConverter *convert);
-
 
 gboolean             gst_audio_converter_samples         (GstAudioConverter * convert,
                                                           GstAudioConverterFlags flags,

@@ -5,8 +5,8 @@
       <sub name="adder" link="gst-plugins-base-plugins-adder.html"/>
       <sub name="alsamidisrc" link="gst-plugins-base-plugins-alsamidisrc.html"/>
       <sub name="alsasink" link="gst-plugins-base-plugins-alsasink.html"/>
-      <sub name="alsasrc" link="gst-plugins-base-plugins-alsasrc.html"/>
       <sub name="appsink" link="gst-plugins-base-plugins-appsink.html"/>
+      <sub name="alsasrc" link="gst-plugins-base-plugins-alsasrc.html"/>
       <sub name="appsrc" link="gst-plugins-base-plugins-appsrc.html"/>
       <sub name="audioconvert" link="gst-plugins-base-plugins-audioconvert.html"/>
       <sub name="audiorate" link="gst-plugins-base-plugins-audiorate.html"/>
@@ -101,10 +101,6 @@
     <keyword type="property" name="The “card-name” property" link="gst-plugins-base-plugins-alsasink.html#GstAlsaSink--card-name"/>
     <keyword type="property" name="The “device” property" link="gst-plugins-base-plugins-alsasink.html#GstAlsaSink--device"/>
     <keyword type="property" name="The “device-name” property" link="gst-plugins-base-plugins-alsasink.html#GstAlsaSink--device-name"/>
-    <keyword type="struct" name="struct GstAlsaSrc" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc-struct"/>
-    <keyword type="property" name="The “card-name” property" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc--card-name"/>
-    <keyword type="property" name="The “device” property" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc--device"/>
-    <keyword type="property" name="The “device-name” property" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc--device-name"/>
     <keyword type="struct" name="struct GstAppSink" link="gst-plugins-base-plugins-appsink.html#GstAppSink-struct"/>
     <keyword type="property" name="The “caps” property" link="gst-plugins-base-plugins-appsink.html#GstAppSink--caps"/>
     <keyword type="property" name="The “drop” property" link="gst-plugins-base-plugins-appsink.html#GstAppSink--drop"/>
@@ -117,6 +113,10 @@
     <keyword type="signal" name="The “new-sample” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-new-sample"/>
     <keyword type="signal" name="The “pull-preroll” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-pull-preroll"/>
     <keyword type="signal" name="The “pull-sample” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-pull-sample"/>
+    <keyword type="struct" name="struct GstAlsaSrc" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc-struct"/>
+    <keyword type="property" name="The “card-name” property" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc--card-name"/>
+    <keyword type="property" name="The “device” property" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc--device"/>
+    <keyword type="property" name="The “device-name” property" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc--device-name"/>
     <keyword type="struct" name="struct GstAppSrc" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc-struct"/>
     <keyword type="property" name="The “block” property" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc--block"/>
     <keyword type="property" name="The “caps” property" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc--caps"/>
@@ -130,6 +130,7 @@
     <keyword type="property" name="The “min-percent” property" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc--min-percent"/>
     <keyword type="property" name="The “size” property" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc--size"/>
     <keyword type="property" name="The “stream-type” property" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc--stream-type"/>
+    <keyword type="property" name="The “duration” property" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc--duration"/>
     <keyword type="signal" name="The “end-of-stream” signal" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc-end-of-stream"/>
     <keyword type="signal" name="The “enough-data” signal" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc-enough-data"/>
     <keyword type="signal" name="The “need-data” signal" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc-need-data"/>
@@ -151,6 +152,8 @@
     <keyword type="property" name="The “quality” property" link="gst-plugins-base-plugins-audioresample.html#GstAudioResample--quality"/>
     <keyword type="property" name="The “sinc-filter-auto-threshold” property" link="gst-plugins-base-plugins-audioresample.html#GstAudioResample--sinc-filter-auto-threshold"/>
     <keyword type="property" name="The “sinc-filter-mode” property" link="gst-plugins-base-plugins-audioresample.html#GstAudioResample--sinc-filter-mode"/>
+    <keyword type="property" name="The “resample-method” property" link="gst-plugins-base-plugins-audioresample.html#GstAudioResample--resample-method"/>
+    <keyword type="property" name="The “sinc-filter-interpolation” property" link="gst-plugins-base-plugins-audioresample.html#GstAudioResample--sinc-filter-interpolation"/>
     <keyword type="struct" name="struct GstAudioTestSrc" link="gst-plugins-base-plugins-audiotestsrc.html#GstAudioTestSrc-struct"/>
     <keyword type="enum" name="enum GstAudioTestSrcWave" link="gst-plugins-base-plugins-audiotestsrc.html#GstAudioTestSrcWave"/>
     <keyword type="property" name="The “can-activate-pull” property" link="gst-plugins-base-plugins-audiotestsrc.html#GstAudioTestSrc--can-activate-pull"/>
@@ -212,9 +215,6 @@
     <keyword type="struct" name="struct GstGioStreamSrc" link="gst-plugins-base-plugins-giostreamsrc.html#GstGioStreamSrc-struct"/>
     <keyword type="property" name="The “stream” property" link="gst-plugins-base-plugins-giostreamsrc.html#GstGioStreamSrc--stream"/>
     <keyword type="struct" name="struct GstMultiFdSink" link="gst-plugins-base-plugins-multifdsink.html#GstMultiFdSink-struct"/>
-    <keyword type="enum" name="enum GstRecoverPolicy" link="gst-plugins-base-plugins-multifdsink.html#GstRecoverPolicy"/>
-    <keyword type="enum" name="enum GstSyncMethod" link="gst-plugins-base-plugins-multifdsink.html#GstSyncMethod"/>
-    <keyword type="enum" name="enum GstClientStatus" link="gst-plugins-base-plugins-multifdsink.html#GstClientStatus"/>
     <keyword type="property" name="The “handle-read” property" link="gst-plugins-base-plugins-multifdsink.html#GstMultiFdSink--handle-read"/>
     <keyword type="signal" name="The “add” signal" link="gst-plugins-base-plugins-multifdsink.html#GstMultiFdSink-add"/>
     <keyword type="signal" name="The “add-full” signal" link="gst-plugins-base-plugins-multifdsink.html#GstMultiFdSink-add-full"/>
@@ -225,9 +225,6 @@
     <keyword type="signal" name="The “remove” signal" link="gst-plugins-base-plugins-multifdsink.html#GstMultiFdSink-remove"/>
     <keyword type="signal" name="The “remove-flush” signal" link="gst-plugins-base-plugins-multifdsink.html#GstMultiFdSink-remove-flush"/>
     <keyword type="struct" name="struct GstMultiSocketSink" link="gst-plugins-base-plugins-multisocketsink.html#GstMultiSocketSink-struct"/>
-    <keyword type="enum" name="enum GstRecoverPolicy" link="gst-plugins-base-plugins-multisocketsink.html#GstRecoverPolicy"/>
-    <keyword type="enum" name="enum GstSyncMethod" link="gst-plugins-base-plugins-multisocketsink.html#GstSyncMethod"/>
-    <keyword type="enum" name="enum GstClientStatus" link="gst-plugins-base-plugins-multisocketsink.html#GstClientStatus"/>
     <keyword type="property" name="The “send-dispatched” property" link="gst-plugins-base-plugins-multisocketsink.html#GstMultiSocketSink--send-dispatched"/>
     <keyword type="property" name="The “send-messages” property" link="gst-plugins-base-plugins-multisocketsink.html#GstMultiSocketSink--send-messages"/>
     <keyword type="signal" name="The “add” signal" link="gst-plugins-base-plugins-multisocketsink.html#GstMultiSocketSink-add"/>
@@ -248,6 +245,7 @@
     <keyword type="property" name="The “apply-gain” property" link="gst-plugins-base-plugins-opusdec.html#GstOpusDec--apply-gain"/>
     <keyword type="property" name="The “use-inband-fec” property" link="gst-plugins-base-plugins-opusdec.html#GstOpusDec--use-inband-fec"/>
     <keyword type="struct" name="struct GstOpusEnc" link="gst-plugins-base-plugins-opusenc.html#GstOpusEnc-struct"/>
+    <keyword type="enum" name="enum GstOpusEncBitrateType" link="gst-plugins-base-plugins-opusenc.html#GstOpusEncBitrateType"/>
     <keyword type="property" name="The “audio” property" link="gst-plugins-base-plugins-opusenc.html#GstOpusEnc--audio"/>
     <keyword type="property" name="The “audio-type” property" link="gst-plugins-base-plugins-opusenc.html#GstOpusEnc--audio-type"/>
     <keyword type="property" name="The “bandwidth” property" link="gst-plugins-base-plugins-opusenc.html#GstOpusEnc--bandwidth"/>
@@ -262,7 +260,6 @@
     <keyword type="property" name="The “max-payload-size” property" link="gst-plugins-base-plugins-opusenc.html#GstOpusEnc--max-payload-size"/>
     <keyword type="property" name="The “packet-loss-percentage” property" link="gst-plugins-base-plugins-opusenc.html#GstOpusEnc--packet-loss-percentage"/>
     <keyword type="struct" name="struct GstPlayBin" link="gst-plugins-base-plugins-playbin.html#GstPlayBin-struct"/>
-    <keyword type="enum" name="enum GstPlayFlags" link="gst-plugins-base-plugins-playbin.html#GstPlayFlags"/>
     <keyword type="property" name="The “audio-sink” property" link="gst-plugins-base-plugins-playbin.html#GstPlayBin--audio-sink"/>
     <keyword type="property" name="The “audio-stream-combiner” property" link="gst-plugins-base-plugins-playbin.html#GstPlayBin--audio-stream-combiner"/>
     <keyword type="property" name="The “av-offset” property" link="gst-plugins-base-plugins-playbin.html#GstPlayBin--av-offset"/>
@@ -312,6 +309,7 @@
     <keyword type="signal" name="The “text-tags-changed” signal" link="gst-plugins-base-plugins-playbin.html#GstPlayBin-text-tags-changed"/>
     <keyword type="signal" name="The “video-changed” signal" link="gst-plugins-base-plugins-playbin.html#GstPlayBin-video-changed"/>
     <keyword type="signal" name="The “video-tags-changed” signal" link="gst-plugins-base-plugins-playbin.html#GstPlayBin-video-tags-changed"/>
+    <keyword type="signal" name="The “element-setup” signal" link="gst-plugins-base-plugins-playbin.html#GstPlayBin-element-setup"/>
     <keyword type="struct" name="GstPlaySink" link="gst-plugins-base-plugins-playsink.html#GstPlaySink-struct"/>
     <keyword type="property" name="The “audio-sink” property" link="gst-plugins-base-plugins-playsink.html#GstPlaySink--audio-sink"/>
     <keyword type="property" name="The “av-offset” property" link="gst-plugins-base-plugins-playsink.html#GstPlaySink--av-offset"/>
@@ -360,6 +358,9 @@
     <keyword type="property" name="The “port” property" link="gst-plugins-base-plugins-tcpserversrc.html#GstTCPServerSrc--port"/>
     <keyword type="struct" name="struct GstTextOverlay" link="gst-plugins-base-plugins-textoverlay.html#GstTextOverlay-struct"/>
     <keyword type="struct" name="struct GstTextRender" link="gst-plugins-base-plugins-textrender.html#GstTextRender-struct"/>
+    <keyword type="enum" name="enum GstTextRenderHAlign" link="gst-plugins-base-plugins-textrender.html#GstTextRenderHAlign"/>
+    <keyword type="enum" name="enum GstTextRenderLineAlign" link="gst-plugins-base-plugins-textrender.html#GstTextRenderLineAlign"/>
+    <keyword type="enum" name="enum GstTextRenderVAlign" link="gst-plugins-base-plugins-textrender.html#GstTextRenderVAlign"/>
     <keyword type="property" name="The “font-desc” property" link="gst-plugins-base-plugins-textrender.html#GstTextRender--font-desc"/>
     <keyword type="property" name="The “halignment” property" link="gst-plugins-base-plugins-textrender.html#GstTextRender--halignment"/>
     <keyword type="property" name="The “line-alignment” property" link="gst-plugins-base-plugins-textrender.html#GstTextRender--line-alignment"/>
@@ -391,7 +392,6 @@
     <keyword type="enum" name="enum GstTimeOverlayTimeLine" link="gst-plugins-base-plugins-timeoverlay.html#GstTimeOverlayTimeLine"/>
     <keyword type="property" name="The “time-mode” property" link="gst-plugins-base-plugins-timeoverlay.html#GstTimeOverlay--time-mode"/>
     <keyword type="struct" name="struct GstURIDecodeBin" link="gst-plugins-base-plugins-uridecodebin.html#GstURIDecodeBin-struct"/>
-    <keyword type="enum" name="enum GstAutoplugSelectResult" link="gst-plugins-base-plugins-uridecodebin.html#GstAutoplugSelectResult"/>
     <keyword type="property" name="The “buffer-duration” property" link="gst-plugins-base-plugins-uridecodebin.html#GstURIDecodeBin--buffer-duration"/>
     <keyword type="property" name="The “buffer-size” property" link="gst-plugins-base-plugins-uridecodebin.html#GstURIDecodeBin--buffer-size"/>
     <keyword type="property" name="The “caps” property" link="gst-plugins-base-plugins-uridecodebin.html#GstURIDecodeBin--caps"/>
@@ -515,61 +515,24 @@
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_RED_NOISE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-RED-NOISE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_BLUE_NOISE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-BLUE-NOISE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_VIOLET_NOISE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-VIOLET-NOISE:CAPS"/>
-    <keyword type="constant" name="GST_RECOVER_POLICY_NONE" link="gst-plugins-base-plugins-multifdsink.html#GST-RECOVER-POLICY-NONE:CAPS"/>
-    <keyword type="constant" name="GST_RECOVER_POLICY_RESYNC_LATEST" link="gst-plugins-base-plugins-multifdsink.html#GST-RECOVER-POLICY-RESYNC-LATEST:CAPS"/>
-    <keyword type="constant" name="GST_RECOVER_POLICY_RESYNC_SOFT_LIMIT" link="gst-plugins-base-plugins-multifdsink.html#GST-RECOVER-POLICY-RESYNC-SOFT-LIMIT:CAPS"/>
-    <keyword type="constant" name="GST_RECOVER_POLICY_RESYNC_KEYFRAME" link="gst-plugins-base-plugins-multifdsink.html#GST-RECOVER-POLICY-RESYNC-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_LATEST" link="gst-plugins-base-plugins-multifdsink.html#GST-SYNC-METHOD-LATEST:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_NEXT_KEYFRAME" link="gst-plugins-base-plugins-multifdsink.html#GST-SYNC-METHOD-NEXT-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_LATEST_KEYFRAME" link="gst-plugins-base-plugins-multifdsink.html#GST-SYNC-METHOD-LATEST-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_BURST" link="gst-plugins-base-plugins-multifdsink.html#GST-SYNC-METHOD-BURST:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_BURST_KEYFRAME" link="gst-plugins-base-plugins-multifdsink.html#GST-SYNC-METHOD-BURST-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_BURST_WITH_KEYFRAME" link="gst-plugins-base-plugins-multifdsink.html#GST-SYNC-METHOD-BURST-WITH-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_OK" link="gst-plugins-base-plugins-multifdsink.html#GST-CLIENT-STATUS-OK:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_CLOSED" link="gst-plugins-base-plugins-multifdsink.html#GST-CLIENT-STATUS-CLOSED:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_REMOVED" link="gst-plugins-base-plugins-multifdsink.html#GST-CLIENT-STATUS-REMOVED:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_SLOW" link="gst-plugins-base-plugins-multifdsink.html#GST-CLIENT-STATUS-SLOW:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_ERROR" link="gst-plugins-base-plugins-multifdsink.html#GST-CLIENT-STATUS-ERROR:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_DUPLICATE" link="gst-plugins-base-plugins-multifdsink.html#GST-CLIENT-STATUS-DUPLICATE:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_FLUSHING" link="gst-plugins-base-plugins-multifdsink.html#GST-CLIENT-STATUS-FLUSHING:CAPS"/>
-    <keyword type="constant" name="GST_RECOVER_POLICY_NONE" link="gst-plugins-base-plugins-multisocketsink.html#GST-RECOVER-POLICY-NONE:CAPS"/>
-    <keyword type="constant" name="GST_RECOVER_POLICY_RESYNC_LATEST" link="gst-plugins-base-plugins-multisocketsink.html#GST-RECOVER-POLICY-RESYNC-LATEST:CAPS"/>
-    <keyword type="constant" name="GST_RECOVER_POLICY_RESYNC_SOFT_LIMIT" link="gst-plugins-base-plugins-multisocketsink.html#GST-RECOVER-POLICY-RESYNC-SOFT-LIMIT:CAPS"/>
-    <keyword type="constant" name="GST_RECOVER_POLICY_RESYNC_KEYFRAME" link="gst-plugins-base-plugins-multisocketsink.html#GST-RECOVER-POLICY-RESYNC-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_LATEST" link="gst-plugins-base-plugins-multisocketsink.html#GST-SYNC-METHOD-LATEST:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_NEXT_KEYFRAME" link="gst-plugins-base-plugins-multisocketsink.html#GST-SYNC-METHOD-NEXT-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_LATEST_KEYFRAME" link="gst-plugins-base-plugins-multisocketsink.html#GST-SYNC-METHOD-LATEST-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_BURST" link="gst-plugins-base-plugins-multisocketsink.html#GST-SYNC-METHOD-BURST:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_BURST_KEYFRAME" link="gst-plugins-base-plugins-multisocketsink.html#GST-SYNC-METHOD-BURST-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_SYNC_METHOD_BURST_WITH_KEYFRAME" link="gst-plugins-base-plugins-multisocketsink.html#GST-SYNC-METHOD-BURST-WITH-KEYFRAME:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_OK" link="gst-plugins-base-plugins-multisocketsink.html#GST-CLIENT-STATUS-OK:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_CLOSED" link="gst-plugins-base-plugins-multisocketsink.html#GST-CLIENT-STATUS-CLOSED:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_REMOVED" link="gst-plugins-base-plugins-multisocketsink.html#GST-CLIENT-STATUS-REMOVED:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_SLOW" link="gst-plugins-base-plugins-multisocketsink.html#GST-CLIENT-STATUS-SLOW:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_ERROR" link="gst-plugins-base-plugins-multisocketsink.html#GST-CLIENT-STATUS-ERROR:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_DUPLICATE" link="gst-plugins-base-plugins-multisocketsink.html#GST-CLIENT-STATUS-DUPLICATE:CAPS"/>
-    <keyword type="constant" name="GST_CLIENT_STATUS_FLUSHING" link="gst-plugins-base-plugins-multisocketsink.html#GST-CLIENT-STATUS-FLUSHING:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_VIDEO" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-VIDEO:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_AUDIO" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-AUDIO:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_TEXT" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-TEXT:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_VIS" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-VIS:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_SOFT_VOLUME" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-SOFT-VOLUME:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_NATIVE_AUDIO" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-NATIVE-AUDIO:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_NATIVE_VIDEO" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-NATIVE-VIDEO:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_DOWNLOAD" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-DOWNLOAD:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_BUFFERING" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-BUFFERING:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_DEINTERLACE" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-DEINTERLACE:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_SOFT_COLORBALANCE" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-SOFT-COLORBALANCE:CAPS"/>
-    <keyword type="constant" name="GST_PLAY_FLAG_FORCE_FILTERS" link="gst-plugins-base-plugins-playbin.html#GST-PLAY-FLAG-FORCE-FILTERS:CAPS"/>
+    <keyword type="constant" name="BITRATE_TYPE_CBR" link="gst-plugins-base-plugins-opusenc.html#BITRATE-TYPE-CBR:CAPS"/>
+    <keyword type="constant" name="BITRATE_TYPE_VBR" link="gst-plugins-base-plugins-opusenc.html#BITRATE-TYPE-VBR:CAPS"/>
+    <keyword type="constant" name="BITRATE_TYPE_CONSTRAINED_VBR" link="gst-plugins-base-plugins-opusenc.html#BITRATE-TYPE-CONSTRAINED-VBR:CAPS"/>
+    <keyword type="constant" name="GST_TEXT_RENDER_HALIGN_LEFT" link="gst-plugins-base-plugins-textrender.html#GST-TEXT-RENDER-HALIGN-LEFT:CAPS"/>
+    <keyword type="constant" name="GST_TEXT_RENDER_HALIGN_CENTER" link="gst-plugins-base-plugins-textrender.html#GST-TEXT-RENDER-HALIGN-CENTER:CAPS"/>
+    <keyword type="constant" name="GST_TEXT_RENDER_HALIGN_RIGHT" link="gst-plugins-base-plugins-textrender.html#GST-TEXT-RENDER-HALIGN-RIGHT:CAPS"/>
+    <keyword type="constant" name="GST_TEXT_RENDER_LINE_ALIGN_LEFT" link="gst-plugins-base-plugins-textrender.html#GST-TEXT-RENDER-LINE-ALIGN-LEFT:CAPS"/>
+    <keyword type="constant" name="GST_TEXT_RENDER_LINE_ALIGN_CENTER" link="gst-plugins-base-plugins-textrender.html#GST-TEXT-RENDER-LINE-ALIGN-CENTER:CAPS"/>
+    <keyword type="constant" name="GST_TEXT_RENDER_LINE_ALIGN_RIGHT" link="gst-plugins-base-plugins-textrender.html#GST-TEXT-RENDER-LINE-ALIGN-RIGHT:CAPS"/>
+    <keyword type="constant" name="GST_TEXT_RENDER_VALIGN_BASELINE" link="gst-plugins-base-plugins-textrender.html#GST-TEXT-RENDER-VALIGN-BASELINE:CAPS"/>
+    <keyword type="constant" name="GST_TEXT_RENDER_VALIGN_BOTTOM" link="gst-plugins-base-plugins-textrender.html#GST-TEXT-RENDER-VALIGN-BOTTOM:CAPS"/>
+    <keyword type="constant" name="GST_TEXT_RENDER_VALIGN_TOP" link="gst-plugins-base-plugins-textrender.html#GST-TEXT-RENDER-VALIGN-TOP:CAPS"/>
     <keyword type="constant" name="MULTIPASS_MODE_SINGLE_PASS" link="gst-plugins-base-plugins-theoraenc.html#MULTIPASS-MODE-SINGLE-PASS:CAPS"/>
     <keyword type="constant" name="MULTIPASS_MODE_FIRST_PASS" link="gst-plugins-base-plugins-theoraenc.html#MULTIPASS-MODE-FIRST-PASS:CAPS"/>
     <keyword type="constant" name="MULTIPASS_MODE_SECOND_PASS" link="gst-plugins-base-plugins-theoraenc.html#MULTIPASS-MODE-SECOND-PASS:CAPS"/>
     <keyword type="constant" name="GST_TIME_OVERLAY_TIME_LINE_BUFFER_TIME" link="gst-plugins-base-plugins-timeoverlay.html#GST-TIME-OVERLAY-TIME-LINE-BUFFER-TIME:CAPS"/>
     <keyword type="constant" name="GST_TIME_OVERLAY_TIME_LINE_STREAM_TIME" link="gst-plugins-base-plugins-timeoverlay.html#GST-TIME-OVERLAY-TIME-LINE-STREAM-TIME:CAPS"/>
     <keyword type="constant" name="GST_TIME_OVERLAY_TIME_LINE_RUNNING_TIME" link="gst-plugins-base-plugins-timeoverlay.html#GST-TIME-OVERLAY-TIME-LINE-RUNNING-TIME:CAPS"/>
-    <keyword type="constant" name="GST_AUTOPLUG_SELECT_TRY" link="gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-TRY:CAPS"/>
-    <keyword type="constant" name="GST_AUTOPLUG_SELECT_EXPOSE" link="gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-EXPOSE:CAPS"/>
-    <keyword type="constant" name="GST_AUTOPLUG_SELECT_SKIP" link="gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-SKIP:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_SCALE_NEAREST" link="gst-plugins-base-plugins-videoscale.html#GST-VIDEO-SCALE-NEAREST:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_SCALE_BILINEAR" link="gst-plugins-base-plugins-videoscale.html#GST-VIDEO-SCALE-BILINEAR:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_SCALE_4TAP" link="gst-plugins-base-plugins-videoscale.html#GST-VIDEO-SCALE-4TAP:CAPS"/>

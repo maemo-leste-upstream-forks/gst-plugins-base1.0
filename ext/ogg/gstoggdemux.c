@@ -808,8 +808,6 @@ gst_ogg_demux_chain_peer (GstOggPad * pad, ogg_packet * packet,
           pad->discont = FALSE;
   }
 
-  pad->position = ogg->segment.position;
-
   /* don't push the header packets when we are asked to skip them */
   if (!packet->b_o_s || push_headers) {
     if (pad->last_ret == GST_FLOW_OK) {
@@ -853,6 +851,8 @@ gst_ogg_demux_chain_peer (GstOggPad * pad, ogg_packet * packet,
 
   GST_DEBUG_OBJECT (ogg, "ogg current time %" GST_TIME_FORMAT
       " (%" G_GINT64_FORMAT ")", GST_TIME_ARGS (current_time), current_time);
+
+  pad->position = ogg->segment.position;
 
   /* check stream eos */
   if (!pad->is_eos && !delta_unit &&
@@ -2238,10 +2238,10 @@ gst_ogg_demux_class_init (GstOggDemuxClass * klass)
       "demux ogg streams (info about ogg: http://xiph.org)",
       "Wim Taymans <wim@fluendo.com>");
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&ogg_demux_sink_template_factory));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&ogg_demux_src_template_factory));
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &ogg_demux_sink_template_factory);
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &ogg_demux_src_template_factory);
 
   gstelement_class->change_state = gst_ogg_demux_change_state;
   gstelement_class->send_event = gst_ogg_demux_receive_event;
@@ -2319,6 +2319,7 @@ gst_ogg_demux_reset_streams (GstOggDemux * ogg)
     stream->start_time = -1;
     stream->map.accumulated_granule = 0;
     stream->current_granule = -1;
+    stream->keyframe_granule = -1;
   }
   ogg->building_chain = chain;
   GST_DEBUG_OBJECT (ogg, "Resetting current chain");
@@ -4562,7 +4563,7 @@ gst_ogg_demux_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
   drop = (ogg->seek_event_drop_till > 0);
   GST_PUSH_UNLOCK (ogg);
   if (drop) {
-    GST_ERROR_OBJECT (ogg, "Dropping buffer because we have a pending seek");
+    GST_DEBUG_OBJECT (ogg, "Dropping buffer because we have a pending seek");
     gst_buffer_unref (buffer);
     return GST_FLOW_OK;
   }

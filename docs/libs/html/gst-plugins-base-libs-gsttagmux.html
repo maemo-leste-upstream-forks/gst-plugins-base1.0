@@ -27,8 +27,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-gsttagmux.top_of_page"></a>gsttagmux</span></h2>
-<p>gsttagmux — Base class for adding tags that are in one single chunk
-                    directly at the beginning or at the end of a file</p>
+<p>gsttagmux</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -58,31 +57,6 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gsttagmux.description"></a><h2>Description</h2>
-<div class="refsect2">
-<a name="id-1.2.13.10.5.2"></a><h3>Deriving from GstTagMux</h3>
-<p>
-Provides a base class for adding tags at the beginning or end of a
-stream.
-</p>
-<p>
-Subclasses have to do the following things:
-</p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
- In their base init function, they must add pad templates for the sink
- pad and the source pad to the element class, describing the media type
- they accept and output in the caps of the pad template.
- </p></li>
-<li class="listitem"><p>
- In their class init function, they must override the
- GST_TAG_MUX_CLASS(mux_klass)-&gt;render_start_tag and/or
- GST_TAG_MUX_CLASS(mux_klass)-&gt;render_end_tag vfuncs and set up a render
- function.
- </p></li>
-</ul></div>
-<p>
-</p>
-</div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gsttagmux.functions_details"></a><h2>Functions</h2>
@@ -96,22 +70,6 @@ Subclasses have to do the following things:
   GstElement    element;
 };
 </pre>
-<p>Opaque <a class="link" href="gst-plugins-base-libs-gsttagmux.html#GstTagMux" title="struct GstTagMux"><span class="type">GstTagMux</span></a> structure.</p>
-<div class="refsect3">
-<a name="GstTagMux.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="struct_members_name">
-<col class="struct_members_description">
-<col width="200px" class="struct_members_annotations">
-</colgroup>
-<tbody><tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#GstElement-struct"><span class="type">GstElement</span></a> <em class="structfield"><code><a name="GstTagMux.element"></a>element</code></em>;</p></td>
-<td class="struct_member_description"><p>parent element</p></td>
-<td class="struct_member_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -124,37 +82,7 @@ Subclasses have to do the following things:
   GstBuffer  * (*render_end_tag)   (GstTagMux * mux, const GstTagList * tag_list);
 };
 </pre>
-<p>The <a class="link" href="gst-plugins-base-libs-gsttagmux.html#GstTagMuxClass" title="struct GstTagMuxClass"><span class="type">GstTagMuxClass</span></a> structure. Subclasses need to override at least one
-of the two render vfuncs.</p>
-<div class="refsect3">
-<a name="GstTagMuxClass.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="struct_members_name">
-<col class="struct_members_description">
-<col width="200px" class="struct_members_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstTagMuxClass.render-start-tag"></a>render_start_tag</code></em> ()</p></td>
-<td class="struct_member_description"><p>create a tag buffer to add to the beginning of the
-input stream given a tag list, or NULL</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstTagMuxClass.render-end-tag"></a>render_end_tag</code></em> ()</p></td>
-<td class="struct_member_description"><p>create a tag buffer to add to the end of the
-input stream given a tag list, or NULL</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
 </div>
-</div>
-</div>
-<div class="refsect1">
-<a name="gst-plugins-base-libs-gsttagmux.see-also"></a><h2>See Also</h2>
-<p>GstApeMux, GstId3Mux</p>
 </div>
 </div>
 <div class="footer">

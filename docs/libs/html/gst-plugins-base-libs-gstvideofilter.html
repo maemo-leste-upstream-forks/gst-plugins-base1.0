@@ -28,7 +28,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-gstvideofilter.top_of_page"></a>gstvideofilter</span></h2>
-<p>gstvideofilter — Base class for video filters</p>
+<p>gstvideofilter</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -68,15 +68,6 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstvideofilter.description"></a><h2>Description</h2>
-<div class="refsect2">
-<a name="id-1.2.15.7.7.2"></a><p>
-Provides useful functions and a base class for video filters.
-</p>
-<p>
-The videofilter will by default enable QoS on the parent GstBaseTransform
-to implement frame dropping.
-</p>
-</div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstvideofilter.functions_details"></a><h2>Functions</h2>
@@ -104,34 +95,6 @@ to implement frame dropping.
   GstFlowReturn (*transform_frame_ip) (GstVideoFilter *trans, GstVideoFrame *frame);
 };
 </pre>
-<p>The video filter class structure.</p>
-<div class="refsect3">
-<a name="GstVideoFilterClass.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="struct_members_name">
-<col class="struct_members_description">
-<col width="200px" class="struct_members_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstVideoFilterClass.set-info"></a>set_info</code></em> ()</p></td>
-<td class="struct_member_description"><p>function to be called with the negotiated caps and video infos</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstVideoFilterClass.transform-frame"></a>transform_frame</code></em> ()</p></td>
-<td class="struct_member_description"><p>transform a video frame</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstVideoFilterClass.transform-frame-ip"></a>transform_frame_ip</code></em> ()</p></td>
-<td class="struct_member_description"><p>transform a video frame in place</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
 </div>
 </div>
 </div>

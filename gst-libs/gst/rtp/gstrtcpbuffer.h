@@ -279,6 +279,15 @@ void            gst_rtcp_packet_set_rb                (GstRTCPPacket *packet, gu
                                                        guint32 exthighestseq, guint32 jitter,
                                                        guint32 lsr, guint32 dlsr);
 
+/* profile-specific extensions for SR and RR */
+gboolean        gst_rtcp_packet_add_profile_specific_ext        (GstRTCPPacket * packet,
+                                                                 const guint8 * data, guint len);
+guint16         gst_rtcp_packet_get_profile_specific_ext_length (GstRTCPPacket * packet);
+gboolean        gst_rtcp_packet_get_profile_specific_ext        (GstRTCPPacket * packet,
+                                                                 guint8 ** data, guint * len);
+gboolean        gst_rtcp_packet_copy_profile_specific_ext       (GstRTCPPacket * packet,
+                                                                 guint8 ** data, guint * len);
+
 /* source description packet */
 guint           gst_rtcp_packet_sdes_get_item_count   (GstRTCPPacket *packet);
 gboolean        gst_rtcp_packet_sdes_first_item       (GstRTCPPacket *packet);
@@ -305,6 +314,17 @@ gboolean        gst_rtcp_packet_bye_add_ssrcs         (GstRTCPPacket *packet, gu
 guint8          gst_rtcp_packet_bye_get_reason_len    (GstRTCPPacket *packet);
 gchar*          gst_rtcp_packet_bye_get_reason        (GstRTCPPacket *packet);
 gboolean        gst_rtcp_packet_bye_set_reason        (GstRTCPPacket *packet, const gchar *reason);
+
+/* app packets */
+void            gst_rtcp_packet_app_set_subtype       (GstRTCPPacket * packet, guint8 subtype);
+guint8          gst_rtcp_packet_app_get_subtype       (GstRTCPPacket * packet);
+void            gst_rtcp_packet_app_set_ssrc          (GstRTCPPacket * packet, guint32 ssrc);
+guint32         gst_rtcp_packet_app_get_ssrc          (GstRTCPPacket * packet);
+void            gst_rtcp_packet_app_set_name          (GstRTCPPacket * packet, const gchar *name);
+const gchar*    gst_rtcp_packet_app_get_name          (GstRTCPPacket * packet);
+guint16         gst_rtcp_packet_app_get_data_length   (GstRTCPPacket * packet);
+gboolean        gst_rtcp_packet_app_set_data_length   (GstRTCPPacket * packet, guint16 wordlen);
+guint8*         gst_rtcp_packet_app_get_data          (GstRTCPPacket * packet);
 
 /* feedback packets */
 guint32         gst_rtcp_packet_fb_get_sender_ssrc    (GstRTCPPacket *packet);

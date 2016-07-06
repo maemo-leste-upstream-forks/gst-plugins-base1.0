@@ -29,8 +29,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-gstcolorbalancechannel.top_of_page"></a>gstcolorbalancechannel</span></h2>
-<p>gstcolorbalancechannel — Object representing a channel from the <a class="link" href="gst-plugins-base-libs-gstcolorbalance.html#GstColorBalance"><span class="type">GstColorBalance</span></a>
-        interface.</p>
+<p>gstcolorbalancechannel</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -81,12 +80,6 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstcolorbalancechannel.description"></a><h2>Description</h2>
-<div class="refsect2">
-<a name="id-1.2.15.14.8.2"></a><p>The <a class="link" href="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannel"><span class="type">GstColorBalanceChannel</span></a> object represents a parameter
-for modifying the color balance implemented by an element providing the
-<a class="link" href="gst-plugins-base-libs-gstcolorbalance.html#GstColorBalance"><span class="type">GstColorBalance</span></a> interface. For example, Hue or Saturation.
-</p>
-</div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstcolorbalancechannel.functions_details"></a><h2>Functions</h2>
@@ -102,33 +95,6 @@ for modifying the color balance implemented by an element providing the
   gint    max_value;
 };
 </pre>
-<div class="refsect3">
-<a name="GstColorBalanceChannel.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="struct_members_name">
-<col class="struct_members_description">
-<col width="200px" class="struct_members_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstColorBalanceChannel-struct.label"></a>label</code></em>;</p></td>
-<td class="struct_member_description"><p>A string containing a descriptive name for this channel</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstColorBalanceChannel-struct.min-value"></a>min_value</code></em>;</p></td>
-<td class="struct_member_description"><p>The minimum valid value for this channel.</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstColorBalanceChannel-struct.max-value"></a>max_value</code></em>;</p></td>
-<td class="struct_member_description"><p>The maximum valid value for this channel.</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -141,29 +107,6 @@ for modifying the color balance implemented by an element providing the
                           gint                    value);
 };
 </pre>
-<p>Color-balance channel class.</p>
-<div class="refsect3">
-<a name="GstColorBalanceChannelClass.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="struct_members_name">
-<col class="struct_members_description">
-<col width="200px" class="struct_members_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="GstColorBalanceChannelClass.parent"></a>parent</code></em>;</p></td>
-<td class="struct_member_description"><p>the parent class</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstColorBalanceChannelClass.value-changed"></a>value_changed</code></em> ()</p></td>
-<td class="struct_member_description"><p>default handler for value changed notification</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
 </div>
 </div>
 <div class="refsect1">
@@ -171,37 +114,9 @@ for modifying the color balance implemented by an element providing the
 <div class="refsect2">
 <a name="GstColorBalanceChannel-value-changed"></a><h3>The <code class="literal">“value-changed”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-user_function (<a class="link" href="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannel"><span class="type">GstColorBalanceChannel</span></a> *channel,
-               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a>                    value,
+user_function (<a class="link" href="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannel"><span class="type">GstColorBalanceChannel</span></a> *gstcolorbalancechannel,
+               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a>                    arg1,
                <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                user_data)</pre>
-<p>Fired when the value of the indicated channel has changed.</p>
-<div class="refsect3">
-<a name="GstColorBalanceChannel-value-changed.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>channel</p></td>
-<td class="parameter_description"><p>The <a class="link" href="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannel"><span class="type">GstColorBalanceChannel</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>value</p></td>
-<td class="parameter_description"><p>The new value</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>user_data</p></td>
-<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
 <p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>
 </div>

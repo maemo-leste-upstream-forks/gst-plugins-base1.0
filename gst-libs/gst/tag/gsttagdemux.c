@@ -228,8 +228,7 @@ gst_tag_demux_base_init (gpointer klass)
 {
   GstElementClass *element_class = GST_ELEMENT_CLASS (klass);
 
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&src_factory));
+  gst_element_class_add_static_pad_template (element_class, &src_factory);
 
   GST_DEBUG_CATEGORY_INIT (tagdemux_debug, "tagdemux", 0,
       "tag demux base class");
@@ -467,6 +466,10 @@ gst_tag_demux_trim_buffer (GstTagDemux * tagdemux, GstBuffer ** buf_ref,
           gst_buffer_copy_region (buf, GST_BUFFER_COPY_ALL, trim_start,
           out_size);
       g_return_val_if_fail (sub != NULL, FALSE);
+      if (GST_BUFFER_TIMESTAMP_IS_VALID (buf))
+        GST_BUFFER_TIMESTAMP (sub) = GST_BUFFER_TIMESTAMP (buf);
+      if (GST_BUFFER_DURATION_IS_VALID (buf))
+        GST_BUFFER_DURATION (sub) = GST_BUFFER_DURATION (buf);
       gst_buffer_unref (buf);
       *buf_ref = buf = sub;
       *buf_size = out_size;
@@ -623,12 +626,10 @@ gst_tag_demux_chain_parse_tag (GstTagDemux * demux)
 }
 
 static GstFlowReturn
-gst_tag_demux_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
+gst_tag_demux_chain_buffer (GstTagDemux * demux, GstBuffer * buf,
+    gboolean at_eos)
 {
-  GstTagDemux *demux;
   gsize size;
-
-  demux = GST_TAG_DEMUX (parent);
 
   size = gst_buffer_get_size (buf);
 
@@ -661,7 +662,7 @@ gst_tag_demux_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
 
       update_collected (demux);
 
-      if (demux->priv->collect_size <
+      if (!at_eos && demux->priv->collect_size <
           TYPE_FIND_MIN_SIZE + demux->priv->strip_start)
         break;                  /* Go get more data first */
 
@@ -742,13 +743,19 @@ gst_tag_demux_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
           demux->priv->send_tag_event = FALSE;
         }
 
-        GST_LOG_OBJECT (demux, "Pushing buffer %p", outbuf);
+        GST_LOG_OBJECT (demux, "Pushing buffer %" GST_PTR_FORMAT, outbuf);
 
         return gst_pad_push (demux->priv->srcpad, outbuf);
       }
     }
   }
   return GST_FLOW_OK;
+}
+
+static GstFlowReturn
+gst_tag_demux_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
+{
+  return gst_tag_demux_chain_buffer (GST_TAG_DEMUX (parent), buf, FALSE);
 }
 
 static gboolean
@@ -761,10 +768,15 @@ gst_tag_demux_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
 
   switch (GST_EVENT_TYPE (event)) {
     case GST_EVENT_EOS:
-      /* FIXME, detect this differently */
-      if (demux->priv->srcpad == NULL) {
-        GST_WARNING_OBJECT (demux, "EOS before we found a type");
-        GST_ELEMENT_ERROR (demux, STREAM, TYPE_NOT_FOUND, (NULL), (NULL));
+      if (!gst_pad_has_current_caps (demux->priv->srcpad)) {
+        GST_INFO_OBJECT (demux, "EOS before we found a type");
+
+        /* push final buffer with eos indication to force typefinding */
+        gst_tag_demux_chain_buffer (demux, gst_buffer_new (), TRUE);
+
+        if (!gst_pad_has_current_caps (demux->priv->srcpad)) {
+          GST_ELEMENT_ERROR (demux, STREAM, TYPE_NOT_FOUND, (NULL), (NULL));
+        }
       }
       ret = gst_pad_event_default (pad, parent, event);
       break;

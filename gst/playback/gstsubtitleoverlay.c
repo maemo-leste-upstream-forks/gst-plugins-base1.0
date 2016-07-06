@@ -430,6 +430,10 @@ gst_subtitle_overlay_create_factory_caps (void)
       gst_caps_unref (_factory_caps);
     _factory_caps = gst_caps_new_empty ();
 
+    /* The caps is cached */
+    GST_MINI_OBJECT_FLAG_SET (_factory_caps,
+        GST_MINI_OBJECT_FLAG_MAY_BE_LEAKED);
+
     factories = gst_registry_feature_filter (registry,
         (GstPluginFeatureFilter) _factory_filter, FALSE, &_factory_caps);
     GST_DEBUG ("Created factory caps: %" GST_PTR_FORMAT, _factory_caps);
@@ -1018,10 +1022,17 @@ _pad_blocked_cb (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
   GstCaps *subcaps;
   GList *l, *factories = NULL;
 
-  if (GST_IS_EVENT (info->data) && !GST_EVENT_IS_SERIALIZED (info->data)) {
-    GST_DEBUG_OBJECT (pad, "Letting non-serialized event %s pass",
-        GST_EVENT_TYPE_NAME (info->data));
-    return GST_PAD_PROBE_PASS;
+  if (GST_IS_EVENT (info->data)) {
+    if (!GST_EVENT_IS_SERIALIZED (info->data)) {
+      GST_DEBUG_OBJECT (pad, "Letting non-serialized event %s pass",
+          GST_EVENT_TYPE_NAME (info->data));
+      return GST_PAD_PROBE_PASS;
+    }
+    if (GST_EVENT_TYPE (info->data) == GST_EVENT_STREAM_START) {
+      GST_DEBUG_OBJECT (pad, "Letting event %s pass",
+          GST_EVENT_TYPE_NAME (info->data));
+      return GST_PAD_PROBE_PASS;
+    }
   }
 
   GST_DEBUG_OBJECT (pad, "Pad blocked");
@@ -1059,7 +1070,7 @@ _pad_blocked_cb (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
 
   /* If there are no subcaps but the subtitle sink is blocked upstream
    * must behave wrong as there are no fixed caps set for the first
-   * buffer or in-order event */
+   * buffer or in-order event after stream-start */
   if (G_UNLIKELY (!subcaps && self->subtitle_sink_blocked)) {
     GST_ELEMENT_WARNING (self, CORE, NEGOTIATION, (NULL),
         ("Subtitle sink is blocked but we have no subtitle caps"));
@@ -1575,13 +1586,12 @@ gst_subtitle_overlay_class_init (GstSubtitleOverlayClass * klass)
           "ISO-8859-15 will be assumed.", NULL,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&srctemplate));
+  gst_element_class_add_static_pad_template (element_class, &srctemplate);
 
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&video_sinktemplate));
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&subtitle_sinktemplate));
+  gst_element_class_add_static_pad_template (element_class,
+      &video_sinktemplate);
+  gst_element_class_add_static_pad_template (element_class,
+      &subtitle_sinktemplate);
 
   gst_element_class_set_static_metadata (element_class, "Subtitle Overlay",
       "Video/Overlay/Subtitle",

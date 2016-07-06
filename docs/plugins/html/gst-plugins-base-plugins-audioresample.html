@@ -53,8 +53,18 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><span class="type">SpeexResamplerSincFilterMode</span></td>
+<td class="property_type"><span class="type">GstAudioResamplerFilterMode</span></td>
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-audioresample.html#GstAudioResample--sinc-filter-mode" title="The “sinc-filter-mode” property">sinc-filter-mode</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><span class="type">GstAudioResamplerMethod</span></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-audioresample.html#GstAudioResample--resample-method" title="The “resample-method” property">resample-method</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><span class="type">GstAudioResamplerFilterInterpolation</span></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-audioresample.html#GstAudioResample--sinc-filter-interpolation" title="The “sinc-filter-interpolation” property">sinc-filter-interpolation</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 </tbody>
@@ -160,7 +170,7 @@ This assumes there is an audio sink that will accept/handle 8kHz audio.
 </tr>
 <tr>
 <td><p><span class="term">details</span></p></td>
-<td>audio/x-raw, format=(string){ F32LE, F64LE, S32LE, S24LE, S16LE, S8 }, rate=(int)[ 1, 2147483647 ], channels=(int)[ 1, 2147483647 ], layout=(string){ interleaved, non-interleaved }</td>
+<td>audio/x-raw, format=(string){ S8, U8, S16LE, S16BE, U16LE, U16BE, S24_32LE, S24_32BE, U24_32LE, U24_32BE, S32LE, S32BE, U32LE, U32BE, S24LE, S24BE, U24LE, U24BE, S20LE, S20BE, U20LE, U20BE, S18LE, S18BE, U18LE, U18BE, F32LE, F32BE, F64LE, F64BE }, rate=(int)[ 1, 2147483647 ], channels=(int)[ 1, 2147483647 ], layout=(string){ interleaved, non-interleaved }</td>
 </tr>
 </tbody>
 </table></div>
@@ -184,7 +194,7 @@ This assumes there is an audio sink that will accept/handle 8kHz audio.
 </tr>
 <tr>
 <td><p><span class="term">details</span></p></td>
-<td>audio/x-raw, format=(string){ F32LE, F64LE, S32LE, S24LE, S16LE, S8 }, rate=(int)[ 1, 2147483647 ], channels=(int)[ 1, 2147483647 ], layout=(string){ interleaved, non-interleaved }</td>
+<td>audio/x-raw, format=(string){ S8, U8, S16LE, S16BE, U16LE, U16BE, S24_32LE, S24_32BE, U24_32LE, U24_32BE, S32LE, S32BE, U32LE, U32BE, S24LE, S24BE, U24LE, U24BE, S20LE, S20BE, U20LE, U20BE, S18LE, S18BE, U18LE, U18BE, F32LE, F32BE, F64LE, F64BE }, rate=(int)[ 1, 2147483647 ], channels=(int)[ 1, 2147483647 ], layout=(string){ interleaved, non-interleaved }</td>
 </tr>
 </tbody>
 </table></div>
@@ -224,10 +234,26 @@ This assumes there is an audio sink that will accept/handle 8kHz audio.
 <hr>
 <div class="refsect2">
 <a name="GstAudioResample--sinc-filter-mode"></a><h3>The <code class="literal">“sinc-filter-mode”</code> property</h3>
-<pre class="programlisting">  “sinc-filter-mode”         <span class="type">SpeexResamplerSincFilterMode</span></pre>
+<pre class="programlisting">  “sinc-filter-mode”         <span class="type">GstAudioResamplerFilterMode</span></pre>
 <p>What sinc filter table mode to use.</p>
 <p>Flags: Read / Write</p>
-<p>Default value: Use full table if table size below threshold</p>
+<p>Default value: GST_AUDIO_RESAMPLER_FILTER_MODE_AUTO</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioResample--resample-method"></a><h3>The <code class="literal">“resample-method”</code> property</h3>
+<pre class="programlisting">  “resample-method”          <span class="type">GstAudioResamplerMethod</span></pre>
+<p>What resample method to use.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: GST_AUDIO_RESAMPLER_METHOD_KAISER</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioResample--sinc-filter-interpolation"></a><h3>The <code class="literal">“sinc-filter-interpolation”</code> property</h3>
+<pre class="programlisting">  “sinc-filter-interpolation” <span class="type">GstAudioResamplerFilterInterpolation</span></pre>
+<p>How to interpolate the sinc filter table.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: GST_AUDIO_RESAMPLER_FILTER_INTERPOLATION_CUBIC</p>
 </div>
 </div>
 </div>

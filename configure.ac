@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/prerelease
-AC_INIT([GStreamer Base Plug-ins],[1.8.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
+AC_INIT([GStreamer Base Plug-ins],[1.9.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
 
 AG_GST_INIT
 
@@ -56,10 +56,10 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 802, 0, 802)
+AS_LIBTOOL(GST, 901, 0, 901)
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.8.0
+GST_REQ=1.9.1
 
 dnl *** autotools stuff ****
 
@@ -174,7 +174,7 @@ AC_HEADER_STDC
 
 dnl check for GCC specific SSE headers
 dnl these are used by the speex resampler code
-AC_CHECK_HEADERS([xmmintrin.h emmintrin.h])
+AC_CHECK_HEADERS([xmmintrin.h emmintrin.h smmintrin.h])
 
 dnl used in gst/tcp
 AC_CHECK_HEADERS([sys/socket.h],
@@ -395,6 +395,12 @@ else
 fi
 AC_SUBST(GST_PLUGIN_LIBTOOLFLAGS)
 AM_CONDITIONAL(GST_PLUGIN_BUILD_STATIC, test "x$enable_static_plugins" = "xyes")
+
+dnl If only building static libraries, define GST_STATIC_COMPILATION. This is
+dnl needed only on Windows, but it doesn't hurt to have it everywhere.
+if test x$enable_static = xyes -a x$enable_shared = xno; then
+  GST_STATIC_CFLAGS="-DGST_STATIC_COMPILATION"
+fi
 
 # set by AG_GST_PARSE_SUBSYSTEM_DISABLES above
 dnl make sure it doesn't complain about unused variables if debugging is disabled
@@ -801,7 +807,7 @@ AC_SUBST(GST_PLUGINS_BASE_CFLAGS)
 
 dnl FIXME: do we want to rename to GST_ALL_* ?
 dnl add GST_OPTION_CFLAGS, but overridable
-GST_CFLAGS="$GST_CFLAGS"
+GST_CFLAGS="$GST_CFLAGS $GST_STATIC_CFLAGS"
 GST_CXXFLAGS="$GLIB_CFLAGS $GST_CFLAGS \$(GLIB_EXTRA_CFLAGS) \$(GST_OPTION_CXXFLAGS)"
 GST_CFLAGS="$GLIB_CFLAGS $GST_CFLAGS \$(GLIB_EXTRA_CFLAGS) \$(GST_OPTION_CFLAGS)"
 AC_SUBST(GST_CFLAGS)
@@ -912,6 +918,7 @@ tests/check/Makefile
 tests/examples/Makefile
 tests/examples/app/Makefile
 tests/examples/audio/Makefile
+tests/examples/decodebin_next/Makefile
 tests/examples/dynamic/Makefile
 tests/examples/encoding/Makefile
 tests/examples/fft/Makefile
