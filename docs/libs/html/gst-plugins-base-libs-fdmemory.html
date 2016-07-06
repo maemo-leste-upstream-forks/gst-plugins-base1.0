@@ -27,7 +27,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-fdmemory.top_of_page"></a>fdmemory</span></h2>
-<p>fdmemory — Memory wrapper for fd backed memory</p>
+<p>fdmemory</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -112,49 +112,6 @@ gst_fd_allocator_alloc (<em class="parameter"><code><a href="/usr/share/gtk-doc/
                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> fd</code></em>,
                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>,
                         <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-fdmemory.html#GstFdMemoryFlags" title="enum GstFdMemoryFlags"><span class="type">GstFdMemoryFlags</span></a> flags</code></em>);</pre>
-<p>Return a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMemory.html#GstMemory-struct"><code class="literal">GstMemory</code></a> that wraps a generic file descriptor.</p>
-<div class="refsect3">
-<a name="gst-fd-allocator-alloc.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>allocator</p></td>
-<td class="parameter_description"><p>allocator to be used for this memory</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>fd</p></td>
-<td class="parameter_description"><p>file descriptor</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>size</p></td>
-<td class="parameter_description"><p>memory size</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>flags</p></td>
-<td class="parameter_description"><p>extra <a class="link" href="gst-plugins-base-libs-fdmemory.html#GstFdMemoryFlags" title="enum GstFdMemoryFlags"><span class="type">GstFdMemoryFlags</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="gst-fd-allocator-alloc.returns"></a><h4>Returns</h4>
-<p> a GstMemory based on <em class="parameter"><code>allocator</code></em>
-.
-When the buffer will be released the allocator will close the <em class="parameter"><code>fd</code></em>
-.
-The memory is only mmapped on <code class="function">gst_buffer_mmap()</code> request. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
-</div>
-<p class="since">Since: 1.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -167,84 +124,24 @@ gst_fd_allocator_get_type (<em class="parameter"><code><span class="type">void</
 <a name="gst-fd-allocator-new"></a><h3>gst_fd_allocator_new ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstAllocator.html#GstAllocator-struct"><span class="returnvalue">GstAllocator</span></a> *
 gst_fd_allocator_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
-<p>Return a new fd allocator.</p>
-<div class="refsect3">
-<a name="gst-fd-allocator-new.returns"></a><h4>Returns</h4>
-<p> a new fd allocator, or NULL if the allocator
-isn't available. Use <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstObject.html#gst-object-unref"><code class="function">gst_object_unref()</code></a> to release the allocator after
-usage. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
-</div>
-<p class="since">Since: 1.6</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-fd-memory-get-fd"></a><h3>gst_fd_memory_get_fd ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 gst_fd_memory_get_fd (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMemory.html#GstMemory-struct"><span class="type">GstMemory</span></a> *mem</code></em>);</pre>
-<p>Get the fd from <em class="parameter"><code>mem</code></em>
-. Call <a class="link" href="gst-plugins-base-libs-fdmemory.html#gst-is-fd-memory" title="gst_is_fd_memory ()"><code class="function">gst_is_fd_memory()</code></a> to check if <em class="parameter"><code>mem</code></em>
- has
-an fd.</p>
-<div class="refsect3">
-<a name="gst-fd-memory-get-fd.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>mem</p></td>
-<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMemory.html#GstMemory-struct"><span class="type">GstMemory</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="gst-fd-memory-get-fd.returns"></a><h4>Returns</h4>
-<p> the fd of <em class="parameter"><code>mem</code></em>
-or -1 when there is no fd on <em class="parameter"><code>mem</code></em>
-</p>
-</div>
-<p class="since">Since: 1.6</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-is-fd-memory"></a><h3>gst_is_fd_memory ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_is_fd_memory (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMemory.html#GstMemory-struct"><span class="type">GstMemory</span></a> *mem</code></em>);</pre>
-<p>Check if <em class="parameter"><code>mem</code></em>
- is memory backed by an fd</p>
-<div class="refsect3">
-<a name="gst-is-fd-memory.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>mem</p></td>
-<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMemory.html#GstMemory-struct"><span class="type">GstMemory</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="gst-is-fd-memory.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when <em class="parameter"><code>mem</code></em>
-has an fd that can be retrieved with
-<a class="link" href="gst-plugins-base-libs-fdmemory.html#gst-fd-memory-get-fd" title="gst_fd_memory_get_fd ()"><code class="function">gst_fd_memory_get_fd()</code></a>.</p>
-</div>
-<p class="since">Since: 1.6</p>
 </div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-fdmemory.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="GstFdMemoryFlags"></a><h3>enum GstFdMemoryFlags</h3>
-<p>Various flags to control the operation of the fd backed memory.</p>
 <div class="refsect3">
 <a name="GstFdMemoryFlags.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -256,36 +153,23 @@ has an fd that can be retrieved with
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-FD-MEMORY-FLAG-NONE:CAPS"></a>GST_FD_MEMORY_FLAG_NONE</p></td>
-<td class="enum_member_description">
-<p>no flag</p>
-</td>
-<td class="enum_member_annotations"> </td>
+<td> </td>
+<td> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-FD-MEMORY-FLAG-KEEP-MAPPED:CAPS"></a>GST_FD_MEMORY_FLAG_KEEP_MAPPED</p></td>
-<td class="enum_member_description">
-<p>once the memory is mapped,
-       keep it mapped until the memory is destroyed.</p>
-</td>
-<td class="enum_member_annotations"> </td>
+<td> </td>
+<td> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-FD-MEMORY-FLAG-MAP-PRIVATE:CAPS"></a>GST_FD_MEMORY_FLAG_MAP_PRIVATE</p></td>
-<td class="enum_member_description">
-<p>do a private mapping instead of
-       the default shared mapping.</p>
-</td>
-<td class="enum_member_annotations"> </td>
+<td> </td>
+<td> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.6</p>
 </div>
-</div>
-<div class="refsect1">
-<a name="gst-plugins-base-libs-fdmemory.see-also"></a><h2>See Also</h2>
-<p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMemory.html#GstMemory-struct"><span class="type">GstMemory</span></a></p>
 </div>
 </div>
 <div class="footer">

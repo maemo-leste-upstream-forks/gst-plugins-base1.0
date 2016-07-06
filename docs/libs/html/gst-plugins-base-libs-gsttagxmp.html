@@ -27,8 +27,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-gsttagxmp.top_of_page"></a>gsttagxmp</span></h2>
-<p>gsttagxmp — tag mappings and support functions for plugins
-                    dealing with xmp packets</p>
+<p>gsttagxmp</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -73,9 +72,6 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gsttagxmp.description"></a><h2>Description</h2>
-<p>Contains various utility functions for plugins to parse or create
-xmp packets and map them to and from <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstTagList.html#GstTagList-struct"><span class="type">GstTagList</span></a>s.</p>
-<p>Please note that the xmp parser is very lightweight and not strict at all.</p>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gsttagxmp.functions_details"></a><h2>Functions</h2>
@@ -83,26 +79,6 @@ xmp packets and map them to and from <a href="/usr/share/gtk-doc/html/gstreamer-
 <a name="gst-tag-list-from-xmp-buffer"></a><h3>gst_tag_list_from_xmp_buffer ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstTagList.html#GstTagList-struct"><span class="returnvalue">GstTagList</span></a> *
 gst_tag_list_from_xmp_buffer (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
-<p>Parse a xmp packet into a taglist.</p>
-<div class="refsect3">
-<a name="gst-tag-list-from-xmp-buffer.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>buffer</p></td>
-<td class="parameter_description"><p>buffer</p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="gst-tag-list-from-xmp-buffer.returns"></a><h4>Returns</h4>
-<p> new taglist or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, free the list when done</p>
-</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -111,61 +87,16 @@ gst_tag_list_from_xmp_buffer (<em class="parameter"><code><a href="/usr/share/gt
 gst_tag_list_to_xmp_buffer (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstTagList.html#GstTagList-struct"><span class="type">GstTagList</span></a> *list</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> read_only</code></em>,
                             <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **schemas</code></em>);</pre>
-<p>Formats a taglist as a xmp packet using only the selected
-schemas. An empty list (<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>) means that all schemas should
-be used</p>
-<div class="refsect3">
-<a name="gst-tag-list-to-xmp-buffer.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>list</p></td>
-<td class="parameter_description"><p>tags</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>read_only</p></td>
-<td class="parameter_description"><p>does the container forbid inplace editing</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>schemas</p></td>
-<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated array of schemas to be used on serialization</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="gst-tag-list-to-xmp-buffer.returns"></a><h4>Returns</h4>
-<p> new buffer or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, unref the buffer when done</p>
-</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-tag-xmp-list-schemas"></a><h3>gst_tag_xmp_list_schemas ()</h3>
 <pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> **
 gst_tag_xmp_list_schemas (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
-<p>Gets the list of supported schemas in the xmp lib</p>
-<div class="refsect3">
-<a name="gst-tag-xmp-list-schemas.returns"></a><h4>Returns</h4>
-<p> a <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated array of strings with the
-schema names. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
-</div>
 </div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gsttagxmp.other_details"></a><h2>Types and Values</h2>
-</div>
-<div class="refsect1">
-<a name="gst-plugins-base-libs-gsttagxmp.see-also"></a><h2>See Also</h2>
-<p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstTagList.html#GstTagList-struct"><span class="type">GstTagList</span></a></p>
 </div>
 </div>
 <div class="footer">

@@ -10,6 +10,7 @@ glib_enum_headers= 		\
 	audio-converter.h 	\
 	audio-info.h			\
 	audio-quantize.h			\
+	audio-resampler.h			\
 	gstaudioringbuffer.h
 
 glib_enum_define = GST_AUDIO
@@ -25,6 +26,8 @@ lib_LTLIBRARIES = \
 
 CLEANFILES = $(BUILT_SOURCES)
 
+EXTRA_DIST += dbesi0.c
+
 libgstaudio_@GST_API_VERSION@_la_SOURCES = \
 	audio.c \
 	audio-format.c \
@@ -33,6 +36,7 @@ libgstaudio_@GST_API_VERSION@_la_SOURCES = \
 	audio-converter.c \
 	audio-info.c \
 	audio-quantize.c \
+	audio-resampler.c \
 	gstaudioringbuffer.c \
 	gstaudioclock.c \
 	gstaudiocdsrc.c \
@@ -59,6 +63,7 @@ libgstaudio_@GST_API_VERSION@include_HEADERS = \
 	audio-converter.h \
 	audio-info.h \
 	audio-quantize.h \
+	audio-resampler.h \
 	gstaudioringbuffer.h \
 	gstaudioclock.h \
 	gstaudiofilter.h \
@@ -76,7 +81,9 @@ libgstaudio_@GST_API_VERSION@include_HEADERS = \
 nodist_libgstaudio_@GST_API_VERSION@include_HEADERS = \
 	audio-enumtypes.h
 
-noinst_HEADERS = gstaudioutilsprivate.h
+noinst_HEADERS = \
+	gstaudioutilsprivate.h \
+	audio-resampler-x86.h
 
 libgstaudio_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS) \
 		$(ORC_CFLAGS)
@@ -98,6 +105,7 @@ gir_sources+=$(patsubst %,$(builddir)/%, $(built_sources))
 GstAudio-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstaudio-@GST_API_VERSION@.la
 	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
 		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
+		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
 		$(INTROSPECTION_SCANNER) -v --namespace GstAudio \
 		--nsversion=@GST_API_VERSION@ \
 		--warn-all \

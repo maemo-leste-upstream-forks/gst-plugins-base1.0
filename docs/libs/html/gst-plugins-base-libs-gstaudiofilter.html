@@ -28,7 +28,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-gstaudiofilter.top_of_page"></a>gstaudiofilter</span></h2>
-<p>gstaudiofilter — Base class for simple audio filters</p>
+<p>gstaudiofilter</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -85,17 +85,6 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstaudiofilter.description"></a><h2>Description</h2>
-<p><a class="link" href="gst-plugins-base-libs-gstaudiofilter.html#GstAudioFilter"><span class="type">GstAudioFilter</span></a> is a <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstBaseTransform.html#GstBaseTransform-struct"><span class="type">GstBaseTransform</span></a>-derived base class for simple audio
-filters, ie. those that output the same format that they get as input.</p>
-<p><a class="link" href="gst-plugins-base-libs-gstaudiofilter.html#GstAudioFilter"><span class="type">GstAudioFilter</span></a> will parse the input format for you (with error checking)
-before calling your setup function. Also, elements deriving from
-<a class="link" href="gst-plugins-base-libs-gstaudiofilter.html#GstAudioFilter"><span class="type">GstAudioFilter</span></a> may use <a class="link" href="gst-plugins-base-libs-gstaudiofilter.html#gst-audio-filter-class-add-pad-templates" title="gst_audio_filter_class_add_pad_templates ()"><code class="function">gst_audio_filter_class_add_pad_templates()</code></a> from
-their class_init function to easily configure the set of caps/formats that
-the element is able to handle.</p>
-<p>Derived classes should override the <a class="link" href="gst-plugins-base-libs-gstaudiofilter.html#GstAudioFilterClass.setup"><code class="function">GstAudioFilterClass.setup()</code></a> and
-<a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstBaseTransform.html#GstBaseTransformClass.transform-ip"><code class="function">GstBaseTransformClass.transform_ip()</code></a> and/or
-<a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstBaseTransform.html#GstBaseTransformClass.transform"><code class="function">GstBaseTransformClass.transform()</code></a>
-virtual functions in their class_init function.</p>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstaudiofilter.functions_details"></a><h2>Functions</h2>
@@ -105,32 +94,6 @@ virtual functions in their class_init function.</p>
 gst_audio_filter_class_add_pad_templates
                                (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudiofilter.html#GstAudioFilterClass" title="struct GstAudioFilterClass"><span class="type">GstAudioFilterClass</span></a> *klass</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *allowed_caps</code></em>);</pre>
-<p>Convenience function to add pad templates to this element class, with
-<em class="parameter"><code>allowed_caps</code></em>
- as the caps that can be handled.</p>
-<p>This function is usually used from within a GObject class_init function.</p>
-<div class="refsect3">
-<a name="gst-audio-filter-class-add-pad-templates.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>klass</p></td>
-<td class="parameter_description"><p>an <a class="link" href="gst-plugins-base-libs-gstaudiofilter.html#GstAudioFilterClass" title="struct GstAudioFilterClass"><span class="type">GstAudioFilterClass</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>allowed_caps</p></td>
-<td class="parameter_description"><p>what formats the filter can handle, as <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
 </div>
 </div>
 <div class="refsect1">
@@ -138,7 +101,6 @@ gst_audio_filter_class_add_pad_templates
 <div class="refsect2">
 <a name="GstAudioFilter-struct"></a><h3>struct GstAudioFilter</h3>
 <pre class="programlisting">struct GstAudioFilter;</pre>
-<p>Base class for audio filters with the same format for input and output.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -150,32 +112,6 @@ gst_audio_filter_class_add_pad_templates
   gboolean  (*setup) (GstAudioFilter * filter, const GstAudioInfo * info);
 };
 </pre>
-<p>In addition to the <em class="parameter"><code>setup</code></em>
- virtual function, you should also override the
-GstBaseTransform::transform and/or GstBaseTransform::transform_ip virtual
-function.</p>
-<div class="refsect3">
-<a name="GstAudioFilterClass.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="struct_members_name">
-<col class="struct_members_description">
-<col width="200px" class="struct_members_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstBaseTransform.html#GstBaseTransformClass"><span class="type">GstBaseTransformClass</span></a> <em class="structfield"><code><a name="GstAudioFilterClass.basetransformclass"></a>basetransformclass</code></em>;</p></td>
-<td class="struct_member_description"><p>parent class</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstAudioFilterClass.setup"></a>setup</code></em> ()</p></td>
-<td class="struct_member_description"><p>virtual function called whenever the format changes</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
 </div>
 </div>
 </div>

@@ -553,6 +553,7 @@ static void gst_decode_pad_unblock (GstDecodePad * dpad);
 static void gst_decode_pad_set_blocked (GstDecodePad * dpad, gboolean blocked);
 static gboolean gst_decode_pad_query (GstPad * pad, GstObject * parent,
     GstQuery * query);
+static gboolean gst_decode_pad_is_exposable (GstDecodePad * endpad);
 
 static void gst_pending_pad_free (GstPendingPad * ppad);
 static GstPadProbeReturn pad_event_cb (GstPad * pad, GstPadProbeInfo * info,
@@ -999,10 +1000,10 @@ gst_decode_bin_class_init (GstDecodeBinClass * klass)
   klass->autoplug_select = GST_DEBUG_FUNCPTR (gst_decode_bin_autoplug_select);
   klass->autoplug_query = GST_DEBUG_FUNCPTR (gst_decode_bin_autoplug_query);
 
-  gst_element_class_add_pad_template (gstelement_klass,
-      gst_static_pad_template_get (&decoder_bin_sink_template));
-  gst_element_class_add_pad_template (gstelement_klass,
-      gst_static_pad_template_get (&decoder_bin_src_template));
+  gst_element_class_add_static_pad_template (gstelement_klass,
+      &decoder_bin_sink_template);
+  gst_element_class_add_static_pad_template (gstelement_klass,
+      &decoder_bin_src_template);
 
   gst_element_class_set_static_metadata (gstelement_klass,
       "Decoder Bin", "Generic/Bin/Decoder",
@@ -1739,11 +1740,9 @@ analyze_new_pad (GstDecodeBin * dbin, GstElement * src, GstPad * pad,
   if (is_parser_converter) {
     GstCaps *filter_caps;
     gint i;
+    GstElement *capsfilter;
     GstPad *p;
     GstDecodeElement *delem;
-
-    g_assert (chain->elements != NULL);
-    delem = (GstDecodeElement *) chain->elements->data;
 
     filter_caps = gst_caps_new_empty ();
     for (i = 0; i < factories->n_values; i++) {
@@ -1778,17 +1777,28 @@ analyze_new_pad (GstDecodeBin * dbin, GstElement * src, GstPad * pad,
     /* Append the parser caps to prevent any not-negotiated errors */
     filter_caps = gst_caps_merge (filter_caps, gst_caps_ref (caps));
 
-    delem->capsfilter = gst_element_factory_make ("capsfilter", NULL);
-    g_object_set (G_OBJECT (delem->capsfilter), "caps", filter_caps, NULL);
+    if (chain->elements) {
+      delem = (GstDecodeElement *) chain->elements->data;
+      capsfilter = delem->capsfilter =
+          gst_element_factory_make ("capsfilter", NULL);
+    } else {
+      delem = g_slice_new0 (GstDecodeElement);
+      capsfilter = delem->element =
+          gst_element_factory_make ("capsfilter", NULL);
+      delem->capsfilter = NULL;
+      chain->elements = g_list_prepend (chain->elements, delem);
+    }
+
+    g_object_set (G_OBJECT (capsfilter), "caps", filter_caps, NULL);
     gst_caps_unref (filter_caps);
-    gst_element_set_state (delem->capsfilter, GST_STATE_PAUSED);
-    gst_bin_add (GST_BIN_CAST (dbin), gst_object_ref (delem->capsfilter));
+    gst_element_set_state (capsfilter, GST_STATE_PAUSED);
+    gst_bin_add (GST_BIN_CAST (dbin), gst_object_ref (capsfilter));
 
     decode_pad_set_target (dpad, NULL);
-    p = gst_element_get_static_pad (delem->capsfilter, "sink");
+    p = gst_element_get_static_pad (capsfilter, "sink");
     gst_pad_link_full (pad, p, GST_PAD_LINK_CHECK_NOTHING);
     gst_object_unref (p);
-    p = gst_element_get_static_pad (delem->capsfilter, "src");
+    p = gst_element_get_static_pad (capsfilter, "src");
     decode_pad_set_target (dpad, p);
     pad = p;
 
@@ -2132,7 +2142,8 @@ connect_pad (GstDecodeBin * dbin, GstElement * src, GstDecodePad * dpad,
     gboolean subtitle;
     GList *to_connect = NULL;
     GList *to_expose = NULL;
-    gboolean is_parser_converter = FALSE;
+    gboolean is_parser = FALSE;
+    gboolean is_decoder = FALSE;
 
     /* Set dpad target to pad again, it might've been unset
      * below but we came back here because something failed
@@ -2198,10 +2209,10 @@ connect_pad (GstDecodeBin * dbin, GstElement * src, GstDecodePad * dpad,
      * parser is the only one that does not change the data. A
      * valid example for this would be multiple id3demux in a row.
      */
-    is_parser_converter = strstr (gst_element_factory_get_metadata (factory,
+    is_parser = strstr (gst_element_factory_get_metadata (factory,
             GST_ELEMENT_METADATA_KLASS), "Parser") != NULL;
 
-    if (is_parser_converter) {
+    if (is_parser) {
       gboolean skip = FALSE;
       GList *l;
 
@@ -2392,6 +2403,23 @@ connect_pad (GstDecodeBin * dbin, GstElement * src, GstDecodePad * dpad,
 
       if (parent_chain->adaptive_demuxer)
         chain->demuxer = TRUE;
+    }
+
+    /* If we are configured to use buffering and there is no demuxer in the
+     * chain, we still want a multiqueue, otherwise we will ignore the
+     * use-buffering property. In that case, we will insert a multiqueue after
+     * the parser or decoder - not elsewhere, otherwise we won't have
+     * timestamps.
+     */
+    is_decoder = strstr (gst_element_factory_get_metadata (factory,
+            GST_ELEMENT_METADATA_KLASS), "Decoder") != NULL;
+
+    if (!chain->parent && (is_parser || is_decoder) && dbin->use_buffering) {
+      chain->demuxer = TRUE;
+      if (is_decoder) {
+        GST_WARNING_OBJECT (dbin,
+            "Buffering messages used for decoded and non-parsed data");
+      }
     }
 
     CHAIN_MUTEX_UNLOCK (chain);
@@ -2797,13 +2825,10 @@ check_upstream_seekable (GstDecodeBin * dbin, GstPad * pad)
   query = gst_query_new_seeking (GST_FORMAT_BYTES);
   if (!gst_pad_peer_query (pad, query)) {
     GST_DEBUG_OBJECT (dbin, "seeking query failed");
-    gst_query_unref (query);
-    return FALSE;
+    goto done;
   }
 
   gst_query_parse_seeking (query, NULL, &seekable, &start, &stop);
-
-  gst_query_unref (query);
 
   /* try harder to query upstream size if we didn't get it the first time */
   if (seekable && stop == -1) {
@@ -2815,10 +2840,13 @@ check_upstream_seekable (GstDecodeBin * dbin, GstPad * pad)
    * practice even if it technically may be seekable */
   if (seekable && (start != 0 || stop <= start)) {
     GST_DEBUG_OBJECT (dbin, "seekable but unknown start/stop -> disable");
-    return FALSE;
+    seekable = FALSE;
+  } else {
+    GST_DEBUG_OBJECT (dbin, "upstream seekable: %d", seekable);
   }
 
-  GST_DEBUG_OBJECT (dbin, "upstream seekable: %d", seekable);
+done:
+  gst_query_unref (query);
   return seekable;
 }
 
@@ -3922,7 +3950,7 @@ gst_decode_chain_is_complete (GstDecodeChain * chain)
     goto out;
   }
 
-  if (chain->endpad && (chain->endpad->blocked || chain->endpad->exposed)) {
+  if (chain->endpad && gst_decode_pad_is_exposable (chain->endpad)) {
     complete = TRUE;
     goto out;
   }
@@ -4728,7 +4756,7 @@ gst_decode_chain_expose (GstDecodeChain * chain, GList ** endpads,
   }
 
   if (chain->endpad) {
-    if (!chain->endpad->blocked && !chain->endpad->exposed)
+    if (!gst_decode_pad_is_exposable (chain->endpad) && !chain->endpad->exposed)
       return FALSE;
     *endpads = g_list_prepend (*endpads, gst_object_ref (chain->endpad));
     return TRUE;
@@ -5032,6 +5060,15 @@ gst_decode_pad_query (GstPad * pad, GstObject * parent, GstQuery * query)
     ret = gst_pad_query_default (pad, parent, query);
 
   return ret;
+}
+
+static gboolean
+gst_decode_pad_is_exposable (GstDecodePad * endpad)
+{
+  if (endpad->blocked || endpad->exposed)
+    return TRUE;
+
+  return gst_pad_has_current_caps (GST_PAD_CAST (endpad));
 }
 
 /*gst_decode_pad_new:

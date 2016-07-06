@@ -98,7 +98,6 @@
 
 #include <string.h>
 
-#include "gstapp-marshal.h"
 #include "gstappsrc.h"
 
 struct _GstAppSrcPrivate
@@ -111,6 +110,7 @@ struct _GstAppSrcPrivate
   GstCaps *current_caps;
 
   gint64 size;
+  GstClockTime duration;
   GstAppStreamType stream_type;
   guint64 max_bytes;
   GstFormat format;
@@ -163,6 +163,7 @@ enum
 #define DEFAULT_PROP_EMIT_SIGNALS  TRUE
 #define DEFAULT_PROP_MIN_PERCENT   0
 #define DEFAULT_PROP_CURRENT_LEVEL_BYTES   0
+#define DEFAULT_PROP_DURATION      GST_CLOCK_TIME_NONE
 
 enum
 {
@@ -179,6 +180,7 @@ enum
   PROP_EMIT_SIGNALS,
   PROP_MIN_PERCENT,
   PROP_CURRENT_LEVEL_BYTES,
+  PROP_DURATION,
   PROP_LAST
 };
 
@@ -402,6 +404,19 @@ gst_app_src_class_init (GstAppSrcClass * klass)
           0, G_MAXUINT64, DEFAULT_PROP_CURRENT_LEVEL_BYTES,
           G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * GstAppSrc::duration:
+   *
+   * The total duration in nanoseconds of the data stream. If the total duration is known, it
+   * is recommended to configure it with this property.
+   *
+   * Since: 1.10
+   */
+  g_object_class_install_property (gobject_class, PROP_DURATION,
+      g_param_spec_uint64 ("duration", "Duration",
+          "The duration of the data stream in nanoseconds (GST_CLOCK_TIME_NONE if unknown)",
+          0, G_MAXUINT64, DEFAULT_PROP_DURATION,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
    * GstAppSrc::need-data:
@@ -420,7 +435,7 @@ gst_app_src_class_init (GstAppSrcClass * klass)
   gst_app_src_signals[SIGNAL_NEED_DATA] =
       g_signal_new ("need-data", G_TYPE_FROM_CLASS (klass), G_SIGNAL_RUN_LAST,
       G_STRUCT_OFFSET (GstAppSrcClass, need_data),
-      NULL, NULL, __gst_app_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT);
+      NULL, NULL, NULL, G_TYPE_NONE, 1, G_TYPE_UINT);
 
   /**
    * GstAppSrc::enough-data:
@@ -449,8 +464,7 @@ gst_app_src_class_init (GstAppSrcClass * klass)
   gst_app_src_signals[SIGNAL_SEEK_DATA] =
       g_signal_new ("seek-data", G_TYPE_FROM_CLASS (klass), G_SIGNAL_RUN_LAST,
       G_STRUCT_OFFSET (GstAppSrcClass, seek_data),
-      NULL, NULL, __gst_app_marshal_BOOLEAN__UINT64, G_TYPE_BOOLEAN, 1,
-      G_TYPE_UINT64);
+      NULL, NULL, NULL, G_TYPE_BOOLEAN, 1, G_TYPE_UINT64);
 
    /**
     * GstAppSrc::push-buffer:
@@ -467,7 +481,7 @@ gst_app_src_class_init (GstAppSrcClass * klass)
   gst_app_src_signals[SIGNAL_PUSH_BUFFER] =
       g_signal_new ("push-buffer", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, G_STRUCT_OFFSET (GstAppSrcClass,
-          push_buffer), NULL, NULL, __gst_app_marshal_ENUM__BOXED,
+          push_buffer), NULL, NULL, NULL,
       GST_TYPE_FLOW_RETURN, 1, GST_TYPE_BUFFER);
 
   /**
@@ -493,7 +507,7 @@ gst_app_src_class_init (GstAppSrcClass * klass)
   gst_app_src_signals[SIGNAL_PUSH_SAMPLE] =
       g_signal_new ("push-sample", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, G_STRUCT_OFFSET (GstAppSrcClass,
-          push_sample), NULL, NULL, __gst_app_marshal_ENUM__BOXED,
+          push_sample), NULL, NULL, NULL,
       GST_TYPE_FLOW_RETURN, 1, GST_TYPE_SAMPLE);
 
 
@@ -506,15 +520,15 @@ gst_app_src_class_init (GstAppSrcClass * klass)
   gst_app_src_signals[SIGNAL_END_OF_STREAM] =
       g_signal_new ("end-of-stream", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, G_STRUCT_OFFSET (GstAppSrcClass,
-          end_of_stream), NULL, NULL, __gst_app_marshal_ENUM__VOID,
+          end_of_stream), NULL, NULL, NULL,
       GST_TYPE_FLOW_RETURN, 0, G_TYPE_NONE);
 
   gst_element_class_set_static_metadata (element_class, "AppSrc",
       "Generic/Source", "Allow the application to feed buffers to a pipeline",
       "David Schleef <ds@schleef.org>, Wim Taymans <wim.taymans@gmail.com>");
 
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&gst_app_src_template));
+  gst_element_class_add_static_pad_template (element_class,
+      &gst_app_src_template);
 
   element_class->send_event = gst_app_src_send_event;
 
@@ -551,6 +565,7 @@ gst_app_src_init (GstAppSrc * appsrc)
   priv->queue = g_queue_new ();
 
   priv->size = DEFAULT_PROP_SIZE;
+  priv->duration = DEFAULT_PROP_DURATION;
   priv->stream_type = DEFAULT_PROP_STREAM_TYPE;
   priv->max_bytes = DEFAULT_PROP_MAX_BYTES;
   priv->format = DEFAULT_PROP_FORMAT;
@@ -703,6 +718,9 @@ gst_app_src_set_property (GObject * object, guint prop_id,
     case PROP_MIN_PERCENT:
       priv->min_percent = g_value_get_uint (value);
       break;
+    case PROP_DURATION:
+      gst_app_src_set_duration (appsrc, g_value_get_uint64 (value));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -762,6 +780,9 @@ gst_app_src_get_property (GObject * object, guint prop_id, GValue * value,
       break;
     case PROP_CURRENT_LEVEL_BYTES:
       g_value_set_uint64 (value, gst_app_src_get_current_level_bytes (appsrc));
+      break;
+    case PROP_DURATION:
+      g_value_set_uint64 (value, gst_app_src_get_duration (appsrc));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -935,6 +956,9 @@ gst_app_src_query (GstBaseSrc * src, GstQuery * query)
       if (format == GST_FORMAT_BYTES) {
         gst_query_set_duration (query, format, priv->size);
         res = TRUE;
+      } else if (format == GST_FORMAT_TIME) {
+        gst_query_set_duration (query, format, priv->duration);
+        res = TRUE;
       } else {
         res = FALSE;
       }
@@ -1096,6 +1120,16 @@ gst_app_src_create (GstBaseSrc * bsrc, guint64 offset, guint size,
         "Size changed from %" G_GINT64_FORMAT " to %" G_GINT64_FORMAT,
         bsrc->segment.duration, priv->size);
     bsrc->segment.duration = priv->size;
+    GST_OBJECT_UNLOCK (appsrc);
+
+    gst_element_post_message (GST_ELEMENT (appsrc),
+        gst_message_new_duration_changed (GST_OBJECT (appsrc)));
+  } else if (G_UNLIKELY (priv->duration != bsrc->segment.duration &&
+          bsrc->segment.format == GST_FORMAT_TIME)) {
+    GST_DEBUG_OBJECT (appsrc,
+        "Duration changed from %" GST_TIME_FORMAT " to %" GST_TIME_FORMAT,
+        GST_TIME_ARGS (bsrc->segment.duration), GST_TIME_ARGS (priv->duration));
+    bsrc->segment.duration = priv->duration;
     GST_OBJECT_UNLOCK (appsrc);
 
     gst_element_post_message (GST_ELEMENT (appsrc),
@@ -1354,6 +1388,62 @@ gst_app_src_get_size (GstAppSrc * appsrc)
   GST_OBJECT_UNLOCK (appsrc);
 
   return size;
+}
+
+/**
+ * gst_app_src_set_duration:
+ * @appsrc: a #GstAppSrc
+ * @duration: the duration to set
+ *
+ * Set the duration of the stream in nanoseconds. A value of GST_CLOCK_TIME_NONE means that the duration is
+ * not known.
+ *
+ * Since: 1.10
+ */
+void
+gst_app_src_set_duration (GstAppSrc * appsrc, GstClockTime duration)
+{
+  GstAppSrcPrivate *priv;
+
+  g_return_if_fail (GST_IS_APP_SRC (appsrc));
+
+  priv = appsrc->priv;
+
+  GST_OBJECT_LOCK (appsrc);
+  GST_DEBUG_OBJECT (appsrc, "setting duration of %" GST_TIME_FORMAT,
+      GST_TIME_ARGS (duration));
+  priv->duration = duration;
+  GST_OBJECT_UNLOCK (appsrc);
+}
+
+/**
+ * gst_app_src_get_duration:
+ * @appsrc: a #GstAppSrc
+ *
+ * Get the duration of the stream in nanoseconds. A value of GST_CLOCK_TIME_NONE means that the duration is
+ * not known.
+ *
+ * Returns: the duration of the stream previously set with gst_app_src_set_duration();
+ *
+ * Since: 1.10
+ */
+GstClockTime
+gst_app_src_get_duration (GstAppSrc * appsrc)
+{
+  GstClockTime duration;
+  GstAppSrcPrivate *priv;
+
+  g_return_val_if_fail (GST_IS_APP_SRC (appsrc), GST_CLOCK_TIME_NONE);
+
+  priv = appsrc->priv;
+
+  GST_OBJECT_LOCK (appsrc);
+  duration = priv->duration;
+  GST_DEBUG_OBJECT (appsrc, "getting duration of %" GST_TIME_FORMAT,
+      GST_TIME_ARGS (duration));
+  GST_OBJECT_UNLOCK (appsrc);
+
+  return duration;
 }
 
 /**
@@ -1616,6 +1706,40 @@ gst_app_src_push_buffer_full (GstAppSrc * appsrc, GstBuffer * buffer,
   g_return_val_if_fail (GST_IS_BUFFER (buffer), GST_FLOW_ERROR);
 
   priv = appsrc->priv;
+
+  if (GST_BUFFER_DTS (buffer) == GST_CLOCK_TIME_NONE &&
+      GST_BUFFER_PTS (buffer) == GST_CLOCK_TIME_NONE &&
+      gst_base_src_get_do_timestamp (GST_BASE_SRC_CAST (appsrc))) {
+    GstClock *clock;
+
+    clock = gst_element_get_clock (GST_ELEMENT_CAST (appsrc));
+    if (clock) {
+      GstClockTime now;
+      GstClockTime base_time =
+          gst_element_get_base_time (GST_ELEMENT_CAST (appsrc));
+
+      now = gst_clock_get_time (clock);
+      if (now > base_time)
+        now -= base_time;
+      else
+        now = 0;
+      gst_object_unref (clock);
+
+      if (!steal_ref)
+        buffer = gst_buffer_copy (buffer);
+      else
+        buffer = gst_buffer_make_writable (buffer);
+
+      GST_BUFFER_PTS (buffer) = now;
+      GST_BUFFER_DTS (buffer) = now;
+      steal_ref = TRUE;
+    } else {
+      GST_WARNING_OBJECT (appsrc,
+          "do-timestamp=TRUE but buffers are provided before "
+          "reaching the PLAYING state and having a clock. Timestamps will "
+          "not be accurate!");
+    }
+  }
 
   g_mutex_lock (&priv->mutex);
 

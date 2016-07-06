@@ -29,7 +29,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-gstrtpbasepayload.top_of_page"></a>gstrtpbasepayload</span></h2>
-<p>gstrtpbasepayload — Base class for RTP payloader</p>
+<p>gstrtpbasepayload</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -217,7 +217,6 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstrtpbasepayload.description"></a><h2>Description</h2>
-<p>Provides a base class for RTP payloaders</p>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstrtpbasepayload.functions_details"></a><h2>Functions</h2>
@@ -225,92 +224,24 @@
 <a name="GST-RTP-BASE-PAYLOAD-MTU:CAPS"></a><h3>GST_RTP_BASE_PAYLOAD_MTU()</h3>
 <pre class="programlisting">#define GST_RTP_BASE_PAYLOAD_MTU(payload) (GST_RTP_BASE_PAYLOAD (payload)-&gt;mtu)
 </pre>
-<p>Get access to the configured MTU of <em class="parameter"><code>payload</code></em>
-.</p>
-<div class="refsect3">
-<a name="GST-RTP-BASE-PAYLOAD-MTU.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>payload</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-RTP-BASE-PAYLOAD-PT:CAPS"></a><h3>GST_RTP_BASE_PAYLOAD_PT()</h3>
 <pre class="programlisting">#define GST_RTP_BASE_PAYLOAD_PT(payload)  (GST_RTP_BASE_PAYLOAD (payload)-&gt;pt)
 </pre>
-<p>Get access to the configured payload type of <em class="parameter"><code>payload</code></em>
-.</p>
-<div class="refsect3">
-<a name="GST-RTP-BASE-PAYLOAD-PT.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>payload</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-RTP-BASE-PAYLOAD-SINKPAD:CAPS"></a><h3>GST_RTP_BASE_PAYLOAD_SINKPAD()</h3>
 <pre class="programlisting">#define GST_RTP_BASE_PAYLOAD_SINKPAD(payload) (GST_RTP_BASE_PAYLOAD (payload)-&gt;sinkpad)
 </pre>
-<p>Get access to the sinkpad of <em class="parameter"><code>payload</code></em>
-.</p>
-<div class="refsect3">
-<a name="GST-RTP-BASE-PAYLOAD-SINKPAD.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>payload</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-RTP-BASE-PAYLOAD-SRCPAD:CAPS"></a><h3>GST_RTP_BASE_PAYLOAD_SRCPAD()</h3>
 <pre class="programlisting">#define GST_RTP_BASE_PAYLOAD_SRCPAD(payload)  (GST_RTP_BASE_PAYLOAD (payload)-&gt;srcpad)
 </pre>
-<p>Get access to the srcpad of <em class="parameter"><code>payload</code></em>
-.</p>
-<div class="refsect3">
-<a name="GST-RTP-BASE-PAYLOAD-SRCPAD.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>payload</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr></tbody>
-</table></div>
-</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -319,44 +250,6 @@
 gst_rtp_base_payload_is_filled (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a> *payload</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> size</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> duration</code></em>);</pre>
-<p>Check if the packet with <em class="parameter"><code>size</code></em>
- and <em class="parameter"><code>duration</code></em>
- would exceed the configured
-maximum size.</p>
-<div class="refsect3">
-<a name="gst-rtp-base-payload-is-filled.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>payload</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>size</p></td>
-<td class="parameter_description"><p>the size of the packet</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>duration</p></td>
-<td class="parameter_description"><p>the duration of the packet</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="gst-rtp-base-payload-is-filled.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the packet of <em class="parameter"><code>size</code></em>
-and <em class="parameter"><code>duration</code></em>
-would exceed the
-configured MTU or max_ptime.</p>
-</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -364,37 +257,6 @@ configured MTU or max_ptime.</p>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
 gst_rtp_base_payload_push (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a> *payload</code></em>,
                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *buffer</code></em>);</pre>
-<p>Push <em class="parameter"><code>buffer</code></em>
- to the peer element of the payloader. The SSRC, payload type,
-seqnum and timestamp of the RTP buffer will be updated first.</p>
-<p>This function takes ownership of <em class="parameter"><code>buffer</code></em>
-.</p>
-<div class="refsect3">
-<a name="gst-rtp-base-payload-push.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>payload</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>buffer</p></td>
-<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="gst-rtp-base-payload-push.returns"></a><h4>Returns</h4>
-<p> a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a>.</p>
-</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -402,37 +264,6 @@ seqnum and timestamp of the RTP buffer will be updated first.</p>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
 gst_rtp_base_payload_push_list (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a> *payload</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBufferList.html#GstBufferList-struct"><span class="type">GstBufferList</span></a> *list</code></em>);</pre>
-<p>Push <em class="parameter"><code>list</code></em>
- to the peer element of the payloader. The SSRC, payload type,
-seqnum and timestamp of the RTP buffer will be updated first.</p>
-<p>This function takes ownership of <em class="parameter"><code>list</code></em>
-.</p>
-<div class="refsect3">
-<a name="gst-rtp-base-payload-push-list.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>payload</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>list</p></td>
-<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBufferList.html#GstBufferList-struct"><span class="type">GstBufferList</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="gst-rtp-base-payload-push-list.returns"></a><h4>Returns</h4>
-<p> a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a>.</p>
-</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -443,46 +274,6 @@ gst_rtp_base_payload_set_options (<em class="parameter"><code><a class="link" hr
                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> dynamic</code></em>,
                                   <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding_name</code></em>,
                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint32"><span class="type">guint32</span></a> clock_rate</code></em>);</pre>
-<p>Set the rtp options of the payloader. These options will be set in the caps
-of the payloader. Subclasses must call this method before calling
-<a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#gst-rtp-base-payload-push" title="gst_rtp_base_payload_push ()"><code class="function">gst_rtp_base_payload_push()</code></a> or <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#gst-rtp-base-payload-set-outcaps" title="gst_rtp_base_payload_set_outcaps ()"><code class="function">gst_rtp_base_payload_set_outcaps()</code></a>.</p>
-<div class="refsect3">
-<a name="gst-rtp-base-payload-set-options.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>payload</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>media</p></td>
-<td class="parameter_description"><p>the media type (typically "audio" or "video")</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>dynamic</p></td>
-<td class="parameter_description"><p>if the payload type is dynamic</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>encoding_name</p></td>
-<td class="parameter_description"><p>the encoding name</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>clock_rate</p></td>
-<td class="parameter_description"><p>the clock rate of the media</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -491,40 +282,6 @@ of the payloader. Subclasses must call this method before calling
 gst_rtp_base_payload_set_outcaps (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a> *payload</code></em>,
                                   <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *fieldname</code></em>,
                                   <em class="parameter"><code>...</code></em>);</pre>
-<p>Configure the output caps with the optional parameters.</p>
-<p>Variable arguments should be in the form field name, field type
-(as a GType), value(s).  The last variable argument should be NULL.</p>
-<div class="refsect3">
-<a name="gst-rtp-base-payload-set-outcaps.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="parameter_name"><p>payload</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload"><span class="type">GstRTPBasePayload</span></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>fieldname</p></td>
-<td class="parameter_description"><p>the first field name or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-<tr>
-<td class="parameter_name"><p>...</p></td>
-<td class="parameter_description"><p>field values</p></td>
-<td class="parameter_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="gst-rtp-base-payload-set-outcaps.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the caps could be set.</p>
-</div>
 </div>
 </div>
 <div class="refsect1">
@@ -554,49 +311,6 @@ gst_rtp_base_payload_set_outcaps (<em class="parameter"><code><a class="link" hr
   gboolean      (*query)                (GstRTPBasePayload *payload, GstPad *pad, GstQuery * query);
 };
 </pre>
-<p>Base class for audio RTP payloader.</p>
-<div class="refsect3">
-<a name="GstRTPBasePayloadClass.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="struct_members_name">
-<col class="struct_members_description">
-<col width="200px" class="struct_members_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBasePayloadClass.get-caps"></a>get_caps</code></em> ()</p></td>
-<td class="struct_member_description"><p>get desired caps</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBasePayloadClass.set-caps"></a>set_caps</code></em> ()</p></td>
-<td class="struct_member_description"><p>configure the payloader</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBasePayloadClass.handle-buffer"></a>handle_buffer</code></em> ()</p></td>
-<td class="struct_member_description"><p>process data</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBasePayloadClass.sink-event"></a>sink_event</code></em> ()</p></td>
-<td class="struct_member_description"><p>custom event handling on the sinkpad</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBasePayloadClass.src-event"></a>src_event</code></em> ()</p></td>
-<td class="struct_member_description"><p>custom event handling on the srcpad</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBasePayloadClass.query"></a>query</code></em> ()</p></td>
-<td class="struct_member_description"><p>custom query handling</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
 </div>
 </div>
 <div class="refsect1">
@@ -613,7 +327,7 @@ gst_rtp_base_payload_set_outcaps (<em class="parameter"><code><a class="link" hr
 <div class="refsect2">
 <a name="GstRTPBasePayload--min-ptime"></a><h3>The <code class="literal">“min-ptime”</code> property</h3>
 <pre class="programlisting">  “min-ptime”                <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="type">gint64</span></a></pre>
-<p>Minimum duration of the packet data in ns (can't go above MTU)</p>
+<p>Minimum duration of the packet data in ns (can't go above MTU).</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: &gt;= 0</p>
 <p>Default value: 0</p>
@@ -631,21 +345,7 @@ gst_rtp_base_payload_set_outcaps (<em class="parameter"><code><a class="link" hr
 <div class="refsect2">
 <a name="GstRTPBasePayload--perfect-rtptime"></a><h3>The <code class="literal">“perfect-rtptime”</code> property</h3>
 <pre class="programlisting">  “perfect-rtptime”          <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>Try to use the offset fields to generate perfect RTP timestamps. When this
-option is disabled, RTP timestamps are generated from GST_BUFFER_PTS of
-each payloaded buffer. The PTSes of buffers may not necessarily increment
-with the amount of data in each input buffer, consider e.g. the case where
-the buffer arrives from a network which means that the PTS is unrelated to
-the amount of data. Because the RTP timestamps are generated from
-GST_BUFFER_PTS this can result in RTP timestamps that also don't increment
-with the amount of data in the payloaded packet. To circumvent this it is
-possible to set the perfect rtptime option enabled. When this option is
-enabled the payloader will increment the RTP timestamps based on
-GST_BUFFER_OFFSET which relates to the amount of data in each packet
-rather than the GST_BUFFER_PTS of each buffer and therefore the RTP
-timestamps will more closely correlate with the amount of data in each
-buffer. Currently GstRTPBasePayload is limited to handling perfect RTP
-timestamps for audio streams.</p>
+<p>Generate perfect RTP timestamps when possible.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: TRUE</p>
 </div>
@@ -662,7 +362,7 @@ timestamps for audio streams.</p>
 <div class="refsect2">
 <a name="GstRTPBasePayload--ptime-multiple"></a><h3>The <code class="literal">“ptime-multiple”</code> property</h3>
 <pre class="programlisting">  “ptime-multiple”           <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="type">gint64</span></a></pre>
-<p>Force buffers to be multiples of this duration in ns (0 disables)</p>
+<p>Force buffers to be multiples of this duration in ns (0 disables).</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: &gt;= 0</p>
 <p>Default value: 0</p>
@@ -697,59 +397,7 @@ timestamps for audio streams.</p>
 <div class="refsect2">
 <a name="GstRTPBasePayload--stats"></a><h3>The <code class="literal">“stats”</code> property</h3>
 <pre class="programlisting">  “stats”                    <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *</pre>
-<p>Various payloader statistics retrieved atomically (and are therefore
-synchroized with each other), these can be used e.g. to generate an
-RTP-Info header. This property return a GstStructure named
-application/x-rtp-payload-stats containing the following fields relating to
-the last processed buffer and current state of the stream being payloaded:</p>
-<div class="variablelist"><table border="0" class="variablelist">
-<colgroup>
-<col align="left" valign="top">
-<col>
-</colgroup>
-<tbody>
-<tr>
-<td><p><span class="term">clock-rate</span></p></td>
-<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, clock-rate of the
-    stream</p></td>
-</tr>
-<tr>
-<td><p><span class="term">running-time</span></p></td>
-<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT64:CAPS"><span class="type">G_TYPE_UINT64</span></a>, running time
-    </p></td>
-</tr>
-<tr>
-<td><p><span class="term">seqnum</span></p></td>
-<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, sequence number, same as
-    <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload--seqnum" title="The “seqnum” property"><span class="type">“seqnum”</span></a></p></td>
-</tr>
-<tr>
-<td><p><span class="term">timestamp</span></p></td>
-<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, RTP timestamp, same as
-    <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload--timestamp" title="The “timestamp” property"><span class="type">“timestamp”</span></a></p></td>
-</tr>
-<tr>
-<td><p><span class="term">ssrc</span></p></td>
-<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, The SSRC in use
-    </p></td>
-</tr>
-<tr>
-<td><p><span class="term">pt</span></p></td>
-<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, The Payload type in use, same as
-    <a class="link" href="gst-plugins-base-libs-gstrtpbasepayload.html#GstRTPBasePayload--pt" title="The “pt” property"><span class="type">“pt”</span></a></p></td>
-</tr>
-<tr>
-<td><p><span class="term">seqnum-offset</span></p></td>
-<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, The current offset added to the
-    seqnum</p></td>
-</tr>
-<tr>
-<td><p><span class="term">timestamp-offset</span></p></td>
-<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, The current offset added to the
-    timestamp</p></td>
-</tr>
-</tbody>
-</table></div>
+<p>Various statistics.</p>
 <p>Flags: Read</p>
 </div>
 <hr>

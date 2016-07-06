@@ -175,7 +175,8 @@ CONFIG_CLEAN_VPATH_FILES =
 @USE_PLUGIN_PLAYBACK_TRUE@am__EXEEXT_12 = elements/decodebin$(EXEEXT) \
 @USE_PLUGIN_PLAYBACK_TRUE@	elements/playbin$(EXEEXT) \
 @USE_PLUGIN_PLAYBACK_TRUE@	elements/playbin-complex$(EXEEXT) \
-@USE_PLUGIN_PLAYBACK_TRUE@	elements/streamsynchronizer$(EXEEXT)
+@USE_PLUGIN_PLAYBACK_TRUE@	elements/streamsynchronizer$(EXEEXT) \
+@USE_PLUGIN_PLAYBACK_TRUE@	elements/playsink$(EXEEXT)
 @USE_PLUGIN_SUBPARSE_TRUE@am__EXEEXT_13 = elements/subparse$(EXEEXT)
 @USE_PLUGIN_APP_FALSE@@USE_PLUGIN_TCP_TRUE@am__EXEEXT_14 = elements/multifdsink$(EXEEXT) \
 @USE_PLUGIN_APP_FALSE@@USE_PLUGIN_TCP_TRUE@	elements/multisocketsink$(EXEEXT)
@@ -333,6 +334,11 @@ elements_playbin_complex_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(elements_playbin_complex_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
+elements_playsink_SOURCES = elements/playsink.c
+elements_playsink_OBJECTS = elements/playsink.$(OBJEXT)
+elements_playsink_LDADD = $(LDADD)
+elements_playsink_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 elements_streamsynchronizer_SOURCES = elements/streamsynchronizer.c
 elements_streamsynchronizer_OBJECTS =  \
 	elements/streamsynchronizer.$(OBJEXT)
@@ -806,22 +812,23 @@ SOURCES = elements/adder.c elements/appsink.c elements/appsrc.c \
 	elements/decodebin.c elements/encodebin.c elements/libvisual.c \
 	elements/multifdsink.c elements/multisocketsink.c \
 	elements/opus.c elements/playbin.c elements/playbin-complex.c \
-	elements/streamsynchronizer.c elements/subparse.c \
-	elements/textoverlay.c elements/videoconvert.c \
-	elements/videorate.c elements/videoscale.c \
-	elements/videotestsrc.c elements/volume.c elements/vorbisdec.c \
-	elements/vorbistag.c generic/clock-selection.c \
-	generic/states.c gst/typefindfunctions.c libs/allocators.c \
-	libs/audio.c libs/audiocdsrc.c libs/audiodecoder.c \
-	libs/audioencoder.c $(libs_baseaudiovisualizer_SOURCES) \
-	libs/discoverer.c libs/fft.c $(libs_gstlibscpp_SOURCES) \
-	libs/libsabi.c libs/mikey.c libs/navigation.c libs/pbutils.c \
-	libs/profile.c libs/rtp.c libs/rtpbasedepayload.c \
-	libs/rtpbasepayload.c libs/rtsp.c libs/rtspconnection.c \
-	libs/sdp.c libs/tag.c libs/video.c libs/videodecoder.c \
-	libs/videoencoder.c libs/xmpwriter.c \
-	$(nodist_orc_adder_SOURCES) $(nodist_orc_audio_SOURCES) \
-	$(nodist_orc_video_SOURCES) $(nodist_orc_videotestsrc_SOURCES) \
+	elements/playsink.c elements/streamsynchronizer.c \
+	elements/subparse.c elements/textoverlay.c \
+	elements/videoconvert.c elements/videorate.c \
+	elements/videoscale.c elements/videotestsrc.c \
+	elements/volume.c elements/vorbisdec.c elements/vorbistag.c \
+	generic/clock-selection.c generic/states.c \
+	gst/typefindfunctions.c libs/allocators.c libs/audio.c \
+	libs/audiocdsrc.c libs/audiodecoder.c libs/audioencoder.c \
+	$(libs_baseaudiovisualizer_SOURCES) libs/discoverer.c \
+	libs/fft.c $(libs_gstlibscpp_SOURCES) libs/libsabi.c \
+	libs/mikey.c libs/navigation.c libs/pbutils.c libs/profile.c \
+	libs/rtp.c libs/rtpbasedepayload.c libs/rtpbasepayload.c \
+	libs/rtsp.c libs/rtspconnection.c libs/sdp.c libs/tag.c \
+	libs/video.c libs/videodecoder.c libs/videoencoder.c \
+	libs/xmpwriter.c $(nodist_orc_adder_SOURCES) \
+	$(nodist_orc_audio_SOURCES) $(nodist_orc_video_SOURCES) \
+	$(nodist_orc_videotestsrc_SOURCES) \
 	$(nodist_orc_volume_SOURCES) pipelines/basetime.c \
 	pipelines/capsfilter-renegotiation.c pipelines/gio.c \
 	pipelines/oggmux.c pipelines/simple-launch-lines.c \
@@ -834,20 +841,21 @@ DIST_SOURCES = elements/adder.c elements/appsink.c elements/appsrc.c \
 	elements/decodebin.c elements/encodebin.c elements/libvisual.c \
 	elements/multifdsink.c elements/multisocketsink.c \
 	elements/opus.c elements/playbin.c elements/playbin-complex.c \
-	elements/streamsynchronizer.c elements/subparse.c \
-	elements/textoverlay.c elements/videoconvert.c \
-	elements/videorate.c elements/videoscale.c \
-	elements/videotestsrc.c elements/volume.c elements/vorbisdec.c \
-	elements/vorbistag.c generic/clock-selection.c \
-	generic/states.c gst/typefindfunctions.c libs/allocators.c \
-	libs/audio.c libs/audiocdsrc.c libs/audiodecoder.c \
-	libs/audioencoder.c $(libs_baseaudiovisualizer_SOURCES) \
-	libs/discoverer.c libs/fft.c $(libs_gstlibscpp_SOURCES) \
-	libs/libsabi.c libs/mikey.c libs/navigation.c libs/pbutils.c \
-	libs/profile.c libs/rtp.c libs/rtpbasedepayload.c \
-	libs/rtpbasepayload.c libs/rtsp.c libs/rtspconnection.c \
-	libs/sdp.c libs/tag.c libs/video.c libs/videodecoder.c \
-	libs/videoencoder.c libs/xmpwriter.c pipelines/basetime.c \
+	elements/playsink.c elements/streamsynchronizer.c \
+	elements/subparse.c elements/textoverlay.c \
+	elements/videoconvert.c elements/videorate.c \
+	elements/videoscale.c elements/videotestsrc.c \
+	elements/volume.c elements/vorbisdec.c elements/vorbistag.c \
+	generic/clock-selection.c generic/states.c \
+	gst/typefindfunctions.c libs/allocators.c libs/audio.c \
+	libs/audiocdsrc.c libs/audiodecoder.c libs/audioencoder.c \
+	$(libs_baseaudiovisualizer_SOURCES) libs/discoverer.c \
+	libs/fft.c $(libs_gstlibscpp_SOURCES) libs/libsabi.c \
+	libs/mikey.c libs/navigation.c libs/pbutils.c libs/profile.c \
+	libs/rtp.c libs/rtpbasedepayload.c libs/rtpbasepayload.c \
+	libs/rtsp.c libs/rtspconnection.c libs/sdp.c libs/tag.c \
+	libs/video.c libs/videodecoder.c libs/videoencoder.c \
+	libs/xmpwriter.c pipelines/basetime.c \
 	pipelines/capsfilter-renegotiation.c pipelines/gio.c \
 	pipelines/oggmux.c pipelines/simple-launch-lines.c \
 	pipelines/streamsynchronizer.c pipelines/tcp.c \
@@ -1418,7 +1426,8 @@ TESTS = $(check_PROGRAMS)
 @USE_PLUGIN_AUDIOCONVERT_TRUE@check_audioconvert = elements/audioconvert
 @USE_PLUGIN_PLAYBACK_FALSE@check_playback = 
 @USE_PLUGIN_PLAYBACK_TRUE@check_playback = elements/decodebin elements/playbin \
-@USE_PLUGIN_PLAYBACK_TRUE@    elements/playbin-complex elements/streamsynchronizer
+@USE_PLUGIN_PLAYBACK_TRUE@    elements/playbin-complex elements/streamsynchronizer \
+@USE_PLUGIN_PLAYBACK_TRUE@    elements/playsink
 
 @USE_THEORA_FALSE@check_theora = 
 @USE_THEORA_TRUE@check_theora = pipelines/theoraenc
@@ -2026,6 +2035,12 @@ elements/elements_playbin_complex-playbin-complex.$(OBJEXT):  \
 elements/playbin-complex$(EXEEXT): $(elements_playbin_complex_OBJECTS) $(elements_playbin_complex_DEPENDENCIES) $(EXTRA_elements_playbin_complex_DEPENDENCIES) elements/$(am__dirstamp)
 	@rm -f elements/playbin-complex$(EXEEXT)
 	$(AM_V_CCLD)$(elements_playbin_complex_LINK) $(elements_playbin_complex_OBJECTS) $(elements_playbin_complex_LDADD) $(LIBS)
+elements/playsink.$(OBJEXT): elements/$(am__dirstamp) \
+	elements/$(DEPDIR)/$(am__dirstamp)
+
+elements/playsink$(EXEEXT): $(elements_playsink_OBJECTS) $(elements_playsink_DEPENDENCIES) $(EXTRA_elements_playsink_DEPENDENCIES) elements/$(am__dirstamp)
+	@rm -f elements/playsink$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(elements_playsink_OBJECTS) $(elements_playsink_LDADD) $(LIBS)
 elements/streamsynchronizer.$(OBJEXT): elements/$(am__dirstamp) \
 	elements/$(DEPDIR)/$(am__dirstamp)
 
@@ -2409,6 +2424,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/elements_vorbistag-vorbistag.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/multifdsink.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/opus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/playsink.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/streamsynchronizer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/videorate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@elements/$(DEPDIR)/videotestsrc.Po@am__quote@
@@ -3811,6 +3827,13 @@ elements/playbin-complex.log: elements/playbin-complex$(EXEEXT)
 elements/streamsynchronizer.log: elements/streamsynchronizer$(EXEEXT)
 	@p='elements/streamsynchronizer$(EXEEXT)'; \
 	b='elements/streamsynchronizer'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+elements/playsink.log: elements/playsink$(EXEEXT)
+	@p='elements/playsink$(EXEEXT)'; \
+	b='elements/playsink'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

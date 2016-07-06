@@ -104,7 +104,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayFlags" title="enum GstPlayFlags"><span class="type">GstPlayFlags</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-playbin.html#GstPlayFlags"><span class="type">GstPlayFlags</span></a></td>
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin--flags" title="The “flags” property">flags</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -325,6 +325,11 @@
 <td class="signal_name"><a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin-video-tags-changed" title="The “video-tags-changed” signal">video-tags-changed</a></td>
 <td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin-element-setup" title="The “element-setup” signal">element-setup</a></td>
+<td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -335,16 +340,10 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody>
-<tr>
+<tbody><tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin-struct" title="struct GstPlayBin">GstPlayBin</a></td>
-</tr>
-<tr>
-<td class="datatype_keyword">enum</td>
-<td class="function_name"><a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayFlags" title="enum GstPlayFlags">GstPlayFlags</a></td>
-</tr>
-</tbody>
+</tr></tbody>
 </table></div>
 </div>
 <div class="refsect1">
@@ -646,112 +645,6 @@ the drive is detected automatically by the plugin).
 <pre class="programlisting">struct GstPlayBin;</pre>
 <p>playbin element structure</p>
 </div>
-<hr>
-<div class="refsect2">
-<a name="GstPlayFlags"></a><h3>enum GstPlayFlags</h3>
-<p>Extra flags to configure the behaviour of the sinks.</p>
-<div class="refsect3">
-<a name="GstPlayFlags.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="enum_members_name">
-<col class="enum_members_description">
-<col width="200px" class="enum_members_annotations">
-</colgroup>
-<tbody>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-VIDEO:CAPS"></a>GST_PLAY_FLAG_VIDEO</p></td>
-<td class="enum_member_description">
-<p>Enable rendering of the video stream</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-AUDIO:CAPS"></a>GST_PLAY_FLAG_AUDIO</p></td>
-<td class="enum_member_description">
-<p>Enable rendering of the audio stream</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-TEXT:CAPS"></a>GST_PLAY_FLAG_TEXT</p></td>
-<td class="enum_member_description">
-<p>Enable rendering of subtitles</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-VIS:CAPS"></a>GST_PLAY_FLAG_VIS</p></td>
-<td class="enum_member_description">
-<p>Enable rendering of visualisations when there is
-      no video stream.</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-SOFT-VOLUME:CAPS"></a>GST_PLAY_FLAG_SOFT_VOLUME</p></td>
-<td class="enum_member_description">
-<p>Use software volume</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-NATIVE-AUDIO:CAPS"></a>GST_PLAY_FLAG_NATIVE_AUDIO</p></td>
-<td class="enum_member_description">
-<p>only allow native audio formats, this omits
-  configuration of audioconvert and audioresample.</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-NATIVE-VIDEO:CAPS"></a>GST_PLAY_FLAG_NATIVE_VIDEO</p></td>
-<td class="enum_member_description">
-<p>only allow native video formats, this omits
-  configuration of videoconvert and videoscale.</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-DOWNLOAD:CAPS"></a>GST_PLAY_FLAG_DOWNLOAD</p></td>
-<td class="enum_member_description">
-<p>enable progressice download buffering for selected
-  formats.</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-BUFFERING:CAPS"></a>GST_PLAY_FLAG_BUFFERING</p></td>
-<td class="enum_member_description">
-<p>enable buffering of the demuxed or parsed data.</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-DEINTERLACE:CAPS"></a>GST_PLAY_FLAG_DEINTERLACE</p></td>
-<td class="enum_member_description">
-<p>deinterlace raw video (if native not forced).</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-SOFT-COLORBALANCE:CAPS"></a>GST_PLAY_FLAG_SOFT_COLORBALANCE</p></td>
-<td class="enum_member_description">
-<p>Use a software filter for colour balance</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-<tr>
-<td class="enum_member_name"><p><a name="GST-PLAY-FLAG-FORCE-FILTERS:CAPS"></a>GST_PLAY_FLAG_FORCE_FILTERS</p></td>
-<td class="enum_member_description">
-<p>force audio/video filters to be applied if
-  set.</p>
-</td>
-<td class="enum_member_annotations"> </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-</div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-plugins-playbin.property-details"></a><h2>Property Details</h2>
@@ -855,7 +748,7 @@ stream with data is played.</p>
 <hr>
 <div class="refsect2">
 <a name="GstPlayBin--flags"></a><h3>The <code class="literal">“flags”</code> property</h3>
-<pre class="programlisting">  “flags”                    <a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayFlags" title="enum GstPlayFlags"><span class="type">GstPlayFlags</span></a></pre>
+<pre class="programlisting">  “flags”                    <a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-playbin.html#GstPlayFlags"><span class="type">GstPlayFlags</span></a></pre>
 <p>Control the behaviour of playbin.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: Render the video stream|Render the audio stream|Render subtitles|Use software volume|Deinterlace video if necessary|Use software color balance</p>
@@ -1656,6 +1549,50 @@ to notify your application's main thread.</p>
 </table></div>
 </div>
 <p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstPlayBin-element-setup"></a><h3>The <code class="literal">“element-setup”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin"><span class="type">GstPlayBin</span></a> *playbin,
+               <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#GstElement-struct"><span class="type">GstElement</span></a> *element,
+               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+<p>This signal is emitted when a new element is added to playbin or any of
+its sub-bins. This signal can be used to configure elements, e.g. to set
+properties on decoders. This is functionally equivalent to connecting to
+the deep-element-added signal, but more convenient.</p>
+<p>This signal is usually emitted from the context of a GStreamer streaming
+thread, so might be called at the same time as code running in the main
+application thread.</p>
+<div class="refsect3">
+<a name="GstPlayBin-element-setup.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>playbin</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin"><span class="type">GstPlayBin</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>element</p></td>
+<td class="parameter_description"><p>an element that was added to the playbin hierarchy</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
+<p class="since">Since: 1.10</p>
 </div>
 </div>
 </div>
