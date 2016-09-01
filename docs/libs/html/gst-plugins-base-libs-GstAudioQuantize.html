@@ -107,6 +107,22 @@
 <a name="gst-audio-quantize-free"></a><h3>gst_audio_quantize_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_audio_quantize_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudioQuantize.html#GstAudioQuantize" title="GstAudioQuantize"><span class="type">GstAudioQuantize</span></a> *quant</code></em>);</pre>
+<p>Free a <a class="link" href="gst-plugins-base-libs-GstAudioQuantize.html#GstAudioQuantize" title="GstAudioQuantize"><span class="type">GstAudioQuantize</span></a>.</p>
+<div class="refsect3">
+<a name="gst-audio-quantize-free.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>quant</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudioQuantize.html#GstAudioQuantize" title="GstAudioQuantize"><span class="type">GstAudioQuantize</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -127,6 +143,54 @@ gst_audio_quantize_samples (<em class="parameter"><code><a class="link" href="gs
                             <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> in[]</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> out[]</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> samples</code></em>);</pre>
+<p>Perform quantization on <em class="parameter"><code>samples</code></em>
+ in <em class="parameter"><code>in</code></em>
+ and write the result to <em class="parameter"><code>out</code></em>
+.</p>
+<p>In case the samples are interleaved, <em class="parameter"><code>in</code></em>
+ and <em class="parameter"><code>out</code></em>
+ must point to an
+array with a single element pointing to a block of interleaved samples.</p>
+<p>If non-interleaved samples are used, <em class="parameter"><code>in</code></em>
+ and <em class="parameter"><code>out</code></em>
+ must point to an
+array with pointers to memory blocks, one for each channel.</p>
+<p><em class="parameter"><code>in</code></em>
+ and <em class="parameter"><code>out</code></em>
+ may point to the same memory location, in which case samples will be
+modified in-place.</p>
+<div class="refsect3">
+<a name="gst-audio-quantize-samples.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>quant</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudioQuantize.html#GstAudioQuantize" title="GstAudioQuantize"><span class="type">GstAudioQuantize</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>in</p></td>
+<td class="parameter_description"><p>input samples</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out</p></td>
+<td class="parameter_description"><p>output samples</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>samples</p></td>
+<td class="parameter_description"><p>number of samples</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -138,6 +202,7 @@ gst_audio_quantize_samples (<em class="parameter"><code><a class="link" href="gs
 <hr>
 <div class="refsect2">
 <a name="GstAudioQuantizeFlags"></a><h3>enum GstAudioQuantizeFlags</h3>
+<p>Extra flags that can be passed to <a class="link" href="gst-plugins-base-libs-GstAudioQuantize.html#gst-audio-quantize-new" title="gst_audio_quantize_new ()"><code class="function">gst_audio_quantize_new()</code></a></p>
 <div class="refsect3">
 <a name="GstAudioQuantizeFlags.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -149,13 +214,17 @@ gst_audio_quantize_samples (<em class="parameter"><code><a class="link" href="gs
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-QUANTIZE-FLAG-NONE:CAPS"></a>GST_AUDIO_QUANTIZE_FLAG_NONE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>no flags</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-QUANTIZE-FLAG-NON-INTERLEAVED:CAPS"></a>GST_AUDIO_QUANTIZE_FLAG_NON_INTERLEAVED</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>samples are non-interleaved</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -164,6 +233,7 @@ gst_audio_quantize_samples (<em class="parameter"><code><a class="link" href="gs
 <hr>
 <div class="refsect2">
 <a name="GstAudioDitherMethod"></a><h3>enum GstAudioDitherMethod</h3>
+<p>Set of available dithering methods.</p>
 <div class="refsect3">
 <a name="GstAudioDitherMethod.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -175,23 +245,31 @@ gst_audio_quantize_samples (<em class="parameter"><code><a class="link" href="gs
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-DITHER-NONE:CAPS"></a>GST_AUDIO_DITHER_NONE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>No dithering</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-DITHER-RPDF:CAPS"></a>GST_AUDIO_DITHER_RPDF</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Rectangular dithering</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-DITHER-TPDF:CAPS"></a>GST_AUDIO_DITHER_TPDF</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Triangular dithering (default)</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-DITHER-TPDF-HF:CAPS"></a>GST_AUDIO_DITHER_TPDF_HF</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>High frequency triangular dithering</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -200,6 +278,7 @@ gst_audio_quantize_samples (<em class="parameter"><code><a class="link" href="gs
 <hr>
 <div class="refsect2">
 <a name="GstAudioNoiseShapingMethod"></a><h3>enum GstAudioNoiseShapingMethod</h3>
+<p>Set of available noise shaping methods</p>
 <div class="refsect3">
 <a name="GstAudioNoiseShapingMethod.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -211,28 +290,38 @@ gst_audio_quantize_samples (<em class="parameter"><code><a class="link" href="gs
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-NOISE-SHAPING-NONE:CAPS"></a>GST_AUDIO_NOISE_SHAPING_NONE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>No noise shaping (default)</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-NOISE-SHAPING-ERROR-FEEDBACK:CAPS"></a>GST_AUDIO_NOISE_SHAPING_ERROR_FEEDBACK</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Error feedback</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-NOISE-SHAPING-SIMPLE:CAPS"></a>GST_AUDIO_NOISE_SHAPING_SIMPLE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Simple 2-pole noise shaping</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-NOISE-SHAPING-MEDIUM:CAPS"></a>GST_AUDIO_NOISE_SHAPING_MEDIUM</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Medium 5-pole noise shaping</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-NOISE-SHAPING-HIGH:CAPS"></a>GST_AUDIO_NOISE_SHAPING_HIGH</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>High 8-pole noise shaping</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>

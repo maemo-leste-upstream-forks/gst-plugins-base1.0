@@ -27,7 +27,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-GstVideoPool.top_of_page"></a>GstVideoPool</span></h2>
-<p>GstVideoPool</p>
+<p>GstVideoPool — GstBufferPool for raw video buffers</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -100,6 +100,10 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoPool.description"></a><h2>Description</h2>
+<p>Special GstBufferPool subclass for raw video buffers.</p>
+<p>Allows configuration of video-specific requirements such as
+stride alignments or pixel padding, and can also be configured
+to automatically add <a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> to the buffers.</p>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoPool.functions_details"></a><h2>Functions</h2>
@@ -107,6 +111,13 @@
 <a name="gst-video-buffer-pool-new"></a><h3>gst_video_buffer_pool_new ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBufferPool.html#GstBufferPool-struct"><span class="returnvalue">GstBufferPool</span></a> *
 gst_video_buffer_pool_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p>Create a new bufferpool that can allocate video frames. This bufferpool
+supports all the video bufferpool options.</p>
+<div class="refsect3">
+<a name="gst-video-buffer-pool-new.returns"></a><h4>Returns</h4>
+<p> a new <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBufferPool.html#GstBufferPool-struct"><span class="type">GstBufferPool</span></a> to allocate video frames. </p>
+<p><span class="annotation">[<acronym title="Alias for transfer none, used for objects with floating refs."><span class="acronym">transfer floating</span></acronym>]</span></p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -115,6 +126,37 @@ gst_video_buffer_pool_new (<em class="parameter"><code><span class="type">void</
 gst_buffer_pool_config_get_video_alignment
                                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *config</code></em>,
                                 <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a> *align</code></em>);</pre>
+<p>Get the video alignment from the bufferpool configuration <em class="parameter"><code>config</code></em>
+ in
+in <em class="parameter"><code>align</code></em>
+</p>
+<div class="refsect3">
+<a name="gst-buffer-pool-config-get-video-alignment.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>config</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-buffer-pool-config-get-video-alignment.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a> if <em class="parameter"><code>config</code></em>
+could be parsed correctly.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -123,6 +165,32 @@ gst_buffer_pool_config_get_video_alignment
 gst_buffer_pool_config_set_video_alignment
                                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *config</code></em>,
                                 <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a> *align</code></em>);</pre>
+<p>Set the video alignment in <em class="parameter"><code>align</code></em>
+ to the bufferpool configuration
+<em class="parameter"><code>config</code></em>
+</p>
+<div class="refsect3">
+<a name="gst-buffer-pool-config-set-video-alignment.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>config</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -149,13 +217,23 @@ gst_buffer_pool_config_set_video_alignment
 <a name="GST-BUFFER-POOL-OPTION-VIDEO-ALIGNMENT:CAPS"></a><h3>GST_BUFFER_POOL_OPTION_VIDEO_ALIGNMENT</h3>
 <pre class="programlisting">#define GST_BUFFER_POOL_OPTION_VIDEO_ALIGNMENT "GstBufferPoolOptionVideoAlignment"
 </pre>
+<p>A bufferpool option to enable extra padding. When a bufferpool supports this
+option, <a class="link" href="gst-plugins-base-libs-GstVideoPool.html#gst-buffer-pool-config-set-video-alignment" title="gst_buffer_pool_config_set_video_alignment ()"><code class="function">gst_buffer_pool_config_set_video_alignment()</code></a> can be called.</p>
+<p>When this option is enabled on the bufferpool,
+<a class="link" href="gst-plugins-base-libs-GstVideoPool.html#GST-BUFFER-POOL-OPTION-VIDEO-META:CAPS" title="GST_BUFFER_POOL_OPTION_VIDEO_META"><span class="type">GST_BUFFER_POOL_OPTION_VIDEO_META</span></a> should also be enabled.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GST-BUFFER-POOL-OPTION-VIDEO-META:CAPS"></a><h3>GST_BUFFER_POOL_OPTION_VIDEO_META</h3>
 <pre class="programlisting">#define GST_BUFFER_POOL_OPTION_VIDEO_META "GstBufferPoolOptionVideoMeta"
 </pre>
+<p>An option that can be activated on bufferpool to request video metadata
+on buffers from the pool.</p>
 </div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-libs-GstVideoPool.see-also"></a><h2>See Also</h2>
+<p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBufferPool.html#GstBufferPool-struct"><span class="type">GstBufferPool</span></a></p>
 </div>
 </div>
 <div class="footer">

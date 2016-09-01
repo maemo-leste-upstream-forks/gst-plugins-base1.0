@@ -217,6 +217,7 @@ check_PROGRAMS = \
 	libs/video \
 	libs/videodecoder \
 	libs/videoencoder \
+	libs/videotimecode \
 	libs/xmpwriter \
 	pipelines/simple-launch-lines \
 	pipelines/basetime \
@@ -269,12 +270,12 @@ AM_CFLAGS = -I$(top_srcdir)/gst-libs -I$(top_builddir)/gst-libs \
 	$(GST_CFLAGS) $(GST_CHECK_CFLAGS) \
 	-DGST_TEST_FILES_PATH="\"$(TEST_FILES_DIRECTORY)\"" \
 	-DGST_CHECK_TEST_ENVIRONMENT_BEACON="\"GST_PLUGIN_LOADING_WHITELIST\"" \
-	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS
+	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS $(PTHREAD_CFLAGS)
 AM_CXXFLAGS = -I$(top_srcdir)/gst-libs -I$(top_builddir)/gst-libs \
 	$(GST_CXXFLAGS) $(GST_CHECK_CFLAGS) \
 	-DGST_TEST_FILES_PATH="\"$(TEST_FILES_DIRECTORY)\"" \
 	-DGST_CHECK_TEST_ENVIRONMENT_BEACON="\"GST_PLUGIN_LOADING_WHITELIST\"" \
-	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS
+	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS $(PTHREAD_CFLAGS)
 LDADD = $(GST_LIBS) $(GST_CHECK_LIBS)
 
 # valgrind testing
@@ -617,6 +618,16 @@ libs_videoencoder_CFLAGS = \
 	$(AM_CFLAGS)
 
 libs_videoencoder_LDADD = \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) \
+	$(LDADD)
+
+libs_videotimecode_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) \
+	$(AM_CFLAGS)
+
+libs_videotimecode_LDADD = \
 	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) \
 	$(LDADD)

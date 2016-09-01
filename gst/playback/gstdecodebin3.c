@@ -34,6 +34,41 @@
 #include "gstplay-enum.h"
 #include "gstrawcaps.h"
 
+/**
+ * SECTION:element-decodebin3
+ *
+ * #GstBin that auto-magically constructs a decoding pipeline using available
+ * decoders and demuxers via auto-plugging. The output is raw audio, video
+ * or subtitle streams.
+ *
+ * decodebin3 differs from the previous decodebin (decodebin2) in important ways:
+ *
+ * <itemizedlist>
+ * <listitem>
+ * supports publication and selection of stream information via
+ * GstStreamCollection messages and #GST_EVENT_SELECT_STREAM events.
+ * </listitem>
+ * <listitem>
+ * dynamically switches stream connections internally, and
+ * reuses decoder elements when stream selections change, so that in
+ * the normal case it maintains 1 decoder of each type (video/audio/subtitle)
+ * and only creates new elements when streams change and an existing decoder
+ * is not capable of handling the new format.
+ * </listitem>
+ * <listitem>
+ * supports multiple input pads for the parallel decoding of auxilliary streams
+ * not muxed with the primary stream.
+ * </listitem>
+ * <listitem>
+ * does not handle network stream buffering. decodebin3 expects that network stream
+ * buffering is handled upstream, before data is passed to it.
+ * </listitem>
+ * </itemizedlist>
+ *
+ * <emphasis>decodebin3 is still experimental API and a technology preview.
+ * Its behaviour and exposed API is subject to change.</emphasis>
+ *
+ */
 
 /**
  * Global design
@@ -573,6 +608,7 @@ static void
 gst_decodebin3_dispose (GObject * object)
 {
   GstDecodebin3 *dbin = (GstDecodebin3 *) object;
+  GList *walk, *next;
 
   if (dbin->factories)
     gst_plugin_feature_list_free (dbin->factories);
@@ -584,9 +620,18 @@ gst_decodebin3_dispose (GObject * object)
   g_list_free (dbin->active_selection);
   g_list_free (dbin->to_activate);
   g_list_free (dbin->pending_select_streams);
+  g_clear_object (&dbin->collection);
 
   free_input (dbin, dbin->main_input);
-  /* FIXME : GO OVER INPUTS */
+
+  for (walk = dbin->other_inputs; walk; walk = next) {
+    DecodebinInput *input = walk->data;
+
+    next = g_list_next (walk);
+
+    free_input (dbin, input);
+    dbin->other_inputs = g_list_delete_link (dbin->other_inputs, walk);
+  }
 
   G_OBJECT_CLASS (parent_class)->dispose (object);
 }
@@ -783,6 +828,8 @@ free_input (GstDecodebin3 * dbin, DecodebinInput * input)
     gst_object_unref (input->parsebin);
     gst_object_unref (input->parsebin_sink);
   }
+  if (input->collection)
+    gst_object_unref (input->collection);
   g_free (input);
 }
 
@@ -997,7 +1044,7 @@ get_merged_collection (GstDecodebin3 * dbin)
 
   if (!needs_merge) {
     GST_DEBUG_OBJECT (dbin, "No need to merge, returning %p", res);
-    return res;
+    return gst_object_ref (res);
   }
 
   /* We really need to create a new collection */
@@ -1009,7 +1056,7 @@ get_merged_collection (GstDecodebin3 * dbin)
     for (i = 0; i < nb_stream; i++) {
       GstStream *stream =
           gst_stream_collection_get_stream (dbin->main_input->collection, i);
-      gst_stream_collection_add_stream (res, stream);
+      gst_stream_collection_add_stream (res, gst_object_ref (stream));
     }
   }
 
@@ -1023,7 +1070,7 @@ get_merged_collection (GstDecodebin3 * dbin)
       for (i = 0; i < nb_stream; i++) {
         GstStream *stream =
             gst_stream_collection_get_stream (input->collection, i);
-        gst_stream_collection_add_stream (res, stream);
+        gst_stream_collection_add_stream (res, gst_object_ref (stream));
       }
     }
   }
@@ -1106,7 +1153,7 @@ handle_stream_collection (GstDecodebin3 * dbin,
   /* Replace collection in input */
   if (input->collection)
     gst_object_unref (input->collection);
-  input->collection = collection;
+  input->collection = gst_object_ref (collection);
   GST_DEBUG_OBJECT (dbin, "Setting collection %p on input %p", collection,
       input);
 
@@ -1121,8 +1168,8 @@ handle_stream_collection (GstDecodebin3 * dbin,
   GST_DEBUG ("  %d streams", gst_stream_collection_get_size (collection));
   for (i = 0; i < gst_stream_collection_get_size (collection); i++) {
     GstStream *stream = gst_stream_collection_get_stream (collection, i);
-    const GstTagList *taglist;
-    const GstCaps *caps;
+    GstTagList *taglist;
+    GstCaps *caps;
 
     GST_DEBUG ("   Stream '%s'", gst_stream_get_stream_id (stream));
     GST_DEBUG ("     type  : %s",
@@ -1132,6 +1179,9 @@ handle_stream_collection (GstDecodebin3 * dbin,
     GST_DEBUG ("     tags  : %" GST_PTR_FORMAT, taglist);
     caps = gst_stream_get_caps (stream);
     GST_DEBUG ("     caps  : %" GST_PTR_FORMAT, caps);
+    if (taglist)
+      gst_tag_list_unref (taglist);
+    gst_caps_unref (caps);
   }
 #endif
 
@@ -1182,6 +1232,8 @@ gst_decodebin3_handle_message (GstBin * bin, GstMessage * message)
         gst_message_unref (message);
         message = new_msg;
       }
+      if (collection)
+        gst_object_unref (collection);
       break;
     }
     default:
@@ -1225,7 +1277,7 @@ get_output_for_slot (MultiQueueSlot * slot)
   GstDecodebin3 *dbin = slot->dbin;
   DecodebinOutputStream *output = NULL;
   const gchar *stream_id;
-  const GstCaps *caps;
+  GstCaps *caps;
 
   /* If we already have a configured output, just use it */
   if (slot->output != NULL)
@@ -1249,6 +1301,7 @@ get_output_for_slot (MultiQueueSlot * slot)
   stream_id = gst_stream_get_stream_id (slot->active_stream);
   caps = gst_stream_get_caps (slot->active_stream);
   GST_DEBUG_OBJECT (dbin, "stream %s , %" GST_PTR_FORMAT, stream_id, caps);
+  gst_caps_unref (caps);
 
   /* 0. Emit autoplug-continue signal for pending caps ? */
   GST_FIXME_OBJECT (dbin, "emit autoplug-continue");
@@ -1442,6 +1495,8 @@ multiqueue_src_probe (GstPad * pad, GstPadProbeInfo * info,
           if (peer) {
             gst_pad_send_event (peer, ev);
             gst_object_unref (peer);
+          } else {
+            gst_event_unref (ev);
           }
           SELECTION_LOCK (dbin);
           /* FIXME : Shouldn't we try to re-assign the output instead of just
@@ -1465,7 +1520,7 @@ multiqueue_src_probe (GstPad * pad, GstPadProbeInfo * info,
       case GST_QUERY_CAPS:
       {
         GST_DEBUG_OBJECT (pad, "Intercepting CAPS query");
-        gst_query_set_caps_result (query, gst_caps_new_any ());
+        gst_query_set_caps_result (query, GST_CAPS_ANY);
         ret = GST_PAD_PROBE_HANDLED;
       }
         break;
@@ -1651,17 +1706,19 @@ create_element (GstDecodebin3 * dbin, GstStream * stream,
 {
   GList *res;
   GstElement *element = NULL;
+  GstCaps *caps;
 
   g_mutex_lock (&dbin->factories_lock);
   gst_decode_bin_update_factories_list (dbin);
+  caps = gst_stream_get_caps (stream);
   if (ftype == GST_ELEMENT_FACTORY_TYPE_DECODER)
     res =
         gst_element_factory_list_filter (dbin->decoder_factories,
-        gst_stream_get_caps (stream), GST_PAD_SINK, TRUE);
+        caps, GST_PAD_SINK, TRUE);
   else
     res =
         gst_element_factory_list_filter (dbin->decodable_factories,
-        gst_stream_get_caps (stream), GST_PAD_SINK, TRUE);
+        caps, GST_PAD_SINK, TRUE);
   g_mutex_unlock (&dbin->factories_lock);
 
   if (res) {
@@ -1670,10 +1727,10 @@ create_element (GstDecodebin3 * dbin, GstStream * stream,
     GST_DEBUG ("Created element '%s'", GST_ELEMENT_NAME (element));
     gst_plugin_feature_list_free (res);
   } else {
-    GST_DEBUG ("Could not find an element for caps %" GST_PTR_FORMAT,
-        gst_stream_get_caps (stream));
+    GST_DEBUG ("Could not find an element for caps %" GST_PTR_FORMAT, caps);
   }
 
+  gst_caps_unref (caps);
   return element;
 }
 
@@ -1720,6 +1777,7 @@ reconfigure_output_stream (DecodebinOutputStream * output,
   if (output->slot != NULL && output->slot != slot) {
     GST_WARNING_OBJECT (dbin,
         "Output still linked to another slot (%p)", output->slot);
+    gst_caps_unref (new_caps);
     return;
   }
 
@@ -1730,8 +1788,8 @@ reconfigure_output_stream (DecodebinOutputStream * output,
     gboolean can_reuse_decoder;
 
     if (needs_decoder) {
-      GstQuery *q = gst_query_new_accept_caps (new_caps);
-      can_reuse_decoder = gst_pad_query (output->decoder_sink, q);
+      can_reuse_decoder =
+          gst_pad_query_accept_caps (output->decoder_sink, new_caps);
     } else
       can_reuse_decoder = FALSE;
 
@@ -1748,6 +1806,7 @@ reconfigure_output_stream (DecodebinOutputStream * output,
             GST_PAD_LINK_CHECK_NOTHING);
         output->linked = TRUE;
       }
+      gst_caps_unref (new_caps);
       return;
     }
 
@@ -1763,11 +1822,9 @@ reconfigure_output_stream (DecodebinOutputStream * output,
 
     if (!gst_ghost_pad_set_target ((GstGhostPad *) output->src_pad, NULL)) {
       GST_ERROR_OBJECT (dbin, "Could not release decoder pad");
+      gst_caps_unref (new_caps);
       goto cleanup;
     }
-
-    gst_object_replace ((GstObject **) & output->decoder_sink, NULL);
-    gst_object_replace ((GstObject **) & output->decoder_src, NULL);
 
     gst_element_set_locked_state (output->decoder, TRUE);
     gst_element_set_state (output->decoder, GST_STATE_NULL);
@@ -1776,17 +1833,25 @@ reconfigure_output_stream (DecodebinOutputStream * output,
     output->decoder = NULL;
   }
 
+  gst_caps_unref (new_caps);
+
+  gst_object_replace ((GstObject **) & output->decoder_sink, NULL);
+  gst_object_replace ((GstObject **) & output->decoder_src, NULL);
+
   /* If a decoder is required, create one */
   if (needs_decoder) {
     /* If we don't have a decoder yet, instantiate one */
     output->decoder = create_decoder (dbin, slot->active_stream);
     if (output->decoder == NULL) {
+      GstCaps *caps;
+
       SELECTION_UNLOCK (dbin);
       /* FIXME : Should we be smarter if there's a missing decoder ?
        * Should we deactivate that stream ? */
+      caps = gst_stream_get_caps (slot->active_stream);
       gst_element_post_message (GST_ELEMENT_CAST (dbin),
-          gst_missing_decoder_message_new (GST_ELEMENT_CAST (dbin),
-              gst_stream_get_caps (slot->active_stream)));
+          gst_missing_decoder_message_new (GST_ELEMENT_CAST (dbin), caps));
+      gst_caps_unref (caps);
       SELECTION_LOCK (dbin);
       goto cleanup;
     }
@@ -1982,10 +2047,15 @@ reassign_slot (GstDecodebin3 * dbin, MultiQueueSlot * slot)
         (GstPadProbeCallback) idle_reconfigure, target_slot, NULL);
     /* gst_pad_send_event (target_slot->src_pad, gst_event_new_reconfigure ()); */
   } else {
+    GstMessage *msg;
+
+    dbin->output_streams = g_list_remove (dbin->output_streams, output);
+    free_output_stream (dbin, output);
+    msg = is_selection_done (slot->dbin);
     SELECTION_UNLOCK (dbin);
-    /* FIXME : Remove output if no longer needed ? The tricky part is knowing
-     * if it's really no longer needed or not */
-    GST_FIXME_OBJECT (slot->src_pad, "Remove unused output stream ?");
+
+    if (msg)
+      gst_element_post_message ((GstElement *) slot->dbin, msg);
   }
 
   return TRUE;
@@ -2131,6 +2201,8 @@ handle_stream_switch (GstDecodebin3 * dbin, GList * select_streams,
     GST_DEBUG_OBJECT (dbin,
         "Really need to deactivate slot %p, but no available alternative",
         slot);
+
+    slots_to_reassign = g_list_append (slots_to_reassign, slot);
   }
 
   /* The only slots left to activate are the ones that won't be reassigned and
@@ -2223,6 +2295,8 @@ ghost_pad_event_probe (GstPad * pad, GstPadProbeInfo * info,
       if ((peer = gst_pad_get_peer (pad))) {
         gst_pad_send_event (peer, event);
         gst_object_unref (peer);
+      } else {
+        gst_event_unref (event);
       }
       /* Finally handle the switch */
       if (streams)
@@ -2275,6 +2349,7 @@ gst_decodebin3_send_event (GstElement * element, GstEvent * event)
     if (streams)
       handle_stream_switch (dbin, streams, seqnum);
 
+    gst_event_unref (event);
     return TRUE;
   }
   return GST_ELEMENT_CLASS (parent_class)->send_event (element, event);
@@ -2294,6 +2369,7 @@ free_multiqueue_slot (GstDecodebin3 * dbin, MultiQueueSlot * slot)
   gst_element_release_request_pad (dbin->multiqueue, slot->sink_pad);
   gst_object_replace ((GstObject **) & slot->sink_pad, NULL);
   gst_object_replace ((GstObject **) & slot->src_pad, NULL);
+  gst_object_replace ((GstObject **) & slot->active_stream, NULL);
   g_free (slot);
 }
 

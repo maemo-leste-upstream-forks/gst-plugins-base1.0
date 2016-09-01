@@ -130,6 +130,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
+	$(top_srcdir)/common/m4/ax_pthread.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
@@ -222,6 +223,7 @@ am_libgstvideo_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstvideo_@GST_API_VERSION@_la-gstvideoaffinetransformationmeta.lo \
 	libgstvideo_@GST_API_VERSION@_la-gstvideometa.lo \
 	libgstvideo_@GST_API_VERSION@_la-gstvideopool.lo \
+	libgstvideo_@GST_API_VERSION@_la-videodirection.lo \
 	libgstvideo_@GST_API_VERSION@_la-videoorientation.lo \
 	libgstvideo_@GST_API_VERSION@_la-videooverlay.lo \
 	libgstvideo_@GST_API_VERSION@_la-gstvideodecoder.lo \
@@ -231,7 +233,8 @@ am_libgstvideo_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstvideo_@GST_API_VERSION@_la-video-resampler.lo \
 	libgstvideo_@GST_API_VERSION@_la-video-blend.lo \
 	libgstvideo_@GST_API_VERSION@_la-video-overlay-composition.lo \
-	libgstvideo_@GST_API_VERSION@_la-video-multiview.lo
+	libgstvideo_@GST_API_VERSION@_la-video-multiview.lo \
+	libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.lo
 am__objects_1 = libgstvideo_@GST_API_VERSION@_la-video-enumtypes.lo
 am__objects_2 =
 am__objects_3 = libgstvideo_@GST_API_VERSION@_la-tmp-orc.lo \
@@ -511,6 +514,9 @@ PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 POSUB = @POSUB@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PTHREAD_CC = @PTHREAD_CC@
+PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
+PTHREAD_LIBS = @PTHREAD_LIBS@
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_PLATFORM = @PYTHON_PLATFORM@
@@ -561,6 +567,7 @@ am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
+ax_pthread_config = @ax_pthread_config@
 bindir = @bindir@
 build = @build@
 build_alias = @build_alias@
@@ -656,6 +663,7 @@ libgstvideo_@GST_API_VERSION@_la_SOURCES = \
 	gstvideoaffinetransformationmeta.c \
 	gstvideometa.c   	\
 	gstvideopool.c		\
+	videodirection.c	\
 	videoorientation.c	\
 	videooverlay.c          \
 	gstvideodecoder.c       \
@@ -665,7 +673,8 @@ libgstvideo_@GST_API_VERSION@_la_SOURCES = \
 	video-resampler.c	\
 	video-blend.c		\
 	video-overlay-composition.c \
-	video-multiview.c
+	video-multiview.c	\
+	gstvideotimecode.c
 
 nodist_libgstvideo_@GST_API_VERSION@_la_SOURCES = $(BUILT_SOURCES)
 libgstvideo_@GST_API_VERSION@includedir = $(includedir)/gstreamer-@GST_API_VERSION@/gst/video
@@ -689,6 +698,7 @@ libgstvideo_@GST_API_VERSION@include_HEADERS = \
 	gstvideometa.h		\
 	gstvideoaffinetransformationmeta.h \
 	gstvideopool.h		\
+	videodirection.h 	\
 	videoorientation.h 	\
 	videooverlay.h          \
 	gstvideodecoder.h       \
@@ -697,7 +707,8 @@ libgstvideo_@GST_API_VERSION@include_HEADERS = \
 	video-resampler.h	\
 	video-blend.h		\
 	video-overlay-composition.h \
-	video-multiview.h
+	video-multiview.h	\
+	gstvideotimecode.h
 
 nodist_libgstvideo_@GST_API_VERSION@include_HEADERS = $(built_headers)
 noinst_HEADERS = gstvideoutilsprivate.h
@@ -813,6 +824,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideometa.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideopool.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideosink.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoutils.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoutilsprivate.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-navigation.Plo@am__quote@
@@ -833,6 +845,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-scaler.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-tile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-videodirection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-videoorientation.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-videooverlay.Plo@am__quote@
 
@@ -1000,6 +1013,13 @@ libgstvideo_@GST_API_VERSION@_la-gstvideopool.lo: gstvideopool.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstvideo_@GST_API_VERSION@_la-gstvideopool.lo `test -f 'gstvideopool.c' || echo '$(srcdir)/'`gstvideopool.c
 
+libgstvideo_@GST_API_VERSION@_la-videodirection.lo: videodirection.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstvideo_@GST_API_VERSION@_la-videodirection.lo -MD -MP -MF $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-videodirection.Tpo -c -o libgstvideo_@GST_API_VERSION@_la-videodirection.lo `test -f 'videodirection.c' || echo '$(srcdir)/'`videodirection.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-videodirection.Tpo $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-videodirection.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='videodirection.c' object='libgstvideo_@GST_API_VERSION@_la-videodirection.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstvideo_@GST_API_VERSION@_la-videodirection.lo `test -f 'videodirection.c' || echo '$(srcdir)/'`videodirection.c
+
 libgstvideo_@GST_API_VERSION@_la-videoorientation.lo: videoorientation.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstvideo_@GST_API_VERSION@_la-videoorientation.lo -MD -MP -MF $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-videoorientation.Tpo -c -o libgstvideo_@GST_API_VERSION@_la-videoorientation.lo `test -f 'videoorientation.c' || echo '$(srcdir)/'`videoorientation.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-videoorientation.Tpo $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-videoorientation.Plo
@@ -1069,6 +1089,13 @@ libgstvideo_@GST_API_VERSION@_la-video-multiview.lo: video-multiview.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='video-multiview.c' object='libgstvideo_@GST_API_VERSION@_la-video-multiview.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstvideo_@GST_API_VERSION@_la-video-multiview.lo `test -f 'video-multiview.c' || echo '$(srcdir)/'`video-multiview.c
+
+libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.lo: gstvideotimecode.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.lo -MD -MP -MF $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.Tpo -c -o libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.lo `test -f 'gstvideotimecode.c' || echo '$(srcdir)/'`gstvideotimecode.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.Tpo $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstvideotimecode.c' object='libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstvideo_@GST_API_VERSION@_la-gstvideotimecode.lo `test -f 'gstvideotimecode.c' || echo '$(srcdir)/'`gstvideotimecode.c
 
 libgstvideo_@GST_API_VERSION@_la-tmp-orc.lo: tmp-orc.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstvideo_@GST_API_VERSION@_la-tmp-orc.lo -MD -MP -MF $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-tmp-orc.Tpo -c -o libgstvideo_@GST_API_VERSION@_la-tmp-orc.lo `test -f 'tmp-orc.c' || echo '$(srcdir)/'`tmp-orc.c
