@@ -79,8 +79,8 @@ static void
 dump_collection (GstStreamCollection * collection)
 {
   guint i;
-  const GstTagList *tags;
-  const GstCaps *caps;
+  GstTagList *tags;
+  GstCaps *caps;
 
   for (i = 0; i < gst_stream_collection_get_size (collection); i++) {
     GstStream *stream = gst_stream_collection_get_stream (collection, i);
@@ -94,12 +94,14 @@ dump_collection (GstStreamCollection * collection)
       gchar *caps_str = gst_caps_to_string (caps);
       g_print ("  caps: %s\n", caps_str);
       g_free (caps_str);
+      gst_caps_unref (caps);
     }
 
     tags = gst_stream_get_tags (stream);
     if (tags) {
       g_print ("  tags:\n");
       gst_tag_list_foreach (tags, print_tag_foreach, GUINT_TO_POINTER (3));
+      gst_tag_list_unref (tags);
     }
   }
 }
@@ -223,6 +225,7 @@ _on_bus_message (GstBus * bus, GstMessage * message, MyDataStruct * data)
           /* In 5s try to change streams */
           data->timeout_id =
               g_timeout_add_seconds (5, (GSourceFunc) switch_streams, data);
+        gst_object_unref (collection);
       }
       break;
     }

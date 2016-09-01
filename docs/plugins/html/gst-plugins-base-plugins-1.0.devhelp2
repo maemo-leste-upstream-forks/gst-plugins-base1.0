@@ -15,6 +15,7 @@
       <sub name="cdparanoiasrc" link="gst-plugins-base-plugins-cdparanoiasrc.html"/>
       <sub name="clockoverlay" link="gst-plugins-base-plugins-clockoverlay.html"/>
       <sub name="decodebin" link="gst-plugins-base-plugins-decodebin.html"/>
+      <sub name="decodebin3" link="gst-plugins-base-plugins-decodebin3.html"/>
       <sub name="encodebin" link="gst-plugins-base-plugins-encodebin.html"/>
       <sub name="giosink" link="gst-plugins-base-plugins-giosink.html"/>
       <sub name="giosrc" link="gst-plugins-base-plugins-giosrc.html"/>
@@ -31,7 +32,9 @@
       <sub name="ogmvideoparse" link="gst-plugins-base-plugins-ogmvideoparse.html"/>
       <sub name="opusdec" link="gst-plugins-base-plugins-opusdec.html"/>
       <sub name="opusenc" link="gst-plugins-base-plugins-opusenc.html"/>
+      <sub name="parsebin" link="gst-plugins-base-plugins-parsebin.html"/>
       <sub name="playbin" link="gst-plugins-base-plugins-playbin.html"/>
+      <sub name="playbin3" link="gst-plugins-base-plugins-playbin3.html"/>
       <sub name="playsink" link="gst-plugins-base-plugins-playsink.html"/>
       <sub name="socketsrc" link="gst-plugins-base-plugins-socketsrc.html"/>
       <sub name="ssaparse" link="gst-plugins-base-plugins-ssaparse.html"/>
@@ -49,6 +52,7 @@
       <sub name="theoraparse" link="gst-plugins-base-plugins-theoraparse.html"/>
       <sub name="timeoverlay" link="gst-plugins-base-plugins-timeoverlay.html"/>
       <sub name="uridecodebin" link="gst-plugins-base-plugins-uridecodebin.html"/>
+      <sub name="urisourcebin" link="gst-plugins-base-plugins-urisourcebin.html"/>
       <sub name="videoconvert" link="gst-plugins-base-plugins-videoconvert.html"/>
       <sub name="videorate" link="gst-plugins-base-plugins-videorate.html"/>
       <sub name="videoscale" link="gst-plugins-base-plugins-videoscale.html"/>
@@ -113,6 +117,8 @@
     <keyword type="signal" name="The “new-sample” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-new-sample"/>
     <keyword type="signal" name="The “pull-preroll” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-pull-preroll"/>
     <keyword type="signal" name="The “pull-sample” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-pull-sample"/>
+    <keyword type="signal" name="The “try-pull-preroll” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-try-pull-preroll"/>
+    <keyword type="signal" name="The “try-pull-sample” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-try-pull-sample"/>
     <keyword type="struct" name="struct GstAlsaSrc" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc-struct"/>
     <keyword type="property" name="The “card-name” property" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc--card-name"/>
     <keyword type="property" name="The “device” property" link="gst-plugins-base-plugins-alsasrc.html#GstAlsaSrc--device"/>
@@ -533,6 +539,7 @@
     <keyword type="constant" name="GST_TIME_OVERLAY_TIME_LINE_BUFFER_TIME" link="gst-plugins-base-plugins-timeoverlay.html#GST-TIME-OVERLAY-TIME-LINE-BUFFER-TIME:CAPS"/>
     <keyword type="constant" name="GST_TIME_OVERLAY_TIME_LINE_STREAM_TIME" link="gst-plugins-base-plugins-timeoverlay.html#GST-TIME-OVERLAY-TIME-LINE-STREAM-TIME:CAPS"/>
     <keyword type="constant" name="GST_TIME_OVERLAY_TIME_LINE_RUNNING_TIME" link="gst-plugins-base-plugins-timeoverlay.html#GST-TIME-OVERLAY-TIME-LINE-RUNNING-TIME:CAPS"/>
+    <keyword type="constant" name="GST_TIME_OVERLAY_TIME_LINE_TIME_CODE" link="gst-plugins-base-plugins-timeoverlay.html#GST-TIME-OVERLAY-TIME-LINE-TIME-CODE:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_SCALE_NEAREST" link="gst-plugins-base-plugins-videoscale.html#GST-VIDEO-SCALE-NEAREST:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_SCALE_BILINEAR" link="gst-plugins-base-plugins-videoscale.html#GST-VIDEO-SCALE-BILINEAR:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_SCALE_4TAP" link="gst-plugins-base-plugins-videoscale.html#GST-VIDEO-SCALE-4TAP:CAPS"/>

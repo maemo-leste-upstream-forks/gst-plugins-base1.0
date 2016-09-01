@@ -38,6 +38,7 @@ libgstvideo_@GST_API_VERSION@_la_SOURCES = \
 	gstvideoaffinetransformationmeta.c \
 	gstvideometa.c   	\
 	gstvideopool.c		\
+	videodirection.c	\
 	videoorientation.c	\
 	videooverlay.c          \
 	gstvideodecoder.c       \
@@ -47,7 +48,8 @@ libgstvideo_@GST_API_VERSION@_la_SOURCES = \
 	video-resampler.c	\
 	video-blend.c		\
 	video-overlay-composition.c \
-	video-multiview.c
+	video-multiview.c	\
+	gstvideotimecode.c
 
 nodist_libgstvideo_@GST_API_VERSION@_la_SOURCES = $(BUILT_SOURCES)
 
@@ -72,6 +74,7 @@ libgstvideo_@GST_API_VERSION@include_HEADERS = \
 	gstvideometa.h		\
 	gstvideoaffinetransformationmeta.h \
 	gstvideopool.h		\
+	videodirection.h 	\
 	videoorientation.h 	\
 	videooverlay.h          \
 	gstvideodecoder.h       \
@@ -80,7 +83,8 @@ libgstvideo_@GST_API_VERSION@include_HEADERS = \
 	video-resampler.h	\
 	video-blend.h		\
 	video-overlay-composition.h \
-	video-multiview.h
+	video-multiview.h	\
+	gstvideotimecode.h
 
 nodist_libgstvideo_@GST_API_VERSION@include_HEADERS = $(built_headers)
 noinst_HEADERS = gstvideoutilsprivate.h

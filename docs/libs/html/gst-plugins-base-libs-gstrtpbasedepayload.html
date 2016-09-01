@@ -29,7 +29,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-gstrtpbasedepayload.top_of_page"></a>gstrtpbasedepayload</span></h2>
-<p>gstrtpbasedepayload</p>
+<p>gstrtpbasedepayload — Base class for RTP depayloader</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -123,6 +123,7 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstrtpbasedepayload.description"></a><h2>Description</h2>
+<p>Provides a base class for RTP depayloaders</p>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstrtpbasedepayload.functions_details"></a><h2>Functions</h2>
@@ -143,6 +144,39 @@
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
 gst_rtp_base_depayload_push (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstrtpbasedepayload.html#GstRTPBaseDepayload"><span class="type">GstRTPBaseDepayload</span></a> *filter</code></em>,
                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *out_buf</code></em>);</pre>
+<p>Push <em class="parameter"><code>out_buf</code></em>
+ to the peer of <em class="parameter"><code>filter</code></em>
+. This function takes ownership of
+<em class="parameter"><code>out_buf</code></em>
+.</p>
+<p>This function will by default apply the last incomming timestamp on
+the outgoing buffer when it didn't have a timestamp already.</p>
+<div class="refsect3">
+<a name="gst-rtp-base-depayload-push.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>filter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasedepayload.html#GstRTPBaseDepayload"><span class="type">GstRTPBaseDepayload</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_buf</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-rtp-base-depayload-push.returns"></a><h4>Returns</h4>
+<p> a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a>.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -150,6 +184,37 @@ gst_rtp_base_depayload_push (<em class="parameter"><code><a class="link" href="g
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
 gst_rtp_base_depayload_push_list (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstrtpbasedepayload.html#GstRTPBaseDepayload"><span class="type">GstRTPBaseDepayload</span></a> *filter</code></em>,
                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBufferList.html#GstBufferList-struct"><span class="type">GstBufferList</span></a> *out_list</code></em>);</pre>
+<p>Push <em class="parameter"><code>out_list</code></em>
+ to the peer of <em class="parameter"><code>filter</code></em>
+. This function takes ownership of
+<em class="parameter"><code>out_list</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-rtp-base-depayload-push-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>filter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstrtpbasedepayload.html#GstRTPBaseDepayload"><span class="type">GstRTPBaseDepayload</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_list</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBufferList.html#GstBufferList-struct"><span class="type">GstBufferList</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-rtp-base-depayload-push-list.returns"></a><h4>Returns</h4>
+<p> a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a>.</p>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -198,6 +263,44 @@ gst_rtp_base_depayload_push_list (<em class="parameter"><code><a class="link" hr
   GstBuffer * (*process_rtp_packet) (GstRTPBaseDepayload *base, GstRTPBuffer * rtp_buffer);
 };
 </pre>
+<p>Base class for audio RTP payloader.</p>
+<div class="refsect3">
+<a name="GstRTPBaseDepayloadClass.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBaseDepayloadClass.set-caps"></a>set_caps</code></em> ()</p></td>
+<td class="struct_member_description"><p>configure the depayloader</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBaseDepayloadClass.process"></a>process</code></em> ()</p></td>
+<td class="struct_member_description"><p>process incoming rtp packets</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBaseDepayloadClass.packet-lost"></a>packet_lost</code></em> ()</p></td>
+<td class="struct_member_description"><p>signal the depayloader about packet loss</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBaseDepayloadClass.handle-event"></a>handle_event</code></em> ()</p></td>
+<td class="struct_member_description"><p>custom event handling</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBaseDepayloadClass.process-rtp-packet"></a>process_rtp_packet</code></em> ()</p></td>
+<td> </td>
+<td> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -205,7 +308,65 @@ gst_rtp_base_depayload_push_list (<em class="parameter"><code><a class="link" hr
 <div class="refsect2">
 <a name="GstRTPBaseDepayload--stats"></a><h3>The <code class="literal">“stats”</code> property</h3>
 <pre class="programlisting">  “stats”                    <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *</pre>
-<p>Various statistics.</p>
+<p>Various depayloader statistics retrieved atomically (and are therefore
+synchroized with each other). This property return a GstStructure named
+application/x-rtp-depayload-stats containing the following fields relating to
+the last processed buffer and current state of the stream being depayloaded:</p>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term">clock-rate</span></p></td>
+<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, clock-rate of the
+    stream</p></td>
+</tr>
+<tr>
+<td><p><span class="term">npt-start</span></p></td>
+<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT64:CAPS"><span class="type">G_TYPE_UINT64</span></a>, time of playback start
+    </p></td>
+</tr>
+<tr>
+<td><p><span class="term">npt-stop</span></p></td>
+<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT64:CAPS"><span class="type">G_TYPE_UINT64</span></a>, time of playback stop
+    </p></td>
+</tr>
+<tr>
+<td><p><span class="term">play-speed</span></p></td>
+<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-DOUBLE:CAPS"><span class="type">G_TYPE_DOUBLE</span></a>, the playback speed
+    </p></td>
+</tr>
+<tr>
+<td><p><span class="term">play-scale</span></p></td>
+<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-DOUBLE:CAPS"><span class="type">G_TYPE_DOUBLE</span></a>, the playback scale
+    </p></td>
+</tr>
+<tr>
+<td><p><span class="term">running-time-dts</span></p></td>
+<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT64:CAPS"><span class="type">G_TYPE_UINT64</span></a>, the last running-time of the
+     last DTS
+    </p></td>
+</tr>
+<tr>
+<td><p><span class="term">running-time-pts</span></p></td>
+<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT64:CAPS"><span class="type">G_TYPE_UINT64</span></a>, the last running-time of the
+     last PTS
+    </p></td>
+</tr>
+<tr>
+<td><p><span class="term">seqnum</span></p></td>
+<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, the last seen seqnum
+    </p></td>
+</tr>
+<tr>
+<td><p><span class="term">timestamp</span></p></td>
+<td><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, the last seen RTP timestamp
+    </p></td>
+</tr>
+</tbody>
+</table></div>
 <p>Flags: Read</p>
 </div>
 </div>

@@ -30,7 +30,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-gststreamvolume.top_of_page"></a>gststreamvolume</span></h2>
-<p>gststreamvolume</p>
+<p>gststreamvolume — Interface for elements that provide a stream volume</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -145,6 +145,28 @@ GstStreamVolume requires
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gststreamvolume.description"></a><h2>Description</h2>
+<div class="refsect2">
+<a name="id-1.2.6.19.10.2"></a><p>
+This interface is implemented by elements that provide a stream volume. Examples for
+such elements are <span class="type">volume</span> and <span class="type">playbin</span>.
+</p>
+<p>
+Applications can use this interface to get or set the current stream volume. For this
+the "volume" <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> property can be used or the helper functions <a class="link" href="gst-plugins-base-libs-gststreamvolume.html#gst-stream-volume-set-volume" title="gst_stream_volume_set_volume ()"><code class="function">gst_stream_volume_set_volume()</code></a>
+and <a class="link" href="gst-plugins-base-libs-gststreamvolume.html#gst-stream-volume-get-volume" title="gst_stream_volume_get_volume ()"><code class="function">gst_stream_volume_get_volume()</code></a>. This volume is always a linear factor, i.e. 0.0 is muted
+1.0 is 100%. For showing the volume in a GUI it might make sense to convert it to
+a different format by using <a class="link" href="gst-plugins-base-libs-gststreamvolume.html#gst-stream-volume-convert-volume" title="gst_stream_volume_convert_volume ()"><code class="function">gst_stream_volume_convert_volume()</code></a>. Volume sliders should usually
+use a cubic volume.
+
+Separate from the volume the stream can also be muted by the "mute" <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> property or
+<a class="link" href="gst-plugins-base-libs-gststreamvolume.html#gst-stream-volume-set-mute" title="gst_stream_volume_set_mute ()"><code class="function">gst_stream_volume_set_mute()</code></a> and <a class="link" href="gst-plugins-base-libs-gststreamvolume.html#gst-stream-volume-get-mute" title="gst_stream_volume_get_mute ()"><code class="function">gst_stream_volume_get_mute()</code></a>.
+</p>
+<p>
+Elements that provide some kind of stream volume should implement the "volume" and
+"mute" <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> properties and handle setting and getting of them properly.
+The volume property is defined to be a linear volume factor.
+</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gststreamvolume.functions_details"></a><h2>Functions</h2>
@@ -153,6 +175,32 @@ GstStreamVolume requires
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
 gst_stream_volume_get_volume (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolume"><span class="type">GstStreamVolume</span></a> *volume</code></em>,
                               <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolumeFormat" title="enum GstStreamVolumeFormat"><span class="type">GstStreamVolumeFormat</span></a> format</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-stream-volume-get-volume.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>volume</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolume"><span class="type">GstStreamVolume</span></a> that should be used</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolumeFormat" title="enum GstStreamVolumeFormat"><span class="type">GstStreamVolumeFormat</span></a> which should be returned</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-stream-volume-get-volume.returns"></a><h4>Returns</h4>
+<p> The current stream volume as linear factor</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -161,12 +209,59 @@ gst_stream_volume_get_volume (<em class="parameter"><code><a class="link" href="
 gst_stream_volume_set_volume (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolume"><span class="type">GstStreamVolume</span></a> *volume</code></em>,
                               <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolumeFormat" title="enum GstStreamVolumeFormat"><span class="type">GstStreamVolumeFormat</span></a> format</code></em>,
                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> val</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-stream-volume-set-volume.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>volume</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolume"><span class="type">GstStreamVolume</span></a> that should be used</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolumeFormat" title="enum GstStreamVolumeFormat"><span class="type">GstStreamVolumeFormat</span></a> of <em class="parameter"><code>val</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>val</p></td>
+<td class="parameter_description"><p>Linear volume factor that should be set</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-stream-volume-get-mute"></a><h3>gst_stream_volume_get_mute ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_stream_volume_get_mute (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolume"><span class="type">GstStreamVolume</span></a> *volume</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-stream-volume-get-mute.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>volume</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolume"><span class="type">GstStreamVolume</span></a> that should be used</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-stream-volume-get-mute.returns"></a><h4>Returns</h4>
+<p> Returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the stream is muted</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -174,6 +269,28 @@ gst_stream_volume_get_mute (<em class="parameter"><code><a class="link" href="gs
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_stream_volume_set_mute (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolume"><span class="type">GstStreamVolume</span></a> *volume</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> mute</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-stream-volume-set-mute.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>volume</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolume"><span class="type">GstStreamVolume</span></a> that should be used</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>mute</p></td>
+<td class="parameter_description"><p>Mute state that should be set</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -182,6 +299,38 @@ gst_stream_volume_set_mute (<em class="parameter"><code><a class="link" href="gs
 gst_stream_volume_convert_volume (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolumeFormat" title="enum GstStreamVolumeFormat"><span class="type">GstStreamVolumeFormat</span></a> from</code></em>,
                                   <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolumeFormat" title="enum GstStreamVolumeFormat"><span class="type">GstStreamVolumeFormat</span></a> to</code></em>,
                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> val</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-stream-volume-convert-volume.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>from</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolumeFormat" title="enum GstStreamVolumeFormat"><span class="type">GstStreamVolumeFormat</span></a> to convert from</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>to</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gststreamvolume.html#GstStreamVolumeFormat" title="enum GstStreamVolumeFormat"><span class="type">GstStreamVolumeFormat</span></a> to convert to</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>val</p></td>
+<td class="parameter_description"><p>Volume in <em class="parameter"><code>from</code></em>
+format that should be converted</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-stream-volume-convert-volume.returns"></a><h4>Returns</h4>
+<p> the converted volume</p>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -193,6 +342,10 @@ gst_stream_volume_convert_volume (<em class="parameter"><code><a class="link" hr
 <hr>
 <div class="refsect2">
 <a name="GstStreamVolumeFormat"></a><h3>enum GstStreamVolumeFormat</h3>
+<p>Different representations of a stream volume. <a class="link" href="gst-plugins-base-libs-gststreamvolume.html#gst-stream-volume-convert-volume" title="gst_stream_volume_convert_volume ()"><code class="function">gst_stream_volume_convert_volume()</code></a>
+allows to convert between the different representations.</p>
+<p>Formulas to convert from a linear to a cubic or dB volume are
+cbrt(val) and 20 * log10 (val).</p>
 <div class="refsect3">
 <a name="GstStreamVolumeFormat.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -204,18 +357,24 @@ gst_stream_volume_convert_volume (<em class="parameter"><code><a class="link" hr
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-STREAM-VOLUME-FORMAT-LINEAR:CAPS"></a>GST_STREAM_VOLUME_FORMAT_LINEAR</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Linear scale factor, 1.0 = 100%</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-STREAM-VOLUME-FORMAT-CUBIC:CAPS"></a>GST_STREAM_VOLUME_FORMAT_CUBIC</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Cubic volume scale</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-STREAM-VOLUME-FORMAT-DB:CAPS"></a>GST_STREAM_VOLUME_FORMAT_DB</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Logarithmic volume scale (dB, amplitude not power)</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>

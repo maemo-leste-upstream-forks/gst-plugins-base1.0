@@ -27,7 +27,7 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gst-plugins-base-libs-GstVideoDither.top_of_page"></a>GstVideoDither</span></h2>
-<p>GstVideoDither</p>
+<p>GstVideoDither — Utility object for dithering and quantizing lines of video</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
@@ -96,6 +96,8 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoDither.description"></a><h2>Description</h2>
+<p>GstVideoDither provides implementations of several dithering algorithms
+that can be applied to lines of video pixels to quantize and dither them.</p>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoDither.functions_details"></a><h2>Functions</h2>
@@ -103,6 +105,23 @@
 <a name="gst-video-dither-free"></a><h3>gst_video_dither_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_dither_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GstVideoDither" title="GstVideoDither"><span class="type">GstVideoDither</span></a> *dither</code></em>);</pre>
+<p>Free <em class="parameter"><code>dither</code></em>
+</p>
+<div class="refsect3">
+<a name="gst-video-dither-free.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>dither</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GstVideoDither" title="GstVideoDither"><span class="type">GstVideoDither</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -113,6 +132,51 @@ gst_video_dither_line (<em class="parameter"><code><a class="link" href="gst-plu
                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> x</code></em>,
                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> y</code></em>,
                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>);</pre>
+<p>Dither <em class="parameter"><code>width</code></em>
+ pixels starting from offset <em class="parameter"><code>x</code></em>
+ in <em class="parameter"><code>line</code></em>
+ using <em class="parameter"><code>dither</code></em>
+.</p>
+<p><em class="parameter"><code>y</code></em>
+ is the line number of <em class="parameter"><code>line</code></em>
+ in the output image.</p>
+<div class="refsect3">
+<a name="gst-video-dither-line.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>dither</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GstVideoDither" title="GstVideoDither"><span class="type">GstVideoDither</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>line</p></td>
+<td class="parameter_description"><p>pointer to the pixels of the line</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>x</p></td>
+<td class="parameter_description"><p>x coordinate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>y</p></td>
+<td class="parameter_description"><p>y coordinate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>width</p></td>
+<td class="parameter_description"><p>the width</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -123,6 +187,58 @@ gst_video_dither_new (<em class="parameter"><code><a class="link" href="gst-plug
                       <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> quantizer[GST_VIDEO_MAX_COMPONENTS]</code></em>,
                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>);</pre>
+<p>Make a new dither object for dithering lines of <em class="parameter"><code>format</code></em>
+ using the
+algorithm described by <em class="parameter"><code>method</code></em>
+.</p>
+<p>Each component will be quantized to a multiple of <em class="parameter"><code>quantizer</code></em>
+. Better
+performance is achived when <em class="parameter"><code>quantizer</code></em>
+ is a power of 2.</p>
+<p><em class="parameter"><code>width</code></em>
+ is the width of the lines that this ditherer will handle.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
+<div class="refsect3">
+<a name="gst-video-dither-new.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>method</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GstVideoDitherMethod" title="enum GstVideoDitherMethod"><span class="type">GstVideoDitherMethod</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GstVideoDitherFlags" title="enum GstVideoDitherFlags"><span class="type">GstVideoDitherFlags</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>quantizer</p></td>
+<td class="parameter_description"><p>quantizer</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>width</p></td>
+<td class="parameter_description"><p>the width of the lines</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-dither-new.returns"></a><h4>Returns</h4>
+<p> a new <a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GstVideoDither" title="GstVideoDither"><span class="type">GstVideoDither</span></a></p>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -134,6 +250,7 @@ gst_video_dither_new (<em class="parameter"><code><a class="link" href="gst-plug
 <hr>
 <div class="refsect2">
 <a name="GstVideoDitherFlags"></a><h3>enum GstVideoDitherFlags</h3>
+<p>Extra flags that influence the result from <a class="link" href="gst-plugins-base-libs-GstVideoChroma.html#gst-video-chroma-resample-new" title="gst_video_chroma_resample_new ()"><code class="function">gst_video_chroma_resample_new()</code></a>.</p>
 <div class="refsect3">
 <a name="GstVideoDitherFlags.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -145,18 +262,24 @@ gst_video_dither_new (<em class="parameter"><code><a class="link" href="gst-plug
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-VIDEO-DITHER-FLAG-NONE:CAPS"></a>GST_VIDEO_DITHER_FLAG_NONE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>no flags</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-VIDEO-DITHER-FLAG-INTERLACED:CAPS"></a>GST_VIDEO_DITHER_FLAG_INTERLACED</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>the input is interlaced</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-VIDEO-DITHER-FLAG-QUANTIZE:CAPS"></a>GST_VIDEO_DITHER_FLAG_QUANTIZE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>quantize values in addition to adding dither.</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -165,6 +288,7 @@ gst_video_dither_new (<em class="parameter"><code><a class="link" href="gst-plug
 <hr>
 <div class="refsect2">
 <a name="GstVideoDitherMethod"></a><h3>enum GstVideoDitherMethod</h3>
+<p>Different dithering methods to use.</p>
 <div class="refsect3">
 <a name="GstVideoDitherMethod.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -176,28 +300,38 @@ gst_video_dither_new (<em class="parameter"><code><a class="link" href="gst-plug
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GST-VIDEO-DITHER-NONE:CAPS"></a>GST_VIDEO_DITHER_NONE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>no dithering</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-VIDEO-DITHER-VERTERR:CAPS"></a>GST_VIDEO_DITHER_VERTERR</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>propagate rounding errors downwards</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-VIDEO-DITHER-FLOYD-STEINBERG:CAPS"></a>GST_VIDEO_DITHER_FLOYD_STEINBERG</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Dither with floyd-steinberg error diffusion</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-VIDEO-DITHER-SIERRA-LITE:CAPS"></a>GST_VIDEO_DITHER_SIERRA_LITE</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Dither with Sierra Lite error diffusion</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-VIDEO-DITHER-BAYER:CAPS"></a>GST_VIDEO_DITHER_BAYER</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>ordered dither using a bayer pattern</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>

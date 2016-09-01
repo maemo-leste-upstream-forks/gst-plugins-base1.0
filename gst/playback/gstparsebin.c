@@ -26,11 +26,19 @@
  */
 
 /**
- * SECTION:element-ParseBin
+ * SECTION:element-parsebin
  *
  * #GstBin that auto-magically constructs a parsing pipeline
  * using available parsers and demuxers via auto-plugging.
  *
+ * parsebin unpacks the contents of the input stream to the
+ * level of parsed elementary streams, but unlike decodebin
+ * it doesn't connect decoder elements. The output pads
+ * produce packetised encoded data with timestamps where possible,
+ * or send missing-element messages where not.
+ *
+ * <emphasis>parsebin is still experimental API and a technology preview.
+ * Its behaviour and exposed API is subject to change.</emphasis>
  */
 
 /* Implementation notes:
@@ -3611,8 +3619,7 @@ retry:
      * and post a stream-collection onto the bus */
     if (parsepad->active_collection == NULL && fallback_collection) {
       gst_pad_push_event (GST_PAD (parsepad),
-          gst_event_new_stream_collection (gst_object_ref
-              (fallback_collection)));
+          gst_event_new_stream_collection (fallback_collection));
     }
     gst_object_unref (parsepad);
   }
@@ -3743,7 +3750,10 @@ build_fallback_collection (GstParseChain * chain,
 
   if (!group)
     return;
-  for (l = group->children; l; l = l->next) {
+
+  /* we used g_list_prepend when adding children, so iterate from last
+   * to first to maintain the original order they were added in */
+  for (l = g_list_last (group->children); l != NULL; l = l->prev) {
     GstParseChain *childchain = l->data;
 
     build_fallback_collection (childchain, collection);
@@ -3816,7 +3826,7 @@ source_pad_blocked_cb (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
        * want to block the pad on it if we didn't get any buffers before
        * EOS and expose the pad then. */
       peer = gst_pad_get_peer (pad);
-      gst_pad_send_event (peer, gst_event_ref (event));
+      gst_pad_send_event (peer, event);
       gst_object_unref (peer);
       GST_LOG_OBJECT (pad, "Manually pushed sticky event through");
       ret = GST_PAD_PROBE_HANDLED;
@@ -3910,9 +3920,11 @@ gst_parse_pad_update_caps (GstParsePad * parsepad, GstCaps * caps)
 static void
 gst_parse_pad_update_tags (GstParsePad * parsepad, GstTagList * tags)
 {
-  if (tags && parsepad->active_stream) {
-    GST_DEBUG_OBJECT (parsepad, "Storing new tags %" GST_PTR_FORMAT
-        " on stream %" GST_PTR_FORMAT, tags, parsepad->active_stream);
+  if (tags && gst_tag_list_get_scope (tags) == GST_TAG_SCOPE_STREAM
+      && parsepad->active_stream) {
+    GST_DEBUG_OBJECT (parsepad,
+        "Storing new tags %" GST_PTR_FORMAT " on stream %" GST_PTR_FORMAT, tags,
+        parsepad->active_stream);
     gst_stream_set_tags (parsepad->active_stream, tags);
   }
 }
@@ -3963,8 +3975,10 @@ gst_parse_pad_stream_start_event (GstParsePad * parsepad, GstEvent * event)
       gst_object_replace ((GstObject **) & parsepad->active_stream,
           (GstObject *) stream);
     }
-    if (caps)
+    if (caps) {
       gst_parse_pad_update_caps (parsepad, caps);
+      gst_caps_unref (caps);
+    }
 
     event = gst_event_make_writable (event);
     gst_event_set_stream (event, stream);

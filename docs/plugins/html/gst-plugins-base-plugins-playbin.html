@@ -6,8 +6,8 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gst-plugins-base Elements">
-<link rel="prev" href="gst-plugins-base-plugins-opusenc.html" title="opusenc">
-<link rel="next" href="gst-plugins-base-plugins-playsink.html" title="playsink">
+<link rel="prev" href="gst-plugins-base-plugins-parsebin.html" title="parsebin">
+<link rel="next" href="gst-plugins-base-plugins-playbin3.html" title="playbin3">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -23,8 +23,8 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gst-plugins-base-plugins-opusenc.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-plugins-playsink.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="p" href="gst-plugins-base-plugins-parsebin.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-plugins-playbin3.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-plugins-playbin"></a><div class="titlepage"></div>
@@ -397,7 +397,7 @@ volume control with mute option
 </li>
 </ul></div>
 <div class="refsect2">
-<a name="id-1.2.31.9.5"></a><h3>Usage</h3>
+<a name="id-1.2.33.9.5"></a><h3>Usage</h3>
 <p>
 A playbin element can be created just like any other element using
 <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElementFactory.html#gst-element-factory-make"><code class="function">gst_element_factory_make()</code></a>. The file/URI to play should be set via the <a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin--uri" title="The “uri” property"><span class="type">“uri”</span></a>
@@ -438,7 +438,7 @@ the duration or position will have been returned in units of nanoseconds.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.31.9.6"></a><h3>Advanced Usage: specifying the audio and video sink</h3>
+<a name="id-1.2.33.9.6"></a><h3>Advanced Usage: specifying the audio and video sink</h3>
 <p>
 By default, if no audio sink or video sink has been specified via the
 <a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin--audio-sink" title="The “audio-sink” property"><span class="type">“audio-sink”</span></a> or <a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin--video-sink" title="The “video-sink” property"><span class="type">“video-sink”</span></a> property, playbin will use the autoaudiosink
@@ -473,7 +473,7 @@ It is also possible to 'suppress' audio and/or video output by using
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.31.9.7"></a><h3>Retrieving Tags and Other Meta Data</h3>
+<a name="id-1.2.33.9.7"></a><h3>Retrieving Tags and Other Meta Data</h3>
 <p>
 Most of the common meta data (artist, title, etc.) can be retrieved by
 watching for TAG messages on the pipeline's bus (see above).
@@ -485,7 +485,7 @@ from the negotiated caps on the sink pads of the sinks.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.31.9.8"></a><h3>Buffering</h3>
+<a name="id-1.2.33.9.8"></a><h3>Buffering</h3>
 Playbin handles buffering automatically for the most part, but applications
 need to handle parts of the buffering process as well. Whenever playbin is
 buffering, it will post BUFFERING messages on the bus with a percentage
@@ -527,7 +527,7 @@ of 100 percent is received (if PLAYING is the desired state, that is).
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.31.9.9"></a><h3>Embedding the video window in your application</h3>
+<a name="id-1.2.33.9.9"></a><h3>Embedding the video window in your application</h3>
 By default, playbin (or rather the video sinks used) will create their own
 window. Applications will usually want to force output to a window of their
 own, however. This can be done using the <a href="../html/gst-plugins-base-libs-gstvideooverlay.html#GstVideoOverlay-struct"><span class="type">GstVideoOverlay</span></a> interface, which most
@@ -535,7 +535,7 @@ video sinks implement. See the documentation there for more details.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.31.9.10"></a><h3>Specifying which CD/DVD device to use</h3>
+<a name="id-1.2.33.9.10"></a><h3>Specifying which CD/DVD device to use</h3>
 The device to use for CDs/DVDs needs to be set on the source element
 playbin creates before it is opened. The most generic way of doing this
 is to connect to playbin's "source-setup" (or "notify::source") signal,
@@ -549,7 +549,7 @@ dvd://[/path/to/device]
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.31.9.11"></a><h3>Handling redirects</h3>
+<a name="id-1.2.33.9.11"></a><h3>Handling redirects</h3>
 <p>
 Some elements may post 'redirect' messages on the bus to tell the
 application to open another location. These are element messages containing
@@ -560,7 +560,7 @@ for such redirects can be found in many quicktime movie trailers.
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.31.9.12"></a><h3>Examples</h3>
+<a name="id-1.2.33.9.12"></a><h3>Examples</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -604,7 +604,7 @@ the drive is detected automatically by the plugin).
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.31.9.13.1"></a><h3>Element Information</h3>
+<a name="id-1.2.33.9.13.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -630,7 +630,7 @@ the drive is detected automatically by the plugin).
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.31.9.13.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.33.9.13.2"></a><h3>Element Pads</h3>
 </div>
 </div>
 </div>

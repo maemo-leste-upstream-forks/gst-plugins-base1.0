@@ -114,6 +114,18 @@
 <td class="signal_name"><a class="link" href="gst-plugins-base-plugins-appsink.html#GstAppSink-pull-sample" title="The “pull-sample” signal">pull-sample</a></td>
 <td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-ACTION:CAPS">Action</a></td>
 </tr>
+<tr>
+<td class="signal_type">
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0GstSample.html#GstSample-struct"><span class="returnvalue">GstSample</span></a>*</td>
+<td class="signal_name"><a class="link" href="gst-plugins-base-plugins-appsink.html#GstAppSink-try-pull-preroll" title="The “try-pull-preroll” signal">try-pull-preroll</a></td>
+<td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-ACTION:CAPS">Action</a></td>
+</tr>
+<tr>
+<td class="signal_type">
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0GstSample.html#GstSample-struct"><span class="returnvalue">GstSample</span></a>*</td>
+<td class="signal_name"><a class="link" href="gst-plugins-base-plugins-appsink.html#GstAppSink-try-pull-sample" title="The “try-pull-sample” signal">try-pull-sample</a></td>
+<td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-ACTION:CAPS">Action</a></td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -309,6 +321,24 @@ user_function (<a class="link" href="gst-plugins-base-plugins-appsink.html#GstAp
 <a name="GstAppSink-pull-sample"></a><h3>The <code class="literal">“pull-sample”</code> signal</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstSample.html#GstSample-struct"><span class="returnvalue">GstSample</span></a>*
 user_function (<a class="link" href="gst-plugins-base-plugins-appsink.html#GstAppSink"><span class="type">GstAppSink</span></a> *gstappsink,
+               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+<p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-ACTION:CAPS">Action</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAppSink-try-pull-preroll"></a><h3>The <code class="literal">“try-pull-preroll”</code> signal</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstSample.html#GstSample-struct"><span class="returnvalue">GstSample</span></a>*
+user_function (<a class="link" href="gst-plugins-base-plugins-appsink.html#GstAppSink"><span class="type">GstAppSink</span></a> *gstappsink,
+               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a>     arg1,
+               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+<p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-ACTION:CAPS">Action</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAppSink-try-pull-sample"></a><h3>The <code class="literal">“try-pull-sample”</code> signal</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstSample.html#GstSample-struct"><span class="returnvalue">GstSample</span></a>*
+user_function (<a class="link" href="gst-plugins-base-plugins-appsink.html#GstAppSink"><span class="type">GstAppSink</span></a> *gstappsink,
+               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint64"><span class="type">guint64</span></a>     arg1,
                <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
 <p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-ACTION:CAPS">Action</a></p>
 </div>

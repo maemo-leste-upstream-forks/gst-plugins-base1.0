@@ -102,7 +102,8 @@ check_PROGRAMS = generic/clock-selection$(EXEEXT) \
 	libs/rtsp$(EXEEXT) libs/rtspconnection$(EXEEXT) \
 	libs/sdp$(EXEEXT) libs/tag$(EXEEXT) libs/video$(EXEEXT) \
 	libs/videodecoder$(EXEEXT) libs/videoencoder$(EXEEXT) \
-	libs/xmpwriter$(EXEEXT) pipelines/simple-launch-lines$(EXEEXT) \
+	libs/videotimecode$(EXEEXT) libs/xmpwriter$(EXEEXT) \
+	pipelines/simple-launch-lines$(EXEEXT) \
 	pipelines/basetime$(EXEEXT) \
 	pipelines/capsfilter-renegotiation$(EXEEXT) \
 	pipelines/streamsynchronizer$(EXEEXT) $(am__EXEEXT_1) \
@@ -123,6 +124,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
+	$(top_srcdir)/common/m4/ax_pthread.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
@@ -633,6 +635,15 @@ libs_videoencoder_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(libs_videoencoder_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
+libs_videotimecode_SOURCES = libs/videotimecode.c
+libs_videotimecode_OBJECTS =  \
+	libs/libs_videotimecode-videotimecode.$(OBJEXT)
+libs_videotimecode_DEPENDENCIES = $(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2)
+libs_videotimecode_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(libs_videotimecode_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 libs_xmpwriter_SOURCES = libs/xmpwriter.c
 libs_xmpwriter_OBJECTS = libs/libs_xmpwriter-xmpwriter.$(OBJEXT)
 libs_xmpwriter_DEPENDENCIES = $(top_builddir)/gst-libs/gst/tag/libgsttag-@GST_API_VERSION@.la \
@@ -826,9 +837,9 @@ SOURCES = elements/adder.c elements/appsink.c elements/appsrc.c \
 	libs/rtp.c libs/rtpbasedepayload.c libs/rtpbasepayload.c \
 	libs/rtsp.c libs/rtspconnection.c libs/sdp.c libs/tag.c \
 	libs/video.c libs/videodecoder.c libs/videoencoder.c \
-	libs/xmpwriter.c $(nodist_orc_adder_SOURCES) \
-	$(nodist_orc_audio_SOURCES) $(nodist_orc_video_SOURCES) \
-	$(nodist_orc_videotestsrc_SOURCES) \
+	libs/videotimecode.c libs/xmpwriter.c \
+	$(nodist_orc_adder_SOURCES) $(nodist_orc_audio_SOURCES) \
+	$(nodist_orc_video_SOURCES) $(nodist_orc_videotestsrc_SOURCES) \
 	$(nodist_orc_volume_SOURCES) pipelines/basetime.c \
 	pipelines/capsfilter-renegotiation.c pipelines/gio.c \
 	pipelines/oggmux.c pipelines/simple-launch-lines.c \
@@ -855,7 +866,7 @@ DIST_SOURCES = elements/adder.c elements/appsink.c elements/appsrc.c \
 	libs/rtp.c libs/rtpbasedepayload.c libs/rtpbasepayload.c \
 	libs/rtsp.c libs/rtspconnection.c libs/sdp.c libs/tag.c \
 	libs/video.c libs/videodecoder.c libs/videoencoder.c \
-	libs/xmpwriter.c pipelines/basetime.c \
+	libs/videotimecode.c libs/xmpwriter.c pipelines/basetime.c \
 	pipelines/capsfilter-renegotiation.c pipelines/gio.c \
 	pipelines/oggmux.c pipelines/simple-launch-lines.c \
 	pipelines/streamsynchronizer.c pipelines/tcp.c \
@@ -1287,6 +1298,9 @@ PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 POSUB = @POSUB@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PTHREAD_CC = @PTHREAD_CC@
+PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
+PTHREAD_LIBS = @PTHREAD_LIBS@
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_PLATFORM = @PYTHON_PLATFORM@
@@ -1337,6 +1351,7 @@ am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
+ax_pthread_config = @ax_pthread_config@
 bindir = @bindir@
 build = @build@
 build_alias = @build_alias@
@@ -1485,13 +1500,13 @@ AM_CFLAGS = -I$(top_srcdir)/gst-libs -I$(top_builddir)/gst-libs \
 	$(GST_CFLAGS) $(GST_CHECK_CFLAGS) \
 	-DGST_TEST_FILES_PATH="\"$(TEST_FILES_DIRECTORY)\"" \
 	-DGST_CHECK_TEST_ENVIRONMENT_BEACON="\"GST_PLUGIN_LOADING_WHITELIST\"" \
-	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS
+	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS $(PTHREAD_CFLAGS)
 
 AM_CXXFLAGS = -I$(top_srcdir)/gst-libs -I$(top_builddir)/gst-libs \
 	$(GST_CXXFLAGS) $(GST_CHECK_CFLAGS) \
 	-DGST_TEST_FILES_PATH="\"$(TEST_FILES_DIRECTORY)\"" \
 	-DGST_CHECK_TEST_ENVIRONMENT_BEACON="\"GST_PLUGIN_LOADING_WHITELIST\"" \
-	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS
+	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS $(PTHREAD_CFLAGS)
 
 LDADD = $(GST_LIBS) $(GST_CHECK_LIBS)
 
@@ -1836,6 +1851,16 @@ libs_videoencoder_CFLAGS = \
 	$(AM_CFLAGS)
 
 libs_videoencoder_LDADD = \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) \
+	$(LDADD)
+
+libs_videotimecode_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) \
+	$(AM_CFLAGS)
+
+libs_videotimecode_LDADD = \
 	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) \
 	$(LDADD)
@@ -2281,6 +2306,12 @@ libs/libs_videoencoder-videoencoder.$(OBJEXT): libs/$(am__dirstamp) \
 libs/videoencoder$(EXEEXT): $(libs_videoencoder_OBJECTS) $(libs_videoencoder_DEPENDENCIES) $(EXTRA_libs_videoencoder_DEPENDENCIES) libs/$(am__dirstamp)
 	@rm -f libs/videoencoder$(EXEEXT)
 	$(AM_V_CCLD)$(libs_videoencoder_LINK) $(libs_videoencoder_OBJECTS) $(libs_videoencoder_LDADD) $(LIBS)
+libs/libs_videotimecode-videotimecode.$(OBJEXT): libs/$(am__dirstamp) \
+	libs/$(DEPDIR)/$(am__dirstamp)
+
+libs/videotimecode$(EXEEXT): $(libs_videotimecode_OBJECTS) $(libs_videotimecode_DEPENDENCIES) $(EXTRA_libs_videotimecode_DEPENDENCIES) libs/$(am__dirstamp)
+	@rm -f libs/videotimecode$(EXEEXT)
+	$(AM_V_CCLD)$(libs_videotimecode_LINK) $(libs_videotimecode_OBJECTS) $(libs_videotimecode_LDADD) $(LIBS)
 libs/libs_xmpwriter-xmpwriter.$(OBJEXT): libs/$(am__dirstamp) \
 	libs/$(DEPDIR)/$(am__dirstamp)
 
@@ -2455,6 +2486,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/libs_video-video.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/libs_videodecoder-videodecoder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/libs_videoencoder-videoencoder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/libs_videotimecode-videotimecode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libs/$(DEPDIR)/libs_xmpwriter-xmpwriter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@orc/$(DEPDIR)/orc_adder-adder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@orc/$(DEPDIR)/orc_audio-audio.Po@am__quote@
@@ -3098,6 +3130,20 @@ libs/libs_videoencoder-videoencoder.obj: libs/videoencoder.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libs_videoencoder_CFLAGS) $(CFLAGS) -c -o libs/libs_videoencoder-videoencoder.obj `if test -f 'libs/videoencoder.c'; then $(CYGPATH_W) 'libs/videoencoder.c'; else $(CYGPATH_W) '$(srcdir)/libs/videoencoder.c'; fi`
 
+libs/libs_videotimecode-videotimecode.o: libs/videotimecode.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libs_videotimecode_CFLAGS) $(CFLAGS) -MT libs/libs_videotimecode-videotimecode.o -MD -MP -MF libs/$(DEPDIR)/libs_videotimecode-videotimecode.Tpo -c -o libs/libs_videotimecode-videotimecode.o `test -f 'libs/videotimecode.c' || echo '$(srcdir)/'`libs/videotimecode.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libs/$(DEPDIR)/libs_videotimecode-videotimecode.Tpo libs/$(DEPDIR)/libs_videotimecode-videotimecode.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libs/videotimecode.c' object='libs/libs_videotimecode-videotimecode.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libs_videotimecode_CFLAGS) $(CFLAGS) -c -o libs/libs_videotimecode-videotimecode.o `test -f 'libs/videotimecode.c' || echo '$(srcdir)/'`libs/videotimecode.c
+
+libs/libs_videotimecode-videotimecode.obj: libs/videotimecode.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libs_videotimecode_CFLAGS) $(CFLAGS) -MT libs/libs_videotimecode-videotimecode.obj -MD -MP -MF libs/$(DEPDIR)/libs_videotimecode-videotimecode.Tpo -c -o libs/libs_videotimecode-videotimecode.obj `if test -f 'libs/videotimecode.c'; then $(CYGPATH_W) 'libs/videotimecode.c'; else $(CYGPATH_W) '$(srcdir)/libs/videotimecode.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libs/$(DEPDIR)/libs_videotimecode-videotimecode.Tpo libs/$(DEPDIR)/libs_videotimecode-videotimecode.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libs/videotimecode.c' object='libs/libs_videotimecode-videotimecode.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libs_videotimecode_CFLAGS) $(CFLAGS) -c -o libs/libs_videotimecode-videotimecode.obj `if test -f 'libs/videotimecode.c'; then $(CYGPATH_W) 'libs/videotimecode.c'; else $(CYGPATH_W) '$(srcdir)/libs/videotimecode.c'; fi`
+
 libs/libs_xmpwriter-xmpwriter.o: libs/xmpwriter.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libs_xmpwriter_CFLAGS) $(CFLAGS) -MT libs/libs_xmpwriter-xmpwriter.o -MD -MP -MF libs/$(DEPDIR)/libs_xmpwriter-xmpwriter.Tpo -c -o libs/libs_xmpwriter-xmpwriter.o `test -f 'libs/xmpwriter.c' || echo '$(srcdir)/'`libs/xmpwriter.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libs/$(DEPDIR)/libs_xmpwriter-xmpwriter.Tpo libs/$(DEPDIR)/libs_xmpwriter-xmpwriter.Po
@@ -3680,6 +3726,13 @@ libs/videodecoder.log: libs/videodecoder$(EXEEXT)
 libs/videoencoder.log: libs/videoencoder$(EXEEXT)
 	@p='libs/videoencoder$(EXEEXT)'; \
 	b='libs/videoencoder'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+libs/videotimecode.log: libs/videotimecode$(EXEEXT)
+	@p='libs/videotimecode$(EXEEXT)'; \
+	b='libs/videotimecode'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
