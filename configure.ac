@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/prerelease
-AC_INIT([GStreamer Base Plug-ins],[1.9.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
+AC_INIT([GStreamer Base Plug-ins],[1.9.90],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
 
 AG_GST_INIT
 
@@ -56,10 +56,10 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 902, 0, 902)
+AS_LIBTOOL(GST, 990, 0, 990)
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.9.2
+GST_REQ=1.9.90
 
 dnl *** autotools stuff ****
 
@@ -179,6 +179,30 @@ dnl check for GCC specific SSE headers
 dnl these are used by the speex resampler code
 AC_CHECK_HEADERS([xmmintrin.h emmintrin.h smmintrin.h])
 
+dnl also check which architecture we're on for building files with intrinsics
+dnl separately
+AC_CHECK_DECLS([__i386__], [HAVE_X86=1])
+AC_CHECK_DECLS([__x86_64__], [HAVE_X86=1])
+
+dnl check for -m* compiler flags too
+SSE_CFLAGS="-msse"
+SSE2_CFLAGS="-msse2"
+SSE41_CFLAGS="-msse4.1"
+
+AS_COMPILER_FLAG([$SSE_CFLAGS], [HAVE_SSE=1], [HAVE_SSE=0])
+AS_COMPILER_FLAG([$SSE2_CFLAGS], [HAVE_SSE2=1], [HAVE_SSE2=0])
+AS_COMPILER_FLAG([$SSE41_CFLAGS], [HAVE_SSE41=1], [HAVE_SSE41=0])
+
+AM_CONDITIONAL(HAVE_X86, [test "x${HAVE_X86}" = "x1"])
+
+AC_DEFINE_UNQUOTED(HAVE_SSE, [$HAVE_SSE], [SSE support is enabled])
+AC_DEFINE_UNQUOTED(HAVE_SSE2, [$HAVE_SSE2], [SSE2 support is enabled])
+AC_DEFINE_UNQUOTED(HAVE_SSE41, [$HAVE_SSE41], [SSE4.1 support is enabled])
+
+AC_SUBST(SSE_CFLAGS)
+AC_SUBST(SSE2_CFLAGS)
+AC_SUBST(SSE41_CFLAGS)
+
 dnl used in gst/tcp
 AC_CHECK_HEADERS([sys/socket.h],
   [HAVE_SYS_SOCKET_H="yes"], [HAVE_SYS_SOCKET_H="no"], [AC_INCLUDES_DEFAULT])
@@ -254,7 +278,7 @@ dnl GLib
 GLIB_REQ=2.40.0
 AG_GST_GLIB_CHECK([$GLIB_REQ])
 
-ORC_CHECK([0.4.23])
+ORC_CHECK([0.4.24])
 
 dnl checks for gstreamer
 dnl uninstalled is selected preferentially -- see pkg-config(1)

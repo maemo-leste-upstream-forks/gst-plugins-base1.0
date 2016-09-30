@@ -121,7 +121,16 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@HAVE_INTROSPECTION_TRUE@am__append_1 = $(BUILT_GIRSOURCES) $(typelibs_DATA)
+
+# Don't use full GST_LT_LDFLAGS in LDFLAGS because we get things like
+# -version-info that cause a warning on private libs
+@HAVE_X86_TRUE@am__append_1 = libaudio_resampler_sse.la \
+@HAVE_X86_TRUE@	libaudio_resampler_sse2.la \
+@HAVE_X86_TRUE@	libaudio_resampler_sse41.la
+@HAVE_X86_TRUE@am__append_2 = libaudio_resampler_sse.la \
+@HAVE_X86_TRUE@	libaudio_resampler_sse2.la \
+@HAVE_X86_TRUE@	libaudio_resampler_sse41.la
+@HAVE_INTROSPECTION_TRUE@am__append_3 = $(BUILT_GIRSOURCES) $(typelibs_DATA)
 subdir = gst-libs/gst/audio
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -197,11 +206,48 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" \
 	"$(DESTDIR)$(typelibsdir)" \
 	"$(DESTDIR)$(libgstaudio_@GST_API_VERSION@includedir)" \
 	"$(DESTDIR)$(libgstaudio_@GST_API_VERSION@includedir)"
-LTLIBRARIES = $(lib_LTLIBRARIES)
+LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
+libaudio_resampler_sse_la_LIBADD =
+am__libaudio_resampler_sse_la_SOURCES_DIST =  \
+	audio-resampler-x86-sse.c
+@HAVE_X86_TRUE@am_libaudio_resampler_sse_la_OBJECTS = libaudio_resampler_sse_la-audio-resampler-x86-sse.lo
+libaudio_resampler_sse_la_OBJECTS =  \
+	$(am_libaudio_resampler_sse_la_OBJECTS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
+libaudio_resampler_sse_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(libaudio_resampler_sse_la_CFLAGS) $(CFLAGS) \
+	$(libaudio_resampler_sse_la_LDFLAGS) $(LDFLAGS) -o $@
+@HAVE_X86_TRUE@am_libaudio_resampler_sse_la_rpath =
+libaudio_resampler_sse2_la_LIBADD =
+am__libaudio_resampler_sse2_la_SOURCES_DIST =  \
+	audio-resampler-x86-sse2.c
+@HAVE_X86_TRUE@am_libaudio_resampler_sse2_la_OBJECTS = libaudio_resampler_sse2_la-audio-resampler-x86-sse2.lo
+libaudio_resampler_sse2_la_OBJECTS =  \
+	$(am_libaudio_resampler_sse2_la_OBJECTS)
+libaudio_resampler_sse2_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(libaudio_resampler_sse2_la_CFLAGS) $(CFLAGS) \
+	$(libaudio_resampler_sse2_la_LDFLAGS) $(LDFLAGS) -o $@
+@HAVE_X86_TRUE@am_libaudio_resampler_sse2_la_rpath =
+libaudio_resampler_sse41_la_LIBADD =
+am__libaudio_resampler_sse41_la_SOURCES_DIST =  \
+	audio-resampler-x86-sse41.c
+@HAVE_X86_TRUE@am_libaudio_resampler_sse41_la_OBJECTS = libaudio_resampler_sse41_la-audio-resampler-x86-sse41.lo
+libaudio_resampler_sse41_la_OBJECTS =  \
+	$(am_libaudio_resampler_sse41_la_OBJECTS)
+libaudio_resampler_sse41_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(libaudio_resampler_sse41_la_CFLAGS) $(CFLAGS) \
+	$(libaudio_resampler_sse41_la_LDFLAGS) $(LDFLAGS) -o $@
+@HAVE_X86_TRUE@am_libaudio_resampler_sse41_la_rpath =
 am__DEPENDENCIES_1 =
 libgstaudio_@GST_API_VERSION@_la_DEPENDENCIES = $(top_builddir)/gst-libs/gst/tag/libgsttag-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) $(am__append_2)
 am_libgstaudio_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstaudio_@GST_API_VERSION@_la-audio.lo \
 	libgstaudio_@GST_API_VERSION@_la-audio-format.lo \
@@ -233,10 +279,6 @@ nodist_libgstaudio_@GST_API_VERSION@_la_OBJECTS = $(am__objects_3)
 libgstaudio_@GST_API_VERSION@_la_OBJECTS =  \
 	$(am_libgstaudio_@GST_API_VERSION@_la_OBJECTS) \
 	$(nodist_libgstaudio_@GST_API_VERSION@_la_OBJECTS)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
-am__v_lt_1 = 
 libgstaudio_@GST_API_VERSION@_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(libgstaudio_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) \
@@ -275,9 +317,15 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libgstaudio_@GST_API_VERSION@_la_SOURCES) \
+SOURCES = $(libaudio_resampler_sse_la_SOURCES) \
+	$(libaudio_resampler_sse2_la_SOURCES) \
+	$(libaudio_resampler_sse41_la_SOURCES) \
+	$(libgstaudio_@GST_API_VERSION@_la_SOURCES) \
 	$(nodist_libgstaudio_@GST_API_VERSION@_la_SOURCES)
-DIST_SOURCES = $(libgstaudio_@GST_API_VERSION@_la_SOURCES)
+DIST_SOURCES = $(am__libaudio_resampler_sse_la_SOURCES_DIST) \
+	$(am__libaudio_resampler_sse2_la_SOURCES_DIST) \
+	$(am__libaudio_resampler_sse41_la_SOURCES_DIST) \
+	$(libgstaudio_@GST_API_VERSION@_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -520,6 +568,9 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SSE2_CFLAGS = @SSE2_CFLAGS@
+SSE41_CFLAGS = @SSE41_CFLAGS@
+SSE_CFLAGS = @SSE_CFLAGS@
 STRIP = @STRIP@
 THEORA_CFLAGS = @THEORA_CFLAGS@
 THEORA_LIBS = @THEORA_LIBS@
@@ -640,7 +691,7 @@ built_headers = audio-enumtypes.h
 lib_LTLIBRARIES = \
 	libgstaudio-@GST_API_VERSION@.la
 
-CLEANFILES = $(BUILT_SOURCES) $(am__append_1)
+CLEANFILES = $(BUILT_SOURCES) $(am__append_3)
 libgstaudio_@GST_API_VERSION@_la_SOURCES = \
 	audio.c \
 	audio-format.c \
@@ -694,19 +745,55 @@ nodist_libgstaudio_@GST_API_VERSION@include_HEADERS = \
 	audio-enumtypes.h
 
 noinst_HEADERS = \
-	gstaudioutilsprivate.h \
-	audio-resampler-x86.h \
+	gstaudioutilsprivate.h 		\
+	audio-resampler-private.h 	\
+	audio-resampler-macros.h 	\
+	audio-resampler-x86.h 		\
+	audio-resampler-x86-sse.h	\
+	audio-resampler-x86-sse2.h	\
+	audio-resampler-x86-sse41.h	\
 	audio-resampler-neon.h
 
 libgstaudio_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS) \
 		$(ORC_CFLAGS)
 
-libgstaudio_@GST_API_VERSION@_la_LIBADD = \
-  $(top_builddir)/gst-libs/gst/tag/libgsttag-@GST_API_VERSION@.la \
-  $(GST_BASE_LIBS) $(GST_LIBS) $(LIBM) $(ORC_LIBS)
-
+libgstaudio_@GST_API_VERSION@_la_LIBADD = $(top_builddir)/gst-libs/gst/tag/libgsttag-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LIBM) $(ORC_LIBS) \
+	$(am__append_2)
 libgstaudio_@GST_API_VERSION@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
+
+# Arch-specific bits
+noinst_LTLIBRARIES = $(am__append_1)
+@HAVE_X86_TRUE@libaudio_resampler_sse_la_SOURCES = audio-resampler-x86-sse.c
+@HAVE_X86_TRUE@libaudio_resampler_sse_la_CFLAGS = \
+@HAVE_X86_TRUE@	$(libgstaudio_@GST_API_VERSION@_la_CFLAGS) \
+@HAVE_X86_TRUE@	$(SSE_CFLAGS)
+
+@HAVE_X86_TRUE@libaudio_resampler_sse_la_LDFLAGS = \
+@HAVE_X86_TRUE@	$(GST_LIB_LDFLAGS) \
+@HAVE_X86_TRUE@	$(GST_ALL_LDFLAGS)
+
+@HAVE_X86_TRUE@libaudio_resampler_sse2_la_SOURCES = audio-resampler-x86-sse2.c
+@HAVE_X86_TRUE@libaudio_resampler_sse2_la_CFLAGS = \
+@HAVE_X86_TRUE@	$(libgstaudio_@GST_API_VERSION@_la_CFLAGS) \
+@HAVE_X86_TRUE@	$(SSE2_CFLAGS)
+
+@HAVE_X86_TRUE@libaudio_resampler_sse2_la_LDFLAGS = \
+@HAVE_X86_TRUE@	$(GST_LIB_LDFLAGS) \
+@HAVE_X86_TRUE@	$(GST_ALL_LDFLAGS)
+
+@HAVE_X86_TRUE@libaudio_resampler_sse41_la_SOURCES = audio-resampler-x86-sse41.c
+@HAVE_X86_TRUE@libaudio_resampler_sse41_la_CFLAGS = \
+@HAVE_X86_TRUE@	$(libgstaudio_@GST_API_VERSION@_la_CFLAGS) \
+@HAVE_X86_TRUE@	$(SSE41_CFLAGS)
+
+@HAVE_X86_TRUE@libaudio_resampler_sse41_la_LDFLAGS = \
+@HAVE_X86_TRUE@	$(GST_LIB_LDFLAGS) \
+@HAVE_X86_TRUE@	$(GST_ALL_LDFLAGS)
+
 enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
+
+# Introspection
 @HAVE_INTROSPECTION_TRUE@BUILT_GIRSOURCES = GstAudio-@GST_API_VERSION@.gir
 @HAVE_INTROSPECTION_TRUE@gir_headers = $(patsubst %,$(srcdir)/%, \
 @HAVE_INTROSPECTION_TRUE@	$(libgstaudio_@GST_API_VERSION@include_HEADERS)) \
@@ -794,6 +881,26 @@ clean-libLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+	@list='$(noinst_LTLIBRARIES)'; \
+	locs=`for p in $$list; do echo $$p; done | \
+	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
+	      sort -u`; \
+	test -z "$$locs" || { \
+	  echo rm -f $${locs}; \
+	  rm -f $${locs}; \
+	}
+
+libaudio_resampler_sse.la: $(libaudio_resampler_sse_la_OBJECTS) $(libaudio_resampler_sse_la_DEPENDENCIES) $(EXTRA_libaudio_resampler_sse_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libaudio_resampler_sse_la_LINK) $(am_libaudio_resampler_sse_la_rpath) $(libaudio_resampler_sse_la_OBJECTS) $(libaudio_resampler_sse_la_LIBADD) $(LIBS)
+
+libaudio_resampler_sse2.la: $(libaudio_resampler_sse2_la_OBJECTS) $(libaudio_resampler_sse2_la_DEPENDENCIES) $(EXTRA_libaudio_resampler_sse2_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libaudio_resampler_sse2_la_LINK) $(am_libaudio_resampler_sse2_la_rpath) $(libaudio_resampler_sse2_la_OBJECTS) $(libaudio_resampler_sse2_la_LIBADD) $(LIBS)
+
+libaudio_resampler_sse41.la: $(libaudio_resampler_sse41_la_OBJECTS) $(libaudio_resampler_sse41_la_DEPENDENCIES) $(EXTRA_libaudio_resampler_sse41_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libaudio_resampler_sse41_la_LINK) $(am_libaudio_resampler_sse41_la_rpath) $(libaudio_resampler_sse41_la_OBJECTS) $(libaudio_resampler_sse41_la_LIBADD) $(LIBS)
+
 libgstaudio-@GST_API_VERSION@.la: $(libgstaudio_@GST_API_VERSION@_la_OBJECTS) $(libgstaudio_@GST_API_VERSION@_la_DEPENDENCIES) $(EXTRA_libgstaudio_@GST_API_VERSION@_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libgstaudio_@GST_API_VERSION@_la_LINK) -rpath $(libdir) $(libgstaudio_@GST_API_VERSION@_la_OBJECTS) $(libgstaudio_@GST_API_VERSION@_la_LIBADD) $(LIBS)
 
@@ -803,6 +910,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudio_resampler_sse2_la-audio-resampler-x86-sse2.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudio_resampler_sse41_la-audio-resampler-x86-sse41.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudio_resampler_sse_la-audio-resampler-x86-sse.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channel-mixer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channels.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-converter.Plo@am__quote@
@@ -851,6 +961,27 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+libaudio_resampler_sse_la-audio-resampler-x86-sse.lo: audio-resampler-x86-sse.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libaudio_resampler_sse_la_CFLAGS) $(CFLAGS) -MT libaudio_resampler_sse_la-audio-resampler-x86-sse.lo -MD -MP -MF $(DEPDIR)/libaudio_resampler_sse_la-audio-resampler-x86-sse.Tpo -c -o libaudio_resampler_sse_la-audio-resampler-x86-sse.lo `test -f 'audio-resampler-x86-sse.c' || echo '$(srcdir)/'`audio-resampler-x86-sse.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libaudio_resampler_sse_la-audio-resampler-x86-sse.Tpo $(DEPDIR)/libaudio_resampler_sse_la-audio-resampler-x86-sse.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='audio-resampler-x86-sse.c' object='libaudio_resampler_sse_la-audio-resampler-x86-sse.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libaudio_resampler_sse_la_CFLAGS) $(CFLAGS) -c -o libaudio_resampler_sse_la-audio-resampler-x86-sse.lo `test -f 'audio-resampler-x86-sse.c' || echo '$(srcdir)/'`audio-resampler-x86-sse.c
+
+libaudio_resampler_sse2_la-audio-resampler-x86-sse2.lo: audio-resampler-x86-sse2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libaudio_resampler_sse2_la_CFLAGS) $(CFLAGS) -MT libaudio_resampler_sse2_la-audio-resampler-x86-sse2.lo -MD -MP -MF $(DEPDIR)/libaudio_resampler_sse2_la-audio-resampler-x86-sse2.Tpo -c -o libaudio_resampler_sse2_la-audio-resampler-x86-sse2.lo `test -f 'audio-resampler-x86-sse2.c' || echo '$(srcdir)/'`audio-resampler-x86-sse2.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libaudio_resampler_sse2_la-audio-resampler-x86-sse2.Tpo $(DEPDIR)/libaudio_resampler_sse2_la-audio-resampler-x86-sse2.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='audio-resampler-x86-sse2.c' object='libaudio_resampler_sse2_la-audio-resampler-x86-sse2.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libaudio_resampler_sse2_la_CFLAGS) $(CFLAGS) -c -o libaudio_resampler_sse2_la-audio-resampler-x86-sse2.lo `test -f 'audio-resampler-x86-sse2.c' || echo '$(srcdir)/'`audio-resampler-x86-sse2.c
+
+libaudio_resampler_sse41_la-audio-resampler-x86-sse41.lo: audio-resampler-x86-sse41.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libaudio_resampler_sse41_la_CFLAGS) $(CFLAGS) -MT libaudio_resampler_sse41_la-audio-resampler-x86-sse41.lo -MD -MP -MF $(DEPDIR)/libaudio_resampler_sse41_la-audio-resampler-x86-sse41.Tpo -c -o libaudio_resampler_sse41_la-audio-resampler-x86-sse41.lo `test -f 'audio-resampler-x86-sse41.c' || echo '$(srcdir)/'`audio-resampler-x86-sse41.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libaudio_resampler_sse41_la-audio-resampler-x86-sse41.Tpo $(DEPDIR)/libaudio_resampler_sse41_la-audio-resampler-x86-sse41.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='audio-resampler-x86-sse41.c' object='libaudio_resampler_sse41_la-audio-resampler-x86-sse41.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libaudio_resampler_sse41_la_CFLAGS) $(CFLAGS) -c -o libaudio_resampler_sse41_la-audio-resampler-x86-sse41.lo `test -f 'audio-resampler-x86-sse41.c' || echo '$(srcdir)/'`audio-resampler-x86-sse41.c
 
 libgstaudio_@GST_API_VERSION@_la-audio.lo: audio.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudio_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstaudio_@GST_API_VERSION@_la-audio.lo -MD -MP -MF $(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio.Tpo -c -o libgstaudio_@GST_API_VERSION@_la-audio.lo `test -f 'audio.c' || echo '$(srcdir)/'`audio.c
@@ -1239,7 +1370,7 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool clean-local \
-	mostlyclean-am
+	clean-noinstLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -1316,14 +1447,14 @@ uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 .MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
-	clean-libLTLIBRARIES clean-libtool clean-local cscopelist-am \
-	ctags ctags-am dist-hook distclean distclean-compile \
-	distclean-generic distclean-libtool distclean-tags distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-girDATA install-html \
-	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES \
+	clean-libLTLIBRARIES clean-libtool clean-local \
+	clean-noinstLTLIBRARIES cscopelist-am ctags ctags-am dist-hook \
+	distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-girDATA install-html install-html-am \
+	install-info install-info-am install-libLTLIBRARIES \
 	install-libgstaudio_@GST_API_VERSION@includeHEADERS \
 	install-man \
 	install-nodist_libgstaudio_@GST_API_VERSION@includeHEADERS \

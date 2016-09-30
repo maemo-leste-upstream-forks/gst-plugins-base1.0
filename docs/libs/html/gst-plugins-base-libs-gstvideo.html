@@ -3708,11 +3708,13 @@ to get to the pixels.</p>
 14
 15
 16
-17</pre></td>
+17
+18
+19</pre></td>
         <td class="listing_code"><pre class="programlisting">GstVideoFrame vframe<span class="gtkdoc opt">;</span>
 <span class="gtkdoc opt">...</span>
 <span class="gtkdoc slc">// set RGB pixels to black one at a time</span>
-<span class="keyword">if</span> <span class="gtkdoc opt">(</span><span class="function"><a href="gst-plugins-base-libs-gstvideo.html#gst-video-frame-map">gst_video_frame_map</a></span> <span class="gtkdoc opt">(&amp;</span>vframe<span class="gtkdoc opt">,</span> video_info<span class="gtkdoc opt">,</span> video_buffer<span class="gtkdoc opt">)) {</span>
+<span class="keyword">if</span> <span class="gtkdoc opt">(</span><span class="function"><a href="gst-plugins-base-libs-gstvideo.html#gst-video-frame-map">gst_video_frame_map</a></span> <span class="gtkdoc opt">(&amp;</span>vframe<span class="gtkdoc opt">,</span> video_info<span class="gtkdoc opt">,</span> video_buffer<span class="gtkdoc opt">,</span> GST_MAP_WRITE<span class="gtkdoc opt">)) {</span>
   guint8 <span class="gtkdoc opt">*</span>pixels <span class="gtkdoc opt">=</span> <span class="function"><a href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FRAME-PLANE-DATA:CAPS">GST_VIDEO_FRAME_PLANE_DATA</a></span> <span class="gtkdoc opt">(</span>vframe<span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">);</span>
   guint stride <span class="gtkdoc opt">=</span> <span class="function"><a href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FRAME-PLANE-STRIDE:CAPS">GST_VIDEO_FRAME_PLANE_STRIDE</a></span> <span class="gtkdoc opt">(</span>vframe<span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">);</span>
   guint pixel_stride <span class="gtkdoc opt">=</span> <span class="function"><a href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FRAME-COMP-PSTRIDE:CAPS">GST_VIDEO_FRAME_COMP_PSTRIDE</a></span> <span class="gtkdoc opt">(</span>vframe<span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">);</span>
@@ -3724,6 +3726,8 @@ to get to the pixels.</p>
       <span class="function">memset</span> <span class="gtkdoc opt">(</span>pixel<span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">,</span> pixel_stride<span class="gtkdoc opt">);</span>
     <span class="gtkdoc opt">}</span>
   <span class="gtkdoc opt">}</span>
+
+  <span class="function"><a href="gst-plugins-base-libs-gstvideo.html#gst-video-frame-unmap">gst_video_frame_unmap</a></span> <span class="gtkdoc opt">(&amp;</span>vframe<span class="gtkdoc opt">);</span>
 <span class="gtkdoc opt">}</span>
 <span class="gtkdoc opt">...</span></pre></td>
       </tr>
@@ -7269,6 +7273,8 @@ indentify the frame in case of multiview video.</p></td>
 <a name="GstVideoBufferFlags"></a><h3>enum GstVideoBufferFlags</h3>
 <p>Additional video buffer flags. These flags can potentially be used on any
 buffers carrying video data - even encoded data.</p>
+<p>Note that these are only valid for <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> of type: video/...
+They can conflict with other extended buffer flags.</p>
 <div class="refsect3">
 <a name="GstVideoBufferFlags.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
