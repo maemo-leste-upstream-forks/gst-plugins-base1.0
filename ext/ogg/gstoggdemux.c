@@ -48,7 +48,7 @@
 #define CHUNKSIZE (8500)        /* this is out of vorbisfile */
 
 /* we hope we get a granpos within this many bytes off the end */
-#define DURATION_CHUNK_OFFSET (64*1024)
+#define DURATION_CHUNK_OFFSET (128*1024)
 
 /* An Ogg page can not be larger than 255 segments of 255 bytes, plus
    26 bytes of header */
@@ -1537,6 +1537,10 @@ gst_ogg_demux_seek_back_after_push_duration_check_unlock (GstOggDemux * ogg)
   /* Get the delayed event, if any */
   event = ogg->push_mode_seek_delayed_event;
   ogg->push_mode_seek_delayed_event = NULL;
+
+  /* if we haven't learnt about the total time yet, disable seeking */
+  if (ogg->total_time == -1)
+    ogg->push_disable_seeking = TRUE;
 
   ogg->push_state = PUSH_PLAYING;
 

@@ -50,9 +50,7 @@
 #include "gstplay-enum.h"
 #include "gstrawcaps.h"
 #include "gstplayback.h"
-
-/* From gstdecodebin2.c */
-gint _decode_bin_compare_factories_func (gconstpointer p1, gconstpointer p2);
+#include "gstplaybackutils.h"
 
 #define GST_TYPE_URI_DECODE_BIN \
   (gst_uri_source_bin_get_type())
@@ -355,7 +353,7 @@ gst_uri_source_bin_update_factories_list (GstURISourceBin * dec)
         gst_element_factory_list_get_elements
         (GST_ELEMENT_FACTORY_TYPE_DECODABLE, GST_RANK_MARGINAL);
     dec->factories =
-        g_list_sort (dec->factories, _decode_bin_compare_factories_func);
+        g_list_sort (dec->factories, gst_playback_utils_compare_factories_func);
     dec->factories_cookie = cookie;
   }
 }
@@ -743,6 +741,8 @@ gst_uri_source_bin_init (GstURISourceBin * urisrc)
   urisrc->last_buffering_pct = -1;
 
   GST_OBJECT_FLAG_SET (urisrc, GST_ELEMENT_FLAG_SOURCE);
+  gst_bin_set_suppressed_flags (GST_BIN (urisrc),
+      GST_ELEMENT_FLAG_SOURCE | GST_ELEMENT_FLAG_SINK);
 }
 
 static void
@@ -1990,8 +1990,6 @@ could_not_link:
     GST_ELEMENT_ERROR (urisrc, CORE, NEGOTIATION,
         (NULL), ("Can't link source to typefind element"));
     gst_bin_remove (GST_BIN_CAST (urisrc), typefind);
-    /* Don't lose the SOURCE flag */
-    GST_OBJECT_FLAG_SET (urisrc, GST_ELEMENT_FLAG_SOURCE);
     do_async_done (urisrc);
     return FALSE;
   }
@@ -2053,8 +2051,6 @@ remove_source (GstURISourceBin * urisrc)
     gst_bin_remove (GST_BIN_CAST (urisrc), urisrc->demuxer);
     urisrc->demuxer = NULL;
   }
-  /* Don't lose the SOURCE flag */
-  GST_OBJECT_FLAG_SET (urisrc, GST_ELEMENT_FLAG_SOURCE);
 }
 
 /* is called when a dynamic source element created a new pad. */
