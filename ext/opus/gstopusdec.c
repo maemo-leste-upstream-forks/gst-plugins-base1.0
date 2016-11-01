@@ -126,13 +126,12 @@ gst_opus_dec_class_init (GstOpusDecClass * klass)
   adclass->set_format = GST_DEBUG_FUNCPTR (gst_opus_dec_set_format);
   adclass->getcaps = GST_DEBUG_FUNCPTR (gst_opus_dec_getcaps);
 
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&opus_dec_src_factory));
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&opus_dec_sink_factory));
+  gst_element_class_add_static_pad_template (element_class,
+      &opus_dec_src_factory);
+  gst_element_class_add_static_pad_template (element_class,
+      &opus_dec_sink_factory);
   gst_element_class_set_static_metadata (element_class, "Opus audio decoder",
-      "Codec/Decoder/Audio",
-      "decode opus streams to audio",
+      "Codec/Decoder/Audio", "decode opus streams to audio",
       "Vincent Penquerc'h <vincent.penquerch@collabora.co.uk>");
   g_object_class_install_property (gobject_class, PROP_USE_INBAND_FEC,
       g_param_spec_boolean ("use-inband-fec", "Use in-band FEC",
@@ -167,6 +166,7 @@ gst_opus_dec_reset (GstOpusDec * dec)
   dec->sample_rate = 0;
   dec->n_channels = 0;
   dec->leftover_plc_duration = 0;
+  dec->last_known_buffer_duration = GST_CLOCK_TIME_NONE;
 }
 
 static void
@@ -317,7 +317,8 @@ gst_opus_dec_parse_header (GstOpusDec * dec, GstBuffer * buf)
   const GstAudioChannelPosition *posn = NULL;
 
   if (!gst_opus_header_is_id_header (buf)) {
-    GST_ERROR_OBJECT (dec, "Header is not an Opus ID header");
+    GST_ELEMENT_ERROR (dec, STREAM, FORMAT, (NULL),
+        ("Header is not an Opus ID header"));
     return GST_FLOW_ERROR;
   }
 
@@ -328,7 +329,8 @@ gst_opus_dec_parse_header (GstOpusDec * dec, GstBuffer * buf)
           &dec->n_streams,
           &dec->n_stereo_streams,
           dec->channel_mapping, &dec->pre_skip, &dec->r128_gain)) {
-    GST_ERROR_OBJECT (dec, "Failed to parse Opus ID header");
+    GST_ELEMENT_ERROR (dec, STREAM, DECODE, (NULL),
+        ("Failed to parse Opus ID header"));
     return GST_FLOW_ERROR;
   }
   dec->r128_gain_volume = gst_opus_dec_get_r128_volume (dec->r128_gain);
@@ -380,6 +382,66 @@ static GstFlowReturn
 gst_opus_dec_parse_comments (GstOpusDec * dec, GstBuffer * buf)
 {
   return GST_FLOW_OK;
+}
+
+/* adapted from ext/ogg/gstoggstream.c */
+static gint64
+packet_duration_opus (const unsigned char *data, size_t bytes)
+{
+  static const guint64 durations[32] = {
+    480, 960, 1920, 2880,       /* Silk NB */
+    480, 960, 1920, 2880,       /* Silk MB */
+    480, 960, 1920, 2880,       /* Silk WB */
+    480, 960,                   /* Hybrid SWB */
+    480, 960,                   /* Hybrid FB */
+    120, 240, 480, 960,         /* CELT NB */
+    120, 240, 480, 960,         /* CELT NB */
+    120, 240, 480, 960,         /* CELT NB */
+    120, 240, 480, 960,         /* CELT NB */
+  };
+
+  gint64 duration;
+  gint64 frame_duration;
+  gint nframes = 0;
+  guint8 toc;
+
+  if (bytes < 1)
+    return 0;
+
+  /* headers */
+  if (bytes >= 8 && !memcmp (data, "Opus", 4))
+    return 0;
+
+  toc = data[0];
+
+  frame_duration = durations[toc >> 3];
+  switch (toc & 3) {
+    case 0:
+      nframes = 1;
+      break;
+    case 1:
+      nframes = 2;
+      break;
+    case 2:
+      nframes = 2;
+      break;
+    case 3:
+      if (bytes < 2) {
+        GST_WARNING ("Code 3 Opus packet has less than 2 bytes");
+        return 0;
+      }
+      nframes = data[1] & 63;
+      break;
+  }
+
+  duration = nframes * frame_duration;
+  if (duration > 5760) {
+    GST_WARNING ("Opus packet duration > 120 ms, invalid");
+    return 0;
+  }
+  GST_LOG ("Opus packet: frame size %.1f ms, %d frames, duration %.1f ms",
+      frame_duration / 48.f, nframes, duration / 48.f);
+  return duration / 48.f * 1000000;
 }
 
 static GstFlowReturn
@@ -478,6 +540,19 @@ opus_dec_chain_parse_data (GstOpusDec * dec, GstBuffer * buffer)
     GstClockTime aligned_missing_duration;
     GstClockTime missing_duration = GST_BUFFER_DURATION (bufd);
 
+    if (!GST_CLOCK_TIME_IS_VALID (missing_duration)) {
+      if (GST_CLOCK_TIME_IS_VALID (dec->last_known_buffer_duration)) {
+        missing_duration = dec->last_known_buffer_duration;
+        GST_WARNING_OBJECT (dec,
+            "Missing duration, using last duration %" GST_TIME_FORMAT,
+            GST_TIME_ARGS (missing_duration));
+      } else {
+        GST_WARNING_OBJECT (dec,
+            "Missing buffer, but unknown duration, and no previously known duration, assuming 20 ms");
+        missing_duration = 20 * GST_MSECOND;
+      }
+    }
+
     GST_DEBUG_OBJECT (dec,
         "missing buffer, doing PLC duration %" GST_TIME_FORMAT
         " plus leftover %" GST_TIME_FORMAT, GST_TIME_ARGS (missing_duration),
@@ -530,6 +605,9 @@ opus_dec_chain_parse_data (GstOpusDec * dec, GstBuffer * buffer)
     goto buffer_failed;
   }
 
+  if (size > 0)
+    dec->last_known_buffer_duration = packet_duration_opus (data, size);
+
   gst_buffer_map (outbuf, &omap, GST_MAP_WRITE);
   out_data = (gint16 *) omap.data;
 
@@ -558,7 +636,7 @@ opus_dec_chain_parse_data (GstOpusDec * dec, GstBuffer * buffer)
     GstFlowReturn ret = GST_FLOW_ERROR;
 
     gst_buffer_unref (outbuf);
-    GST_AUDIO_DECODER_ERROR (dec, 1, STREAM, DECODE, ("Error decoding stream"),
+    GST_AUDIO_DECODER_ERROR (dec, 1, STREAM, DECODE, (NULL),
         ("Decoding error (%d): %s", n, opus_strerror (n)), ret);
     return ret;
   }
@@ -647,11 +725,13 @@ done:
   return res;
 
 creation_failed:
-  GST_ERROR_OBJECT (dec, "Failed to create Opus decoder: %d", err);
+  GST_ELEMENT_ERROR (dec, LIBRARY, INIT, ("Failed to create Opus decoder"),
+      ("Failed to create Opus decoder (%d): %s", err, opus_strerror (err)));
   return GST_FLOW_ERROR;
 
 buffer_failed:
-  GST_ERROR_OBJECT (dec, "Failed to create %u byte buffer", packet_size);
+  GST_ELEMENT_ERROR (dec, STREAM, DECODE, (NULL),
+      ("Failed to create %u byte buffer", packet_size));
   return GST_FLOW_ERROR;
 }
 

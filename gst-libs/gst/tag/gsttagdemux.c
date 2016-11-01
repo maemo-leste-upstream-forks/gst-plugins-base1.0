@@ -228,8 +228,7 @@ gst_tag_demux_base_init (gpointer klass)
 {
   GstElementClass *element_class = GST_ELEMENT_CLASS (klass);
 
-  gst_element_class_add_pad_template (element_class,
-      gst_static_pad_template_get (&src_factory));
+  gst_element_class_add_static_pad_template (element_class, &src_factory);
 
   GST_DEBUG_CATEGORY_INIT (tagdemux_debug, "tagdemux", 0,
       "tag demux base class");
@@ -467,6 +466,10 @@ gst_tag_demux_trim_buffer (GstTagDemux * tagdemux, GstBuffer ** buf_ref,
           gst_buffer_copy_region (buf, GST_BUFFER_COPY_ALL, trim_start,
           out_size);
       g_return_val_if_fail (sub != NULL, FALSE);
+      if (GST_BUFFER_TIMESTAMP_IS_VALID (buf))
+        GST_BUFFER_TIMESTAMP (sub) = GST_BUFFER_TIMESTAMP (buf);
+      if (GST_BUFFER_DURATION_IS_VALID (buf))
+        GST_BUFFER_DURATION (sub) = GST_BUFFER_DURATION (buf);
       gst_buffer_unref (buf);
       *buf_ref = buf = sub;
       *buf_size = out_size;
@@ -1517,8 +1520,7 @@ pause:
       }
     } else if (ret == GST_FLOW_NOT_LINKED || ret < GST_FLOW_EOS) {
       /* for fatal errors we post an error message */
-      GST_ELEMENT_ERROR (demux, STREAM, FAILED, (NULL),
-          ("Stream stopped, reason %s", reason));
+      GST_ELEMENT_FLOW_ERROR (demux, ret);
       push_eos = TRUE;
     }
     if (push_eos) {

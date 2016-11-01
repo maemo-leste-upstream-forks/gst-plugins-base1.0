@@ -99,6 +99,7 @@
         <sub name="gstvideosink" link="gst-plugins-base-libs-gstvideosink.html"/>
         <sub name="gstcolorbalance" link="gst-plugins-base-libs-gstcolorbalance.html"/>
         <sub name="gstcolorbalancechannel" link="gst-plugins-base-libs-gstcolorbalancechannel.html"/>
+        <sub name="gstvideodirection" link="gst-plugins-base-libs-gstvideodirection.html"/>
         <sub name="gstvideoorientation" link="gst-plugins-base-libs-gstvideoorientation.html"/>
         <sub name="gstvideooverlay" link="gst-plugins-base-libs-gstvideooverlay.html"/>
         <sub name="GstVideoDecoder" link="gst-plugins-base-libs-GstVideoDecoder.html"/>
@@ -130,6 +131,8 @@
     <keyword type="function" name="gst_app_src_set_latency ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-set-latency"/>
     <keyword type="function" name="gst_app_src_set_size ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-set-size"/>
     <keyword type="function" name="gst_app_src_get_size ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-get-size"/>
+    <keyword type="function" name="gst_app_src_set_duration ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-set-duration" since="1.10"/>
+    <keyword type="function" name="gst_app_src_get_duration ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-get-duration" since="1.10"/>
     <keyword type="function" name="gst_app_src_set_stream_type ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-set-stream-type"/>
     <keyword type="function" name="gst_app_src_get_stream_type ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-get-stream-type"/>
     <keyword type="function" name="gst_app_src_set_max_bytes ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-set-max-bytes"/>
@@ -154,6 +157,8 @@
     <keyword type="function" name="gst_app_sink_get_drop ()" link="gst-plugins-base-libs-appsink.html#gst-app-sink-get-drop"/>
     <keyword type="function" name="gst_app_sink_pull_preroll ()" link="gst-plugins-base-libs-appsink.html#gst-app-sink-pull-preroll"/>
     <keyword type="function" name="gst_app_sink_pull_sample ()" link="gst-plugins-base-libs-appsink.html#gst-app-sink-pull-sample"/>
+    <keyword type="function" name="gst_app_sink_try_pull_preroll ()" link="gst-plugins-base-libs-appsink.html#gst-app-sink-try-pull-preroll" since="1.10"/>
+    <keyword type="function" name="gst_app_sink_try_pull_sample ()" link="gst-plugins-base-libs-appsink.html#gst-app-sink-try-pull-sample" since="1.10"/>
     <keyword type="function" name="gst_app_sink_set_callbacks ()" link="gst-plugins-base-libs-appsink.html#gst-app-sink-set-callbacks"/>
     <keyword type="struct" name="GstAppSinkCallbacks" link="gst-plugins-base-libs-appsink.html#GstAppSinkCallbacks"/>
     <keyword type="function" name="GstAudioFormatPack ()" link="gst-plugins-base-libs-gstaudio.html#GstAudioFormatPack"/>
@@ -385,6 +390,7 @@
     <keyword type="function" name="gst_audio_buffer_reorder_channels ()" link="gst-plugins-base-libs-gstaudiochannels.html#gst-audio-buffer-reorder-channels"/>
     <keyword type="function" name="gst_audio_reorder_channels ()" link="gst-plugins-base-libs-gstaudiochannels.html#gst-audio-reorder-channels"/>
     <keyword type="function" name="gst_audio_get_channel_reorder_map ()" link="gst-plugins-base-libs-gstaudiochannels.html#gst-audio-get-channel-reorder-map"/>
+    <keyword type="function" name="gst_audio_channel_positions_to_string ()" link="gst-plugins-base-libs-gstaudiochannels.html#gst-audio-channel-positions-to-string"/>
     <keyword type="function" name="gst_audio_channel_mixer_new ()" link="gst-plugins-base-libs-gstaudiochannels.html#gst-audio-channel-mixer-new"/>
     <keyword type="function" name="gst_audio_channel_mixer_free ()" link="gst-plugins-base-libs-gstaudiochannels.html#gst-audio-channel-mixer-free"/>
     <keyword type="function" name="gst_audio_channel_mixer_is_passthrough ()" link="gst-plugins-base-libs-gstaudiochannels.html#gst-audio-channel-mixer-is-passthrough"/>
@@ -1118,6 +1124,8 @@
     <keyword type="function" name="gst_codec_utils_aac_get_index_from_sample_rate ()" link="gst-plugins-base-libs-gstpbutilscodecutils.html#gst-codec-utils-aac-get-index-from-sample-rate"/>
     <keyword type="function" name="gst_codec_utils_aac_get_profile ()" link="gst-plugins-base-libs-gstpbutilscodecutils.html#gst-codec-utils-aac-get-profile"/>
     <keyword type="function" name="gst_codec_utils_aac_get_level ()" link="gst-plugins-base-libs-gstpbutilscodecutils.html#gst-codec-utils-aac-get-level"/>
+    <keyword type="function" name="gst_codec_utils_aac_get_channels ()" link="gst-plugins-base-libs-gstpbutilscodecutils.html#gst-codec-utils-aac-get-channels"/>
+    <keyword type="function" name="gst_codec_utils_aac_get_sample_rate ()" link="gst-plugins-base-libs-gstpbutilscodecutils.html#gst-codec-utils-aac-get-sample-rate"/>
     <keyword type="function" name="gst_codec_utils_aac_caps_set_level_and_profile ()" link="gst-plugins-base-libs-gstpbutilscodecutils.html#gst-codec-utils-aac-caps-set-level-and-profile"/>
     <keyword type="function" name="gst_codec_utils_h264_get_profile ()" link="gst-plugins-base-libs-gstpbutilscodecutils.html#gst-codec-utils-h264-get-profile"/>
     <keyword type="function" name="gst_codec_utils_h264_get_level ()" link="gst-plugins-base-libs-gstpbutilscodecutils.html#gst-codec-utils-h264-get-level"/>
@@ -1455,11 +1463,26 @@
     <keyword type="function" name="gst_video_multiview_mode_to_caps_string ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-multiview-mode-to-caps-string" since="1.6"/>
     <keyword type="function" name="gst_video_multiview_guess_half_aspect ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-multiview-guess-half-aspect" since="1.6"/>
     <keyword type="function" name="gst_video_multiview_video_info_change_mode ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-multiview-video-info-change-mode" since="1.6"/>
+    <keyword type="function" name="gst_video_time_code_new ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-new" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_new_empty ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-new-empty" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_free ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-free" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_copy ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-copy" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_init ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-init" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_clear ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-clear" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_is_valid ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-is-valid" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_compare ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-compare" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_increment_frame ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-increment-frame" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_add_frames ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-add-frames" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_frames_since_daily_jam ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-frames-since-daily-jam" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_nsec_since_daily_jam ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-nsec-since-daily-jam" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_to_date_time ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-to-date-time" since="1.10"/>
+    <keyword type="function" name="gst_video_time_code_to_string ()" link="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-to-string" since="1.10"/>
     <keyword type="struct" name="struct GstVideoAlignment" link="gst-plugins-base-libs-gstvideo.html#GstVideoAlignment"/>
     <keyword type="macro" name="GST_META_TAG_VIDEO_STR" link="gst-plugins-base-libs-gstvideo.html#GST-META-TAG-VIDEO-STR:CAPS" since="1.2"/>
     <keyword type="macro" name="GST_META_TAG_VIDEO_ORIENTATION_STR" link="gst-plugins-base-libs-gstvideo.html#GST-META-TAG-VIDEO-ORIENTATION-STR:CAPS" since="1.2"/>
     <keyword type="macro" name="GST_META_TAG_VIDEO_SIZE_STR" link="gst-plugins-base-libs-gstvideo.html#GST-META-TAG-VIDEO-SIZE-STR:CAPS" since="1.2"/>
     <keyword type="macro" name="GST_META_TAG_VIDEO_COLORSPACE_STR" link="gst-plugins-base-libs-gstvideo.html#GST-META-TAG-VIDEO-COLORSPACE-STR:CAPS" since="1.2"/>
+    <keyword type="enum" name="enum GstVideoOrientationMethod" link="gst-plugins-base-libs-gstvideo.html#GstVideoOrientationMethod" since="1.10"/>
     <keyword type="enum" name="enum GstVideoFormat" link="gst-plugins-base-libs-gstvideo.html#GstVideoFormat"/>
     <keyword type="macro" name="GST_VIDEO_MAX_PLANES" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-MAX-PLANES:CAPS"/>
     <keyword type="macro" name="GST_VIDEO_MAX_COMPONENTS" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-MAX-COMPONENTS:CAPS"/>
@@ -1486,6 +1509,9 @@
     <keyword type="enum" name="enum GstVideoTileType" link="gst-plugins-base-libs-gstvideo.html#GstVideoTileType"/>
     <keyword type="enum" name="enum GstVideoTileMode" link="gst-plugins-base-libs-gstvideo.html#GstVideoTileMode"/>
     <keyword type="struct" name="GstVideoConverter" link="gst-plugins-base-libs-gstvideo.html#GstVideoConverter"/>
+    <keyword type="struct" name="struct GstVideoTimeCode" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" since="1.10"/>
+    <keyword type="struct" name="struct GstVideoTimeCodeConfig" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeConfig" since="1.10"/>
+    <keyword type="enum" name="enum GstVideoTimeCodeFlags" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeFlags" since="1.10"/>
     <keyword type="function" name="gst_video_meta_map ()" link="gst-plugins-base-libs-gstvideometa.html#gst-video-meta-map"/>
     <keyword type="function" name="gst_video_meta_unmap ()" link="gst-plugins-base-libs-gstvideometa.html#gst-video-meta-unmap"/>
     <keyword type="function" name="gst_video_meta_get_info ()" link="gst-plugins-base-libs-gstvideometa.html#gst-video-meta-get-info"/>
@@ -1503,12 +1529,16 @@
     <keyword type="function" name="gst_buffer_add_video_gl_texture_upload_meta ()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-add-video-gl-texture-upload-meta"/>
     <keyword type="macro" name="gst_buffer_get_video_gl_texture_upload_meta()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-get-video-gl-texture-upload-meta"/>
     <keyword type="function" name="gst_video_gl_texture_upload_meta_upload ()" link="gst-plugins-base-libs-gstvideometa.html#gst-video-gl-texture-upload-meta-upload"/>
+    <keyword type="function" name="gst_buffer_add_video_time_code_meta ()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-add-video-time-code-meta" since="1.10"/>
+    <keyword type="function" name="gst_buffer_add_video_time_code_meta_full ()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-add-video-time-code-meta-full" since="1.10"/>
+    <keyword type="macro" name="gst_buffer_get_video_time_code_meta()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-get-video-time-code-meta"/>
     <keyword type="struct" name="struct GstVideoMeta" link="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta"/>
     <keyword type="struct" name="GstVideoMetaTransform" link="gst-plugins-base-libs-gstvideometa.html#GstVideoMetaTransform"/>
     <keyword type="struct" name="struct GstVideoCropMeta" link="gst-plugins-base-libs-gstvideometa.html#GstVideoCropMeta"/>
     <keyword type="struct" name="GstVideoRegionOfInterestMeta" link="gst-plugins-base-libs-gstvideometa.html#GstVideoRegionOfInterestMeta"/>
     <keyword type="macro" name="GST_BUFFER_POOL_OPTION_VIDEO_GL_TEXTURE_UPLOAD_META" link="gst-plugins-base-libs-gstvideometa.html#GST-BUFFER-POOL-OPTION-VIDEO-GL-TEXTURE-UPLOAD-META:CAPS" since="1.2.2"/>
     <keyword type="struct" name="struct GstVideoGLTextureUploadMeta" link="gst-plugins-base-libs-gstvideometa.html#GstVideoGLTextureUploadMeta"/>
+    <keyword type="struct" name="GstVideoTimeCodeMeta" link="gst-plugins-base-libs-gstvideometa.html#GstVideoTimeCodeMeta" since="1.10"/>
     <keyword type="function" name="gst_buffer_add_video_affine_transformation_meta ()" link="gst-plugins-base-libs-gstvideoaffinetransformationmeta.html#gst-buffer-add-video-affine-transformation-meta" since="1.8"/>
     <keyword type="macro" name="gst_buffer_get_video_affine_transformation_meta()" link="gst-plugins-base-libs-gstvideoaffinetransformationmeta.html#gst-buffer-get-video-affine-transformation-meta"/>
     <keyword type="function" name="gst_video_affine_transformation_meta_apply_matrix ()" link="gst-plugins-base-libs-gstvideoaffinetransformationmeta.html#gst-video-affine-transformation-meta-apply-matrix" since="1.8"/>
@@ -1606,6 +1636,9 @@
     <keyword type="struct" name="struct GstColorBalanceChannel" link="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannel-struct"/>
     <keyword type="struct" name="struct GstColorBalanceChannelClass" link="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannelClass"/>
     <keyword type="signal" name="The “value-changed” signal" link="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannel-value-changed"/>
+    <keyword type="struct" name="GstVideoDirection" link="gst-plugins-base-libs-gstvideodirection.html#GstVideoDirection-struct"/>
+    <keyword type="struct" name="struct GstVideoDirectionInterface" link="gst-plugins-base-libs-gstvideodirection.html#GstVideoDirectionInterface" since="1.10"/>
+    <keyword type="property" name="The “video-direction” property" link="gst-plugins-base-libs-gstvideodirection.html#GstVideoDirection--video-direction"/>
     <keyword type="function" name="gst_video_orientation_get_hcenter ()" link="gst-plugins-base-libs-gstvideoorientation.html#gst-video-orientation-get-hcenter"/>
     <keyword type="function" name="gst_video_orientation_get_hflip ()" link="gst-plugins-base-libs-gstvideoorientation.html#gst-video-orientation-get-hflip"/>
     <keyword type="function" name="gst_video_orientation_get_vcenter ()" link="gst-plugins-base-libs-gstvideoorientation.html#gst-video-orientation-get-vcenter"/>
@@ -1768,6 +1801,7 @@
     <keyword type="constant" name="GST_FD_MEMORY_FLAG_NONE" link="gst-plugins-base-libs-fdmemory.html#GST-FD-MEMORY-FLAG-NONE:CAPS"/>
     <keyword type="constant" name="GST_FD_MEMORY_FLAG_KEEP_MAPPED" link="gst-plugins-base-libs-fdmemory.html#GST-FD-MEMORY-FLAG-KEEP-MAPPED:CAPS"/>
     <keyword type="constant" name="GST_FD_MEMORY_FLAG_MAP_PRIVATE" link="gst-plugins-base-libs-fdmemory.html#GST-FD-MEMORY-FLAG-MAP-PRIVATE:CAPS"/>
+    <keyword type="constant" name="GST_FD_MEMORY_FLAG_DONT_CLOSE" link="gst-plugins-base-libs-fdmemory.html#GST-FD-MEMORY-FLAG-DONT-CLOSE:CAPS"/>
     <keyword type="constant" name="GST_APP_STREAM_TYPE_STREAM" link="gst-plugins-base-libs-appsrc.html#GST-APP-STREAM-TYPE-STREAM:CAPS"/>
     <keyword type="constant" name="GST_APP_STREAM_TYPE_SEEKABLE" link="gst-plugins-base-libs-appsrc.html#GST-APP-STREAM-TYPE-SEEKABLE:CAPS"/>
     <keyword type="constant" name="GST_APP_STREAM_TYPE_RANDOM_ACCESS" link="gst-plugins-base-libs-appsrc.html#GST-APP-STREAM-TYPE-RANDOM-ACCESS:CAPS"/>
@@ -2295,6 +2329,16 @@
     <keyword type="constant" name="GST_DISCOVERER_SERIALIZE_TAGS" link="gst-plugins-base-libs-gstdiscoverer.html#GST-DISCOVERER-SERIALIZE-TAGS:CAPS"/>
     <keyword type="constant" name="GST_DISCOVERER_SERIALIZE_MISC" link="gst-plugins-base-libs-gstdiscoverer.html#GST-DISCOVERER-SERIALIZE-MISC:CAPS"/>
     <keyword type="constant" name="GST_DISCOVERER_SERIALIZE_ALL" link="gst-plugins-base-libs-gstdiscoverer.html#GST-DISCOVERER-SERIALIZE-ALL:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_IDENTITY" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-IDENTITY:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_90R" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-90R:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_180" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-180:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_90L" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-90L:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_HORIZ" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-HORIZ:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_VERT" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-VERT:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_UL_LR" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-UL-LR:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_UR_LL" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-UR-LL:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_AUTO" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-AUTO:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_ORIENTATION_CUSTOM" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ORIENTATION-CUSTOM:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_UNKNOWN" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-UNKNOWN:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_ENCODED" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-ENCODED:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_I420" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-I420:CAPS"/>
@@ -2356,6 +2400,9 @@
     <keyword type="constant" name="GST_VIDEO_FORMAT_A444_10BE" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-A444-10BE:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_A444_10LE" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-A444-10LE:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_NV61" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-NV61:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_FORMAT_P010_10BE" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-P010-10BE:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_FORMAT_P010_10LE" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-P010-10LE:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_FORMAT_IYU2" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-IYU2:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_FLAG_YUV" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-FLAG-YUV:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_FLAG_RGB" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-FLAG-RGB:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_FLAG_GRAY" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-FLAG-GRAY:CAPS"/>
@@ -2455,6 +2502,9 @@
     <keyword type="constant" name="GST_VIDEO_TILE_TYPE_INDEXED" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-TILE-TYPE-INDEXED:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_TILE_MODE_UNKNOWN" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-TILE-MODE-UNKNOWN:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_TILE_MODE_ZFLIPZ_2X2" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-TILE-MODE-ZFLIPZ-2X2:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_TIME_CODE_FLAGS_NONE" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-TIME-CODE-FLAGS-NONE:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_TIME_CODE_FLAGS_DROP_FRAME" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-TIME-CODE-FLAGS-DROP-FRAME:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_TIME_CODE_FLAGS_INTERLACED" link="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-TIME-CODE-FLAGS-INTERLACED:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_OVERLAY_FORMAT_FLAG_NONE" link="gst-plugins-base-libs-gstvideooverlaycomposition.html#GST-VIDEO-OVERLAY-FORMAT-FLAG-NONE:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_OVERLAY_FORMAT_FLAG_PREMULTIPLIED_ALPHA" link="gst-plugins-base-libs-gstvideooverlaycomposition.html#GST-VIDEO-OVERLAY-FORMAT-FLAG-PREMULTIPLIED-ALPHA:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_OVERLAY_FORMAT_FLAG_GLOBAL_ALPHA" link="gst-plugins-base-libs-gstvideooverlaycomposition.html#GST-VIDEO-OVERLAY-FORMAT-FLAG-GLOBAL-ALPHA:CAPS"/>
@@ -2480,6 +2530,7 @@
     <keyword type="constant" name="GST_VIDEO_CHROMA_METHOD_NEAREST" link="gst-plugins-base-libs-GstVideoChroma.html#GST-VIDEO-CHROMA-METHOD-NEAREST:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_CHROMA_METHOD_LINEAR" link="gst-plugins-base-libs-GstVideoChroma.html#GST-VIDEO-CHROMA-METHOD-LINEAR:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_RESAMPLER_FLAG_NONE" link="gst-plugins-base-libs-GstVideoResampler.html#GST-VIDEO-RESAMPLER-FLAG-NONE:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_RESAMPLER_FLAG_HALF_TAPS" link="gst-plugins-base-libs-GstVideoResampler.html#GST-VIDEO-RESAMPLER-FLAG-HALF-TAPS:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_RESAMPLER_METHOD_NEAREST" link="gst-plugins-base-libs-GstVideoResampler.html#GST-VIDEO-RESAMPLER-METHOD-NEAREST:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_RESAMPLER_METHOD_LINEAR" link="gst-plugins-base-libs-GstVideoResampler.html#GST-VIDEO-RESAMPLER-METHOD-LINEAR:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_RESAMPLER_METHOD_CUBIC" link="gst-plugins-base-libs-GstVideoResampler.html#GST-VIDEO-RESAMPLER-METHOD-CUBIC:CAPS"/>
@@ -2876,6 +2927,16 @@
     <keyword type="member" name="GstVideoFrame.id" link="gst-plugins-base-libs-gstvideo.html#GstVideoFrame.id"/>
     <keyword type="member" name="GstVideoFrame.data" link="gst-plugins-base-libs-gstvideo.html#GstVideoFrame.data"/>
     <keyword type="member" name="GstVideoFrame.map" link="gst-plugins-base-libs-gstvideo.html#GstVideoFrame.map"/>
+    <keyword type="member" name="GstVideoTimeCode.config" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode.config"/>
+    <keyword type="member" name="GstVideoTimeCode.hours" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode.hours"/>
+    <keyword type="member" name="GstVideoTimeCode.minutes" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode.minutes"/>
+    <keyword type="member" name="GstVideoTimeCode.seconds" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode.seconds"/>
+    <keyword type="member" name="GstVideoTimeCode.frames" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode.frames"/>
+    <keyword type="member" name="GstVideoTimeCode.field-count" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode.field-count"/>
+    <keyword type="member" name="GstVideoTimeCodeConfig.fps-n" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeConfig.fps-n"/>
+    <keyword type="member" name="GstVideoTimeCodeConfig.fps-d" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeConfig.fps-d"/>
+    <keyword type="member" name="GstVideoTimeCodeConfig.flags" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeConfig.flags"/>
+    <keyword type="member" name="GstVideoTimeCodeConfig.latest-daily-jam" link="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeConfig.latest-daily-jam"/>
     <keyword type="member" name="GstVideoMeta.meta" link="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta.meta"/>
     <keyword type="member" name="GstVideoMeta.buffer" link="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta.buffer"/>
     <keyword type="member" name="GstVideoMeta.flags" link="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta.flags"/>
@@ -2907,6 +2968,8 @@
     <keyword type="member" name="GstVideoGLTextureUploadMeta.texture-orientation" link="gst-plugins-base-libs-gstvideometa.html#GstVideoGLTextureUploadMeta.texture-orientation"/>
     <keyword type="member" name="GstVideoGLTextureUploadMeta.n-textures" link="gst-plugins-base-libs-gstvideometa.html#GstVideoGLTextureUploadMeta.n-textures"/>
     <keyword type="member" name="GstVideoGLTextureUploadMeta.texture-type" link="gst-plugins-base-libs-gstvideometa.html#GstVideoGLTextureUploadMeta.texture-type"/>
+    <keyword type="member" name="GstVideoTimeCodeMeta.meta" link="gst-plugins-base-libs-gstvideometa.html#GstVideoTimeCodeMeta.meta"/>
+    <keyword type="member" name="GstVideoTimeCodeMeta.tc" link="gst-plugins-base-libs-gstvideometa.html#GstVideoTimeCodeMeta.tc"/>
     <keyword type="member" name="GstVideoOverlayCompositionMeta.meta" link="gst-plugins-base-libs-gstvideooverlaycomposition.html#GstVideoOverlayCompositionMeta.meta"/>
     <keyword type="member" name="GstVideoOverlayCompositionMeta.overlay" link="gst-plugins-base-libs-gstvideooverlaycomposition.html#GstVideoOverlayCompositionMeta.overlay"/>
     <keyword type="member" name="GstVideoFilterClass.set-info" link="gst-plugins-base-libs-gstvideofilter.html#GstVideoFilterClass.set-info"/>
@@ -2938,6 +3001,7 @@
     <keyword type="member" name="GstColorBalanceChannel-struct.max-value" link="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannel-struct.max-value"/>
     <keyword type="member" name="GstColorBalanceChannelClass.parent" link="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannelClass.parent"/>
     <keyword type="member" name="GstColorBalanceChannelClass.value-changed" link="gst-plugins-base-libs-gstcolorbalancechannel.html#GstColorBalanceChannelClass.value-changed"/>
+    <keyword type="member" name="GstVideoDirectionInterface.iface" link="gst-plugins-base-libs-gstvideodirection.html#GstVideoDirectionInterface.iface"/>
     <keyword type="member" name="GstVideoOrientationInterface.iface" link="gst-plugins-base-libs-gstvideoorientation.html#GstVideoOrientationInterface.iface"/>
     <keyword type="member" name="GstVideoOrientationInterface.get-hflip" link="gst-plugins-base-libs-gstvideoorientation.html#GstVideoOrientationInterface.get-hflip"/>
     <keyword type="member" name="GstVideoOrientationInterface.get-vflip" link="gst-plugins-base-libs-gstvideoorientation.html#GstVideoOrientationInterface.get-vflip"/>
@@ -3004,6 +3068,7 @@
     <keyword type="member" name="GstVideoCodecState.info" link="gst-plugins-base-libs-gstvideoutils.html#GstVideoCodecState.info"/>
     <keyword type="member" name="GstVideoCodecState.caps" link="gst-plugins-base-libs-gstvideoutils.html#GstVideoCodecState.caps"/>
     <keyword type="member" name="GstVideoCodecState.codec-data" link="gst-plugins-base-libs-gstvideoutils.html#GstVideoCodecState.codec-data"/>
+    <keyword type="member" name="GstVideoCodecState.allocation-caps" link="gst-plugins-base-libs-gstvideoutils.html#GstVideoCodecState.allocation-caps"/>
     <keyword type="member" name="GstNavigationInterface.iface" link="gst-plugins-base-libs-gstnavigation.html#GstNavigationInterface.iface"/>
     <keyword type="member" name="GstNavigationInterface.send-event" link="gst-plugins-base-libs-gstnavigation.html#GstNavigationInterface.send-event"/>
   </functions>

@@ -99,7 +99,6 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@HAVE_INTROSPECTION_TRUE@am__append_1 = $(BUILT_GIRSOURCES) $(typelibs_DATA)
 subdir = gst-libs/gst/app
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -108,6 +107,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
+	$(top_srcdir)/common/m4/ax_pthread.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
@@ -179,11 +179,8 @@ libgstapp_@GST_API_VERSION@_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_libgstapp_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstapp_@GST_API_VERSION@_la-gstappsrc.lo \
 	libgstapp_@GST_API_VERSION@_la-gstappsink.lo
-am__objects_1 = libgstapp_@GST_API_VERSION@_la-gstapp-marshal.lo
-nodist_libgstapp_@GST_API_VERSION@_la_OBJECTS = $(am__objects_1)
 libgstapp_@GST_API_VERSION@_la_OBJECTS =  \
-	$(am_libgstapp_@GST_API_VERSION@_la_OBJECTS) \
-	$(nodist_libgstapp_@GST_API_VERSION@_la_OBJECTS)
+	$(am_libgstapp_@GST_API_VERSION@_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -226,8 +223,7 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libgstapp_@GST_API_VERSION@_la_SOURCES) \
-	$(nodist_libgstapp_@GST_API_VERSION@_la_SOURCES)
+SOURCES = $(libgstapp_@GST_API_VERSION@_la_SOURCES)
 DIST_SOURCES = $(libgstapp_@GST_API_VERSION@_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -434,6 +430,9 @@ PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 POSUB = @POSUB@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PTHREAD_CC = @PTHREAD_CC@
+PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
+PTHREAD_LIBS = @PTHREAD_LIBS@
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_PLATFORM = @PYTHON_PLATFORM@
@@ -447,6 +446,9 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SSE2_CFLAGS = @SSE2_CFLAGS@
+SSE41_CFLAGS = @SSE41_CFLAGS@
+SSE_CFLAGS = @SSE_CFLAGS@
 STRIP = @STRIP@
 THEORA_CFLAGS = @THEORA_CFLAGS@
 THEORA_LIBS = @THEORA_LIBS@
@@ -484,6 +486,7 @@ am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
+ax_pthread_config = @ax_pthread_config@
 bindir = @bindir@
 build = @build@
 build_alias = @build_alias@
@@ -539,12 +542,6 @@ glib_enum_define = GST_APP
 glib_gen_prefix = __gst_app
 glib_gen_basename = gstapp
 enum_headers = $(foreach h,$(glib_enum_headers),\n\#include \"$(h)\")
-built_sources = gstapp-marshal.c
-built_headers = gstapp-marshal.h
-BUILT_SOURCES = $(built_sources) $(built_headers)
-nodist_libgstapp_@GST_API_VERSION@_la_SOURCES = \
-             $(built_sources)
-
 libgstapp_@GST_API_VERSION@_la_SOURCES = gstappsrc.c gstappsink.c 
 libgstapp_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_BASE_CFLAGS) $(GST_CFLAGS)
@@ -557,8 +554,6 @@ libgstapp_@GST_API_VERSION@include_HEADERS = \
 	gstappsrc.h \
 	gstappsink.h
 
-CLEANFILES = $(BUILT_SOURCES) $(am__append_1)
-EXTRA_DIST = gstapp-marshal.list
 @HAVE_INTROSPECTION_TRUE@BUILT_GIRSOURCES = GstApp-@GST_API_VERSION@.gir
 @HAVE_INTROSPECTION_TRUE@gir_headers = $(patsubst %,$(srcdir)/%, $(libgstapp_@GST_API_VERSION@include_HEADERS))
 @HAVE_INTROSPECTION_TRUE@gir_sources = $(patsubst %,$(srcdir)/%, \
@@ -572,8 +567,8 @@ EXTRA_DIST = gstapp-marshal.list
 @HAVE_INTROSPECTION_TRUE@gir_DATA = $(BUILT_GIRSOURCES)
 @HAVE_INTROSPECTION_TRUE@typelibsdir = $(libdir)/girepository-1.0/
 @HAVE_INTROSPECTION_TRUE@typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
-all: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) all-am
+@HAVE_INTROSPECTION_TRUE@CLEANFILES = $(BUILT_GIRSOURCES) $(typelibs_DATA)
+all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
@@ -652,7 +647,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstapp_@GST_API_VERSION@_la-gstapp-marshal.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstapp_@GST_API_VERSION@_la-gstappsink.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstapp_@GST_API_VERSION@_la-gstappsrc.Plo@am__quote@
 
@@ -693,13 +687,6 @@ libgstapp_@GST_API_VERSION@_la-gstappsink.lo: gstappsink.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstappsink.c' object='libgstapp_@GST_API_VERSION@_la-gstappsink.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstapp_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstapp_@GST_API_VERSION@_la-gstappsink.lo `test -f 'gstappsink.c' || echo '$(srcdir)/'`gstappsink.c
-
-libgstapp_@GST_API_VERSION@_la-gstapp-marshal.lo: gstapp-marshal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstapp_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstapp_@GST_API_VERSION@_la-gstapp-marshal.lo -MD -MP -MF $(DEPDIR)/libgstapp_@GST_API_VERSION@_la-gstapp-marshal.Tpo -c -o libgstapp_@GST_API_VERSION@_la-gstapp-marshal.lo `test -f 'gstapp-marshal.c' || echo '$(srcdir)/'`gstapp-marshal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstapp_@GST_API_VERSION@_la-gstapp-marshal.Tpo $(DEPDIR)/libgstapp_@GST_API_VERSION@_la-gstapp-marshal.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstapp-marshal.c' object='libgstapp_@GST_API_VERSION@_la-gstapp-marshal.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstapp_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstapp_@GST_API_VERSION@_la-gstapp-marshal.lo `test -f 'gstapp-marshal.c' || echo '$(srcdir)/'`gstapp-marshal.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -807,15 +794,13 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) check-am
+check: check-am
 all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
 installdirs:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" "$(DESTDIR)$(typelibsdir)" "$(DESTDIR)$(libgstapp_@GST_API_VERSION@includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) install-am
+install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -846,7 +831,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
@@ -921,7 +905,7 @@ uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 	uninstall-libgstapp_@GST_API_VERSION@includeHEADERS \
 	uninstall-typelibsDATA
 
-.MAKE: all check install install-am install-strip
+.MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic \
 	clean-libLTLIBRARIES clean-libtool cscopelist-am ctags-am \

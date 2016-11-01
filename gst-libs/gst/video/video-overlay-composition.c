@@ -186,6 +186,19 @@ gst_video_overlay_get_seqnum (void)
   return (guint) g_atomic_int_add (&seqnum, 1);
 }
 
+static gboolean
+gst_video_overlay_composition_meta_init (GstMeta * meta, gpointer params,
+    GstBuffer * buf)
+{
+  GstVideoOverlayCompositionMeta *ometa;
+
+  ometa = (GstVideoOverlayCompositionMeta *) meta;
+
+  ometa->overlay = NULL;
+
+  return TRUE;
+}
+
 static void
 gst_video_overlay_composition_meta_free (GstMeta * meta, GstBuffer * buf)
 {
@@ -251,7 +264,8 @@ gst_video_overlay_composition_meta_get_info (void)
     const GstMetaInfo *meta =
         gst_meta_register (GST_VIDEO_OVERLAY_COMPOSITION_META_API_TYPE,
         "GstVideoOverlayCompositionMeta",
-        sizeof (GstVideoOverlayCompositionMeta), (GstMetaInitFunction) NULL,
+        sizeof (GstVideoOverlayCompositionMeta),
+        (GstMetaInitFunction) gst_video_overlay_composition_meta_init,
         (GstMetaFreeFunction) gst_video_overlay_composition_meta_free,
         (GstMetaTransformFunction)
         gst_video_overlay_composition_meta_transform);
@@ -440,11 +454,15 @@ gst_video_overlay_rectangle_needs_scaling (GstVideoOverlayRectangle * r)
 /**
  * gst_video_overlay_composition_blend:
  * @comp: a #GstVideoOverlayComposition
- * @video_buf: a #GstVideoFrame containing raw video data in a supported format
+ * @video_buf: a #GstVideoFrame containing raw video data in a
+ *             supported format. It should be mapped using GST_MAP_READWRITE
  *
  * Blends the overlay rectangles in @comp on top of the raw video data
  * contained in @video_buf. The data in @video_buf must be writable and
  * mapped appropriately.
+ *
+ * Since @video_buf data is read and will be modified, it ought be
+ * mapped with flag GST_MAP_READWRITE.
  */
 /* FIXME: formats with more than 8 bit per component which get unpacked into
  * ARGB64 or AYUV64 (such as v210, v216, UYVP, GRAY16_LE and GRAY16_BE)

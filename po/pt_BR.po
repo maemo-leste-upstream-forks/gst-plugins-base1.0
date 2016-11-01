@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base-1.7.90\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-08-19 11:53+0300\n"
+"POT-Creation-Date: 2016-09-30 12:11+0300\n"
 "PO-Revision-Date: 2016-05-06 16:47-0300\n"
 "Last-Translator: Fabrício Godoy <skarllot@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <ldpbr-translation@lists.sourceforge."
@@ -79,9 +79,6 @@ msgstr "Não foi possível buscar no CD."
 msgid "Could not read CD."
 msgstr "Não foi possível ler o CD."
 
-msgid "Internal data stream error."
-msgstr "Erro interno no fluxo de dados."
-
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr ""
@@ -94,6 +91,14 @@ msgid "This appears to be a text file"
 msgstr "Este parece ser um arquivo de texto"
 
 msgid "Could not create \"uridecodebin\" element."
+msgstr "Não foi possível criar o elemento \"uridecodebin\"."
+
+#, fuzzy
+msgid "Could not create \"decodebin3\" element."
+msgstr "Não foi possível criar o elemento \"decodebin2\"."
+
+#, fuzzy
+msgid "Could not create \"urisourcebin\" element."
 msgstr "Não foi possível criar o elemento \"uridecodebin\"."
 
 #, c-format
@@ -228,6 +233,10 @@ msgid "TMPlayer subtitle format"
 msgstr "Formato de legendas TMPlayer"
 
 msgid "Kate subtitle format"
+msgstr "Formato de legendas Kate"
+
+#, fuzzy
+msgid "WebVTT subtitle format"
 msgstr "Formato de legendas Kate"
 
 msgid "Uncompressed video"
@@ -394,6 +403,15 @@ msgid "capturing focal length"
 msgstr "distância focal ao capturar"
 
 msgid "Focal length of the lens used capturing the image, in mm"
+msgstr "Distância focal das lentes utilizada ao capturar a imagem, em mm"
+
+#, fuzzy
+msgid "capturing 35 mm equivalent focal length"
+msgstr "distância focal ao capturar"
+
+#, fuzzy
+msgid ""
+"35 mm equivalent focal length of the lens used capturing the image, in mm"
 msgstr "Distância focal das lentes utilizada ao capturar a imagem, em mm"
 
 msgid "capturing digital zoom ratio"
@@ -678,6 +696,9 @@ msgstr "Você deve fornecer ao menos um nome de arquivo ou URI para reproduzir."
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr "Pressione \"k\" para ver a lista de atalhos do teclado.\n"
 
+#~ msgid "Internal data stream error."
+#~ msgstr "Erro interno no fluxo de dados."
+
 #~ msgid "A %s plugin is required to play this stream, but not installed."
 #~ msgstr ""
 #~ "O plug-in %s é necessário para reproduzir este fluxo, mas não está "
@@ -818,9 +839,6 @@ msgstr "Pressione \"k\" para ver a lista de atalhos do teclado.\n"
 
 #~ msgid "Could not open device \"%s\" for reading and writing."
 #~ msgstr "Não foi possível abrir o dispositivo \"%s\" para leitura e escrita."
-
-#~ msgid "Could not create \"decodebin2\" element."
-#~ msgstr "Não foi possível criar o elemento \"decodebin2\"."
 
 #~ msgid "Could not create \"queue2\" element."
 #~ msgstr "Não foi possível criar o elemento \"queue2\"."

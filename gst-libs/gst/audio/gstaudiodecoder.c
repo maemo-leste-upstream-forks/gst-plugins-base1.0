@@ -203,6 +203,7 @@ typedef struct _GstAudioDecoderContext
   gboolean do_plc;
   gboolean do_estimate_rate;
   gint max_errors;
+  GstCaps *allocation_caps;
   /* MT-protected (with LOCK) */
   GstClockTime min_latency;
   GstClockTime max_latency;
@@ -241,6 +242,8 @@ struct _GstAudioDecoderPrivate
   gboolean force;
   /* input_segment are output_segment identical */
   gboolean in_out_segment_sync;
+  /* expecting the buffer with DISCONT flag */
+  gboolean expecting_discont_buf;
 
 
   /* input bps estimatation */
@@ -528,6 +531,7 @@ gst_audio_decoder_reset (GstAudioDecoder * dec, gboolean full)
 
     GST_OBJECT_LOCK (dec);
     gst_caps_replace (&dec->priv->ctx.input_caps, NULL);
+    gst_caps_replace (&dec->priv->ctx.allocation_caps, NULL);
 
     memset (&dec->priv->ctx, 0, sizeof (dec->priv->ctx));
 
@@ -643,6 +647,8 @@ gst_audio_decoder_negotiate_default (GstAudioDecoder * dec)
   klass = GST_AUDIO_DECODER_GET_CLASS (dec);
 
   caps = gst_audio_info_to_caps (&dec->priv->ctx.info);
+  if (dec->priv->ctx.allocation_caps == NULL)
+    dec->priv->ctx.allocation_caps = gst_caps_ref (caps);
 
   GST_DEBUG_OBJECT (dec, "setting src caps %" GST_PTR_FORMAT, caps);
 
@@ -677,7 +683,7 @@ gst_audio_decoder_negotiate_default (GstAudioDecoder * dec)
     goto done;
   dec->priv->ctx.output_format_changed = FALSE;
 
-  query = gst_query_new_allocation (caps, TRUE);
+  query = gst_query_new_allocation (dec->priv->ctx.allocation_caps, TRUE);
   if (!gst_pad_peer_query (dec->srcpad, query)) {
     GST_DEBUG_OBJECT (dec, "didn't get downstream ALLOCATION hints");
   }
@@ -1893,9 +1899,6 @@ gst_audio_decoder_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 
   dec = GST_AUDIO_DECODER (parent);
 
-  if (G_UNLIKELY (!gst_pad_has_current_caps (pad) && dec->priv->needs_format))
-    goto not_negotiated;
-
   GST_LOG_OBJECT (dec,
       "received buffer of size %" G_GSIZE_FORMAT " with ts %" GST_TIME_FORMAT
       ", duration %" GST_TIME_FORMAT, gst_buffer_get_size (buffer),
@@ -1904,9 +1907,13 @@ gst_audio_decoder_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 
   GST_AUDIO_DECODER_STREAM_LOCK (dec);
 
+  if (G_UNLIKELY (dec->priv->ctx.input_caps == NULL && dec->priv->needs_format))
+    goto not_negotiated;
+
   dec->priv->ctx.had_input_data = TRUE;
 
-  if (GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_DISCONT)) {
+  if (!dec->priv->expecting_discont_buf &&
+      GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_DISCONT)) {
     gint64 samples, ts;
 
     /* track present position */
@@ -1927,6 +1934,7 @@ gst_audio_decoder_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
       dec->priv->samples = samples;
     }
   }
+  dec->priv->expecting_discont_buf = FALSE;
 
   if (dec->input_segment.rate > 0.0)
     ret = gst_audio_decoder_chain_forward (dec, buffer);
@@ -1940,6 +1948,7 @@ gst_audio_decoder_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
   /* ERRORS */
 not_negotiated:
   {
+    GST_AUDIO_DECODER_STREAM_UNLOCK (dec);
     GST_ELEMENT_ERROR (dec, CORE, NEGOTIATION, (NULL),
         ("decoder not initialized"));
     gst_buffer_unref (buffer);
@@ -2119,6 +2128,7 @@ gst_audio_decoder_handle_gap (GstAudioDecoder * dec, GstEvent * event)
     /* best effort, not much error handling */
     gst_audio_decoder_handle_frame (dec, klass, buf);
     ret = TRUE;
+    dec->priv->expecting_discont_buf = TRUE;
     gst_event_unref (event);
   } else {
     GstFlowReturn flowret;
@@ -3226,6 +3236,27 @@ gst_audio_decoder_get_parse_state (GstAudioDecoder * dec,
     *sync = dec->priv->ctx.sync;
   if (eos)
     *eos = dec->priv->ctx.eos;
+}
+
+/**
+ * gst_audio_decoder_set_allocation_caps:
+ * @dec: a #GstAudioDecoder
+ * @allocation_caps: (allow-none): a #GstCaps or %NULL
+ *
+ * Sets a caps in allocation query which are different from the set
+ * pad's caps. Use this function before calling
+ * gst_audio_decoder_negotiate(). Setting to %NULL the allocation
+ * query will use the caps from the pad.
+ *
+ * Since: 1.10
+ */
+void
+gst_audio_decoder_set_allocation_caps (GstAudioDecoder * dec,
+    GstCaps * allocation_caps)
+{
+  g_return_if_fail (GST_IS_AUDIO_DECODER (dec));
+
+  gst_caps_replace (&dec->priv->ctx.allocation_caps, allocation_caps);
 }
 
 /**

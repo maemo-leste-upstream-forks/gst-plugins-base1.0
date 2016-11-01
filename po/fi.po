@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base 0.10.30.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-08-19 11:53+0300\n"
+"POT-Creation-Date: 2016-09-30 12:11+0300\n"
 "PO-Revision-Date: 2010-12-31 23:21+0200\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -76,9 +76,6 @@ msgstr "CD-levyllä ei voitu siirtyä."
 msgid "Could not read CD."
 msgstr "CD-levyä ei voitu lukea."
 
-msgid "Internal data stream error."
-msgstr "Sisäisen tietovirran virhe."
-
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr "Puuttuva elementti \"%s\" - tarkista GStreamer-asennuksesi."
@@ -91,6 +88,14 @@ msgstr "Tämä näyttää olevan tekstitiedosto"
 
 #, fuzzy
 msgid "Could not create \"uridecodebin\" element."
+msgstr "Elementtiä \"decodebin\" ei voitu luoda."
+
+#, fuzzy
+msgid "Could not create \"decodebin3\" element."
+msgstr "Elementtiä \"decodebin2\" ei voitu luoda."
+
+#, fuzzy
+msgid "Could not create \"urisourcebin\" element."
 msgstr "Elementtiä \"decodebin\" ei voitu luoda."
 
 #, c-format
@@ -227,6 +232,10 @@ msgid "TMPlayer subtitle format"
 msgstr "TMPlayer-tekstitysmuoto"
 
 msgid "Kate subtitle format"
+msgstr "Kate-tekstitysmuoto"
+
+#, fuzzy
+msgid "WebVTT subtitle format"
 msgstr "Kate-tekstitysmuoto"
 
 #, fuzzy
@@ -396,6 +405,15 @@ msgid "capturing focal length"
 msgstr "kuvaamisen polttoväli"
 
 msgid "Focal length of the lens used capturing the image, in mm"
+msgstr "Linssin polttoväli kuvattaessa, millimetriä"
+
+#, fuzzy
+msgid "capturing 35 mm equivalent focal length"
+msgstr "kuvaamisen polttoväli"
+
+#, fuzzy
+msgid ""
+"35 mm equivalent focal length of the lens used capturing the image, in mm"
 msgstr "Linssin polttoväli kuvattaessa, millimetriä"
 
 msgid "capturing digital zoom ratio"
@@ -663,6 +681,9 @@ msgstr ""
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr ""
 
+#~ msgid "Internal data stream error."
+#~ msgstr "Sisäisen tietovirran virhe."
+
 #~ msgid "A %s plugin is required to play this stream, but not installed."
 #~ msgstr ""
 #~ "Virran toistamiseen tarvitaan %s-liitännäinen, mutta se ei ole asennettu."
@@ -817,9 +838,6 @@ msgstr ""
 
 #~ msgid "Internal data flow error."
 #~ msgstr "Sisäisen tietovirran virhe."
-
-#~ msgid "Could not create \"decodebin2\" element."
-#~ msgstr "Elementtiä \"decodebin2\" ei voitu luoda."
 
 #~ msgid "Could not create \"queue2\" element."
 #~ msgstr "Elementtiä \"queue2\" ei voitu luoda."

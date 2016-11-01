@@ -271,10 +271,8 @@ gst_opus_enc_class_init (GstOpusEncClass * klass)
   gobject_class->set_property = gst_opus_enc_set_property;
   gobject_class->get_property = gst_opus_enc_get_property;
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&src_factory));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&sink_factory));
+  gst_element_class_add_static_pad_template (gstelement_class, &src_factory);
+  gst_element_class_add_static_pad_template (gstelement_class, &sink_factory);
   gst_element_class_set_static_metadata (gstelement_class, "Opus audio encoder",
       "Codec/Encoder/Audio",
       "Encodes audio in Opus format",
@@ -814,6 +812,9 @@ gst_opus_enc_get_sink_template_caps (void)
 
     caps = gst_caps_new_empty ();
 
+    /* The caps is cached */
+    GST_MINI_OBJECT_FLAG_SET (caps, GST_MINI_OBJECT_FLAG_MAY_BE_LEAKED);
+
     /* Generate our two template structures */
     g_value_init (&rate_array, GST_TYPE_LIST);
     g_value_init (&v, G_TYPE_INT);
@@ -1046,13 +1047,14 @@ gst_opus_enc_encode (GstOpusEnc * enc, GstBuffer * buf)
   gst_buffer_unmap (outbuf, &omap);
 
   if (outsize < 0) {
-    GST_ERROR_OBJECT (enc, "Encoding failed: %d", outsize);
+    GST_ELEMENT_ERROR (enc, STREAM, ENCODE, (NULL),
+        ("Encoding failed (%d): %s", outsize, opus_strerror (outsize)));
     ret = GST_FLOW_ERROR;
     goto done;
   } else if (outsize > max_payload_size) {
-    GST_WARNING_OBJECT (enc,
-        "Encoded size %d is higher than max payload size (%d bytes)",
-        outsize, max_payload_size);
+    GST_ELEMENT_ERROR (enc, STREAM, ENCODE, (NULL),
+        ("Encoded size %d is higher than max payload size (%d bytes)",
+            outsize, max_payload_size));
     ret = GST_FLOW_ERROR;
     goto done;
   }

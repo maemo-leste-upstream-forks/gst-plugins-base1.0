@@ -162,8 +162,8 @@ gst_vorbis_enc_class_init (GstVorbisEncClass * klass)
   gst_element_class_add_pad_template (gstelement_class, sink_templ);
   gst_caps_unref (sink_caps);
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&vorbis_enc_src_factory));
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &vorbis_enc_src_factory);
 
   gst_element_class_set_static_metadata (gstelement_class,
       "Vorbis audio encoder", "Codec/Encoder/Audio",
@@ -774,27 +774,6 @@ gst_vorbis_enc_output_buffers (GstVorbisEnc * vorbisenc)
 
     while (vorbis_bitrate_flushpacket (&vorbisenc->vd, &op)) {
       GstBuffer *buf;
-
-      if (op.e_o_s) {
-        GstAudioEncoder *enc = GST_AUDIO_ENCODER (vorbisenc);
-        GstClockTime duration;
-
-        GST_DEBUG_OBJECT (vorbisenc, "Got EOS packet from libvorbis");
-        GST_AUDIO_ENCODER_STREAM_LOCK (enc);
-        if (!GST_CLOCK_TIME_IS_VALID (enc->output_segment.stop)) {
-          GST_DEBUG_OBJECT (vorbisenc,
-              "Output segment has no end time, setting");
-          duration =
-              gst_util_uint64_scale (op.granulepos, GST_SECOND,
-              vorbisenc->frequency);
-          enc->output_segment.stop = enc->output_segment.start + duration;
-          GST_DEBUG_OBJECT (enc, "new output segment %" GST_SEGMENT_FORMAT,
-              &enc->output_segment);
-          gst_pad_push_event (GST_AUDIO_ENCODER_SRC_PAD (enc),
-              gst_event_new_segment (&enc->output_segment));
-        }
-        GST_AUDIO_ENCODER_STREAM_UNLOCK (enc);
-      }
 
       GST_LOG_OBJECT (vorbisenc, "pushing out a data packet");
       buf =

@@ -1036,7 +1036,7 @@ gst_audio_visualizer_chain (GstPad * pad, GstObject * parent,
   guint64 dist, ts;
   guint avail, sbpf;
   gpointer adata;
-  gint bps, channels, rate;
+  gint bpf, rate;
 
   scope = GST_AUDIO_VISUALIZER (parent);
   klass = GST_AUDIO_VISUALIZER_CLASS (G_OBJECT_GET_CLASS (scope));
@@ -1056,11 +1056,10 @@ gst_audio_visualizer_chain (GstPad * pad, GstObject * parent,
     }
   }
 
-  channels = GST_AUDIO_INFO_CHANNELS (&scope->ainfo);
   rate = GST_AUDIO_INFO_RATE (&scope->ainfo);
-  bps = GST_AUDIO_INFO_BPS (&scope->ainfo);
+  bpf = GST_AUDIO_INFO_BPF (&scope->ainfo);
 
-  if (bps == 0) {
+  if (bpf == 0) {
     ret = GST_FLOW_NOT_NEGOTIATED;
     goto beach;
   }
@@ -1070,7 +1069,7 @@ gst_audio_visualizer_chain (GstPad * pad, GstObject * parent,
   g_mutex_lock (&scope->priv->config_lock);
 
   /* this is what we want */
-  sbpf = scope->req_spf * channels * sizeof (gint16);
+  sbpf = scope->req_spf * bpf;
 
   inbuf = scope->priv->inbuf;
   /* FIXME: the timestamp in the adapter would be different */
@@ -1087,8 +1086,7 @@ gst_audio_visualizer_chain (GstPad * pad, GstObject * parent,
     ts = gst_adapter_prev_pts (scope->priv->adapter, &dist);
     if (GST_CLOCK_TIME_IS_VALID (ts)) {
       /* convert bytes to time */
-      dist /= bps;
-      ts += gst_util_uint64_scale_int (dist, GST_SECOND, rate);
+      ts += gst_util_uint64_scale_int (dist, GST_SECOND, rate * bpf);
     }
 
     /* check for QoS, don't compute buffers that are known to be late */
@@ -1135,7 +1133,7 @@ gst_audio_visualizer_chain (GstPad * pad, GstObject * parent,
     ret = default_prepare_output_buffer (scope, &outbuf);
     g_mutex_lock (&scope->priv->config_lock);
     /* recheck as the value could have changed */
-    sbpf = scope->req_spf * channels * sizeof (gint16);
+    sbpf = scope->req_spf * bpf;
 
     /* no buffer allocated, we don't care why. */
     if (ret != GST_FLOW_OK)
@@ -1145,7 +1143,7 @@ gst_audio_visualizer_chain (GstPad * pad, GstObject * parent,
     if (GST_CLOCK_TIME_IS_VALID (ts))
       gst_object_sync_values (GST_OBJECT (scope), ts);
 
-    GST_BUFFER_TIMESTAMP (outbuf) = ts;
+    GST_BUFFER_PTS (outbuf) = ts;
     GST_BUFFER_DURATION (outbuf) = scope->priv->frame_duration;
 
     /* this can fail as the data size we need could have changed */
@@ -1193,7 +1191,7 @@ gst_audio_visualizer_chain (GstPad * pad, GstObject * parent,
 
   skip:
     /* recheck as the value could have changed */
-    sbpf = scope->req_spf * channels * sizeof (gint16);
+    sbpf = scope->req_spf * bpf;
     GST_LOG_OBJECT (scope, "avail: %u, bpf: %u", avail, sbpf);
     /* we want to take less or more, depending on spf : req_spf */
     if (avail - sbpf >= sbpf) {

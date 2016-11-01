@@ -49,6 +49,8 @@ gst_app_src_get_latency
 gst_app_src_set_latency
 gst_app_src_set_size
 gst_app_src_get_size
+gst_app_src_set_duration
+gst_app_src_get_duration
 gst_app_src_set_stream_type
 gst_app_src_get_stream_type
 gst_app_src_set_max_bytes
@@ -102,6 +104,8 @@ gst_app_sink_set_drop
 gst_app_sink_get_drop
 gst_app_sink_pull_preroll
 gst_app_sink_pull_sample
+gst_app_sink_try_pull_preroll
+gst_app_sink_try_pull_sample
 GstAppSinkCallbacks
 gst_app_sink_set_callbacks
 <SUBSECTION Standard>
@@ -512,6 +516,7 @@ gst_audio_check_valid_channel_positions
 gst_audio_buffer_reorder_channels
 gst_audio_reorder_channels
 gst_audio_get_channel_reorder_map
+gst_audio_channel_positions_to_string
 GstAudioChannelMixer
 GstAudioChannelMixerFlags
 gst_audio_channel_mixer_new
@@ -873,6 +878,19 @@ GST_STREAM_VOLUME_GET_INTERFACE
 GST_IS_STREAM_VOLUME
 GST_IS_STREAM_VOLUME_INTERFACE
 gst_stream_volume_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gstvideodirection</FILE>
+<INCLUDE>gst/video/videodirection.h</INCLUDE>
+GstVideoDirection
+GstVideoDirectionInterface
+<SUBSECTION Standard>
+GST_TYPE_VIDEO_DIRECTION
+GST_VIDEO_DIRECTION
+GST_IS_VIDEO_DIRECTION
+GST_VIDEO_DIRECTION_GET_INTERFACE
+gst_video_direction_get_type
 </SECTION>
 
 <SECTION>
@@ -2217,6 +2235,8 @@ gst_codec_utils_aac_get_sample_rate_from_index
 gst_codec_utils_aac_get_index_from_sample_rate
 gst_codec_utils_aac_get_profile
 gst_codec_utils_aac_get_level
+gst_codec_utils_aac_get_channels
+gst_codec_utils_aac_get_sample_rate
 gst_codec_utils_aac_caps_set_level_and_profile
 <SUBSECTION>
 gst_codec_utils_h264_get_profile
@@ -2357,6 +2377,8 @@ GST_META_TAG_VIDEO_STR
 GST_META_TAG_VIDEO_ORIENTATION_STR
 GST_META_TAG_VIDEO_SIZE_STR
 GST_META_TAG_VIDEO_COLORSPACE_STR
+
+GstVideoOrientationMethod
 
 #video-event.h
 <SUBSECTION>
@@ -2601,6 +2623,30 @@ gst_video_multiview_mode_to_caps_string
 gst_video_multiview_guess_half_aspect
 gst_video_multiview_video_info_change_mode
 
+#video-timecode.h
+<SUBSECTION>
+GstVideoTimeCode
+GstVideoTimeCodeConfig
+GstVideoTimeCodeFlags
+gst_video_time_code_new
+gst_video_time_code_new_empty
+gst_video_time_code_free
+gst_video_time_code_copy
+gst_video_time_code_init
+gst_video_time_code_clear
+gst_video_time_code_is_valid
+gst_video_time_code_compare
+gst_video_time_code_increment_frame
+gst_video_time_code_add_frames
+gst_video_time_code_frames_since_daily_jam
+gst_video_time_code_nsec_since_daily_jam
+gst_video_time_code_to_date_time
+gst_video_time_code_to_string
+
+<SUBSECTION Standard>
+gst_video_time_code_get_type
+GST_TYPE_VIDEO_TIME_CODE
+
 #video-enumtypes.h
 <SUBSECTION Standard>
 gst_color_balance_type_get_type
@@ -2662,6 +2708,10 @@ GstVideoGLTextureUploadMeta
 gst_buffer_add_video_gl_texture_upload_meta
 gst_buffer_get_video_gl_texture_upload_meta
 gst_video_gl_texture_upload_meta_upload
+GstVideoTimeCodeMeta
+gst_buffer_add_video_time_code_meta
+gst_buffer_add_video_time_code_meta_full
+gst_buffer_get_video_time_code_meta
 <SUBSECTION Standard>
 gst_video_crop_meta_api_get_type
 gst_video_meta_api_get_type
@@ -2676,6 +2726,10 @@ GST_VIDEO_GL_TEXTURE_UPLOAD_META_API_TYPE
 GST_VIDEO_GL_TEXTURE_UPLOAD_META_INFO
 gst_video_gl_texture_upload_meta_api_get_type
 gst_video_gl_texture_upload_meta_get_info
+GST_VIDEO_TIME_CODE_META_API_TYPE
+GST_VIDEO_TIME_CODE_META_INFO
+gst_video_time_code_meta_api_get_type
+gst_video_time_code_meta_get_info
 </SECTION>
 
 <SECTION>

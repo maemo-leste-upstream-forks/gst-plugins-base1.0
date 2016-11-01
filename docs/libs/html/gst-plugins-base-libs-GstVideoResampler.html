@@ -237,13 +237,24 @@ gst_video_resampler_init (<em class="parameter"><code><a class="link" href="gst-
 <col class="enum_members_description">
 <col width="200px" class="enum_members_annotations">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="enum_member_name"><p><a name="GST-VIDEO-RESAMPLER-FLAG-NONE:CAPS"></a>GST_VIDEO_RESAMPLER_FLAG_NONE</p></td>
 <td class="enum_member_description">
 <p>no flags</p>
 </td>
 <td class="enum_member_annotations"> </td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-RESAMPLER-FLAG-HALF-TAPS:CAPS"></a>GST_VIDEO_RESAMPLER_FLAG_HALF_TAPS</p></td>
+<td class="enum_member_description">
+<p>when no taps are given, half the
+             number of calculated taps. This can be used when making scalers
+             for the different fields of an interlaced picture. Since 1.10</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <p class="since">Since: 1.6</p>
