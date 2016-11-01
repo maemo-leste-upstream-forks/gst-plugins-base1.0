@@ -1,8 +1,42 @@
-gst-plugins-base1.0 (1.8.3-1) unstable; urgency=medium
+gst-plugins-base1.0 (1.9.90-2) UNRELEASED; urgency=medium
 
-  * New upstream bugfix release.
+  [ Helmut Grohne ]
+  * Mark gstreamer1.0-doc Multi-Arch: foreign (Closes: #842526).
 
- -- Sebastian Dröge <slomo@debian.org>  Fri, 19 Aug 2016 12:17:44 +0300
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 31 Oct 2016 09:29:04 +0200
+
+gst-plugins-base1.0 (1.9.90-1) experimental; urgency=medium
+
+  * New upstream unstable release:
+    + debian/build-deps.in,
+      debian/rules:
+      - Build-depend on GStreamer >= 1.9.90.
+    + debian/libgstreamer-plugins-base.symbols:
+      - Update new symbols.
+
+ -- Sebastian Dröge <slomo@debian.org>  Fri, 30 Sep 2016 12:16:56 +0300
+
+gst-plugins-base1.0 (1.9.2-1) experimental; urgency=medium
+
+  * New upstream unstable release:
+    + debian/build-deps.in,
+      debian/rules:
+      - Build-depend on GStreamer >= 1.9.2.
+    + debian/libgstreamer-plugins-base.symbols:
+      - Update new symbols.
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 01 Sep 2016 11:53:46 +0300
+
+gst-plugins-base1.0 (1.9.1-1) experimental; urgency=medium
+
+  * New upstream unstable release:
+    + debian/build-deps.in,
+      debian/rules:
+      - Build-depend on GStreamer >= 1.9.1.
+    + debian/libgstreamer-plugins-base.symbols:
+      - Update new symbols.
+
+ -- Sebastian Dröge <slomo@debian.org>  Wed, 06 Jul 2016 12:22:14 +0300
 
 gst-plugins-base1.0 (1.8.2-1) unstable; urgency=medium
 

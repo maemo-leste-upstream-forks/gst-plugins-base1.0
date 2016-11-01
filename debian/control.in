@@ -32,6 +32,7 @@ Description: GStreamer helper programs from the "base" set
 
 Package: @GST_PKGNAME@-plugins-base-doc
 Architecture: all
+Multi-Arch: foreign
 Section: doc
 Depends: ${misc:Depends},
          libglib2.0-doc,
