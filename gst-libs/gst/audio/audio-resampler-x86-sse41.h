@@ -1,5 +1,5 @@
 /* GStreamer
- * Copyright (C) 2007-2008 Sebastian Dröge <sebastian.droege@collabora.co.uk>
+ * Copyright (C) <2016> Wim Taymans <wim.taymans@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,10 +17,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define _USE_SSE2
-#define FLOATING_POINT
-#define DOUBLE_PRECISION
-#define OUTSIDE_SPEEX
-#define RANDOM_PREFIX resample_double
+#ifndef AUDIO_RESAMPLER_X86_SSE41_H
+#define AUDIO_RESAMPLER_X86_SSE41_H
 
-#include "resample.c"
+#include "audio-resampler-macros.h"
+
+DECL_RESAMPLE_FUNC (gint32, full, 1, sse41);
+DECL_RESAMPLE_FUNC (gint32, linear, 1, sse41);
+DECL_RESAMPLE_FUNC (gint32, cubic, 1, sse41);
+
+#endif /* AUDIO_RESAMPLER_X86_SSE41_H */

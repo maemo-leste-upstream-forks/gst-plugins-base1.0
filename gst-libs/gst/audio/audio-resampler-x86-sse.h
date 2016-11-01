@@ -1,5 +1,5 @@
 /* GStreamer
- * Copyright (C) 2007-2008 Sebastian Dröge <sebastian.droege@collabora.co.uk>
+ * Copyright (C) <2016> Wim Taymans <wim.taymans@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,11 +17,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define _USE_SSE
-#define _USE_SSE2
-#define _USE_NEON
-#define FLOATING_POINT
-#define OUTSIDE_SPEEX
-#define RANDOM_PREFIX resample_float
+#ifndef AUDIO_RESAMPLER_X86_SSE_H
+#define AUDIO_RESAMPLER_X86_SSE_H
 
-#include "resample.c"
+#include "audio-resampler-macros.h"
+
+DECL_RESAMPLE_FUNC (gfloat, full, 1, sse);
+DECL_RESAMPLE_FUNC (gfloat, linear, 1, sse);
+DECL_RESAMPLE_FUNC (gfloat, cubic, 1, sse);
+
+void interpolate_gfloat_linear_sse (gpointer op, const gpointer ap,
+    gint len, const gpointer icp, gint astride);
+
+void interpolate_gfloat_cubic_sse (gpointer op, const gpointer ap,
+    gint len, const gpointer icp, gint astride);
+
+#endif /* AUDIO_RESAMPLER_X86_SSE_H */

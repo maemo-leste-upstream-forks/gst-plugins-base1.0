@@ -96,10 +96,26 @@ GstOggMux implements
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-plugins-oggmux.description"></a><h2>Description</h2>
+<p>This element merges streams (audio and video) into ogg files.</p>
+<div class="refsect2">
+<a name="id-1.2.25.8.3"></a><h3>Example pipelines</h3>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> v4l2src num<span class="gtkdoc opt">-</span>buffers<span class="gtkdoc opt">=</span><span class="number">500</span> <span class="gtkdoc opt">!</span> video<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span>width<span class="gtkdoc opt">=</span><span class="number">320</span><span class="gtkdoc opt">,</span>height<span class="gtkdoc opt">=</span><span class="number">240</span> <span class="gtkdoc opt">!</span> videoconvert <span class="gtkdoc opt">!</span> videorate <span class="gtkdoc opt">!</span> theoraenc <span class="gtkdoc opt">!</span> oggmux <span class="gtkdoc opt">!</span> filesink location<span class="gtkdoc opt">=</span>video<span class="gtkdoc opt">.</span>ogg</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+ Encodes a video stream captured from a v4l2-compatible camera to Ogg/Theora
+(the encoding will stop automatically after 500 frames)
+</div>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.24.8.2.1"></a><h3>Element Information</h3>
+<a name="id-1.2.25.8.4.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -125,7 +141,7 @@ GstOggMux implements
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.24.8.2.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.25.8.4.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -290,6 +306,7 @@ GstOggMux implements
 <div class="refsect2">
 <a name="GstOggMux-struct"></a><h3>struct GstOggMux</h3>
 <pre class="programlisting">struct GstOggMux;</pre>
+<p>The ogg muxer object structure.</p>
 </div>
 </div>
 <div class="refsect1">
@@ -325,6 +342,10 @@ GstOggMux implements
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
 </div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-oggmux.see-also"></a><h2>See Also</h2>
+<a class="link" href="gst-plugins-base-plugins-oggdemux.html" title="oggdemux">oggdemux</a>
 </div>
 </div>
 <div class="footer">

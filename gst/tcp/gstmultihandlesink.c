@@ -456,8 +456,7 @@ gst_multi_handle_sink_class_init (GstMultiHandleSinkClass * klass)
       G_STRUCT_OFFSET (GstMultiHandleSinkClass, clear), NULL, NULL,
       g_cclosure_marshal_generic, G_TYPE_NONE, 0);
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&sinktemplate));
+  gst_element_class_add_static_pad_template (gstelement_class, &sinktemplate);
 
   gst_element_class_set_static_metadata (gstelement_class,
       "Multi socket sink", "Sink/Network",
@@ -2222,9 +2221,16 @@ gst_multi_handle_sink_change_state (GstElement * element,
   sink = GST_MULTI_HANDLE_SINK (element);
 
   /* we disallow changing the state from the streaming thread */
-  if (g_thread_self () == sink->thread)
-    return GST_STATE_CHANGE_FAILURE;
+  if (g_thread_self () == sink->thread) {
+    g_warning
+        ("\nTrying to change %s's state from its streaming thread would deadlock.\n"
+        "You cannot change the state of an element from its streaming\n"
+        "thread. Use g_idle_add() or post a GstMessage on the bus to\n"
+        "schedule the state change from the main thread.\n",
+        GST_ELEMENT_NAME (sink));
 
+    return GST_STATE_CHANGE_FAILURE;
+  }
 
   switch (transition) {
     case GST_STATE_CHANGE_NULL_TO_READY:

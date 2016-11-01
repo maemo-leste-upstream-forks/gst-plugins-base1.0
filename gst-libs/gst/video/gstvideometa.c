@@ -43,6 +43,24 @@ ensure_debug_category (void)
 #endif /* GST_DISABLE_GST_DEBUG */
 
 static gboolean
+gst_video_meta_init (GstMeta * meta, gpointer params, GstBuffer * buffer)
+{
+  GstVideoMeta *emeta = (GstVideoMeta *) meta;
+
+  emeta->buffer = NULL;
+  emeta->flags = GST_VIDEO_FRAME_FLAG_NONE;
+  emeta->format = GST_VIDEO_FORMAT_UNKNOWN;
+  emeta->id = 0;
+  emeta->width = emeta->height = emeta->n_planes = 0;
+  memset (emeta->offset, 0, sizeof (emeta->offset));
+  memset (emeta->stride, 0, sizeof (emeta->stride));
+  emeta->map = NULL;
+  emeta->unmap = NULL;
+
+  return TRUE;
+}
+
+static gboolean
 gst_video_meta_transform (GstBuffer * dest, GstMeta * meta,
     GstBuffer * buffer, GQuark type, gpointer data)
 {
@@ -113,7 +131,7 @@ gst_video_meta_get_info (void)
   if (g_once_init_enter (&video_meta_info)) {
     const GstMetaInfo *meta =
         gst_meta_register (GST_VIDEO_META_API_TYPE, "GstVideoMeta",
-        sizeof (GstVideoMeta), (GstMetaInitFunction) NULL,
+        sizeof (GstVideoMeta), (GstMetaInitFunction) gst_video_meta_init,
         (GstMetaFreeFunction) NULL, gst_video_meta_transform);
     g_once_init_leave (&video_meta_info, meta);
   }
@@ -425,6 +443,15 @@ gst_video_crop_meta_api_get_type (void)
   return type;
 }
 
+static gboolean
+gst_video_crop_meta_init (GstMeta * meta, gpointer params, GstBuffer * buffer)
+{
+  GstVideoCropMeta *emeta = (GstVideoCropMeta *) meta;
+  emeta->x = emeta->y = emeta->width = emeta->height = 0;
+
+  return TRUE;
+}
+
 const GstMetaInfo *
 gst_video_crop_meta_get_info (void)
 {
@@ -433,7 +460,8 @@ gst_video_crop_meta_get_info (void)
   if (g_once_init_enter (&video_crop_meta_info)) {
     const GstMetaInfo *meta =
         gst_meta_register (GST_VIDEO_CROP_META_API_TYPE, "GstVideoCropMeta",
-        sizeof (GstVideoCropMeta), (GstMetaInitFunction) NULL,
+        sizeof (GstVideoCropMeta),
+        (GstMetaInitFunction) gst_video_crop_meta_init,
         (GstMetaFreeFunction) NULL, gst_video_crop_meta_transform);
     g_once_init_leave (&video_crop_meta_info, meta);
   }
@@ -472,6 +500,25 @@ gst_video_gl_texture_upload_meta_api_get_type (void)
     g_once_init_leave (&type, _type);
   }
   return type;
+}
+
+static gboolean
+gst_video_gl_texture_upload_meta_init (GstMeta * meta, gpointer params,
+    GstBuffer * buffer)
+{
+  GstVideoGLTextureUploadMeta *vmeta = (GstVideoGLTextureUploadMeta *) meta;
+
+  vmeta->texture_orientation =
+      GST_VIDEO_GL_TEXTURE_ORIENTATION_X_NORMAL_Y_NORMAL;
+  vmeta->n_textures = 0;
+  memset (vmeta->texture_type, 0, sizeof (vmeta->texture_type));
+  vmeta->buffer = NULL;
+  vmeta->upload = NULL;
+  vmeta->user_data = NULL;
+  vmeta->user_data_copy = NULL;
+  vmeta->user_data_free = NULL;
+
+  return TRUE;
 }
 
 static void
@@ -532,7 +579,7 @@ gst_video_gl_texture_upload_meta_get_info (void)
         gst_meta_register (GST_VIDEO_GL_TEXTURE_UPLOAD_META_API_TYPE,
         "GstVideoGLTextureUploadMeta",
         sizeof (GstVideoGLTextureUploadMeta),
-        NULL,
+        gst_video_gl_texture_upload_meta_init,
         gst_video_gl_texture_upload_meta_free,
         gst_video_gl_texture_upload_meta_transform);
     g_once_init_leave (&info, meta);
@@ -682,6 +729,7 @@ gst_video_region_of_interest_meta_init (GstMeta * meta, gpointer params,
     GstBuffer * buffer)
 {
   GstVideoRegionOfInterestMeta *emeta = (GstVideoRegionOfInterestMeta *) meta;
+  emeta->roi_type = 0;
   emeta->id = 0;
   emeta->parent_id = 0;
   emeta->x = emeta->y = emeta->w = emeta->h = 0;
@@ -795,6 +843,144 @@ gst_buffer_add_video_region_of_interest_meta_id (GstBuffer * buffer,
   meta->y = y;
   meta->w = w;
   meta->h = h;
+
+  return meta;
+}
+
+/* Time Code Meta implementation *******************************************/
+
+GType
+gst_video_time_code_meta_api_get_type (void)
+{
+  static volatile GType type;
+
+  if (g_once_init_enter (&type)) {
+    static const gchar *tags[] = { NULL };
+    GType _type = gst_meta_api_type_register ("GstVideoTimeCodeMetaAPI", tags);
+    GST_INFO ("registering");
+    g_once_init_leave (&type, _type);
+  }
+  return type;
+}
+
+
+static gboolean
+gst_video_time_code_meta_transform (GstBuffer * dest, GstMeta * meta,
+    GstBuffer * buffer, GQuark type, gpointer data)
+{
+  GstVideoTimeCodeMeta *dmeta, *smeta;
+
+  if (GST_META_TRANSFORM_IS_COPY (type)) {
+    smeta = (GstVideoTimeCodeMeta *) meta;
+
+    GST_DEBUG ("copy time code metadata");
+    dmeta =
+        gst_buffer_add_video_time_code_meta_full (dest, smeta->tc.config.fps_n,
+        smeta->tc.config.fps_d, smeta->tc.config.latest_daily_jam,
+        smeta->tc.config.flags, smeta->tc.hours, smeta->tc.minutes,
+        smeta->tc.seconds, smeta->tc.frames, smeta->tc.field_count);
+    if (!dmeta)
+      return FALSE;
+  } else {
+    /* return FALSE, if transform type is not supported */
+    return FALSE;
+  }
+  return TRUE;
+}
+
+static gboolean
+gst_video_time_code_meta_init (GstMeta * meta, gpointer params,
+    GstBuffer * buffer)
+{
+  GstVideoTimeCodeMeta *emeta = (GstVideoTimeCodeMeta *) meta;
+  memset (&emeta->tc, 0, sizeof (emeta->tc));
+  gst_video_time_code_clear (&emeta->tc);
+
+  return TRUE;
+}
+
+static void
+gst_video_time_code_meta_free (GstMeta * meta, GstBuffer * buffer)
+{
+  GstVideoTimeCodeMeta *emeta = (GstVideoTimeCodeMeta *) meta;
+
+  gst_video_time_code_clear (&emeta->tc);
+}
+
+const GstMetaInfo *
+gst_video_time_code_meta_get_info (void)
+{
+  static const GstMetaInfo *meta_info = NULL;
+
+  if (g_once_init_enter (&meta_info)) {
+    const GstMetaInfo *mi =
+        gst_meta_register (GST_VIDEO_TIME_CODE_META_API_TYPE,
+        "GstVideoTimeCodeMeta",
+        sizeof (GstVideoTimeCodeMeta),
+        gst_video_time_code_meta_init,
+        gst_video_time_code_meta_free,
+        gst_video_time_code_meta_transform);
+    g_once_init_leave (&meta_info, mi);
+  }
+  return meta_info;
+}
+
+/**
+ * gst_buffer_add_video_time_code_meta:
+ * @buffer: a #GstBuffer
+ * @tc: a #GstVideoTimeCode
+ *
+ * Attaches #GstVideoTimeCodeMeta metadata to @buffer with the given
+ * parameters.
+ *
+ * Returns: (transfer none): the #GstVideoTimeCodeMeta on @buffer.
+ *
+ * Since: 1.10
+ */
+GstVideoTimeCodeMeta *
+gst_buffer_add_video_time_code_meta (GstBuffer * buffer, GstVideoTimeCode * tc)
+{
+  g_return_val_if_fail (gst_video_time_code_is_valid (tc), NULL);
+  return gst_buffer_add_video_time_code_meta_full (buffer, tc->config.fps_n,
+      tc->config.fps_d, tc->config.latest_daily_jam, tc->config.flags,
+      tc->hours, tc->minutes, tc->seconds, tc->frames, tc->field_count);
+}
+
+/**
+ * gst_buffer_add_video_time_code_meta_full:
+ * @buffer: a #GstBuffer
+ * @fps_n: framerate numerator
+ * @fps_d: framerate denominator
+ * @latest_daily_jam: a #GDateTime for the latest daily jam
+ * @flags: a #GstVideoTimeCodeFlags
+ * @hours: hours since the daily jam
+ * @minutes: minutes since the daily jam
+ * @seconds: seconds since the daily jam
+ * @frames: frames since the daily jam
+ * @field_count: fields since the daily jam
+ *
+ * Attaches #GstVideoTimeCodeMeta metadata to @buffer with the given
+ * parameters.
+ *
+ * Returns: (transfer none): the #GstVideoTimeCodeMeta on @buffer.
+ *
+ * Since: 1.10
+ */
+GstVideoTimeCodeMeta *
+gst_buffer_add_video_time_code_meta_full (GstBuffer * buffer, guint fps_n,
+    guint fps_d, GDateTime * latest_daily_jam, GstVideoTimeCodeFlags flags,
+    guint hours, guint minutes, guint seconds, guint frames, guint field_count)
+{
+  GstVideoTimeCodeMeta *meta;
+
+  g_return_val_if_fail (GST_IS_BUFFER (buffer), NULL);
+
+  meta = (GstVideoTimeCodeMeta *) gst_buffer_add_meta (buffer,
+      GST_VIDEO_TIME_CODE_META_INFO, NULL);
+  gst_video_time_code_init (&meta->tc, fps_n, fps_d, latest_daily_jam, flags,
+      hours, minutes, seconds, frames, field_count);
+
+  g_return_val_if_fail (gst_video_time_code_is_valid (&meta->tc), NULL);
 
   return meta;
 }

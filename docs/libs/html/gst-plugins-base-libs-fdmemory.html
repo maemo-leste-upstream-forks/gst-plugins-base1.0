@@ -150,7 +150,8 @@ gst_fd_allocator_alloc (<em class="parameter"><code><a href="/usr/share/gtk-doc/
 <p> a GstMemory based on <em class="parameter"><code>allocator</code></em>
 .
 When the buffer will be released the allocator will close the <em class="parameter"><code>fd</code></em>
-.
+unless
+the <a class="link" href="gst-plugins-base-libs-fdmemory.html#GST-FD-MEMORY-FLAG-DONT-CLOSE:CAPS"><code class="literal">GST_FD_MEMORY_FLAG_DONT_CLOSE</code></a> flag is specified.
 The memory is only mmapped on <code class="function">gst_buffer_mmap()</code> request. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -274,6 +275,14 @@ has an fd that can be retrieved with
 <td class="enum_member_description">
 <p>do a private mapping instead of
        the default shared mapping.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-FD-MEMORY-FLAG-DONT-CLOSE:CAPS"></a>GST_FD_MEMORY_FLAG_DONT_CLOSE</p></td>
+<td class="enum_member_description">
+<p>don't close the file descriptor when
+       the memory is freed. Since: 1.10.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>

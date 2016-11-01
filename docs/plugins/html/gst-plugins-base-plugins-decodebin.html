@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gst-plugins-base Elements">
 <link rel="prev" href="gst-plugins-base-plugins-clockoverlay.html" title="clockoverlay">
-<link rel="next" href="gst-plugins-base-plugins-encodebin.html" title="encodebin">
+<link rel="next" href="gst-plugins-base-plugins-decodebin3.html" title="decodebin3">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -24,7 +24,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gst-plugins-base-plugins-clockoverlay.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-plugins-encodebin.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-plugins-decodebin3.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-plugins-decodebin"></a><div class="titlepage"></div>
@@ -136,7 +136,7 @@
 <td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
 <tr>
-<td class="signal_type"><a class="link" href="gst-plugins-base-plugins-uridecodebin.html#GstAutoplugSelectResult" title="enum GstAutoplugSelectResult"><span class="returnvalue">GstAutoplugSelectResult</span></a></td>
+<td class="signal_type"><a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-uridecodebin.html#GstAutoplugSelectResult"><span class="returnvalue">GstAutoplugSelectResult</span></a></td>
 <td class="signal_name"><a class="link" href="gst-plugins-base-plugins-decodebin.html#GstDecodeBin-autoplug-select" title="The “autoplug-select” signal">autoplug-select</a></td>
 <td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
@@ -566,7 +566,7 @@ for example.</p>
 <hr>
 <div class="refsect2">
 <a name="GstDecodeBin-autoplug-select"></a><h3>The <code class="literal">“autoplug-select”</code> signal</h3>
-<pre class="programlisting"><a class="link" href="gst-plugins-base-plugins-uridecodebin.html#GstAutoplugSelectResult" title="enum GstAutoplugSelectResult"><span class="returnvalue">GstAutoplugSelectResult</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-uridecodebin.html#GstAutoplugSelectResult"><span class="returnvalue">GstAutoplugSelectResult</span></a>
 user_function (<a class="link" href="gst-plugins-base-plugins-decodebin.html#GstDecodeBin"><span class="type">GstDecodeBin</span></a>      *bin,
                <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstPad-struct"><span class="type">GstPad</span></a>            *pad,
                <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>           *caps,
@@ -578,13 +578,13 @@ user_function (<a class="link" href="gst-plugins-base-plugins-decodebin.html#Gst
 those factories, this signal is emitted.</p>
 <p>The signal handler should return a <span class="type">GST_TYPE_AUTOPLUG_SELECT_RESULT</span> enum
 value indicating what decodebin should do next.</p>
-<p>A value of <a class="link" href="gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-TRY:CAPS"><span class="type">GST_AUTOPLUG_SELECT_TRY</span></a> will try to autoplug an element from
+<p>A value of <a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-TRY:CAPS"><span class="type">GST_AUTOPLUG_SELECT_TRY</span></a> will try to autoplug an element from
 <em class="parameter"><code>factory</code></em>
 .</p>
-<p>A value of <a class="link" href="gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-EXPOSE:CAPS"><span class="type">GST_AUTOPLUG_SELECT_EXPOSE</span></a> will expose <em class="parameter"><code>pad</code></em>
+<p>A value of <a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-EXPOSE:CAPS"><span class="type">GST_AUTOPLUG_SELECT_EXPOSE</span></a> will expose <em class="parameter"><code>pad</code></em>
  without plugging
 any element to it.</p>
-<p>A value of <a class="link" href="gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-SKIP:CAPS"><span class="type">GST_AUTOPLUG_SELECT_SKIP</span></a> will skip <em class="parameter"><code>factory</code></em>
+<p>A value of <a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-SKIP:CAPS"><span class="type">GST_AUTOPLUG_SELECT_SKIP</span></a> will skip <em class="parameter"><code>factory</code></em>
  and move to the
 next factory.</p>
 <div class="note">
@@ -635,7 +635,7 @@ next factory.</p>
 <a name="GstDecodeBin-autoplug-select.returns"></a><h4>Returns</h4>
 <p> a <span class="type">GST_TYPE_AUTOPLUG_SELECT_RESULT</span> that indicates the required
 operation. the default handler will always return
-<a class="link" href="gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-TRY:CAPS"><span class="type">GST_AUTOPLUG_SELECT_TRY</span></a>.</p>
+<a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-uridecodebin.html#GST-AUTOPLUG-SELECT-TRY:CAPS"><span class="type">GST_AUTOPLUG_SELECT_TRY</span></a>.</p>
 </div>
 <p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base 1.7.90\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-08-19 11:53+0300\n"
+"POT-Creation-Date: 2016-09-30 12:11+0300\n"
 "PO-Revision-Date: 2016-03-04 13:08+0100\n"
 "Last-Translator: Stéphane Aulery <lkppo@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -84,9 +84,6 @@ msgstr "Impossible de rechercher sur le CD."
 msgid "Could not read CD."
 msgstr "Impossible de lire le CD."
 
-msgid "Internal data stream error."
-msgstr "Erreur du flux de données interne."
-
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr "Élément « %s » manquant — Vérifiez votre installation de GStreamer."
@@ -98,6 +95,14 @@ msgid "This appears to be a text file"
 msgstr "Ce fichier semble être un fichier texte"
 
 msgid "Could not create \"uridecodebin\" element."
+msgstr "Impossible de créer un élément « uridecodebin »."
+
+#, fuzzy
+msgid "Could not create \"decodebin3\" element."
+msgstr "Impossible de créer un élément « uridecodebin »."
+
+#, fuzzy
+msgid "Could not create \"urisourcebin\" element."
 msgstr "Impossible de créer un élément « uridecodebin »."
 
 #, c-format
@@ -232,6 +237,10 @@ msgid "TMPlayer subtitle format"
 msgstr "Format de sous-titres TMPlayer"
 
 msgid "Kate subtitle format"
+msgstr "Format de sous-titres Kate"
+
+#, fuzzy
+msgid "WebVTT subtitle format"
 msgstr "Format de sous-titres Kate"
 
 msgid "Uncompressed video"
@@ -399,6 +408,16 @@ msgid "capturing focal length"
 msgstr "distance focale de la capture"
 
 msgid "Focal length of the lens used capturing the image, in mm"
+msgstr ""
+"Distance focale de l’optique utilisée pour la capture de l’image (en mm)"
+
+#, fuzzy
+msgid "capturing 35 mm equivalent focal length"
+msgstr "distance focale de la capture"
+
+#, fuzzy
+msgid ""
+"35 mm equivalent focal length of the lens used capturing the image, in mm"
 msgstr ""
 "Distance focale de l’optique utilisée pour la capture de l’image (en mm)"
 
@@ -677,3 +696,6 @@ msgstr "Vous devez fournir au moins un nom de fichier ou une URI à lire."
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr "Pressez k pour voir la liste des raccourcis clavier.\n"
+
+#~ msgid "Internal data stream error."
+#~ msgstr "Erreur du flux de données interne."

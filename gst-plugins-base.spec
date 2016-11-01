@@ -4,7 +4,7 @@
 %define gst_minver  0.11.0
 
 Name: 		%{gstreamer}-plugins-base
-Version: 	1.8.3
+Version: 	1.9.90
 Release: 	1.gst
 Summary: 	GStreamer streaming media framework plug-ins
 
@@ -221,6 +221,7 @@ GStreamer Plugins Base library development and header files.
 %{_includedir}/gstreamer-%{majorminor}/gst/audio/streamvolume.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/colorbalance.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/colorbalancechannel.h
+%{_includedir}/gstreamer-%{majorminor}/gst/video/videodirection.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/videoorientation.h
 %{_includedir}/gstreamer-%{majorminor}/gst/video/videooverlay.h
 %{_includedir}/gstreamer-%{majorminor}/gst/app/app.h

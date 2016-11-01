@@ -75,7 +75,8 @@ endif
 
 if USE_PLUGIN_PLAYBACK
 check_playback = elements/decodebin elements/playbin \
-    elements/playbin-complex elements/streamsynchronizer
+    elements/playbin-complex elements/streamsynchronizer \
+    elements/playsink
 else
 check_playback =
 endif
@@ -121,7 +122,9 @@ check_videorate =
 endif
 
 if USE_PLUGIN_VIDEOSCALE
-check_videoscale = elements/videoscale
+check_videoscale = elements/videoscale elements/videoscale-1 \
+        elements/videoscale-2 elements/videoscale-3 elements/videoscale-4 \
+        elements/videoscale-5 elements/videoscale-6
 else
 check_videoscale =
 endif
@@ -216,6 +219,7 @@ check_PROGRAMS = \
 	libs/video \
 	libs/videodecoder \
 	libs/videoencoder \
+	libs/videotimecode \
 	libs/xmpwriter \
 	pipelines/simple-launch-lines \
 	pipelines/basetime \
@@ -268,12 +272,12 @@ AM_CFLAGS = -I$(top_srcdir)/gst-libs -I$(top_builddir)/gst-libs \
 	$(GST_CFLAGS) $(GST_CHECK_CFLAGS) \
 	-DGST_TEST_FILES_PATH="\"$(TEST_FILES_DIRECTORY)\"" \
 	-DGST_CHECK_TEST_ENVIRONMENT_BEACON="\"GST_PLUGIN_LOADING_WHITELIST\"" \
-	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS
+	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS $(PTHREAD_CFLAGS)
 AM_CXXFLAGS = -I$(top_srcdir)/gst-libs -I$(top_builddir)/gst-libs \
 	$(GST_CXXFLAGS) $(GST_CHECK_CFLAGS) \
 	-DGST_TEST_FILES_PATH="\"$(TEST_FILES_DIRECTORY)\"" \
 	-DGST_CHECK_TEST_ENVIRONMENT_BEACON="\"GST_PLUGIN_LOADING_WHITELIST\"" \
-	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS
+	-UG_DISABLE_ASSERT -UG_DISABLE_CAST_CHECKS $(PTHREAD_CFLAGS)
 LDADD = $(GST_LIBS) $(GST_CHECK_LIBS)
 
 # valgrind testing
@@ -587,6 +591,25 @@ elements_videoscale_LDADD = \
 	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) $(LDADD)
 
+elements_videoscale_1_SOURCES = elements/videoscale.c
+elements_videoscale_1_CFLAGS = $(elements_videoscale_CFLAGS) -DVSCALE_TEST_GROUP=1
+elements_videoscale_1_LDADD = $(elements_videoscale_LDADD)
+elements_videoscale_2_SOURCES = elements/videoscale.c
+elements_videoscale_2_CFLAGS = $(elements_videoscale_CFLAGS) -DVSCALE_TEST_GROUP=2
+elements_videoscale_2_LDADD = $(elements_videoscale_LDADD)
+elements_videoscale_3_SOURCES = elements/videoscale.c
+elements_videoscale_3_CFLAGS = $(elements_videoscale_CFLAGS) -DVSCALE_TEST_GROUP=3
+elements_videoscale_3_LDADD = $(elements_videoscale_LDADD)
+elements_videoscale_4_SOURCES = elements/videoscale.c
+elements_videoscale_4_CFLAGS = $(elements_videoscale_CFLAGS) -DVSCALE_TEST_GROUP=4
+elements_videoscale_4_LDADD = $(elements_videoscale_LDADD)
+elements_videoscale_5_SOURCES = elements/videoscale.c
+elements_videoscale_5_CFLAGS = $(elements_videoscale_CFLAGS) -DVSCALE_TEST_GROUP=5
+elements_videoscale_5_LDADD = $(elements_videoscale_LDADD)
+elements_videoscale_6_SOURCES = elements/videoscale.c
+elements_videoscale_6_CFLAGS = $(elements_videoscale_CFLAGS) -DVSCALE_TEST_GROUP=6
+elements_videoscale_6_LDADD = $(elements_videoscale_LDADD)
+
 gst_typefindfunctions_CFLAGS = $(GST_BASE_CFLAGS) $(AM_CFLAGS)
 gst_typefindfunctions_LDADD = $(GST_BASE_LIBS) $(LDADD)
 
@@ -616,6 +639,16 @@ libs_videoencoder_CFLAGS = \
 	$(AM_CFLAGS)
 
 libs_videoencoder_LDADD = \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) \
+	$(LDADD)
+
+libs_videotimecode_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) \
+	$(AM_CFLAGS)
+
+libs_videotimecode_LDADD = \
 	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) \
 	$(LDADD)

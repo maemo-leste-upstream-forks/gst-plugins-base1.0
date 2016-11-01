@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base 0.10.32.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-08-19 11:53+0300\n"
+"POT-Creation-Date: 2016-09-30 12:11+0300\n"
 "PO-Revision-Date: 2011-10-02 15:46+0200\n"
 "Last-Translator: Jorge González González <aloriel@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -72,9 +72,6 @@ msgstr "No se pudo buscar en el CD."
 msgid "Could not read CD."
 msgstr "No se pudo leer del D."
 
-msgid "Internal data stream error."
-msgstr "Error interno de flujo de datos."
-
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr "Falta el elemento «%s»; compruebe su instalación de GStreamer."
@@ -87,6 +84,14 @@ msgstr "Esto parece ser un archivo de texto"
 
 #, fuzzy
 msgid "Could not create \"uridecodebin\" element."
+msgstr "No se pudo crear el elemento «decodebin»."
+
+#, fuzzy
+msgid "Could not create \"decodebin3\" element."
+msgstr "No se pudo crear el elemento «decodebin2»."
+
+#, fuzzy
+msgid "Could not create \"urisourcebin\" element."
 msgstr "No se pudo crear el elemento «decodebin»."
 
 #, c-format
@@ -224,6 +229,10 @@ msgid "TMPlayer subtitle format"
 msgstr "Formato de subtítulos TMPlayer"
 
 msgid "Kate subtitle format"
+msgstr "Formato de subtítulos kate"
+
+#, fuzzy
+msgid "WebVTT subtitle format"
 msgstr "Formato de subtítulos kate"
 
 #, fuzzy
@@ -393,6 +402,15 @@ msgid "capturing focal length"
 msgstr "longitud focal de la toma"
 
 msgid "Focal length of the lens used capturing the image, in mm"
+msgstr "Longitud focal de la lente usada al tomar la imagen, en mm"
+
+#, fuzzy
+msgid "capturing 35 mm equivalent focal length"
+msgstr "longitud focal de la toma"
+
+#, fuzzy
+msgid ""
+"35 mm equivalent focal length of the lens used capturing the image, in mm"
 msgstr "Longitud focal de la lente usada al tomar la imagen, en mm"
 
 msgid "capturing digital zoom ratio"
@@ -659,6 +677,9 @@ msgstr ""
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr ""
 
+#~ msgid "Internal data stream error."
+#~ msgstr "Error interno de flujo de datos."
+
 #~ msgid "A %s plugin is required to play this stream, but not installed."
 #~ msgstr ""
 #~ "Se requiere un complemento de %s para reproducir este medio, pero no está "
@@ -815,9 +836,6 @@ msgstr ""
 
 #~ msgid "Internal data flow error."
 #~ msgstr "Error en el flujo de datos interno."
-
-#~ msgid "Could not create \"decodebin2\" element."
-#~ msgstr "No se pudo crear el elemento «decodebin2»."
 
 #~ msgid "Could not create \"queue2\" element."
 #~ msgstr "No se pudo crear el elemento «queue2»."

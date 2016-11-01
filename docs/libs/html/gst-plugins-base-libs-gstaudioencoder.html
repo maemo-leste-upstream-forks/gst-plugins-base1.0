@@ -682,6 +682,34 @@ used. </p></td>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_audio_encoder_set_output_format (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudioencoder.html#GstAudioEncoder"><span class="type">GstAudioEncoder</span></a> *enc</code></em>,
                                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
+<p>Configure output caps on the srcpad of <em class="parameter"><code>enc</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-audio-encoder-set-output-format.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>enc</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudioencoder.html#GstAudioEncoder"><span class="type">GstAudioEncoder</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>caps</p></td>
+<td class="parameter_description"><p> <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-encoder-set-output-format.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success.</p>
+</div>
 </div>
 <hr>
 <div class="refsect2">

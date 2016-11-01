@@ -343,6 +343,7 @@ video_format_is_packed (GstVideoFormat fmt)
     case GST_VIDEO_FORMAT_YVU9:
       return FALSE;
     case GST_VIDEO_FORMAT_IYU1:
+    case GST_VIDEO_FORMAT_IYU2:
     case GST_VIDEO_FORMAT_YUY2:
     case GST_VIDEO_FORMAT_YVYU:
     case GST_VIDEO_FORMAT_UYVY:
@@ -872,7 +873,7 @@ GST_START_TEST (test_parse_colorimetry)
         _16_235, SMPTE240M, SMPTE240M, SMPTE240M),
     MAKE_COLORIMETRY_TEST ("sRGB", "sRGB", "sRGB",
         _0_255, RGB, SRGB, BT709),
-    MAKE_COLORIMETRY_TEST ("bt2020" , "bt2020", "bt2020",
+    MAKE_COLORIMETRY_TEST ("bt2020", "bt2020", "bt2020",
         _16_235, BT2020, BT2020_12, BT2020),
     MAKE_COLORIMETRY_TEST ("1:4:0:0", "1:4:0:0", NULL,
         _0_255, BT601, UNKNOWN, UNKNOWN),

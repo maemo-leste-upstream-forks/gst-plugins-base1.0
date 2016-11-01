@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins 0.7.6\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-08-19 11:53+0300\n"
+"POT-Creation-Date: 2016-09-30 12:11+0300\n"
 "PO-Revision-Date: 2004-03-18 14:16+0200\n"
 "Last-Translator: Petri Jooste <rkwjpj@puk.ac.za>\n"
 "Language-Team: Afrikaans <i18n@af.org.za>\n"
@@ -76,9 +76,6 @@ msgstr "Kon nie vfs-lêer \"%s\" toemaak nie."
 msgid "Could not read CD."
 msgstr "Kon nie skryf na toestel \"%s\" nie."
 
-msgid "Internal data stream error."
-msgstr ""
-
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr ""
@@ -92,6 +89,14 @@ msgstr ""
 
 #, fuzzy
 msgid "Could not create \"uridecodebin\" element."
+msgstr "Kon nie skryf na lêer \"%s\" nie."
+
+#, fuzzy
+msgid "Could not create \"decodebin3\" element."
+msgstr "Kon nie skryf na lêer \"%s\" nie."
+
+#, fuzzy
+msgid "Could not create \"urisourcebin\" element."
 msgstr "Kon nie skryf na lêer \"%s\" nie."
 
 #, c-format
@@ -225,6 +230,9 @@ msgid "TMPlayer subtitle format"
 msgstr ""
 
 msgid "Kate subtitle format"
+msgstr ""
+
+msgid "WebVTT subtitle format"
 msgstr ""
 
 msgid "Uncompressed video"
@@ -391,6 +399,13 @@ msgid "capturing focal length"
 msgstr ""
 
 msgid "Focal length of the lens used capturing the image, in mm"
+msgstr ""
+
+msgid "capturing 35 mm equivalent focal length"
+msgstr ""
+
+msgid ""
+"35 mm equivalent focal length of the lens used capturing the image, in mm"
 msgstr ""
 
 msgid "capturing digital zoom ratio"

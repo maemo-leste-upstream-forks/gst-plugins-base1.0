@@ -41,9 +41,7 @@
 #include "gstplay-enum.h"
 #include "gstrawcaps.h"
 #include "gstplayback.h"
-
-/* From gstdecodebin2.c */
-gint _decode_bin_compare_factories_func (gconstpointer p1, gconstpointer p2);
+#include "gstplaybackutils.h"
 
 #define GST_TYPE_URI_DECODE_BIN \
   (gst_uri_decode_bin_get_type())
@@ -321,7 +319,7 @@ gst_uri_decode_bin_update_factories_list (GstURIDecodeBin * dec)
         gst_element_factory_list_get_elements
         (GST_ELEMENT_FACTORY_TYPE_DECODABLE, GST_RANK_MARGINAL);
     dec->factories =
-        g_list_sort (dec->factories, _decode_bin_compare_factories_func);
+        g_list_sort (dec->factories, gst_playback_utils_compare_factories_func);
     dec->factories_cookie = cookie;
   }
 }
@@ -699,8 +697,7 @@ gst_uri_decode_bin_class_init (GstURIDecodeBinClass * klass)
       G_SIGNAL_RUN_LAST, 0, NULL, NULL,
       g_cclosure_marshal_generic, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&srctemplate));
+  gst_element_class_add_static_pad_template (gstelement_class, &srctemplate);
   gst_element_class_set_static_metadata (gstelement_class,
       "URI Decoder", "Generic/Bin/Decoder",
       "Autoplug and decode an URI to raw media",
@@ -743,6 +740,8 @@ gst_uri_decode_bin_init (GstURIDecodeBin * dec)
   dec->ring_buffer_max_size = DEFAULT_RING_BUFFER_MAX_SIZE;
 
   GST_OBJECT_FLAG_SET (dec, GST_ELEMENT_FLAG_SOURCE);
+  gst_bin_set_suppressed_flags (GST_BIN (dec),
+      GST_ELEMENT_FLAG_SOURCE | GST_ELEMENT_FLAG_SINK);
 }
 
 static void
@@ -1683,9 +1682,6 @@ remove_decoders (GstURIDecodeBin * bin, gboolean force)
     bin->pending_decodebins = NULL;
 
   }
-
-  /* Don't loose the SOURCE flag */
-  GST_OBJECT_FLAG_SET (bin, GST_ELEMENT_FLAG_SOURCE);
 }
 
 static void
@@ -2063,8 +2059,6 @@ could_not_link:
     GST_ELEMENT_ERROR (decoder, CORE, NEGOTIATION,
         (NULL), ("Can't link source to typefind element"));
     gst_bin_remove (GST_BIN_CAST (decoder), typefind);
-    /* Don't loose the SOURCE flag */
-    GST_OBJECT_FLAG_SET (decoder, GST_ELEMENT_FLAG_SOURCE);
     do_async_done (decoder);
     return FALSE;
   }
@@ -2113,8 +2107,6 @@ remove_source (GstURIDecodeBin * bin)
     g_hash_table_destroy (bin->streams);
     bin->streams = NULL;
   }
-  /* Don't loose the SOURCE flag */
-  GST_OBJECT_FLAG_SET (bin, GST_ELEMENT_FLAG_SOURCE);
 }
 
 /* is called when a dynamic source element created a new pad. */

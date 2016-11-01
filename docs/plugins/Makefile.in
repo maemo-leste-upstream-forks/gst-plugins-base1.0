@@ -113,6 +113,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
+	$(top_srcdir)/common/m4/ax_pthread.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
@@ -364,6 +365,9 @@ PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 POSUB = @POSUB@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PTHREAD_CC = @PTHREAD_CC@
+PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
+PTHREAD_LIBS = @PTHREAD_LIBS@
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_PLATFORM = @PYTHON_PLATFORM@
@@ -377,6 +381,9 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SSE2_CFLAGS = @SSE2_CFLAGS@
+SSE41_CFLAGS = @SSE41_CFLAGS@
+SSE_CFLAGS = @SSE_CFLAGS@
 STRIP = @STRIP@
 THEORA_CFLAGS = @THEORA_CFLAGS@
 THEORA_LIBS = @THEORA_LIBS@
@@ -414,6 +421,7 @@ am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
+ax_pthread_config = @ax_pthread_config@
 bindir = @bindir@
 build = @build@
 build_alias = @build_alias@
@@ -522,6 +530,8 @@ EXTRA_HFILES = \
 	$(top_srcdir)/ext/cdparanoia/gstcdparanoiasrc.h \
 	$(top_srcdir)/ext/ogg/gstoggdemux.h \
 	$(top_srcdir)/ext/ogg/gstoggmux.h \
+	$(top_srcdir)/ext/opus/gstopusdec.h \
+	$(top_srcdir)/ext/opus/gstopusenc.h \
 	$(top_srcdir)/ext/pango/gstclockoverlay.h \
 	$(top_srcdir)/ext/pango/gsttextoverlay.h \
 	$(top_srcdir)/ext/pango/gsttextrender.h \
@@ -535,6 +545,8 @@ EXTRA_HFILES = \
 	$(top_srcdir)/ext/vorbis/gstvorbistag.h \
 	$(top_srcdir)/gst/adder/gstadder.h \
 	$(top_srcdir)/gst/audioconvert/gstaudioconvert.h \
+	$(top_srcdir)/gst/audiorate/gstaudiorate.h \
+	$(top_srcdir)/gst/audioresample/gstaudioresample.h \
 	$(top_srcdir)/gst/audiotestsrc/gstaudiotestsrc.h \
 	$(top_srcdir)/gst/encoding/gstencodebin.h \
 	$(top_srcdir)/gst/gio/gstgiosink.h \
@@ -542,16 +554,23 @@ EXTRA_HFILES = \
 	$(top_srcdir)/gst/gio/gstgiostreamsink.h \
 	$(top_srcdir)/gst/gio/gstgiostreamsrc.h \
 	$(top_srcdir)/gst/playback/gstplay-enum.h \
+	$(top_srcdir)/gst/playback/gstplaysink.h \
+	$(top_srcdir)/gst/playback/gststreamsynchronizer.h \
 	$(top_srcdir)/gst/playback/gstsubtitleoverlay.h \
 	$(top_srcdir)/gst/audiorate/gstaudiorate.h \
 	$(top_srcdir)/gst/audioresample/gstaudioresample.h \
+	$(top_srcdir)/gst/subparse/gstssaparse.h \
+	$(top_srcdir)/gst/subparse/gstsubparse.h \
+	$(top_srcdir)/gst/tcp/gstmultifdsink.h \
+	$(top_srcdir)/gst/tcp/gstmultihandlesink.h \
 	$(top_srcdir)/gst/tcp/gstmultisocketsink.h \
 	$(top_srcdir)/gst/tcp/gstsocketsrc.h \
-	$(top_srcdir)/gst/tcp/gsttcpclientsrc.h \
 	$(top_srcdir)/gst/tcp/gsttcpclientsink.h \
-	$(top_srcdir)/gst/tcp/gsttcpserversrc.h \
-	$(top_srcdir)/gst/tcp/gsttcpserversink.h \
+	$(top_srcdir)/gst/tcp/gsttcpclientsrc.h \
 	$(top_srcdir)/gst/tcp/gsttcp.h \
+	$(top_srcdir)/gst/tcp/gsttcpserversink.h \
+	$(top_srcdir)/gst/tcp/gsttcpserversrc.h \
+	$(top_srcdir)/gst/videoconvert/gstvideoconvert.h \
 	$(top_srcdir)/gst/videorate/gstvideorate.h \
 	$(top_srcdir)/gst/videoscale/gstvideoscale.h \
 	$(top_srcdir)/gst/videotestsrc/gstvideotestsrc.h \
@@ -1001,9 +1020,13 @@ update: scanobj-update
 @ENABLE_GTK_DOC_TRUE@		$(top_srcdir)/common/plugins.xsl $$a > xml/`basename $$a`; done
 @ENABLE_GTK_DOC_TRUE@	@for f in $(EXAMPLE_CFILES); do \
 @ENABLE_GTK_DOC_TRUE@		$(PYTHON) $(top_srcdir)/common/c-to-xml.py $$f > xml/element-`basename $$f .c`.xml; done
-@ENABLE_GTK_DOC_TRUE@	@gtkdoc-mkdb \
+@ENABLE_GTK_DOC_TRUE@	@_source_dir='' ;						\
+@ENABLE_GTK_DOC_TRUE@	for i in $(DOC_SOURCE_DIR) ; do					\
+@ENABLE_GTK_DOC_TRUE@	    _source_dir="$${_source_dir} --source-dir=$$i" ;	        \
+@ENABLE_GTK_DOC_TRUE@	done ;								\
+@ENABLE_GTK_DOC_TRUE@	gtkdoc-mkdb \
 @ENABLE_GTK_DOC_TRUE@		--module=$(DOC_MODULE) \
-@ENABLE_GTK_DOC_TRUE@		--source-dir=$(DOC_SOURCE_DIR) \
+@ENABLE_GTK_DOC_TRUE@		$${_source_dir} \
 @ENABLE_GTK_DOC_TRUE@		 --expand-content-files="$(expand_content_files)" \
 @ENABLE_GTK_DOC_TRUE@		--main-sgml-file=$(srcdir)/$(DOC_MAIN_SGML_FILE) \
 @ENABLE_GTK_DOC_TRUE@		--output-format=xml \

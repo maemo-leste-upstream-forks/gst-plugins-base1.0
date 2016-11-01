@@ -12,7 +12,17 @@ EXPORTS
 	gst_rtcp_buffer_validate_data_reduced
 	gst_rtcp_buffer_validate_reduced
 	gst_rtcp_ntp_to_unix
+	gst_rtcp_packet_add_profile_specific_ext
 	gst_rtcp_packet_add_rb
+	gst_rtcp_packet_app_get_data
+	gst_rtcp_packet_app_get_data_length
+	gst_rtcp_packet_app_get_name
+	gst_rtcp_packet_app_get_ssrc
+	gst_rtcp_packet_app_get_subtype
+	gst_rtcp_packet_app_set_data_length
+	gst_rtcp_packet_app_set_name
+	gst_rtcp_packet_app_set_ssrc
+	gst_rtcp_packet_app_set_subtype
 	gst_rtcp_packet_bye_add_ssrc
 	gst_rtcp_packet_bye_add_ssrcs
 	gst_rtcp_packet_bye_get_nth_ssrc
@@ -20,6 +30,7 @@ EXPORTS
 	gst_rtcp_packet_bye_get_reason_len
 	gst_rtcp_packet_bye_get_ssrc_count
 	gst_rtcp_packet_bye_set_reason
+	gst_rtcp_packet_copy_profile_specific_ext
 	gst_rtcp_packet_fb_get_fci
 	gst_rtcp_packet_fb_get_fci_length
 	gst_rtcp_packet_fb_get_media_ssrc
@@ -32,6 +43,8 @@ EXPORTS
 	gst_rtcp_packet_get_count
 	gst_rtcp_packet_get_length
 	gst_rtcp_packet_get_padding
+	gst_rtcp_packet_get_profile_specific_ext
+	gst_rtcp_packet_get_profile_specific_ext_length
 	gst_rtcp_packet_get_rb
 	gst_rtcp_packet_get_rb_count
 	gst_rtcp_packet_get_type
@@ -85,6 +98,7 @@ EXPORTS
 	gst_rtp_buffer_compare_seqnum
 	gst_rtp_buffer_default_clock_rate
 	gst_rtp_buffer_ext_timestamp
+	gst_rtp_buffer_flags_get_type
 	gst_rtp_buffer_get_csrc
 	gst_rtp_buffer_get_csrc_count
 	gst_rtp_buffer_get_extension

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base 1.4.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-08-19 11:53+0300\n"
+"POT-Creation-Date: 2016-09-30 12:11+0300\n"
 "PO-Revision-Date: 2014-07-30 09:19+0700\n"
 "Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -71,9 +71,6 @@ msgstr "Tak dapat mencari CD."
 msgid "Could not read CD."
 msgstr "Tak dapat membaca CD."
 
-msgid "Internal data stream error."
-msgstr "Galat arus data internal."
-
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr "Elemen '%s' hilang - cek instalasi GStreamer anda."
@@ -85,6 +82,14 @@ msgid "This appears to be a text file"
 msgstr "Ini kelihatannya merupakan berkas teks"
 
 msgid "Could not create \"uridecodebin\" element."
+msgstr "Tak dapat membuat elemen \"uridecodebin\"."
+
+#, fuzzy
+msgid "Could not create \"decodebin3\" element."
+msgstr "Tak dapat membuat elemen \"uridecodebin\"."
+
+#, fuzzy
+msgid "Could not create \"urisourcebin\" element."
 msgstr "Tak dapat membuat elemen \"uridecodebin\"."
 
 #, c-format
@@ -218,6 +223,10 @@ msgid "TMPlayer subtitle format"
 msgstr "Format subjudul TMPlayer"
 
 msgid "Kate subtitle format"
+msgstr "Format subjudul Kate"
+
+#, fuzzy
+msgid "WebVTT subtitle format"
 msgstr "Format subjudul Kate"
 
 msgid "Uncompressed video"
@@ -384,6 +393,15 @@ msgid "capturing focal length"
 msgstr "menangkap panjang fokal"
 
 msgid "Focal length of the lens used capturing the image, in mm"
+msgstr "Panjang fokal dari lensa digunakan ketika menangkap gambar, dalam mm"
+
+#, fuzzy
+msgid "capturing 35 mm equivalent focal length"
+msgstr "menangkap panjang fokal"
+
+#, fuzzy
+msgid ""
+"35 mm equivalent focal length of the lens used capturing the image, in mm"
 msgstr "Panjang fokal dari lensa digunakan ketika menangkap gambar, dalam mm"
 
 msgid "capturing digital zoom ratio"
@@ -656,6 +674,9 @@ msgstr ""
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr ""
+
+#~ msgid "Internal data stream error."
+#~ msgstr "Galat arus data internal."
 
 #~ msgid "A %s plugin is required to play this stream, but not installed."
 #~ msgstr "Plugin %s dibutuhkan untuk memutar arus ini, tapi tidak diinstal."

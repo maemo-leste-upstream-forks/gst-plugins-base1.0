@@ -815,6 +815,8 @@ buffer should be kept.</p></td>
   GstCaps *caps;
 
   GstBuffer *codec_data;
+
+  GstCaps *allocation_caps;
 };
 </pre>
 <p>Structure representing the state of an incoming or outgoing video
@@ -843,13 +845,19 @@ respective <em class="parameter"><code>set_format</code></em>
 </tr>
 <tr>
 <td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *<em class="structfield"><code><a name="GstVideoCodecState.caps"></a>caps</code></em>;</p></td>
-<td class="struct_member_description"><p>The <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a></p></td>
+<td class="struct_member_description"><p>The <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> used in the caps negotiation of the pad.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="GstVideoCodecState.codec-data"></a>codec_data</code></em>;</p></td>
 <td class="struct_member_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> corresponding to the
 'codec_data' field of a stream, or NULL.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *<em class="structfield"><code><a name="GstVideoCodecState.allocation-caps"></a>allocation_caps</code></em>;</p></td>
+<td class="struct_member_description"><p>The <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> for allocation query and pool
+negotiation. Since: 1.10</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>

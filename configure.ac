@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/prerelease
-AC_INIT([GStreamer Base Plug-ins],[1.8.3],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
+AC_INIT([GStreamer Base Plug-ins],[1.9.90],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
 
 AG_GST_INIT
 
@@ -56,10 +56,10 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 803, 0, 803)
+AS_LIBTOOL(GST, 990, 0, 990)
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.8.0
+GST_REQ=1.9.90
 
 dnl *** autotools stuff ****
 
@@ -167,6 +167,9 @@ dnl libm, for sin() etc.
 LT_LIB_M
 AC_SUBST(LIBM)
 
+dnl check for pthreads
+AX_PTHREAD
+
 dnl *** checks for header files ***
 
 dnl check if we have ANSI C header files
@@ -174,7 +177,31 @@ AC_HEADER_STDC
 
 dnl check for GCC specific SSE headers
 dnl these are used by the speex resampler code
-AC_CHECK_HEADERS([xmmintrin.h emmintrin.h])
+AC_CHECK_HEADERS([xmmintrin.h emmintrin.h smmintrin.h])
+
+dnl also check which architecture we're on for building files with intrinsics
+dnl separately
+AC_CHECK_DECLS([__i386__], [HAVE_X86=1])
+AC_CHECK_DECLS([__x86_64__], [HAVE_X86=1])
+
+dnl check for -m* compiler flags too
+SSE_CFLAGS="-msse"
+SSE2_CFLAGS="-msse2"
+SSE41_CFLAGS="-msse4.1"
+
+AS_COMPILER_FLAG([$SSE_CFLAGS], [HAVE_SSE=1], [HAVE_SSE=0])
+AS_COMPILER_FLAG([$SSE2_CFLAGS], [HAVE_SSE2=1], [HAVE_SSE2=0])
+AS_COMPILER_FLAG([$SSE41_CFLAGS], [HAVE_SSE41=1], [HAVE_SSE41=0])
+
+AM_CONDITIONAL(HAVE_X86, [test "x${HAVE_X86}" = "x1"])
+
+AC_DEFINE_UNQUOTED(HAVE_SSE, [$HAVE_SSE], [SSE support is enabled])
+AC_DEFINE_UNQUOTED(HAVE_SSE2, [$HAVE_SSE2], [SSE2 support is enabled])
+AC_DEFINE_UNQUOTED(HAVE_SSE41, [$HAVE_SSE41], [SSE4.1 support is enabled])
+
+AC_SUBST(SSE_CFLAGS)
+AC_SUBST(SSE2_CFLAGS)
+AC_SUBST(SSE41_CFLAGS)
 
 dnl used in gst/tcp
 AC_CHECK_HEADERS([sys/socket.h],
@@ -251,7 +278,7 @@ dnl GLib
 GLIB_REQ=2.40.0
 AG_GST_GLIB_CHECK([$GLIB_REQ])
 
-ORC_CHECK([0.4.23])
+ORC_CHECK([0.4.24])
 
 dnl checks for gstreamer
 dnl uninstalled is selected preferentially -- see pkg-config(1)
@@ -395,6 +422,12 @@ else
 fi
 AC_SUBST(GST_PLUGIN_LIBTOOLFLAGS)
 AM_CONDITIONAL(GST_PLUGIN_BUILD_STATIC, test "x$enable_static_plugins" = "xyes")
+
+dnl If only building static libraries, define GST_STATIC_COMPILATION. This is
+dnl needed only on Windows, but it doesn't hurt to have it everywhere.
+if test x$enable_static = xyes -a x$enable_shared = xno; then
+  GST_STATIC_CFLAGS="-DGST_STATIC_COMPILATION"
+fi
 
 # set by AG_GST_PARSE_SUBSYSTEM_DISABLES above
 dnl make sure it doesn't complain about unused variables if debugging is disabled
@@ -801,7 +834,7 @@ AC_SUBST(GST_PLUGINS_BASE_CFLAGS)
 
 dnl FIXME: do we want to rename to GST_ALL_* ?
 dnl add GST_OPTION_CFLAGS, but overridable
-GST_CFLAGS="$GST_CFLAGS"
+GST_CFLAGS="$GST_CFLAGS $GST_STATIC_CFLAGS"
 GST_CXXFLAGS="$GLIB_CFLAGS $GST_CFLAGS \$(GLIB_EXTRA_CFLAGS) \$(GST_OPTION_CXXFLAGS)"
 GST_CFLAGS="$GLIB_CFLAGS $GST_CFLAGS \$(GLIB_EXTRA_CFLAGS) \$(GST_OPTION_CFLAGS)"
 AC_SUBST(GST_CFLAGS)
@@ -912,6 +945,7 @@ tests/check/Makefile
 tests/examples/Makefile
 tests/examples/app/Makefile
 tests/examples/audio/Makefile
+tests/examples/decodebin_next/Makefile
 tests/examples/dynamic/Makefile
 tests/examples/encoding/Makefile
 tests/examples/fft/Makefile

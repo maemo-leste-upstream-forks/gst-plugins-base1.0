@@ -98,6 +98,7 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/as-libtool.m4 \
 	$(top_srcdir)/common/m4/as-version.m4 \
 	$(top_srcdir)/common/m4/ax_create_stdint_h.m4 \
+	$(top_srcdir)/common/m4/ax_pthread.m4 \
 	$(top_srcdir)/common/m4/gst-arch.m4 \
 	$(top_srcdir)/common/m4/gst-args.m4 \
 	$(top_srcdir)/common/m4/gst-check.m4 \
@@ -164,14 +165,12 @@ LTLIBRARIES = $(plugin_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libgstaudioresample_la_DEPENDENCIES = $(top_builddir)/gst-libs/gst/audio/libgstaudio-@GST_API_VERSION@.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
 am_libgstaudioresample_la_OBJECTS =  \
-	libgstaudioresample_la-gstaudioresample.lo \
-	libgstaudioresample_la-speex_resampler_int.lo \
-	libgstaudioresample_la-speex_resampler_float.lo \
-	libgstaudioresample_la-speex_resampler_double.lo
-libgstaudioresample_la_OBJECTS = $(am_libgstaudioresample_la_OBJECTS)
+	libgstaudioresample_la-gstaudioresample.lo
+nodist_libgstaudioresample_la_OBJECTS =
+libgstaudioresample_la_OBJECTS = $(am_libgstaudioresample_la_OBJECTS) \
+	$(nodist_libgstaudioresample_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -214,7 +213,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libgstaudioresample_la_SOURCES)
+SOURCES = $(libgstaudioresample_la_SOURCES) \
+	$(nodist_libgstaudioresample_la_SOURCES)
 DIST_SOURCES = $(libgstaudioresample_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -241,7 +241,7 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 ETAGS = etags
 CTAGS = ctags
-am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp README
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ACLOCAL_AMFLAGS = @ACLOCAL_AMFLAGS@
@@ -437,6 +437,9 @@ PKG_CONFIG = @PKG_CONFIG@
 PLUGINDIR = @PLUGINDIR@
 POSUB = @POSUB@
 PROFILE_CFLAGS = @PROFILE_CFLAGS@
+PTHREAD_CC = @PTHREAD_CC@
+PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
+PTHREAD_LIBS = @PTHREAD_LIBS@
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_PLATFORM = @PYTHON_PLATFORM@
@@ -450,6 +453,9 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SSE2_CFLAGS = @SSE2_CFLAGS@
+SSE41_CFLAGS = @SSE41_CFLAGS@
+SSE_CFLAGS = @SSE_CFLAGS@
 STRIP = @STRIP@
 THEORA_CFLAGS = @THEORA_CFLAGS@
 THEORA_LIBS = @THEORA_LIBS@
@@ -487,6 +493,7 @@ am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
+ax_pthread_config = @ax_pthread_config@
 bindir = @bindir@
 build = @build@
 build_alias = @build_alias@
@@ -538,44 +545,25 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 plugin_LTLIBRARIES = libgstaudioresample.la
-@HAVE_ORC_FALSE@ORC_TEST_LIBS = 
-
-# FIXME: we still link against orc if it's there, even if --disable-orc was used
-@HAVE_ORC_TRUE@ORC_TEST_LIBS = -lorc-test-0.4
 libgstaudioresample_la_SOURCES = \
-	gstaudioresample.c \
-	speex_resampler_int.c \
-	speex_resampler_float.c \
-	speex_resampler_double.c
+	gstaudioresample.c 
 
+nodist_libgstaudioresample_la_SOURCES = $(BUILT_SOURCES)
 libgstaudioresample_la_CFLAGS = \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_BASE_CFLAGS) \
-	$(GST_CFLAGS) \
-	$(ORC_CFLAGS)
+	$(GST_CFLAGS)
 
 libgstaudioresample_la_LIBADD = \
 	$(top_builddir)/gst-libs/gst/audio/libgstaudio-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) \
 	$(GST_LIBS) \
-	$(ORC_LIBS) $(ORC_TEST_LIBS) \
 	$(LIBM)
 
 libgstaudioresample_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libgstaudioresample_la_LIBTOOLFLAGS = $(GST_PLUGIN_LIBTOOLFLAGS)
 noinst_HEADERS = \
-	arch.h \
-	fixed_arm4.h \
-	fixed_arm5e.h \
-	fixed_bfin.h \
-	fixed_debug.h \
-	fixed_generic.h \
-	gstaudioresample.h \
-	resample.c \
-	resample_sse.h \
-	resample_neon.h \
-	speex_resampler.h \
-	speex_resampler_wrapper.h
+	gstaudioresample.h
 
 all: all-am
 
@@ -656,9 +644,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudioresample_la-gstaudioresample.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudioresample_la-speex_resampler_double.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudioresample_la-speex_resampler_float.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudioresample_la-speex_resampler_int.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -690,27 +675,6 @@ libgstaudioresample_la-gstaudioresample.lo: gstaudioresample.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstaudioresample.c' object='libgstaudioresample_la-gstaudioresample.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstaudioresample_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudioresample_la_CFLAGS) $(CFLAGS) -c -o libgstaudioresample_la-gstaudioresample.lo `test -f 'gstaudioresample.c' || echo '$(srcdir)/'`gstaudioresample.c
-
-libgstaudioresample_la-speex_resampler_int.lo: speex_resampler_int.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstaudioresample_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudioresample_la_CFLAGS) $(CFLAGS) -MT libgstaudioresample_la-speex_resampler_int.lo -MD -MP -MF $(DEPDIR)/libgstaudioresample_la-speex_resampler_int.Tpo -c -o libgstaudioresample_la-speex_resampler_int.lo `test -f 'speex_resampler_int.c' || echo '$(srcdir)/'`speex_resampler_int.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstaudioresample_la-speex_resampler_int.Tpo $(DEPDIR)/libgstaudioresample_la-speex_resampler_int.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='speex_resampler_int.c' object='libgstaudioresample_la-speex_resampler_int.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstaudioresample_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudioresample_la_CFLAGS) $(CFLAGS) -c -o libgstaudioresample_la-speex_resampler_int.lo `test -f 'speex_resampler_int.c' || echo '$(srcdir)/'`speex_resampler_int.c
-
-libgstaudioresample_la-speex_resampler_float.lo: speex_resampler_float.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstaudioresample_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudioresample_la_CFLAGS) $(CFLAGS) -MT libgstaudioresample_la-speex_resampler_float.lo -MD -MP -MF $(DEPDIR)/libgstaudioresample_la-speex_resampler_float.Tpo -c -o libgstaudioresample_la-speex_resampler_float.lo `test -f 'speex_resampler_float.c' || echo '$(srcdir)/'`speex_resampler_float.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstaudioresample_la-speex_resampler_float.Tpo $(DEPDIR)/libgstaudioresample_la-speex_resampler_float.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='speex_resampler_float.c' object='libgstaudioresample_la-speex_resampler_float.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstaudioresample_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudioresample_la_CFLAGS) $(CFLAGS) -c -o libgstaudioresample_la-speex_resampler_float.lo `test -f 'speex_resampler_float.c' || echo '$(srcdir)/'`speex_resampler_float.c
-
-libgstaudioresample_la-speex_resampler_double.lo: speex_resampler_double.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstaudioresample_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudioresample_la_CFLAGS) $(CFLAGS) -MT libgstaudioresample_la-speex_resampler_double.lo -MD -MP -MF $(DEPDIR)/libgstaudioresample_la-speex_resampler_double.Tpo -c -o libgstaudioresample_la-speex_resampler_double.lo `test -f 'speex_resampler_double.c' || echo '$(srcdir)/'`speex_resampler_double.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstaudioresample_la-speex_resampler_double.Tpo $(DEPDIR)/libgstaudioresample_la-speex_resampler_double.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='speex_resampler_double.c' object='libgstaudioresample_la-speex_resampler_double.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstaudioresample_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudioresample_la_CFLAGS) $(CFLAGS) -c -o libgstaudioresample_la-speex_resampler_double.lo `test -f 'speex_resampler_double.c' || echo '$(srcdir)/'`speex_resampler_double.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

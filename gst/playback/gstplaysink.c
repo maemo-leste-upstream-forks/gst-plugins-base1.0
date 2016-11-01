@@ -620,16 +620,13 @@ gst_play_sink_class_init (GstPlaySinkClass * klass)
       G_STRUCT_OFFSET (GstPlaySinkClass, convert_sample), NULL, NULL,
       g_cclosure_marshal_generic, GST_TYPE_SAMPLE, 1, GST_TYPE_CAPS);
 
-  gst_element_class_add_pad_template (gstelement_klass,
-      gst_static_pad_template_get (&audiorawtemplate));
-  gst_element_class_add_pad_template (gstelement_klass,
-      gst_static_pad_template_get (&audiotemplate));
-  gst_element_class_add_pad_template (gstelement_klass,
-      gst_static_pad_template_get (&videorawtemplate));
-  gst_element_class_add_pad_template (gstelement_klass,
-      gst_static_pad_template_get (&videotemplate));
-  gst_element_class_add_pad_template (gstelement_klass,
-      gst_static_pad_template_get (&texttemplate));
+  gst_element_class_add_static_pad_template (gstelement_klass,
+      &audiorawtemplate);
+  gst_element_class_add_static_pad_template (gstelement_klass, &audiotemplate);
+  gst_element_class_add_static_pad_template (gstelement_klass,
+      &videorawtemplate);
+  gst_element_class_add_static_pad_template (gstelement_klass, &videotemplate);
+  gst_element_class_add_static_pad_template (gstelement_klass, &texttemplate);
   gst_element_class_set_static_metadata (gstelement_klass, "Player Sink",
       "Generic/Bin/Sink",
       "Convenience sink for multiple streams",
@@ -680,6 +677,8 @@ gst_play_sink_init (GstPlaySink * playsink)
 
   g_rec_mutex_init (&playsink->lock);
   GST_OBJECT_FLAG_SET (playsink, GST_ELEMENT_FLAG_SINK);
+  gst_bin_set_suppressed_flags (GST_BIN (playsink),
+      GST_ELEMENT_FLAG_SOURCE | GST_ELEMENT_FLAG_SINK);
 
   channel =
       GST_COLOR_BALANCE_CHANNEL (g_object_new (GST_TYPE_COLOR_BALANCE_CHANNEL,
@@ -1230,8 +1229,6 @@ add_chain (GstPlayChain * chain, gboolean add)
     gst_bin_add (GST_BIN_CAST (chain->playsink), chain->bin);
   else {
     gst_bin_remove (GST_BIN_CAST (chain->playsink), chain->bin);
-    /* we don't want to lose our sink status */
-    GST_OBJECT_FLAG_SET (chain->playsink, GST_ELEMENT_FLAG_SINK);
   }
 
   chain->added = add;
