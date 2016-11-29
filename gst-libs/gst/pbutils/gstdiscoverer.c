@@ -47,6 +47,8 @@
 #include <gst/video/video.h>
 #include <gst/audio/audio.h>
 
+#include <string.h>
+
 #include "pbutils.h"
 #include "pbutils-private.h"
 
@@ -547,7 +549,9 @@ got_subtitle_data (GstPad * pad, GstPadProbeInfo * info, GstDiscoverer * dc)
 {
 
   if (!(GST_IS_BUFFER (info->data) || (GST_IS_EVENT (info->data)
-              && GST_EVENT_TYPE ((GstEvent *) info->data) == GST_EVENT_GAP)))
+              && (GST_EVENT_TYPE ((GstEvent *) info->data) == GST_EVENT_GAP
+                  || GST_EVENT_TYPE ((GstEvent *) info->data) ==
+                  GST_EVENT_EOS))))
     return GST_PAD_PROBE_OK;
 
 
@@ -803,7 +807,7 @@ collect_information (GstDiscoverer * dc, const GstStructure * st,
   GstStructure *caps_st;
   GstTagList *tags_st;
   const gchar *name;
-  int tmp;
+  gint tmp, tmp2;
   guint utmp;
 
   if (!st || !gst_structure_id_has_field (st, _CAPS_QUARK)) {
@@ -812,6 +816,14 @@ collect_information (GstDiscoverer * dc, const GstStructure * st,
   }
 
   gst_structure_id_get (st, _CAPS_QUARK, GST_TYPE_CAPS, &caps, NULL);
+
+  if (!caps || gst_caps_is_empty (caps) || gst_caps_is_any (caps)) {
+    GST_WARNING ("Couldn't find caps !");
+    if (caps)
+      gst_caps_unref (caps);
+    return make_info (parent, GST_TYPE_DISCOVERER_STREAM_INFO, NULL);
+  }
+
   caps_st = gst_caps_get_structure (caps, 0);
   name = gst_structure_get_name (caps_st);
 
@@ -837,7 +849,8 @@ collect_information (GstDiscoverer * dc, const GstStructure * st,
 
       format = gst_audio_format_from_string (format_str);
       finfo = gst_audio_format_get_info (format);
-      info->depth = GST_AUDIO_FORMAT_INFO_DEPTH (finfo);
+      if (finfo)
+        info->depth = GST_AUDIO_FORMAT_INFO_DEPTH (finfo);
     }
 
     if (gst_structure_id_has_field (st, _TAGS_QUARK)) {
@@ -869,26 +882,50 @@ collect_information (GstDiscoverer * dc, const GstStructure * st,
   } else if (g_str_has_prefix (name, "video/") ||
       g_str_has_prefix (name, "image/")) {
     GstDiscovererVideoInfo *info;
-    GstVideoInfo vinfo;
+    const gchar *caps_str;
 
     info = (GstDiscovererVideoInfo *) make_info (parent,
         GST_TYPE_DISCOVERER_VIDEO_INFO, caps);
 
-    if (gst_video_info_from_caps (&vinfo, caps)) {
-      info->width = (guint) vinfo.width;
-      info->height = (guint) vinfo.height;
+    if (gst_structure_get_int (caps_st, "width", &tmp))
+      info->width = (guint) tmp;
+    if (gst_structure_get_int (caps_st, "height", &tmp))
+      info->height = (guint) tmp;
 
-      info->depth = vinfo.finfo->bits * vinfo.finfo->n_components;
-
-      info->par_num = vinfo.par_n;
-      info->par_denom = vinfo.par_d;
-
-      info->framerate_num = vinfo.fps_n;
-      info->framerate_denom = vinfo.fps_d;
-
-      info->interlaced =
-          vinfo.interlace_mode != GST_VIDEO_INTERLACE_MODE_PROGRESSIVE;
+    if (gst_structure_get_fraction (caps_st, "framerate", &tmp, &tmp2)) {
+      info->framerate_num = (guint) tmp;
+      info->framerate_denom = (guint) tmp2;
+    } else {
+      info->framerate_num = 0;
+      info->framerate_denom = 1;
     }
+
+    if (gst_structure_get_fraction (caps_st, "pixel-aspect-ratio", &tmp, &tmp2)) {
+      info->par_num = (guint) tmp;
+      info->par_denom = (guint) tmp2;
+    } else {
+      info->par_num = 1;
+      info->par_denom = 1;
+    }
+
+    /* FIXME: we only want to extract depth if raw video is what's in the
+     * container (i.e. not if there is a decoder involved) */
+    caps_str = gst_structure_get_string (caps_st, "format");
+    if (caps_str != NULL) {
+      const GstVideoFormatInfo *finfo;
+      GstVideoFormat format;
+
+      format = gst_video_format_from_string (caps_str);
+      finfo = gst_video_format_get_info (format);
+      if (finfo)
+        info->depth = finfo->bits * finfo->n_components;
+    }
+
+    caps_str = gst_structure_get_string (caps_st, "interlace-mode");
+    if (!caps_str || strcmp (caps_str, "progressive") == 0)
+      info->interlaced = FALSE;
+    else
+      info->interlaced = TRUE;
 
     if (gst_structure_id_has_field (st, _TAGS_QUARK)) {
       gst_structure_id_get (st, _TAGS_QUARK, GST_TYPE_TAG_LIST, &tags_st, NULL);
@@ -1004,9 +1041,19 @@ find_stream_for_node (GstDiscoverer * dc, const GstStructure * topology)
 static gboolean
 child_is_same_stream (const GstCaps * _parent, const GstCaps * child)
 {
-  GstCaps *parent = gst_caps_copy (_parent);
-  guint i, size = gst_caps_get_size (parent);
+  GstCaps *parent;
+  guint i, size;
   gboolean res;
+
+  if (_parent == child)
+    return TRUE;
+  if (!_parent)
+    return FALSE;
+  if (!child)
+    return FALSE;
+
+  parent = gst_caps_copy (_parent);
+  size = gst_caps_get_size (parent);
 
   for (i = 0; i < size; i++) {
     gst_structure_remove_field (gst_caps_get_structure (parent, i), "parsed");
@@ -1023,6 +1070,13 @@ child_is_raw_stream (const GstCaps * parent, const GstCaps * child)
 {
   const GstStructure *st1, *st2;
   const gchar *name1, *name2;
+
+  if (parent == child)
+    return TRUE;
+  if (!parent)
+    return FALSE;
+  if (!child)
+    return FALSE;
 
   st1 = gst_caps_get_structure (parent, 0);
   name1 = gst_structure_get_name (st1);
@@ -1101,7 +1155,8 @@ parse_stream_topology (GstDiscoverer * dc, const GstStructure * topology,
           res->next = next;
           next->previous = res;
         }
-        gst_caps_unref (caps);
+        if (caps)
+          gst_caps_unref (caps);
       }
     }
 

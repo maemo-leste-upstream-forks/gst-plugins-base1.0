@@ -5,19 +5,20 @@
 # Božidar Putanec <bozidarp@yahoo.com>, 2016.
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.7.90\n"
+"Project-Id-Version: gst-plugins-base-1.10.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-11-17 14:51+0200\n"
-"PO-Revision-Date: 2016-05-27 12:47-0700\n"
+"POT-Creation-Date: 2016-11-29 15:27+0200\n"
+"PO-Revision-Date: 2016-11-19 10:06-0800\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Generator: Lokalize 2.0\n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 msgid "Could not open device for playback in mono mode."
 msgstr "Uređaj za reprodukciju nije moguće otvoriti u mono načinu."
@@ -87,13 +88,11 @@ msgstr "Ovo izgleda kao tekstualna datoteka"
 msgid "Could not create \"uridecodebin\" element."
 msgstr "Element „uridecodebin“ nije moguće napraviti (kreirati)."
 
-#, fuzzy
 msgid "Could not create \"decodebin3\" element."
-msgstr "Element „uridecodebin“ nije moguće napraviti (kreirati)."
+msgstr "Element „decodebin3“ nije moguće napraviti (kreirati)."
 
-#, fuzzy
 msgid "Could not create \"urisourcebin\" element."
-msgstr "Element „uridecodebin“ nije moguće napraviti (kreirati)."
+msgstr "Element „urisourcebin“ nije moguće napraviti (kreirati)."
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
@@ -230,9 +229,8 @@ msgstr "Format podnaslova TMPlayer"
 msgid "Kate subtitle format"
 msgstr "Format naslova Kate"
 
-#, fuzzy
 msgid "WebVTT subtitle format"
-msgstr "Format naslova Kate"
+msgstr "Format naslova WebVTT"
 
 msgid "Uncompressed video"
 msgstr "Nesažeti video"
@@ -403,14 +401,13 @@ msgstr "žarišna duljina"
 msgid "Focal length of the lens used capturing the image, in mm"
 msgstr "Primijenjena žarišna duljina leće pri snimanju slike u mm"
 
-#, fuzzy
 msgid "capturing 35 mm equivalent focal length"
-msgstr "žarišna duljina"
+msgstr "snimanje s 35mm ekvivalent žarišne duljine"
 
-#, fuzzy
 msgid ""
 "35 mm equivalent focal length of the lens used capturing the image, in mm"
-msgstr "Primijenjena žarišna duljina leće pri snimanju slike u mm"
+msgstr ""
+"Primijenjen ekvivalent od 35 mm žarišne duljine leće pri snimanju slike, u mm"
 
 msgid "capturing digital zoom ratio"
 msgstr "digitalno povećanje"
