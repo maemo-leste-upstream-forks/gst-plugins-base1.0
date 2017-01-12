@@ -348,8 +348,8 @@ gst_multi_handle_sink_class_init (GstMultiHandleSinkClass * klass)
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_TIME_MIN,
       g_param_spec_int64 ("time-min", "Time min",
-          "min number of time to queue (-1 = as little as possible)", -1,
-          G_MAXINT64, DEFAULT_TIME_MIN,
+          "min amount of time to queue (in nanoseconds) "
+          "(-1 = as little as possible)", -1, G_MAXINT64, DEFAULT_TIME_MIN,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_BUFFERS_MIN,
       g_param_spec_int ("buffers-min", "Buffers min",
@@ -383,7 +383,7 @@ gst_multi_handle_sink_class_init (GstMultiHandleSinkClass * klass)
           G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_TIME_QUEUED,
       g_param_spec_uint64 ("time-queued", "Time queued",
-          "Number of time currently queued", 0, G_MAXUINT64, 0,
+          "Amount of time currently queued (in nanoseconds)", 0, G_MAXUINT64, 0,
           G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 #endif
 
@@ -1704,26 +1704,14 @@ gst_multi_handle_sink_queue_buffer (GstMultiHandleSink * mhsink,
       soft_max_buffers);
 
   /* then loop over the clients and update the positions */
-  max_buffer_usage = 0;
-
-restart:
   cookie = mhsink->clients_cookie;
-  for (clients = mhsink->clients; clients; clients = next) {
+  for (clients = mhsink->clients; clients; clients = clients->next) {
     GstMultiHandleClient *mhclient = clients->data;
-
-    g_get_current_time (&nowtv);
-    now = GST_TIMEVAL_TO_TIME (nowtv);
-
-    if (cookie != mhsink->clients_cookie) {
-      GST_DEBUG_OBJECT (sink, "Clients cookie outdated, restarting");
-      goto restart;
-    }
-
-    next = g_list_next (clients);
 
     mhclient->bufpos++;
     GST_LOG_OBJECT (sink, "%s client %p at position %d",
         mhclient->debug, mhclient, mhclient->bufpos);
+
     /* check soft max if needed, recover client */
     if (soft_max_buffers > 0 && mhclient->bufpos >= soft_max_buffers) {
       gint newpos;
@@ -1740,6 +1728,25 @@ restart:
             "%s client %p not recovering position", mhclient->debug, mhclient);
       }
     }
+  }
+
+  max_buffer_usage = 0;
+  g_get_current_time (&nowtv);
+  now = GST_TIMEVAL_TO_TIME (nowtv);
+
+  /* now check for new or slow clients */
+restart:
+  cookie = mhsink->clients_cookie;
+  for (clients = mhsink->clients; clients; clients = next) {
+    GstMultiHandleClient *mhclient = clients->data;
+
+    if (cookie != mhsink->clients_cookie) {
+      GST_DEBUG_OBJECT (sink, "Clients cookie outdated, restarting");
+      goto restart;
+    }
+
+    next = g_list_next (clients);
+
     /* check hard max and timeout, remove client */
     if ((max_buffers > 0 && mhclient->bufpos >= max_buffers) ||
         (mhsink->timeout > 0
@@ -1761,6 +1768,7 @@ restart:
       mhsinkclass->hash_adding (mhsink, mhclient);
       hash_changed = TRUE;
     }
+
     /* keep track of maximum buffer usage */
     if (mhclient->bufpos > max_buffer_usage) {
       max_buffer_usage = mhclient->bufpos;
@@ -1783,7 +1791,7 @@ restart:
     find_limits (mhsink, &usage, mhsink->bytes_min, mhsink->buffers_min,
         mhsink->time_min, &max, -1, -1, -1);
 
-    max_buffer_usage = MAX (max_buffer_usage, usage + 1);
+    max_buffer_usage = MAX (max_buffer_usage, usage);
     GST_LOG_OBJECT (sink, "extended queue to %d", max_buffer_usage);
   }
 
@@ -1832,7 +1840,7 @@ restart:
     gst_buffer_unref (old);
   }
   /* save for stats */
-  mhsink->buffers_queued = max_buffer_usage;
+  mhsink->buffers_queued = max_buffer_usage + 1;
   CLIENTS_UNLOCK (sink);
 
   /* and send a signal to thread if handle_set changed */

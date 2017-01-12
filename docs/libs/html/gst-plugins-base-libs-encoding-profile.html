@@ -225,6 +225,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="returnvalue">GstEncodingProfile</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-encoding-profile.html#gst-encoding-profile-copy" title="gst_encoding_profile_copy ()">gst_encoding_profile_copy</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingContainerProfile"><span class="returnvalue">GstEncodingContainerProfile</span></a> *
 </td>
 <td class="function_name">
@@ -497,60 +505,73 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-encoding-profile.description"></a><h2>Description</h2>
-<div class="refsect2">
-<a name="id-1.2.14.10.13.2"></a><p>
-Functions to create and handle encoding profiles.
-</p>
-<p>
-Encoding profiles describe the media types and settings one wishes to use for
-an encoding process. The top-level profiles are commonly
+<p>Functions to create and handle encoding profiles.</p>
+<p>Encoding profiles describe the media types and settings one wishes to use
+for an encoding process. The top-level profiles are commonly
 <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingContainerProfile"><span class="type">GstEncodingContainerProfile</span></a>(s) (which contains a user-readable name and
 description along with which container format to use). These, in turn,
 reference one or more <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a>(s) which indicate which encoding
-format should be used on each individual streams.
-</p>
-<p>
-<a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a>(s) can be provided to the 'encodebin' element, which will take
-care of selecting and setting up the required elements to produce an output stream
-conforming to the specifications of the profile.
-</p>
-<p>
-Unlike other systems, the encoding profiles do not specify which <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#GstElement-struct"><span class="type">GstElement</span></a> to use
-for the various encoding and muxing steps, but instead relies on specifying the format
-one wishes to use.
-</p>
-<p>
-Encoding profiles can be created at runtime by the application or loaded from (and saved
-to) file using the <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingTarget"><span class="type">GstEncodingTarget</span></a> API.
-</p>
-</div>
-<hr>
+format should be used on each individual streams.</p>
+<p><a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a>(s) can be provided to the 'encodebin' element, which
+will take care of selecting and setting up the required elements to produce
+an output stream conforming to the specifications of the profile.</p>
+<p>Unlike other systems, the encoding profiles do not specify which <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#GstElement-struct"><span class="type">GstElement</span></a>
+to use for the various encoding and muxing steps, but instead relies on
+specifying the format one wishes to use.</p>
+<p>Encoding profiles can be created at runtime by the application or loaded
+from (and saved to) file using the <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingTarget"><span class="type">GstEncodingTarget</span></a> API.</p>
 <div class="refsect2">
-<a name="gst-validate-transcoding--encoding-profile"></a><h3>The encoding profile serialization format</h3>
-<p>This is the serialization format of a <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a>.</p>
-<p>
-     Internally the transcoding application uses <a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-encodebin.html#GstEncodeBin-struct"><span class="type">GstEncodeBin</span></a>. <span class="command"><strong>gst-validate-transcoding-&amp;GST_API_VERSION;</strong></span> uses its own
-     serialization format to describe the <a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0gst-plugins-base-plugins-encodebin.html#GstEncodeBin--profile"><span class="type">GstEncodeBin.profile</span></a>
-    property of the encodebin.
-   </p>
-<p>
-       The simplest serialized profile looks like:
-   </p>
+<a name="id-1.2.14.10.13.7"></a><h3>Defining a GstEncodingProfile as a string</h3>
+<div class="refsect3">
+<a name="id-1.2.14.10.13.7.2"></a><h4>Serialized encoding profile formats</h4>
+</div>
+<div class="refsect3">
+<a name="id-1.2.14.10.13.7.3"></a><h4>Using encoders and muxer element factory name:</h4>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">muxer_source_caps<span class="gtkdoc opt">:</span>videoencoder_source_caps<span class="gtkdoc opt">:</span>audioencoder_source_caps</pre></td>
+        <td class="listing_code"><pre class="programlisting">muxer_factory_name<span class="gtkdoc opt">:</span>video_encoder_factory_name<span class="gtkdoc opt">:</span>audio_encoder_factory_name</pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<p>
-        For example to encode a stream into a WebM container, with an OGG audio stream and a VP8 video stream,
-        the serialized <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a> will look like:
-    </p>
+<p></p>
+<p>For example to encode a stream into a WebM container, with an OGG audio
+stream and a VP8 video stream, the serialized <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a> looks
+like:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">webmmux<span class="gtkdoc opt">:</span>vp8enc<span class="gtkdoc opt">:</span>vorbisenc</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+</div>
+<div class="refsect3">
+<a name="id-1.2.14.10.13.7.4"></a><h4>Define the encoding profile in a generic way using caps:</h4>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">muxer_source_caps<span class="gtkdoc opt">:</span>video_encoder_source_caps<span class="gtkdoc opt">:</span>audio_encoder_source_caps</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>For example to encode a stream into a WebM container, with an OGG audio
+stream and a VP8 video stream, the serialized <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a> looks
+like:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -562,9 +583,14 @@ to) file using the <a class="link" href="gst-plugins-base-libs-encoding-profile.
   </table>
 </div>
 
-<p>
-       You can also set the preset name of the encoding profile using the caps+preset_name syntax as in:
-   </p>
+<p></p>
+<p>It is possible to mix caps and element type names so you can specify a specific
+video encoder while using caps for other encoders/muxer.</p>
+</div>
+<div class="refsect3">
+<a name="id-1.2.14.10.13.7.5"></a><h4>Advanced encoding format serialization features:</h4>
+<p>You can also set the preset name of the encoding profile using the
+caps+preset_name syntax as in:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -576,10 +602,9 @@ to) file using the <a class="link" href="gst-plugins-base-libs-encoding-profile.
   </table>
 </div>
 
-<p>
-       Moreover, you can set the <a class="link" href="gst-plugins-base-libs-encoding-profile.html#gst-encoding-profile-set-presence" title="gst_encoding_profile_set_presence ()">presence</a> property of an
-       encoding profile using the <code class="code">|presence</code> syntax as in:
-   </p>
+<p></p>
+<p>Moreover, you can set the <code class="literal">presence</code> property of an
+encoding profile using the <code class="literal">|presence</code> syntax as in:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -591,39 +616,52 @@ to) file using the <a class="link" href="gst-plugins-base-libs-encoding-profile.
   </table>
 </div>
 
-<p>
-     This field allows you to specify how many times maximum a <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a> can be used inside an encodebin.
-   </p>
-<p>
-     You can also use the <code class="code">restriction_caps-&gt;encoded_format_caps</code> syntax to specify the
-     restriction caps
-     to be set on a <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a>. It corresponds to the
-     restriction <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> to apply before
-     the encoder that will be used in the profile. The fields present in restriction
-     caps are properties of the raw stream (that is, before encoding), such as height
-     and width for video and depth and sampling rate for audio. This property does not
-     make sense for muxers.
-   </p>
-<p>
-       To force a video stream to be encoded with a Full HD resolution (using WebM as the container format,
-       VP8 as the video codec and Vorbis as the audio codec), you should use:
-   </p>
+<p></p>
+<p>This field allows specifies the maximum number of times a
+<a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a> can be used inside an encodebin. If 0, it is not a
+mandatory stream and can be used as many times as necessary.</p>
+<p>You can also use the <code class="literal">restriction_caps-&gt;encoded_format_caps</code> syntax to
+specify the restriction caps to be set on a <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a></p>
+<p>It corresponds to the restriction <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> to apply before the encoder that
+will be used in the profile. The fields present in restriction caps are
+properties of the raw stream (that is, before encoding), such as height and
+width for video and depth and sampling rate for audio. This property does
+not make sense for muxers. See <a class="link" href="gst-plugins-base-libs-encoding-profile.html#gst-encoding-profile-get-restriction" title="gst_encoding_profile_get_restriction ()"><span class="type">gst_encoding_profile_get_restriction</span></a> for
+more details.</p>
+<p>To force a video stream to be encoded with a Full HD resolution (using WebM
+as the container format, VP8 as the video codec and Vorbis as the audio
+codec), you should use:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">video<span class="gtkdoc opt">/</span>webm<span class="gtkdoc opt">:</span>video<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span>width<span class="gtkdoc opt">=</span><span class="number">1920</span><span class="gtkdoc opt">,</span>height<span class="gtkdoc opt">=</span><span class="number">1080</span><span class="gtkdoc opt">-&gt;</span>video<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>vp8<span class="gtkdoc opt">:</span>audio<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>vorbis</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="string">&quot;video/webm:video/x-raw,width=1920,height=1080-&gt;video/x-vp8:audio/x-vorbis&quot;</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
+<p></p>
+<div class="blockquote"><blockquote class="blockquote"><p>NOTE: Make sure to enclose into quotes to avoid '&gt;' to be reinterpreted by
+the shell.</p></blockquote></div>
+<p>In the case you are using encoder types, the following is also possible:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="string">&quot;matroskamux:x264enc,width=1920,height=1080:audio/x-vorbis&quot;</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+</div>
 <div class="refsect3">
-<a name="id-1.2.14.10.13.3.16"></a><h4>Some serialized encoding formats examples:</h4>
-<p>
-     MP3 audio and H264 in MP4:
-   </p>
+<a name="id-1.2.14.10.13.7.6"></a><h4>Some serialized encoding formats examples:</h4>
+<p>MP3 audio and H264 in MP4:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -635,9 +673,8 @@ to) file using the <a class="link" href="gst-plugins-base-libs-encoding-profile.
   </table>
 </div>
 
-<p>
-     Vorbis and theora in OGG:
-   </p>
+<p></p>
+<p>Vorbis and theora in OGG:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -649,9 +686,8 @@ to) file using the <a class="link" href="gst-plugins-base-libs-encoding-profile.
   </table>
 </div>
 
-<p>
-     AC3 and H264 in MPEG-TS:
-   </p>
+<p></p>
+<p>AC3 and H264 in MPEG-TS:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -663,13 +699,42 @@ to) file using the <a class="link" href="gst-plugins-base-libs-encoding-profile.
   </table>
 </div>
 
+<p></p>
+</div>
+<div class="refsect3">
+<a name="id-1.2.14.10.13.7.7"></a><h4>Loading a profile from encoding targets</h4>
+<p>Anywhere where you have to use a string to define a <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a>,
+you can use load it from a <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingTarget"><span class="type">GstEncodingTarget</span></a> using the following syntaxes:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">target_name<span class="gtkdoc opt">[/</span>profilename<span class="gtkdoc opt">/</span>category<span class="gtkdoc opt">]</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p>or</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="gtkdoc opt">/</span>path<span class="gtkdoc opt">/</span>to<span class="gtkdoc opt">/</span>target<span class="gtkdoc opt">.</span>gep<span class="gtkdoc opt">:</span>profilename</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.14.10.13.4"></a><h3>Example: Creating a profile</h3>
-<p>
-</p>
+<a name="id-1.2.14.10.13.8"></a><h3>Example: Creating a profile</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -731,14 +796,11 @@ GstEncodingProfile <span class="gtkdoc opt">*</span>
   </table>
 </div>
 
-<p>
-</p>
+<p></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.14.10.13.5"></a><h3>Example: Using an encoder preset with a profile</h3>
-<p>
-</p>
+<a name="id-1.2.14.10.13.9"></a><h3>Example: Using an encoder preset with a profile</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -820,14 +882,11 @@ GstEncodingProfile <span class="gtkdoc opt">*</span>
   </table>
 </div>
 
-<p>
-</p>
+<p></p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.14.10.13.6"></a><h3>Example: Listing categories, targets and profiles</h3>
-<p>
-</p>
+<a name="id-1.2.14.10.13.10"></a><h3>Example: Listing categories, targets and profiles</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -891,8 +950,103 @@ categories <span class="gtkdoc opt">=</span> <span class="function"><a href="gst
   </table>
 </div>
 
-<p>
-</p>
+<p></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="id-1.2.14.10.13.11"></a><h3>Encoding Target</h3>
+<p>On top of the notion of profiles, we implement the notion of EncodingTarget.
+Encoding Targets are basically a higher level of abstraction to define formats
+for specific target types. Those can define several GstEncodingProfiles with
+different names, for example one for transcoding in full HD, another one for
+low res, etc.. which are defined in the same encoding target.</p>
+<p>Basically if you wan to encode a stream to send it to, say, youtube you should
+have a Youtube encoding target defined in the "online-service" category.</p>
+<div class="refsect3">
+<a name="id-1.2.14.10.13.11.4"></a><h4>Encoding target serialization format</h4>
+<p>Encoding targets are serialized in a KeyFile like files.</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="gtkdoc opt">[</span>GStreamer Encoding Target<span class="gtkdoc opt">]</span>
+name <span class="gtkdoc opt">: &lt;</span>name<span class="gtkdoc opt">&gt;</span>
+category <span class="gtkdoc opt">: &lt;</span>category<span class="gtkdoc opt">&gt;</span>
+\description <span class="gtkdoc opt">: &lt;</span>description<span class="gtkdoc opt">&gt;</span> <span class="gtkdoc ppc">#translatable</span>
+
+<span class="gtkdoc opt">[</span>profile<span class="gtkdoc opt">-&lt;</span>profile1name<span class="gtkdoc opt">&gt;]</span>
+name <span class="gtkdoc opt">: &lt;</span>name<span class="gtkdoc opt">&gt;</span>
+\description <span class="gtkdoc opt">: &lt;</span>description<span class="gtkdoc opt">&gt;</span> <span class="gtkdoc ppc">#optional</span>
+format <span class="gtkdoc opt">: &lt;</span>format<span class="gtkdoc opt">&gt;</span>
+preset <span class="gtkdoc opt">: &lt;</span>preset<span class="gtkdoc opt">&gt;</span>
+
+<span class="gtkdoc opt">[</span>streamprofile<span class="gtkdoc opt">-&lt;</span>id<span class="gtkdoc opt">&gt;]</span>
+parent <span class="gtkdoc opt">: &lt;</span>encodingprofile<span class="gtkdoc opt">.</span>name<span class="gtkdoc opt">&gt;[,&lt;</span>encodingprofile<span class="gtkdoc opt">.</span>name<span class="gtkdoc opt">&gt;..]</span>
+<span class="gtkdoc esc">\t</span>ype <span class="gtkdoc opt">: &lt;</span>type<span class="gtkdoc opt">&gt;</span> <span class="gtkdoc ppc">#</span> <span class="gtkdoc pps">&quot;audio&quot;</span><span class="gtkdoc ppc">,</span> <span class="gtkdoc pps">&quot;video&quot;</span><span class="gtkdoc ppc">,</span> <span class="gtkdoc pps">&quot;text&quot;</span><span class="gtkdoc ppc"></span>
+format <span class="gtkdoc opt">: &lt;</span>format<span class="gtkdoc opt">&gt;</span>
+preset <span class="gtkdoc opt">: &lt;</span>preset<span class="gtkdoc opt">&gt;</span>
+restriction <span class="gtkdoc opt">: &lt;</span>restriction<span class="gtkdoc opt">&gt;</span>
+presence <span class="gtkdoc opt">: &lt;</span>presence<span class="gtkdoc opt">&gt;</span>
+pass <span class="gtkdoc opt">: &lt;</span>pass<span class="gtkdoc opt">&gt;</span>
+variableframerate <span class="gtkdoc opt">: &lt;</span>variableframerate<span class="gtkdoc opt">&gt;</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="id-1.2.14.10.13.12"></a><h3>Location of encoding target files</h3>
+<p>$GST_DATADIR/gstreamer-GST_API_VERSION/encoding-profile
+$HOME/gstreamer-GST_API_VERSION/encoding-profile</p>
+<p>There also is a GST_ENCODING_TARGET_PATH environment variable
+defining a list of folder containing encoding target files.</p>
+<div class="refsect3">
+<a name="id-1.2.14.10.13.12.4"></a><h4>Naming convention</h4>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">$<span class="gtkdoc opt">(</span>target<span class="gtkdoc opt">.</span>category<span class="gtkdoc opt">)/</span>$<span class="gtkdoc opt">(</span>target<span class="gtkdoc opt">.</span>name<span class="gtkdoc opt">).</span>gep</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="id-1.2.14.10.13.13"></a><h3>Naming restrictions:</h3>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>lowercase ASCII letter for the first character</p></li>
+<li class="listitem"><p>Same for all other characters + numerics + hyphens</p></li>
+</ul></div>
 </div>
 </div>
 <div class="refsect1">
@@ -1379,8 +1533,8 @@ This is the name that has been set when saving the preset.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>preset</p></td>
-<td class="parameter_description"><p>the element preset to use</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> the element preset to use. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1576,6 +1730,36 @@ gst_encoding_profile_get_type_nick (<em class="parameter"><code><a class="link" 
 <a name="gst-encoding-profile-get-type-nick.returns"></a><h4>Returns</h4>
 <p> the human-readable name of the type of <em class="parameter"><code>profile</code></em>
 .</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-encoding-profile-copy"></a><h3>gst_encoding_profile_copy ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="returnvalue">GstEncodingProfile</span></a> *
+gst_encoding_profile_copy (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a> *self</code></em>);</pre>
+<p>Makes a deep copy of <em class="parameter"><code>self</code></em>
+</p>
+<div class="refsect3">
+<a name="gst-encoding-profile-copy.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>self</p></td>
+<td class="parameter_description"><p>The <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingProfile"><span class="type">GstEncodingProfile</span></a> to copy</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-encoding-profile-copy.returns"></a><h4>Returns</h4>
+<p> The copy of <em class="parameter"><code>self</code></em>
+</p>
+<p>Since 1.12. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2344,7 +2528,9 @@ searched for.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>name</p></td>
-<td class="parameter_description"><p>the name of the <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingTarget"><span class="type">GstEncodingTarget</span></a> to load.</p></td>
+<td class="parameter_description"><p>the name of the <a class="link" href="gst-plugins-base-libs-encoding-profile.html#GstEncodingTarget"><span class="type">GstEncodingTarget</span></a> to load (automatically
+converted to lower case internally as capital letters are not
+valid for target names).</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>

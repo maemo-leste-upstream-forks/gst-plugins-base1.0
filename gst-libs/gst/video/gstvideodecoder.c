@@ -640,7 +640,10 @@ _new_output_state (GstVideoFormat fmt, guint width, guint height,
   state = g_slice_new0 (GstVideoCodecState);
   state->ref_count = 1;
   gst_video_info_init (&state->info);
-  gst_video_info_set_format (&state->info, fmt, width, height);
+  if (!gst_video_info_set_format (&state->info, fmt, width, height)) {
+    g_slice_free (GstVideoCodecState, state);
+    return NULL;
+  }
 
   if (reference) {
     GstVideoInfo *tgt, *ref;
@@ -670,6 +673,9 @@ _new_output_state (GstVideoFormat fmt, guint width, guint height,
     tgt->fps_n = ref->fps_n;
     tgt->fps_d = ref->fps_d;
     tgt->views = ref->views;
+
+    GST_VIDEO_INFO_FIELD_ORDER (tgt) = GST_VIDEO_INFO_FIELD_ORDER (ref);
+
     if (GST_VIDEO_INFO_MULTIVIEW_MODE (ref) != GST_VIDEO_MULTIVIEW_MODE_NONE) {
       GST_VIDEO_INFO_MULTIVIEW_MODE (tgt) = GST_VIDEO_INFO_MULTIVIEW_MODE (ref);
       GST_VIDEO_INFO_MULTIVIEW_FLAGS (tgt) =
@@ -1612,6 +1618,15 @@ gst_video_decoder_src_query_default (GstVideoDecoder * dec, GstQuery * query)
         break;
       }
 
+      /* Refuse BYTES format queries. If it made sense to
+       * answer them, upstream would have already */
+      gst_query_parse_position (query, &format, NULL);
+
+      if (format == GST_FORMAT_BYTES) {
+        GST_LOG_OBJECT (dec, "Ignoring BYTES position query");
+        break;
+      }
+
       /* we start from the last seen time */
       time = dec->priv->last_timestamp_out;
       /* correct for the segment values */
@@ -1622,7 +1637,6 @@ gst_video_decoder_src_query_default (GstVideoDecoder * dec, GstQuery * query)
           "query %p: our time: %" GST_TIME_FORMAT, query, GST_TIME_ARGS (time));
 
       /* and convert to the final format */
-      gst_query_parse_position (query, &format, NULL);
       if (!(res = gst_pad_query_convert (pad, GST_FORMAT_TIME, time,
                   format, &value)))
         break;
@@ -3455,6 +3469,8 @@ gst_video_decoder_set_output_state (GstVideoDecoder * decoder,
 
   /* Create the new output state */
   state = _new_output_state (fmt, width, height, reference);
+  if (!state)
+    return NULL;
 
   GST_VIDEO_DECODER_STREAM_LOCK (decoder);
 
@@ -3953,6 +3969,27 @@ GstFlowReturn
 gst_video_decoder_allocate_output_frame (GstVideoDecoder *
     decoder, GstVideoCodecFrame * frame)
 {
+  return gst_video_decoder_allocate_output_frame_with_params (decoder, frame,
+      NULL);
+}
+
+/**
+ * gst_video_decoder_allocate_output_frame_with_params:
+ * @decoder: a #GstVideoDecoder
+ * @frame: a #GstVideoCodecFrame
+ * @params: a #GstBufferPoolAcquireParams
+ *
+ * Same as #gst_video_decoder_allocate_output_frame except it allows passing
+ * #GstBufferPoolAcquireParams to the sub call gst_buffer_pool_acquire_buffer.
+ *
+ * Returns: %GST_FLOW_OK if an output buffer could be allocated
+ *
+ * Since: 1.12
+ */
+GstFlowReturn
+gst_video_decoder_allocate_output_frame_with_params (GstVideoDecoder *
+    decoder, GstVideoCodecFrame * frame, GstBufferPoolAcquireParams * params)
+{
   GstFlowReturn flow_ret;
   GstVideoCodecState *state;
   int num_bytes;
@@ -3985,7 +4022,7 @@ gst_video_decoder_allocate_output_frame (GstVideoDecoder *
   GST_LOG_OBJECT (decoder, "alloc buffer size %d", num_bytes);
 
   flow_ret = gst_buffer_pool_acquire_buffer (decoder->priv->pool,
-      &frame->output_buffer, NULL);
+      &frame->output_buffer, params);
 
   GST_VIDEO_DECODER_STREAM_UNLOCK (decoder);
 

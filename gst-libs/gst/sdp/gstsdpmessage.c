@@ -361,7 +361,7 @@ gst_sdp_message_copy (const GstSDPMessage * msg, GstSDPMessage ** copy)
 
     gst_sdp_message_add_time (cp, time->start, time->stop, repeat);
 
-    g_free (repeat);
+    g_free ((gchar **) repeat);
   }
 
   len = gst_sdp_message_zones_len (msg);
@@ -3271,6 +3271,73 @@ gst_sdp_parse_rtpmap (const gchar * rtpmap, gint * payload, gchar ** name,
 }
 
 /**
+ * gst_sdp_media_add_rtcp_fb_attributes_from_media:
+ * @media: a #GstSDPMedia
+ * @pt: payload type
+ * @caps: a #GstCaps
+ *
+ * Parse given @media for "rtcp-fb" attributes and add it to the @caps.
+ *
+ * Mapping of caps from SDP fields:
+ *
+ * a=rtcp-fb:(payload) (param1) [param2]...
+ *
+ * Returns: a #GstSDPResult.
+ */
+static GstSDPResult
+gst_sdp_media_add_rtcp_fb_attributes_from_media (const GstSDPMedia * media,
+    gint pt, GstCaps * caps)
+{
+  const gchar *rtcp_fb;
+  gchar *p, *to_free;
+  gint payload, i;
+  GstStructure *s;
+
+  g_return_val_if_fail (media != NULL, GST_SDP_EINVAL);
+  g_return_val_if_fail (caps != NULL && GST_IS_CAPS (caps), GST_SDP_EINVAL);
+
+  s = gst_caps_get_structure (caps, 0);
+
+  for (i = 0;; i++) {
+    gboolean all_formats = FALSE;
+
+    if ((rtcp_fb = gst_sdp_media_get_attribute_val_n (media,
+                "rtcp-fb", i)) == NULL)
+      break;
+
+    /* p is now of the format <payload> attr... */
+    to_free = p = g_strdup (rtcp_fb);
+
+    /* check if it applies to all formats */
+    if (*p == '*') {
+      p++;
+      all_formats = TRUE;
+    } else {
+      PARSE_INT (p, " ", payload);
+    }
+
+    if (all_formats || (payload != -1 && payload == pt)) {
+      gchar *tmp, *key;
+
+      SKIP_SPACES (p);
+
+      /* replace space with '-' */
+      key = g_strdup_printf ("rtcp-fb-%s", p);
+
+      for (tmp = key; (tmp = strchr (tmp, ' ')); ++tmp) {
+        *tmp = '-';
+      }
+
+      gst_structure_set (s, key, G_TYPE_BOOLEAN, TRUE, NULL);
+      GST_DEBUG ("adding caps: %s=TRUE", key);
+      g_free (key);
+    }
+    g_free (to_free);
+  }
+  return GST_SDP_OK;
+}
+
+/**
  * gst_sdp_media_get_caps_from_media:
  * @media: a #GstSDPMedia
  * @pt: a payload type
@@ -3439,6 +3506,9 @@ gst_sdp_media_get_caps_from_media (const GstSDPMedia * media, gint pt)
     }
   }
 
+  /* parse rtcp-fb: field */
+  gst_sdp_media_add_rtcp_fb_attributes_from_media (media, pt, caps);
+
   return caps;
 
   /* ERRORS */
@@ -3467,6 +3537,8 @@ no_rate:
  *
  * a=fmtp:(payload) (param)[=(value)];...
  *
+ * a=rtcp-fb:(payload) (param1) [param2]...
+ *
  * Returns: a #GstSDPResult.
  *
  * Since: 1.8
@@ -3478,7 +3550,7 @@ gst_sdp_media_set_media_from_caps (const GstCaps * caps, GstSDPMedia * media)
   gchar *tmp;
   gint caps_pt, caps_rate;
   guint n_fields, j;
-  gboolean first;
+  gboolean first, nack, nack_pli, ccm_fir;
   GString *fmtp;
   GstStructure *s;
 
@@ -3516,6 +3588,34 @@ gst_sdp_media_set_media_from_caps (const GstCaps * caps, GstSDPMedia * media)
     g_free (tmp);
   }
 
+  /* get rtcp-fb attributes */
+  if (gst_structure_get_boolean (s, "rtcp-fb-nack", &nack)) {
+    if (nack) {
+      tmp = g_strdup_printf ("%d nack", caps_pt);
+      gst_sdp_media_add_attribute (media, "rtcp-fb", tmp);
+      g_free (tmp);
+      GST_DEBUG ("adding rtcp-fb-nack to pt=%d\n", caps_pt);
+    }
+  }
+
+  if (gst_structure_get_boolean (s, "rtcp-fb-nack-pli", &nack_pli)) {
+    if (nack_pli) {
+      tmp = g_strdup_printf ("%d nack pli", caps_pt);
+      gst_sdp_media_add_attribute (media, "rtcp-fb", tmp);
+      g_free (tmp);
+      GST_DEBUG ("adding rtcp-fb-nack-pli to pt=%d\n", caps_pt);
+    }
+  }
+
+  if (gst_structure_get_boolean (s, "rtcp-fb-ccm-fir", &ccm_fir)) {
+    if (ccm_fir) {
+      tmp = g_strdup_printf ("%d ccm fir", caps_pt);
+      gst_sdp_media_add_attribute (media, "rtcp-fb", tmp);
+      g_free (tmp);
+      GST_DEBUG ("adding rtcp-fb-ccm-fir to pt=%d\n", caps_pt);
+    }
+  }
+
   /* collect all other properties and add them to fmtp or attributes */
   fmtp = g_string_new ("");
   g_string_append_printf (fmtp, "%d ", caps_pt);
@@ -3549,6 +3649,8 @@ gst_sdp_media_set_media_from_caps (const GstCaps * caps, GstSDPMedia * media)
       continue;
     /* handled later */
     if (g_str_has_prefix (fname, "x-gst-rtsp-server-rtx-time"))
+      continue;
+    if (g_str_has_prefix (fname, "rtcp-fb-"))
       continue;
 
     if (!strcmp (fname, "a-framesize")) {

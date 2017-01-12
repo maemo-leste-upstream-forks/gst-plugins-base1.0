@@ -500,6 +500,12 @@
 <tr>
 <td class="define_keyword">#define</td>
 <td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-INFO-FIELD-ORDER:CAPS" title="GST_VIDEO_INFO_FIELD_ORDER()">GST_VIDEO_INFO_FIELD_ORDER</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
 <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-INFO-FLAGS:CAPS" title="GST_VIDEO_INFO_FLAGS()">GST_VIDEO_INFO_FLAGS</a><span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -705,7 +711,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">void</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-info-set-format" title="gst_video_info_set_format ()">gst_video_info_set_format</a> <span class="c_punctuation">()</span>
@@ -745,7 +751,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">void</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-info-align" title="gst_video_info_align ()">gst_video_info_align</a> <span class="c_punctuation">()</span>
@@ -1310,6 +1316,10 @@
 <tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInterlaceMode" title="enum GstVideoInterlaceMode">GstVideoInterlaceMode</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFieldOrder" title="enum GstVideoFieldOrder">GstVideoFieldOrder</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword">enum</td>
@@ -3101,6 +3111,12 @@ gst_video_colorimetry_to_string (<em class="parameter"><code>const <a class="lin
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-VIDEO-INFO-FIELD-ORDER:CAPS"></a><h3>GST_VIDEO_INFO_FIELD_ORDER()</h3>
+<pre class="programlisting">#define GST_VIDEO_INFO_FIELD_ORDER(i)    ((i)-&gt;ABI.abi.field_order)
+</pre>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GST-VIDEO-INFO-FLAGS:CAPS"></a><h3>GST_VIDEO_INFO_FLAGS()</h3>
 <pre class="programlisting">#define GST_VIDEO_INFO_FLAGS(i)          ((i)-&gt;flags)
 </pre>
@@ -3363,7 +3379,7 @@ or <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-info-copy
 <hr>
 <div class="refsect2">
 <a name="gst-video-info-set-format"></a><h3>gst_video_info_set_format ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_video_info_set_format (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInfo" title="struct GstVideoInfo"><span class="type">GstVideoInfo</span></a> *info</code></em>,
                            <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>,
@@ -3407,6 +3423,11 @@ subsampled formats.</p>
 </tr>
 </tbody>
 </table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-info-set-format.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the returned video info is invalid, e.g. because the
+size of a frame can't be represented as a 32 bit integer (Since: 1.12)</p>
 </div>
 </div>
 <hr>
@@ -3570,7 +3591,7 @@ are equal, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#F
 <hr>
 <div class="refsect2">
 <a name="gst-video-info-align"></a><h3>gst_video_info_align ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_video_info_align (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInfo" title="struct GstVideoInfo"><span class="type">GstVideoInfo</span></a> *info</code></em>,
                       <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a> *align</code></em>);</pre>
 <p>Adjust the offset and stride fields in <em class="parameter"><code>info</code></em>
@@ -3601,6 +3622,11 @@ is required and <em class="parameter"><code>align</code></em>
 </tr>
 </tbody>
 </table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-info-align.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if alignment could not be applied, e.g. because the
+size of a frame can't be represented as a 32 bit integer (Since: 1.12)</p>
 </div>
 </div>
 <hr>
@@ -5911,6 +5937,13 @@ structure is usually used to configure the bufferpool if it supports the
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-FORMAT-VYUY:CAPS"></a>GST_VIDEO_FORMAT_VYUY</p></td>
+<td class="enum_member_description">
+<p>packed 4:2:2 YUV (V0-Y0-U0-Y1 V2-Y2-U2-Y3 V4 ...)</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -6617,6 +6650,7 @@ non-linear RGB (R'G'B')</p></td>
     struct {
       GstVideoMultiviewMode     multiview_mode;
       GstVideoMultiviewFlags    multiview_flags;
+      GstVideoFieldOrder        field_order;
     } abi;
 };
 </pre>
@@ -6766,6 +6800,49 @@ mode of the stream.</p>
 </tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoFieldOrder"></a><h3>enum GstVideoFieldOrder</h3>
+<p>Field order of interlaced content. This is only valid for
+interlace-mode=interleaved and not interlace-mode=mixed. In the case of
+mixed or GST_VIDEO_FIELD_ORDER_UNKOWN, the field order is signalled via
+buffer flags.</p>
+<div class="refsect3">
+<a name="GstVideoFieldOrder.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-FIELD-ORDER-UNKNOWN:CAPS"></a>GST_VIDEO_FIELD_ORDER_UNKNOWN</p></td>
+<td class="enum_member_description">
+<p>unknown field order for interlaced content.
+    The actual field order is signalled via buffer flags.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-FIELD-ORDER-TOP-FIELD-FIRST:CAPS"></a>GST_VIDEO_FIELD_ORDER_TOP_FIELD_FIRST</p></td>
+<td class="enum_member_description">
+<p>top field is first</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-FIELD-ORDER-BOTTOM-FIELD-FIRST:CAPS"></a>GST_VIDEO_FIELD_ORDER_BOTTOM_FIELD_FIRST</p></td>
+<td class="enum_member_description">
+<p>bottom field is first</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
 </div>
 <hr>
 <div class="refsect2">

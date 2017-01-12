@@ -3129,7 +3129,7 @@ update_video_multiview_caps (GstPlayBin * playbin, GstCaps * caps)
 {
   GstVideoMultiviewMode mv_mode;
   GstVideoMultiviewMode cur_mv_mode;
-  GstVideoMultiviewFlags mv_flags, cur_mv_flags;
+  guint mv_flags, cur_mv_flags;
   GstStructure *s;
   const gchar *mview_mode_str;
   GstCaps *out_caps;
@@ -4733,6 +4733,7 @@ autoplug_select_cb (GstElement * decodebin, GstPad * pad,
           }
 
           gst_object_unref (sinkpad);
+          gst_caps_unref (raw_caps);
           gst_caps_unref (caps);
         }
 
