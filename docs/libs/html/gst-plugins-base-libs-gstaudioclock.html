@@ -219,7 +219,7 @@ calculated it will call <em class="parameter"><code>func</code></em>
 <div class="refsect2">
 <a name="gst-audio-clock-adjust"></a><h3>gst_audio_clock_adjust ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
-gst_audio_clock_adjust (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"><span class="type">GstClock</span></a> *clock</code></em>,
+gst_audio_clock_adjust (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudioclock.html#GstAudioClock"><span class="type">GstAudioClock</span></a> *clock</code></em>,
                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> time</code></em>);</pre>
 <p>Adjust <em class="parameter"><code>time</code></em>
  with the internal offset of the audio clock.</p>
@@ -255,7 +255,7 @@ adjusted with the internal offset.</p>
 <div class="refsect2">
 <a name="gst-audio-clock-get-time"></a><h3>gst_audio_clock_get_time ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
-gst_audio_clock_get_time (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"><span class="type">GstClock</span></a> *clock</code></em>);</pre>
+gst_audio_clock_get_time (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudioclock.html#GstAudioClock"><span class="type">GstAudioClock</span></a> *clock</code></em>);</pre>
 <p>Report the time as returned by the <a class="link" href="gst-plugins-base-libs-gstaudioclock.html#GstAudioClockGetTimeFunc" title="GstAudioClockGetTimeFunc ()"><span class="type">GstAudioClockGetTimeFunc</span></a> without applying
 any offsets.</p>
 <div class="refsect3">
@@ -317,7 +317,7 @@ the <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"
 <div class="refsect2">
 <a name="gst-audio-clock-invalidate"></a><h3>gst_audio_clock_invalidate ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_audio_clock_invalidate (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"><span class="type">GstClock</span></a> *clock</code></em>);</pre>
+gst_audio_clock_invalidate (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudioclock.html#GstAudioClock"><span class="type">GstAudioClock</span></a> *clock</code></em>);</pre>
 <p>Invalidate the clock function. Call this function when the provided
 <a class="link" href="gst-plugins-base-libs-gstaudioclock.html#GstAudioClockGetTimeFunc" title="GstAudioClockGetTimeFunc ()"><span class="type">GstAudioClockGetTimeFunc</span></a> cannot be called anymore, for example, when the
 user_data becomes invalid.</p>

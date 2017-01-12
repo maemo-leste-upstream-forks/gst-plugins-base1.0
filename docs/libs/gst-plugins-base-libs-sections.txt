@@ -4,12 +4,23 @@
 <FILE>gstdmabuf</FILE>
 <TITLE>dmabuf</TITLE>
 <INCLUDE>gst/allocators/gstdmabuf.h</INCLUDE>
+GST_CAPS_FEATURE_MEMORY_DMABUF
 gst_dmabuf_allocator_new
 gst_dmabuf_allocator_alloc
 gst_dmabuf_memory_get_fd
+gst_dmabuf_allocator_get_type
 gst_is_dmabuf_memory
 <SUBSECTION Standard>
+GstDmaBufAllocator
+GstDmaBufAllocatorClass
 GST_ALLOCATOR_DMABUF
+GST_DMABUF_ALLOCATOR
+GST_DMABUF_ALLOCATOR_CAST
+GST_DMABUF_ALLOCATOR_CLASS
+GST_DMABUF_ALLOCATOR_GET_CLASS
+GST_IS_DMABUF_ALLOCATOR
+GST_IS_DMABUF_ALLOCATOR_CLASS
+GST_TYPE_DMABUF_ALLOCATOR
 <SUBSECTION Private>
 </SECTION>
 
@@ -582,6 +593,7 @@ GST_AUDIO_RING_BUFFER_SIGNAL
 GST_AUDIO_RING_BUFFER_WAIT
 
 gst_audio_ring_buffer_set_callback
+gst_audio_ring_buffer_set_callback_full
 
 gst_audio_ring_buffer_acquire
 gst_audio_ring_buffer_release
@@ -1503,6 +1515,7 @@ gst_rtsp_options_as_text
 gst_rtsp_options_from_text
 gst_rtsp_find_header_field
 gst_rtsp_find_method
+gst_rtsp_generate_digest_auth_response
 <SUBSECTION Standard>
 GST_TYPE_RTSP_AUTH_METHOD
 GST_TYPE_RTSP_EVENT
@@ -1670,6 +1683,12 @@ gst_rtsp_message_set_body
 gst_rtsp_message_take_body
 gst_rtsp_message_get_body
 gst_rtsp_message_steal_body
+
+GstRTSPAuthCredential
+GstRTSPAuthParam
+gst_rtsp_message_parse_auth_credentials
+gst_rtsp_auth_credentials_free
+
 gst_rtsp_message_dump
 </SECTION>
 
@@ -2289,6 +2308,7 @@ gst_encoding_profile_is_equal
 gst_encoding_profile_is_enabled
 gst_encoding_profile_get_input_caps
 gst_encoding_profile_get_type_nick
+gst_encoding_profile_copy
 <SUBSECTION container>
 GstEncodingContainerProfile
 gst_encoding_container_profile_new
@@ -2479,6 +2499,7 @@ GST_TYPE_VIDEO_COLOR_PRIMARIES
 <SUBSECTION>
 GstVideoInfo
 GstVideoInterlaceMode
+GstVideoFieldOrder
 GstVideoMultiviewMode
 GstVideoMultiviewFramePacking
 GstVideoMultiviewFlags
@@ -2491,6 +2512,7 @@ GST_VIDEO_INFO_IS_GRAY
 GST_VIDEO_INFO_HAS_ALPHA
 GST_VIDEO_INFO_INTERLACE_MODE
 GST_VIDEO_INFO_IS_INTERLACED
+GST_VIDEO_INFO_FIELD_ORDER
 GST_VIDEO_INFO_FLAGS
 GST_VIDEO_INFO_WIDTH
 GST_VIDEO_INFO_HEIGHT
@@ -2533,6 +2555,8 @@ gst_video_info_align
 <SUBSECTION Standard>
 gst_video_interlace_mode_get_type
 GST_TYPE_VIDEO_INTERLACE_MODE
+gst_video_field_order_get_type
+GST_TYPE_VIDEO_FIELD_ORDER
 gst_video_flags_get_type
 GST_TYPE_VIDEO_FLAGS
 GST_TYPE_VIDEO_MULTIVIEW_FLAGS
@@ -2861,6 +2885,7 @@ GstVideoDecoderClass
 gst_video_decoder_add_to_frame
 gst_video_decoder_allocate_output_buffer
 gst_video_decoder_allocate_output_frame
+gst_video_decoder_allocate_output_frame_full
 gst_video_decoder_get_allocator
 gst_video_decoder_get_buffer_pool
 gst_video_decoder_drop_frame

@@ -57,6 +57,7 @@ GST_DEBUG_CATEGORY_STATIC (discoverer_debug);
 
 static GQuark _CAPS_QUARK;
 static GQuark _TAGS_QUARK;
+static GQuark _ELEMENT_SRCPAD_QUARK;
 static GQuark _TOC_QUARK;
 static GQuark _STREAM_ID_QUARK;
 static GQuark _MISSING_PLUGIN_QUARK;
@@ -139,6 +140,7 @@ _do_init (void)
   GST_DEBUG_CATEGORY_INIT (discoverer_debug, "discoverer", 0, "Discoverer");
 
   _CAPS_QUARK = g_quark_from_static_string ("caps");
+  _ELEMENT_SRCPAD_QUARK = g_quark_from_static_string ("element-srcpad");
   _TAGS_QUARK = g_quark_from_static_string ("tags");
   _TOC_QUARK = g_quark_from_static_string ("toc");
   _STREAM_ID_QUARK = g_quark_from_static_string ("stream-id");
@@ -395,7 +397,8 @@ gst_discoverer_dispose (GObject * obj)
 
     /* pipeline was set to NULL in _reset */
     gst_object_unref (dc->priv->pipeline);
-    gst_object_unref (dc->priv->bus);
+    if (dc->priv->bus)
+      gst_object_unref (dc->priv->bus);
 
     dc->priv->pipeline = NULL;
     dc->priv->uridecodebin = NULL;
@@ -803,19 +806,28 @@ static GstDiscovererStreamInfo *
 collect_information (GstDiscoverer * dc, const GstStructure * st,
     GstDiscovererStreamInfo * parent)
 {
-  GstCaps *caps;
+  GstPad *srcpad;
+  GstCaps *caps = NULL;
   GstStructure *caps_st;
   GstTagList *tags_st;
   const gchar *name;
   gint tmp, tmp2;
   guint utmp;
 
-  if (!st || !gst_structure_id_has_field (st, _CAPS_QUARK)) {
+  if (!st || (!gst_structure_id_has_field (st, _CAPS_QUARK)
+          && !gst_structure_id_has_field (st, _ELEMENT_SRCPAD_QUARK))) {
     GST_WARNING ("Couldn't find caps !");
     return make_info (parent, GST_TYPE_DISCOVERER_STREAM_INFO, NULL);
   }
 
-  gst_structure_id_get (st, _CAPS_QUARK, GST_TYPE_CAPS, &caps, NULL);
+  if (gst_structure_id_get (st, _ELEMENT_SRCPAD_QUARK, GST_TYPE_PAD, &srcpad,
+          NULL)) {
+    caps = gst_pad_get_current_caps (srcpad);
+    gst_object_unref (srcpad);
+  }
+  if (!caps) {
+    gst_structure_id_get (st, _CAPS_QUARK, GST_TYPE_CAPS, &caps, NULL);
+  }
 
   if (!caps || gst_caps_is_empty (caps) || gst_caps_is_any (caps)) {
     GST_WARNING ("Couldn't find caps !");
@@ -1129,6 +1141,8 @@ parse_stream_topology (GstDiscoverer * dc, const GstStructure * topology,
       /* FIXME : aggregate with information from main streams */
       GST_DEBUG ("Coudn't find 'next' ! might be the last entry");
     } else {
+      GstPad *srcpad;
+
       st = (GstStructure *) gst_value_get_structure (nval);
 
       GST_DEBUG ("next is a structure %" GST_PTR_FORMAT, st);
@@ -1136,7 +1150,16 @@ parse_stream_topology (GstDiscoverer * dc, const GstStructure * topology,
       if (!parent)
         parent = res;
 
-      if (gst_structure_id_get (st, _CAPS_QUARK, GST_TYPE_CAPS, &caps, NULL)) {
+      if (gst_structure_id_get (st, _ELEMENT_SRCPAD_QUARK, GST_TYPE_PAD,
+              &srcpad, NULL)) {
+        caps = gst_pad_get_current_caps (srcpad);
+        gst_object_unref (srcpad);
+      }
+      if (!caps) {
+        gst_structure_id_get (st, _CAPS_QUARK, GST_TYPE_CAPS, &caps, NULL);
+      }
+
+      if (caps) {
         if (child_is_same_stream (parent->caps, caps)) {
           /* We sometimes get an extra sub-stream from the parser. If this is
            * the case, we just replace the parent caps with this stream's caps
@@ -1155,8 +1178,7 @@ parse_stream_topology (GstDiscoverer * dc, const GstStructure * topology,
           res->next = next;
           next->previous = res;
         }
-        if (caps)
-          gst_caps_unref (caps);
+        gst_caps_unref (caps);
       }
     }
 
@@ -1171,9 +1193,18 @@ parse_stream_topology (GstDiscoverer * dc, const GstStructure * topology,
     guint i, len;
     GstDiscovererContainerInfo *cont;
     GstTagList *tags;
+    GstPad *srcpad;
 
-    if (!gst_structure_id_get (topology, _CAPS_QUARK,
-            GST_TYPE_CAPS, &caps, NULL))
+    if (gst_structure_id_get (topology, _ELEMENT_SRCPAD_QUARK, GST_TYPE_PAD,
+            &srcpad, NULL)) {
+      caps = gst_pad_get_current_caps (srcpad);
+      gst_object_unref (srcpad);
+    }
+    if (!caps) {
+      gst_structure_id_get (topology, _CAPS_QUARK, GST_TYPE_CAPS, &caps, NULL);
+    }
+
+    if (!caps)
       GST_WARNING ("Couldn't find caps !");
 
     len = gst_value_list_get_size (nval);
@@ -1362,6 +1393,7 @@ static gboolean
 handle_message (GstDiscoverer * dc, GstMessage * msg)
 {
   gboolean done = FALSE;
+  const gchar *dump_name = NULL;
 
   GST_DEBUG_OBJECT (GST_MESSAGE_SRC (msg), "got a %s message",
       GST_MESSAGE_TYPE_NAME (msg));
@@ -1379,6 +1411,7 @@ handle_message (GstDiscoverer * dc, GstMessage * msg)
 
       /* We need to stop */
       done = TRUE;
+      dump_name = "gst-discoverer-error";
 
       /* Don't override missing plugin result code for missing plugin errors */
       if (dc->priv->current_info->result != GST_DISCOVERER_MISSING_PLUGINS ||
@@ -1392,9 +1425,23 @@ handle_message (GstDiscoverer * dc, GstMessage * msg)
     }
       break;
 
+    case GST_MESSAGE_WARNING:{
+      GError *err;
+      gchar *debug = NULL;
+
+      gst_message_parse_warning (msg, &err, &debug);
+      GST_WARNING_OBJECT (GST_MESSAGE_SRC (msg),
+          "Got a warning [debug:%s], [message:%s]", debug, err->message);
+      g_clear_error (&err);
+      g_free (debug);
+      dump_name = "gst-discoverer-warning";
+      break;
+    }
+
     case GST_MESSAGE_EOS:
       GST_DEBUG ("Got EOS !");
       done = TRUE;
+      dump_name = "gst-discoverer-eos";
       break;
 
     case GST_MESSAGE_APPLICATION:{
@@ -1405,8 +1452,10 @@ handle_message (GstDiscoverer * dc, GstMessage * msg)
       DISCO_LOCK (dc);
       async_done = dc->priv->async_done;
       DISCO_UNLOCK (dc);
-      if (g_str_equal (name, "DiscovererDone") && async_done)
-        return TRUE;
+      if (g_str_equal (name, "DiscovererDone") && async_done) {
+        done = TRUE;
+        dump_name = "gst-discoverer-async-done-subtitle";
+      }
       break;
     }
 
@@ -1416,6 +1465,7 @@ handle_message (GstDiscoverer * dc, GstMessage * msg)
         DISCO_LOCK (dc);
         if (dc->priv->pending_subtitle_pads == 0) {
           done = TRUE;
+          dump_name = "gst-discoverer-async-done";
         } else {
           /* Remember that ASYNC_DONE has been received, wait for subtitles */
           dc->priv->async_done = TRUE;
@@ -1491,6 +1541,11 @@ handle_message (GstDiscoverer * dc, GstMessage * msg)
       break;
   }
 
+  if (dump_name != NULL) {
+    /* dump graph when done or for warnings */
+    GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS (GST_BIN (dc->priv->pipeline),
+        GST_DEBUG_GRAPH_SHOW_ALL, dump_name);
+  }
   return done;
 }
 

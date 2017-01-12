@@ -52,16 +52,16 @@
 #include "gstplayback.h"
 #include "gstplaybackutils.h"
 
-#define GST_TYPE_URI_DECODE_BIN \
+#define GST_TYPE_URI_SOURCE_BIN \
   (gst_uri_source_bin_get_type())
 #define GST_URI_SOURCE_BIN(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_URI_DECODE_BIN,GstURISourceBin))
+  (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_URI_SOURCE_BIN,GstURISourceBin))
 #define GST_URI_SOURCE_BIN_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_URI_DECODE_BIN,GstURISourceBinClass))
+  (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_URI_SOURCE_BIN,GstURISourceBinClass))
 #define GST_IS_URI_SOURCE_BIN(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_URI_DECODE_BIN))
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_URI_SOURCE_BIN))
 #define GST_IS_URI_SOURCE_BIN_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_URI_DECODE_BIN))
+  (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_URI_SOURCE_BIN))
 #define GST_URI_SOURCE_BIN_CAST(obj) ((GstURISourceBin *) (obj))
 
 typedef struct _GstURISourceBin GstURISourceBin;
@@ -122,8 +122,7 @@ struct _GstURISourceBin
   gboolean use_buffering;
 
   GstElement *source;
-  GstElement *typefind;
-  guint have_type_id;           /* have-type signal id from typefind */
+  GList *typefinds;             /* list of typefind element */
 
   GstElement *demuxer;          /* Adaptive demuxer if any */
   GSList *out_slots;
@@ -249,6 +248,8 @@ static void expose_output_pad (GstURISourceBin * urisrc, GstPad * pad);
 static OutputSlotInfo *get_output_slot (GstURISourceBin * urisrc,
     gboolean do_download, gboolean is_adaptive, GstCaps * caps);
 static void free_output_slot (OutputSlotInfo * slot, GstURISourceBin * urisrc);
+static void free_output_slot_async (GstURISourceBin * urisrc,
+    OutputSlotInfo * slot);
 static GstPad *create_output_pad (GstURISourceBin * urisrc, GstPad * pad);
 static void remove_buffering_msgs (GstURISourceBin * bin, GstObject * src);
 
@@ -468,7 +469,7 @@ gst_uri_source_bin_class_init (GstURISourceBinClass * klass)
           "Attempt download buffering when buffering network streams",
           DEFAULT_DOWNLOAD, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
-  /**  
+  /**
    * GstURISourceBin::use-buffering:
    *
    * Perform buffering using a queue2 element, and emit BUFFERING
@@ -932,8 +933,8 @@ new_demuxer_pad_added_cb (GstElement * element, GstPad * pad,
       gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM,
       pending_pad_blocked, urisrc, NULL);
   info->event_probe_id =
-      gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_EVENT_DOWNSTREAM,
-      demux_pad_events, urisrc, NULL);
+      gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_EVENT_DOWNSTREAM |
+      GST_PAD_PROBE_TYPE_EVENT_FLUSH, demux_pad_events, urisrc, NULL);
 }
 
 static GstPadProbeReturn
@@ -968,7 +969,6 @@ pending_pad_blocked (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
   if (caps == NULL)
     caps = gst_pad_query_caps (pad, NULL);
 
-  /* FIXME: Don't do buffering if use_buffering is FALSE */
   slot = get_output_slot (urisrc, FALSE, TRUE, caps);
 
   gst_caps_unref (caps);
@@ -1049,6 +1049,8 @@ link_pending_pad_to_output (GstURISourceBin * urisrc, OutputSlotInfo * slot)
       out_info->output_slot = slot;
       slot->linked_info = out_info;
       res = TRUE;
+      urisrc->pending_pads =
+          g_list_remove (urisrc->pending_pads, out_info->demux_src_pad);
     } else {
       GST_ERROR_OBJECT (urisrc,
           "Failed to link new demuxer pad to the output slot we tried");
@@ -1064,6 +1066,8 @@ demux_pad_events (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
 {
   GstURISourceBin *urisrc = GST_URI_SOURCE_BIN (user_data);
   ChildSrcPadInfo *child_info;
+  GstPadProbeReturn ret = GST_PAD_PROBE_OK;
+  GstEvent *ev = GST_PAD_PROBE_INFO_EVENT (info);
 
   if (!(child_info =
           g_object_get_data (G_OBJECT (pad), "urisourcebin.srcpadinfo")))
@@ -1076,34 +1080,54 @@ demux_pad_events (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
     goto done;
   }
 
-  if (GST_IS_EVENT (GST_PAD_PROBE_INFO_DATA (info))) {
-    GstEvent *ev = GST_PAD_PROBE_INFO_EVENT (info);
-    if (GST_EVENT_TYPE (ev) == GST_EVENT_EOS && urisrc->pending_pads) {
+  switch (GST_EVENT_TYPE (ev)) {
+    case GST_EVENT_EOS:
+    {
+      GstEvent *event;
+      GstStructure *s;
+      guint32 seqnum = gst_event_get_seqnum (ev);
+
       GST_LOG_OBJECT (urisrc, "EOS on pad %" GST_PTR_FORMAT, pad);
-      if (!link_pending_pad_to_output (urisrc, child_info->output_slot)) {
-        GstEvent *event;
-        GstStructure *s;
 
-        /* Mark that we fed an EOS to this slot */
-        child_info->output_slot->is_eos = TRUE;
+      /* never forward actual EOS to slot */
+      ret = GST_PAD_PROBE_DROP;
 
-        /* Actually feed a custom EOS event to avoid marking pads as EOSed */
-        s = gst_structure_new_empty ("urisourcebin-custom-eos");
-        event = gst_event_new_custom (GST_EVENT_CUSTOM_DOWNSTREAM, s);
-        gst_pad_send_event (child_info->output_slot->sinkpad, event);
+      if ((urisrc->pending_pads &&
+              link_pending_pad_to_output (urisrc, child_info->output_slot))) {
+        /* Found a new source pad to give this slot data - no need to send EOS */
+        GST_URI_SOURCE_BIN_UNLOCK (urisrc);
+        goto done;
       }
-      GST_URI_SOURCE_BIN_UNLOCK (urisrc);
-      return GST_PAD_PROBE_HANDLED;
-    } else if (GST_EVENT_TYPE (ev) == GST_EVENT_CAPS) {
+
+      /* Mark that we fed an EOS to this slot */
+      child_info->output_slot->is_eos = TRUE;
+
+      /* Actually feed a custom EOS event to avoid marking pads as EOSed */
+      s = gst_structure_new_empty ("urisourcebin-custom-eos");
+      event = gst_event_new_custom (GST_EVENT_CUSTOM_DOWNSTREAM, s);
+      gst_event_set_seqnum (event, seqnum);
+      gst_pad_send_event (child_info->output_slot->sinkpad, event);
+    }
+      break;
+    case GST_EVENT_CAPS:
+    {
       GstCaps *caps;
       gst_event_parse_caps (ev, &caps);
       gst_caps_replace (&child_info->cur_caps, caps);
     }
+      break;
+    case GST_EVENT_STREAM_START:
+    case GST_EVENT_FLUSH_STOP:
+      child_info->output_slot->is_eos = FALSE;
+      break;
+    default:
+      break;
   }
+
   GST_URI_SOURCE_BIN_UNLOCK (urisrc);
 
 done:
-  return GST_PAD_PROBE_OK;
+  return ret;
 }
 
 /* Called with lock held */
@@ -1176,11 +1200,11 @@ get_output_slot (GstURISourceBin * urisrc, gboolean do_download,
   } else {
     if (is_adaptive) {
       GST_LOG_OBJECT (urisrc, "Adding queue for adaptive streaming stream");
-      g_object_set (queue, "use-buffering", TRUE, "use-tags-bitrate", TRUE,
-          "use-rate-estimate", FALSE, NULL);
+      g_object_set (queue, "use-buffering", urisrc->use_buffering,
+          "use-tags-bitrate", TRUE, "use-rate-estimate", FALSE, NULL);
     } else {
       GST_LOG_OBJECT (urisrc, "Adding queue for buffering");
-      g_object_set (queue, "use-buffering", TRUE, NULL);
+      g_object_set (queue, "use-buffering", urisrc->use_buffering, NULL);
     }
     g_object_set (queue, "ring-buffer-max-size",
         urisrc->ring_buffer_max_size, NULL);
@@ -1236,48 +1260,48 @@ source_pad_event_probe (GstPad * pad, GstPadProbeInfo * info,
   GstEvent *event = GST_PAD_PROBE_INFO_EVENT (info);
   GstURISourceBin *urisrc = user_data;
 
-  GST_LOG_OBJECT (pad, "%s, urisrc %p", GST_EVENT_TYPE_NAME (event), urisrc);
+  GST_LOG_OBJECT (pad, "%s, urisrc %p", GST_EVENT_TYPE_NAME (event), event);
 
   if (GST_EVENT_TYPE (event) == GST_EVENT_CUSTOM_DOWNSTREAM &&
       gst_event_has_name (event, "urisourcebin-custom-eos")) {
     OutputSlotInfo *slot;
     GST_DEBUG_OBJECT (pad, "we received EOS");
 
-    /* Check the slot is still unlinked - maybe it got
-     * re-linked and we should drop this EOS */
     GST_URI_SOURCE_BIN_LOCK (urisrc);
+
     slot = g_object_get_data (G_OBJECT (pad), "urisourcebin.slotinfo");
-    if (slot && slot->linked_info) {
-      GST_DEBUG_OBJECT (pad,
-          "EOS pad was re-linked to pending pad, so removing EOS status");
-      slot->is_eos = FALSE;
-      GST_URI_SOURCE_BIN_UNLOCK (urisrc);
-      return GST_PAD_PROBE_HANDLED;
+
+    if (slot) {
+      GstEvent *eos;
+      guint32 seqnum;
+
+      if (slot->linked_info) {
+        /* Do not clear output slot yet. A new input was
+         * connected. We should just drop this EOS */
+        GST_URI_SOURCE_BIN_UNLOCK (urisrc);
+        return GST_PAD_PROBE_DROP;
+      }
+
+      seqnum = gst_event_get_seqnum (event);
+      eos = gst_event_new_eos ();
+      gst_event_set_seqnum (eos, seqnum);
+      gst_pad_push_event (slot->srcpad, eos);
+      free_output_slot_async (urisrc, slot);
     }
-
-    /* Otherwise it's time to send EOS and clean up this pad */
-    gst_pad_push_event (slot->srcpad, gst_event_new_eos ());
-
-    /* FIXME: Can't clean the pad up from the streaming thread... */
-    urisrc->out_slots = g_slist_remove (urisrc->out_slots, slot);
-#if 0
-    free_output_slot (slot, urisrc);
-    slot = NULL;
-#endif
 
     /* FIXME: Only emit drained if all output pads are done and there's no
      * pending pads */
     g_signal_emit (urisrc, gst_uri_source_bin_signals[SIGNAL_DRAINED], 0, NULL);
 
     GST_URI_SOURCE_BIN_UNLOCK (urisrc);
-    return GST_PAD_PROBE_HANDLED;
+    return GST_PAD_PROBE_DROP;
   }
   /* never drop events */
   return GST_PAD_PROBE_OK;
 }
 
 /* called when we found a raw pad to expose. We set up a
- * padprobe to detect EOS before exposing the pad. 
+ * padprobe to detect EOS before exposing the pad.
  * Called with LOCK held. */
 static GstPad *
 create_output_pad (GstURISourceBin * urisrc, GstPad * pad)
@@ -1342,21 +1366,31 @@ pad_removed_cb (GstElement * element, GstPad * pad, GstURISourceBin * urisrc)
 
   /* Send EOS to the output slot if the demuxer didn't already */
   if (info->output_slot) {
-    if (!info->output_slot->is_eos) {
-      GstStructure *s;
-      GstEvent *event;
+    GstStructure *s;
+    GstEvent *event;
+    OutputSlotInfo *slot;
 
-      GST_LOG_OBJECT (element,
-          "Pad %" GST_PTR_FORMAT " was removed without EOS. Sending.", pad);
-
-      s = gst_structure_new_empty ("urisourcebin-custom-eos");
-      event = gst_event_new_custom (GST_EVENT_CUSTOM_DOWNSTREAM, s);
-      gst_pad_send_event (info->output_slot->sinkpad, event);
-      info->output_slot->is_eos = TRUE;
+    if (!info->output_slot->is_eos && urisrc->pending_pads &&
+        link_pending_pad_to_output (urisrc, info->output_slot)) {
+      /* Found a new source pad to give this slot data - no need to send EOS */
+      GST_URI_SOURCE_BIN_UNLOCK (urisrc);
+      return;
     }
-    /* After the pad goes away, the slot is free to reuse */
-    info->output_slot->linked_info = NULL;
+
+    /* Unlink this pad from its output slot and send a fake EOS event to drain the
+     * queue */
+    slot = info->output_slot;
+    slot->is_eos = TRUE;
+    slot->linked_info = NULL;
+
     info->output_slot = NULL;
+
+    GST_LOG_OBJECT (element,
+        "Pad %" GST_PTR_FORMAT " was removed without EOS. Sending.", pad);
+
+    s = gst_structure_new_empty ("urisourcebin-custom-eos");
+    event = gst_event_new_custom (GST_EVENT_CUSTOM_DOWNSTREAM, s);
+    gst_pad_send_event (slot->sinkpad, event);
   } else {
     GST_LOG_OBJECT (urisrc, "Removed pad has no output slot");
   }
@@ -1768,6 +1802,7 @@ make_demuxer (GstURISourceBin * urisrc, GstCaps * caps)
 {
   GList *factories, *eligible, *cur;
   GstElement *demuxer = NULL;
+  GParamSpec *pspec;
 
   GST_LOG_OBJECT (urisrc, "making new adaptive demuxer");
 
@@ -1814,9 +1849,11 @@ make_demuxer (GstURISourceBin * urisrc, GstCaps * caps)
       "pad-removed", G_CALLBACK (pad_removed_cb), urisrc);
 
   /* Propagate connection-speed property */
-  /* FIXME: Check the property exists on the demuxer */
-  g_object_set (demuxer,
-      "connection-speed", urisrc->connection_speed / 1000, NULL);
+  pspec = g_object_class_find_property (G_OBJECT_GET_CLASS (demuxer),
+      "connection-speed");
+  if (pspec != NULL)
+    g_object_set (demuxer,
+        "connection-speed", urisrc->connection_speed / 1000, NULL);
 
   return demuxer;
 
@@ -1861,16 +1898,15 @@ handle_new_pad (GstURISourceBin * urisrc, GstPad * srcpad, GstCaps * caps)
   urisrc->is_adaptive = IS_ADAPTIVE_MEDIA (media_type);
 
   if (urisrc->is_adaptive) {
-    GstElement *demux_elem;
     GstPad *sinkpad;
     GstPadLinkReturn link_res;
 
-    demux_elem = make_demuxer (urisrc, caps);
-    if (!demux_elem)
+    urisrc->demuxer = make_demuxer (urisrc, caps);
+    if (!urisrc->demuxer)
       goto no_demuxer;
-    gst_bin_add (GST_BIN_CAST (urisrc), demux_elem);
+    gst_bin_add (GST_BIN_CAST (urisrc), urisrc->demuxer);
 
-    sinkpad = gst_element_get_static_pad (demux_elem, "sink");
+    sinkpad = gst_element_get_static_pad (urisrc->demuxer, "sink");
     if (sinkpad == NULL)
       goto no_demuxer_sink;
 
@@ -1880,7 +1916,14 @@ handle_new_pad (GstURISourceBin * urisrc, GstPad * srcpad, GstCaps * caps)
     if (link_res != GST_PAD_LINK_OK)
       goto could_not_link;
 
-    gst_element_sync_state_with_parent (demux_elem);
+    gst_element_sync_state_with_parent (urisrc->demuxer);
+  } else if (!urisrc->is_stream) {
+    GstPad *pad;
+    /* We don't need slot here, expose immediately */
+    GST_URI_SOURCE_BIN_LOCK (urisrc);
+    pad = create_output_pad (urisrc, srcpad);
+    expose_output_pad (urisrc, pad);
+    GST_URI_SOURCE_BIN_UNLOCK (urisrc);
   } else {
     OutputSlotInfo *slot;
 
@@ -1948,11 +1991,11 @@ type_found (GstElement * typefind, guint probability,
   gst_object_unref (GST_OBJECT (srcpad));
 }
 
-/* setup a streaming source. This will first plug a typefind element to the
+/* setup typefind for any source. This will first plug a typefind element to the
  * source. After we find the type, we decide to whether to plug an adaptive
- * demuxer, or just link through queue2 and expose the data. */
+ * demuxer, or just link through queue2 (if needed) and expose the data */
 static gboolean
-setup_streaming (GstURISourceBin * urisrc)
+setup_typefind (GstURISourceBin * urisrc, GstPad * srcpad)
 {
   GstElement *typefind;
 
@@ -1961,18 +2004,33 @@ setup_streaming (GstURISourceBin * urisrc)
   if (!typefind)
     goto no_typefind;
 
+  /* Make sure the bin doesn't set the typefind running yet */
+  gst_element_set_locked_state (typefind, TRUE);
+
   gst_bin_add (GST_BIN_CAST (urisrc), typefind);
 
-  if (!gst_element_link_pads (urisrc->source, NULL, typefind, "sink"))
-    goto could_not_link;
+  if (!srcpad) {
+    if (!gst_element_link_pads (urisrc->source, NULL, typefind, "sink"))
+      goto could_not_link;
+  } else {
+    GstPad *sinkpad = gst_element_get_static_pad (typefind, "sink");
+    GstPadLinkReturn ret;
 
-  urisrc->typefind = typefind;
+    ret = gst_pad_link (srcpad, sinkpad);
+    gst_object_unref (sinkpad);
+    if (ret != GST_PAD_LINK_OK)
+      goto could_not_link;
+  }
+
+  urisrc->typefinds = g_list_append (urisrc->typefinds, typefind);
 
   /* connect a signal to find out when the typefind element found
    * a type */
-  urisrc->have_type_id =
-      g_signal_connect (urisrc->typefind, "have-type",
-      G_CALLBACK (type_found), urisrc);
+  g_signal_connect (typefind, "have-type", G_CALLBACK (type_found), urisrc);
+
+  /* Now it can start */
+  gst_element_set_locked_state (typefind, FALSE);
+  gst_element_sync_state_with_parent (typefind);
 
   return TRUE;
 
@@ -2015,6 +2073,23 @@ free_output_slot (OutputSlotInfo * slot, GstURISourceBin * urisrc)
   g_free (slot);
 }
 
+static void
+call_free_output_slot (GstURISourceBin * urisrc, OutputSlotInfo * slot)
+{
+  GST_LOG_OBJECT (urisrc, "free output slot in thread pool");
+  free_output_slot (slot, urisrc);
+}
+
+/* must be called with GST_URI_SOURCE_BIN_LOCK */
+static void
+free_output_slot_async (GstURISourceBin * urisrc, OutputSlotInfo * slot)
+{
+  GST_LOG_OBJECT (urisrc, "pushing output slot on thread pool to free");
+  urisrc->out_slots = g_slist_remove (urisrc->out_slots, slot);
+  gst_element_call_async (GST_ELEMENT_CAST (urisrc),
+      (GstElementCallAsyncFunc) call_free_output_slot, slot, NULL);
+}
+
 /* remove source and all related elements */
 static void
 remove_source (GstURISourceBin * urisrc)
@@ -2032,11 +2107,19 @@ remove_source (GstURISourceBin * urisrc)
     gst_bin_remove (GST_BIN_CAST (urisrc), source);
     urisrc->source = NULL;
   }
-  if (urisrc->typefind) {
+  if (urisrc->typefinds) {
+    GList *iter, *next;
     GST_DEBUG_OBJECT (urisrc, "removing old typefind element");
-    gst_element_set_state (urisrc->typefind, GST_STATE_NULL);
-    gst_bin_remove (GST_BIN_CAST (urisrc), urisrc->typefind);
-    urisrc->typefind = NULL;
+    for (iter = urisrc->typefinds; iter; iter = next) {
+      GstElement *typefind = iter->data;
+
+      next = g_list_next (iter);
+
+      gst_element_set_state (typefind, GST_STATE_NULL);
+      gst_bin_remove (GST_BIN_CAST (urisrc), typefind);
+    }
+
+    urisrc->typefinds = NULL;
   }
 
   GST_URI_SOURCE_BIN_LOCK (urisrc);
@@ -2063,9 +2146,11 @@ source_new_pad (GstElement * element, GstPad * pad, GstURISourceBin * urisrc)
       GST_DEBUG_PAD_NAME (pad), GST_ELEMENT_NAME (element));
   caps = gst_pad_get_current_caps (pad);
   if (caps == NULL)
-    caps = gst_pad_query_caps (pad, NULL);
-  handle_new_pad (urisrc, pad, caps);
-  gst_caps_unref (caps);
+    setup_typefind (urisrc, pad);
+  else {
+    handle_new_pad (urisrc, pad, caps);
+    gst_caps_unref (caps);
+  }
 }
 
 static gboolean
@@ -2148,7 +2233,7 @@ setup_source (GstURISourceBin * urisrc)
     if (urisrc->is_stream) {
       GST_DEBUG_OBJECT (urisrc, "Setting up streaming");
       /* do the stream things here */
-      if (!setup_streaming (urisrc))
+      if (!setup_typefind (urisrc, NULL))
         goto streaming_failed;
     } else {
       GstIterator *pads_iter;
@@ -2172,18 +2257,15 @@ setup_source (GstURISourceBin * urisrc)
             break;
           case GST_ITERATOR_OK:
             pad = g_value_get_object (&item);
-            /* no streaming source, expose pads directly */
-            GST_URI_SOURCE_BIN_LOCK (urisrc);
-            pad = create_output_pad (urisrc, pad);
-            GST_URI_SOURCE_BIN_UNLOCK (urisrc);
-            expose_output_pad (urisrc, pad);
+            if (!setup_typefind (urisrc, pad)) {
+              gst_iterator_free (pads_iter);
+              goto streaming_failed;
+            }
             g_value_reset (&item);
             break;
         }
       }
       gst_iterator_free (pads_iter);
-      gst_element_no_more_pads (GST_ELEMENT_CAST (urisrc));
-      do_async_done (urisrc);
     }
   }
   return TRUE;
@@ -2769,10 +2851,15 @@ gst_uri_source_bin_change_state (GstElement * element,
 
       /* And now sync the states of everything we added */
       g_slist_foreach (urisrc->out_slots, (GFunc) sync_slot_queue, NULL);
-      if (urisrc->typefind)
-        ret = gst_element_set_state (urisrc->typefind, GST_STATE_PAUSED);
-      if (ret == GST_STATE_CHANGE_FAILURE)
-        goto setup_failed;
+      if (urisrc->typefinds) {
+        GList *iter;
+        for (iter = urisrc->typefinds; iter; iter = iter->next) {
+          GstElement *typefind = iter->data;
+          ret = gst_element_set_state (typefind, GST_STATE_PAUSED);
+          if (ret == GST_STATE_CHANGE_FAILURE)
+            goto setup_failed;
+        }
+      }
       if (urisrc->source)
         ret = gst_element_set_state (urisrc->source, GST_STATE_PAUSED);
       if (ret == GST_STATE_CHANGE_FAILURE)
@@ -2822,5 +2909,5 @@ gst_uri_source_bin_plugin_init (GstPlugin * plugin)
       "URI source element");
 
   return gst_element_register (plugin, "urisourcebin", GST_RANK_NONE,
-      GST_TYPE_URI_DECODE_BIN);
+      GST_TYPE_URI_SOURCE_BIN);
 }

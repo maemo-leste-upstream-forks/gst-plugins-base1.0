@@ -112,6 +112,7 @@
     <keyword type="property" name="The “eos” property" link="gst-plugins-base-plugins-appsink.html#GstAppSink--eos"/>
     <keyword type="property" name="The “max-buffers” property" link="gst-plugins-base-plugins-appsink.html#GstAppSink--max-buffers"/>
     <keyword type="property" name="The “wait-on-eos” property" link="gst-plugins-base-plugins-appsink.html#GstAppSink--wait-on-eos"/>
+    <keyword type="property" name="The “buffer-list” property" link="gst-plugins-base-plugins-appsink.html#GstAppSink--buffer-list"/>
     <keyword type="signal" name="The “eos” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-eos"/>
     <keyword type="signal" name="The “new-preroll” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-new-preroll"/>
     <keyword type="signal" name="The “new-sample” signal" link="gst-plugins-base-plugins-appsink.html#GstAppSink-new-sample"/>
@@ -354,6 +355,7 @@
     <keyword type="struct" name="struct GstTCPClientSrc" link="gst-plugins-base-plugins-tcpclientsrc.html#GstTCPClientSrc-struct"/>
     <keyword type="property" name="The “host” property" link="gst-plugins-base-plugins-tcpclientsrc.html#GstTCPClientSrc--host"/>
     <keyword type="property" name="The “port” property" link="gst-plugins-base-plugins-tcpclientsrc.html#GstTCPClientSrc--port"/>
+    <keyword type="property" name="The “timeout” property" link="gst-plugins-base-plugins-tcpclientsrc.html#GstTCPClientSrc--timeout"/>
     <keyword type="struct" name="struct GstTCPServerSink" link="gst-plugins-base-plugins-tcpserversink.html#GstTCPServerSink-struct"/>
     <keyword type="property" name="The “current-port” property" link="gst-plugins-base-plugins-tcpserversink.html#GstTCPServerSink--current-port"/>
     <keyword type="property" name="The “host” property" link="gst-plugins-base-plugins-tcpserversink.html#GstTCPServerSink--host"/>
@@ -438,6 +440,7 @@
     <keyword type="property" name="The “out” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--out"/>
     <keyword type="property" name="The “silent” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--silent"/>
     <keyword type="property" name="The “skip-to-first” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--skip-to-first"/>
+    <keyword type="property" name="The “rate” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--rate"/>
     <keyword type="struct" name="struct GstVideoScale" link="gst-plugins-base-plugins-videoscale.html#GstVideoScale-struct"/>
     <keyword type="enum" name="enum GstVideoScaleMethod" link="gst-plugins-base-plugins-videoscale.html#GstVideoScaleMethod"/>
     <keyword type="property" name="The “add-borders” property" link="gst-plugins-base-plugins-videoscale.html#GstVideoScale--add-borders"/>

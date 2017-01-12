@@ -53,6 +53,11 @@
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-tcpclientsrc.html#GstTCPClientSrc--port" title="The “port” property">port</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-tcpclientsrc.html#GstTCPClientSrc--timeout" title="The “timeout” property">timeout</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -100,7 +105,9 @@ gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span
     </tbody>
   </table>
 </div>
- everything you type in the server is shown on the client
+ everything you type in the server is shown on the client.
+If you want to detect network failures and/or limit the time your tcp client
+keeps waiting for data from server setting a timeout value can be useful.
 </div>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
@@ -187,6 +194,14 @@ gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span
 <p>Flags: Read / Write</p>
 <p>Allowed values: [0,65535]</p>
 <p>Default value: 4953</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstTCPClientSrc--timeout"></a><h3>The <code class="literal">“timeout”</code> property</h3>
+<pre class="programlisting">  “timeout”                  <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<p>Value in seconds to timeout a blocking I/O. 0 = No timeout. .</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 0</p>
 </div>
 </div>
 <div class="refsect1">

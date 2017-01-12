@@ -82,6 +82,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudioringbuffer.html#gst-audio-ring-buffer-set-callback-full" title="gst_audio_ring_buffer_set_callback_full ()">gst_audio_ring_buffer_set_callback_full</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
@@ -439,6 +447,7 @@ gst_audio_ring_buffer_set_callback (<em class="parameter"><code><a class="link" 
 <p>Sets the given callback function on the buffer. This function
 will be called every time a segment has been written to a device.</p>
 <p>MT safe.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="gst-audio-ring-buffer-set-callback.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -456,7 +465,7 @@ will be called every time a segment has been written to a device.</p>
 <tr>
 <td class="parameter_name"><p>cb</p></td>
 <td class="parameter_description"><p> the callback to set. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid until first called."><span class="acronym">scope async</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
@@ -466,6 +475,54 @@ will be called every time a segment has been written to a device.</p>
 </tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-ring-buffer-set-callback-full"></a><h3>gst_audio_ring_buffer_set_callback_full ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_ring_buffer_set_callback_full
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudioringbuffer.html#GstAudioRingBuffer"><span class="type">GstAudioRingBuffer</span></a> *buf</code></em>,
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudioringbuffer.html#GstAudioRingBufferCallback" title="GstAudioRingBufferCallback ()"><span class="type">GstAudioRingBufferCallback</span></a> cb</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
+<p>Sets the given callback function on the buffer. This function
+will be called every time a segment has been written to a device.</p>
+<p>MT safe.</p>
+<p><span class="annotation">[<acronym title="Rename the original symbol's name to SYMBOL."><span class="acronym">rename-to</span></acronym> gst_audio_ring_buffer_set_callback]</span></p>
+<div class="refsect3">
+<a name="gst-audio-ring-buffer-set-callback-full.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>buf</p></td>
+<td class="parameter_description"><p>the <a class="link" href="gst-plugins-base-libs-gstaudioringbuffer.html#GstAudioRingBuffer"><span class="type">GstAudioRingBuffer</span></a> to set the callback on</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>cb</p></td>
+<td class="parameter_description"><p> the callback to set. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data passed to the callback</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>notify</p></td>
+<td class="parameter_description"><p>function to be called when <em class="parameter"><code>user_data</code></em>
+is no longer needed</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
 </div>
 <hr>
 <div class="refsect2">

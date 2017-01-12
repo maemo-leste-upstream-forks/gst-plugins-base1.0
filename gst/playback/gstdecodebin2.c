@@ -2360,6 +2360,9 @@ connect_pad (GstDecodeBin * dbin, GstElement * src, GstDecodePad * dpad,
     chain->demuxer = is_demuxer_element (element);
     chain->adaptive_demuxer = is_adaptive_demuxer_element (element);
 
+    is_decoder = strstr (gst_element_factory_get_metadata (factory,
+            GST_ELEMENT_METADATA_KLASS), "Decoder") != NULL;
+
     /* For adaptive streaming demuxer we insert a multiqueue after
      * this demuxer.
      * Now for the case where we have a container stream inside these
@@ -2375,7 +2378,7 @@ connect_pad (GstDecodeBin * dbin, GstElement * src, GstDecodePad * dpad,
     if (chain->parent && chain->parent->parent) {
       GstDecodeChain *parent_chain = chain->parent->parent;
 
-      if (parent_chain->adaptive_demuxer)
+      if (parent_chain->adaptive_demuxer && (is_parser || is_decoder))
         chain->demuxer = TRUE;
     }
 
@@ -2385,8 +2388,6 @@ connect_pad (GstDecodeBin * dbin, GstElement * src, GstDecodePad * dpad,
      * the parser or decoder - not elsewhere, otherwise we won't have
      * timestamps.
      */
-    is_decoder = strstr (gst_element_factory_get_metadata (factory,
-            GST_ELEMENT_METADATA_KLASS), "Decoder") != NULL;
 
     if (!chain->parent && (is_parser || is_decoder) && dbin->use_buffering) {
       chain->demuxer = TRUE;
@@ -4367,7 +4368,7 @@ sort_end_pads (GstDecodePad * da, GstDecodePad * db)
 
 static GstCaps *
 _gst_element_get_linked_caps (GstElement * src, GstElement * sink,
-    GstPad ** srcpad)
+    GstElement * capsfilter, GstPad ** srcpad)
 {
   GstIterator *it;
   GstElement *parent;
@@ -4384,12 +4385,9 @@ _gst_element_get_linked_caps (GstElement * src, GstElement * sink,
         peer = gst_pad_get_peer (pad);
         if (peer) {
           parent = gst_pad_get_parent_element (peer);
-          if (parent == sink) {
+          if (parent == sink || (capsfilter != NULL && parent == capsfilter)) {
             caps = gst_pad_get_current_caps (pad);
-            if (srcpad) {
-              gst_object_ref (pad);
-              *srcpad = pad;
-            }
+            *srcpad = gst_object_ref (pad);
             done = TRUE;
           }
 
@@ -4441,15 +4439,22 @@ gst_decode_chain_get_topology (GstDecodeChain * chain)
   /* Now at the last element */
   if ((chain->elements || !chain->active_group) &&
       (chain->endpad || chain->deadend)) {
+    GstPad *srcpad;
+
     s = gst_structure_new_id_empty (topology_structure_name);
     gst_structure_id_set (u, topology_caps, GST_TYPE_CAPS, chain->endcaps,
         NULL);
 
     if (chain->endpad) {
       gst_structure_id_set (u, topology_pad, GST_TYPE_PAD, chain->endpad, NULL);
+
+      srcpad = gst_ghost_pad_get_target (GST_GHOST_PAD_CAST (chain->endpad));
       gst_structure_id_set (u, topology_element_srcpad, GST_TYPE_PAD,
-          chain->endpad, NULL);
+          srcpad, NULL);
+
+      gst_object_unref (srcpad);
     }
+
     gst_structure_id_set (s, topology_next, GST_TYPE_STRUCTURE, u, NULL);
     gst_structure_free (u);
     u = s;
@@ -4477,7 +4482,7 @@ gst_decode_chain_get_topology (GstDecodeChain * chain)
   l = (chain->elements && chain->elements->next) ? chain->elements : NULL;
   for (; l && l->next; l = l->next) {
     GstDecodeElement *delem, *delem_next;
-    GstElement *elem, *elem_next;
+    GstElement *elem, *capsfilter, *elem_next;
     GstCaps *caps;
     GstPad *srcpad;
 
@@ -4485,9 +4490,10 @@ gst_decode_chain_get_topology (GstDecodeChain * chain)
     elem = delem->element;
     delem_next = l->next->data;
     elem_next = delem_next->element;
+    capsfilter = delem_next->capsfilter;
     srcpad = NULL;
 
-    caps = _gst_element_get_linked_caps (elem_next, elem, &srcpad);
+    caps = _gst_element_get_linked_caps (elem_next, elem, capsfilter, &srcpad);
 
     if (caps) {
       s = gst_structure_new_id_empty (topology_structure_name);
@@ -5384,12 +5390,22 @@ gst_decode_bin_handle_message (GstBin * bin, GstMessage * msg)
   gboolean drop = FALSE;
 
   if (GST_MESSAGE_TYPE (msg) == GST_MESSAGE_ERROR) {
-    GST_OBJECT_LOCK (dbin);
-    drop = (g_list_find (dbin->filtered, GST_MESSAGE_SRC (msg)) != NULL);
-    if (drop)
-      dbin->filtered_errors =
-          g_list_prepend (dbin->filtered_errors, gst_message_ref (msg));
-    GST_OBJECT_UNLOCK (dbin);
+    /* Don't pass errors when shutting down. Sometimes,
+     * elements can generate spurious errors because we set the
+     * output pads to flushing, and they can't detect that if they
+     * send an event at exactly the wrong moment */
+    DYN_LOCK (dbin);
+    drop = dbin->shutdown;
+    DYN_UNLOCK (dbin);
+
+    if (!drop) {
+      GST_OBJECT_LOCK (dbin);
+      drop = (g_list_find (dbin->filtered, GST_MESSAGE_SRC (msg)) != NULL);
+      if (drop)
+        dbin->filtered_errors =
+            g_list_prepend (dbin->filtered_errors, gst_message_ref (msg));
+      GST_OBJECT_UNLOCK (dbin);
+    }
   } else if (GST_MESSAGE_TYPE (msg) == GST_MESSAGE_BUFFERING) {
     gint perc, msg_perc;
     gint smaller_perc = 100;

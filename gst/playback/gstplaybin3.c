@@ -2713,7 +2713,7 @@ update_video_multiview_caps (GstPlayBin3 * playbin, GstCaps * caps)
 {
   GstVideoMultiviewMode mv_mode;
   GstVideoMultiviewMode cur_mv_mode;
-  GstVideoMultiviewFlags mv_flags, cur_mv_flags;
+  guint mv_flags, cur_mv_flags;
   GstStructure *s;
   const gchar *mview_mode_str;
   GstCaps *out_caps;
@@ -2845,15 +2845,6 @@ pad_added_cb (GstElement * decodebin, GstPad * pad, GstPlayBin3 * playbin)
         g_object_class_find_property (G_OBJECT_GET_CLASS (combine->combiner),
         "active-pad") != NULL;
 
-    if (!custom_combiner) {
-      /* sync-mode=1, use clock */
-      if (combine->type == GST_PLAY_SINK_TYPE_TEXT)
-        g_object_set (combine->combiner, "sync-streams", TRUE,
-            "sync-mode", 1, "cache-buffers", TRUE, NULL);
-      else
-        g_object_set (combine->combiner, "sync-streams", TRUE, NULL);
-    }
-
     if (combine->has_active_pad)
       g_signal_connect (combine->combiner, "notify::active-pad",
           G_CALLBACK (combiner_active_pad_changed), playbin);
@@ -2979,6 +2970,8 @@ pad_removed_cb (GstElement * decodebin, GstPad * pad, GstPlayBin3 * playbin)
   GstElement *combiner;
   GstSourceCombine *combine;
   gulong event_probe_handler;
+  GstStreamType stream_type = GST_STREAM_TYPE_UNKNOWN;
+  gchar *pad_name;
 
   GST_DEBUG_OBJECT (playbin,
       "decoded pad %s:%s removed", GST_DEBUG_PAD_NAME (pad));
@@ -2992,10 +2985,23 @@ pad_removed_cb (GstElement * decodebin, GstPad * pad, GstPlayBin3 * playbin)
     g_object_set_data (G_OBJECT (pad), "playbin.event_probe_id", NULL);
   }
 
+  pad_name = gst_object_get_name (GST_OBJECT (pad));
+
+  if (g_str_has_prefix (pad_name, "video")) {
+    stream_type = GST_STREAM_TYPE_VIDEO;
+  } else if (g_str_has_prefix (pad_name, "audio")) {
+    stream_type = GST_STREAM_TYPE_AUDIO;
+  } else if (g_str_has_prefix (pad_name, "text")) {
+    stream_type = GST_STREAM_TYPE_TEXT;
+  }
+
+  g_free (pad_name);
+
   if ((combine = g_object_get_data (G_OBJECT (pad), "playbin.combine"))) {
     g_assert (combine->combiner == NULL);
     g_assert (combine->srcpad == pad);
     source_combine_remove_pads (playbin, combine);
+    playbin->active_stream_types &= ~stream_type;
     goto exit;
   }
 
@@ -3022,6 +3028,7 @@ pad_removed_cb (GstElement * decodebin, GstPad * pad, GstPlayBin3 * playbin)
       gst_element_set_state (combine->combiner, GST_STATE_NULL);
       gst_bin_remove (GST_BIN_CAST (playbin), combine->combiner);
       combine->combiner = NULL;
+      playbin->active_stream_types &= ~stream_type;
     }
   }
 
@@ -3033,6 +3040,12 @@ pad_removed_cb (GstElement * decodebin, GstPad * pad, GstPlayBin3 * playbin)
   gst_object_unref (combiner);
 exit:
   GST_PLAY_BIN3_UNLOCK (playbin);
+
+  if ((playbin->selected_stream_types & ~playbin->active_stream_types &
+          (GST_STREAM_TYPE_VIDEO | GST_STREAM_TYPE_AUDIO))
+      == 0) {
+    no_more_pads_cb (decodebin, playbin);
+  }
 
   return;
 
@@ -4001,7 +4014,7 @@ autoplug_select_cb (GstElement * decodebin, GstPad * pad,
       ave_list = g_list_prepend (ave_list, NULL);
     }
 
-    /* if it is a decoder and we don't have a fixed sink, then find out 
+    /* if it is a decoder and we don't have a fixed sink, then find out
      * the matching audio/video sink from GstAVElements list */
     for (l = ave_list; l; l = l->next) {
       gboolean created_sink = FALSE;
@@ -4189,7 +4202,7 @@ autoplug_select_cb (GstElement * decodebin, GstPad * pad,
   }
 
   /* remember the sink in the group now, the element is floating, we take
-   * ownership now 
+   * ownership now
    *
    * store the sink in the group, we will configure it later when we
    * reconfigure the sink */

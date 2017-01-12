@@ -517,7 +517,11 @@ _new_output_state (GstCaps * caps, GstVideoCodecState * reference)
   state = g_slice_new0 (GstVideoCodecState);
   state->ref_count = 1;
   gst_video_info_init (&state->info);
-  gst_video_info_set_format (&state->info, GST_VIDEO_FORMAT_ENCODED, 0, 0);
+
+  if (!gst_video_info_set_format (&state->info, GST_VIDEO_FORMAT_ENCODED, 0, 0)) {
+    g_slice_free (GstVideoCodecState, state);
+    return NULL;
+  }
 
   state->caps = caps;
 
@@ -538,6 +542,8 @@ _new_output_state (GstCaps * caps, GstVideoCodecState * reference)
     tgt->par_d = ref->par_d;
     tgt->fps_n = ref->fps_n;
     tgt->fps_d = ref->fps_d;
+
+    GST_VIDEO_INFO_FIELD_ORDER (tgt) = GST_VIDEO_INFO_FIELD_ORDER (ref);
 
     GST_VIDEO_INFO_MULTIVIEW_MODE (tgt) = GST_VIDEO_INFO_MULTIVIEW_MODE (ref);
     GST_VIDEO_INFO_MULTIVIEW_FLAGS (tgt) = GST_VIDEO_INFO_MULTIVIEW_FLAGS (ref);
@@ -1569,6 +1575,7 @@ gst_video_encoder_negotiate_default (GstVideoEncoder * encoder)
   GstQuery *query = NULL;
   GstVideoCodecFrame *frame;
   GstCaps *prevcaps;
+  gchar *colorimetry;
 
   g_return_val_if_fail (state->caps != NULL, FALSE);
 
@@ -1592,6 +1599,24 @@ gst_video_encoder_negotiate_default (GstVideoEncoder * encoder)
     if (state->codec_data)
       gst_caps_set_simple (state->caps, "codec_data", GST_TYPE_BUFFER,
           state->codec_data, NULL);
+
+    gst_caps_set_simple (state->caps, "interlace-mode", G_TYPE_STRING,
+        gst_video_interlace_mode_to_string (info->interlace_mode), NULL);
+    if (info->interlace_mode == GST_VIDEO_INTERLACE_MODE_INTERLEAVED &&
+        GST_VIDEO_INFO_FIELD_ORDER (info) != GST_VIDEO_FIELD_ORDER_UNKNOWN)
+      gst_caps_set_simple (state->caps, "field-order", G_TYPE_STRING,
+          gst_video_field_order_to_string (GST_VIDEO_INFO_FIELD_ORDER (info)),
+          NULL);
+
+    colorimetry = gst_video_colorimetry_to_string (&info->colorimetry);
+    if (colorimetry)
+      gst_caps_set_simple (state->caps, "colorimetry", G_TYPE_STRING,
+          colorimetry, NULL);
+    g_free (colorimetry);
+
+    if (info->chroma_site != GST_VIDEO_CHROMA_SITE_UNKNOWN)
+      gst_caps_set_simple (state->caps, "chroma-site", G_TYPE_STRING,
+          gst_video_chroma_to_string (info->chroma_site), NULL);
 
     if (GST_VIDEO_INFO_MULTIVIEW_MODE (info) != GST_VIDEO_MULTIVIEW_MODE_NONE) {
       const gchar *caps_mview_mode =
@@ -2254,6 +2279,8 @@ gst_video_encoder_set_output_state (GstVideoEncoder * encoder, GstCaps * caps,
   g_return_val_if_fail (caps != NULL, NULL);
 
   state = _new_output_state (caps, reference);
+  if (!state)
+    return NULL;
 
   GST_VIDEO_ENCODER_STREAM_LOCK (encoder);
   if (priv->output_state)
