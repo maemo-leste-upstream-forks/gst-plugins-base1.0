@@ -4,20 +4,21 @@
 #
 # Nicolas Velin <nicolas@velin.fr>, 2008.
 # Claude Paroz <claude@2xlibre.net>, 2008-2011.
-# Stéphane Aulery <lkppo@free.fr>, 2015.
+# Stéphane Aulery <lkppo@free.fr>, 2015-2016.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.7.90\n"
+"Project-Id-Version: gst-plugins-base 1.10.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-11-29 15:27+0200\n"
-"PO-Revision-Date: 2016-03-04 13:08+0100\n"
+"POT-Creation-Date: 2017-01-30 15:26+0200\n"
+"PO-Revision-Date: 2016-12-23 20:39+0100\n"
 "Last-Translator: Stéphane Aulery <lkppo@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
 msgid "Could not open device for playback in mono mode."
@@ -97,13 +98,11 @@ msgstr "Ce fichier semble être un fichier texte"
 msgid "Could not create \"uridecodebin\" element."
 msgstr "Impossible de créer un élément « uridecodebin »."
 
-#, fuzzy
 msgid "Could not create \"decodebin3\" element."
-msgstr "Impossible de créer un élément « uridecodebin »."
+msgstr "Impossible de créer un élément « decodebin3 »."
 
-#, fuzzy
 msgid "Could not create \"urisourcebin\" element."
-msgstr "Impossible de créer un élément « uridecodebin »."
+msgstr "Impossible de créer un élément « urisourcebin »."
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
@@ -239,9 +238,8 @@ msgstr "Format de sous-titres TMPlayer"
 msgid "Kate subtitle format"
 msgstr "Format de sous-titres Kate"
 
-#, fuzzy
 msgid "WebVTT subtitle format"
-msgstr "Format de sous-titres Kate"
+msgstr "Format de sous-titres WebVTT"
 
 msgid "Uncompressed video"
 msgstr "Video non compressée"
@@ -411,15 +409,14 @@ msgid "Focal length of the lens used capturing the image, in mm"
 msgstr ""
 "Distance focale de l’optique utilisée pour la capture de l’image (en mm)"
 
-#, fuzzy
 msgid "capturing 35 mm equivalent focal length"
-msgstr "distance focale de la capture"
+msgstr "distance focale de la capture équivalente à 35 mm"
 
-#, fuzzy
 msgid ""
 "35 mm equivalent focal length of the lens used capturing the image, in mm"
 msgstr ""
-"Distance focale de l’optique utilisée pour la capture de l’image (en mm)"
+"Distance focale de l’optique équivalente à 35 mm, utilisée pour la capture "
+"de l’image (en mm)"
 
 msgid "capturing digital zoom ratio"
 msgstr "valeur du zoom numérique de la capture"

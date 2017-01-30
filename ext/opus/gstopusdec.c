@@ -540,7 +540,7 @@ opus_dec_chain_parse_data (GstOpusDec * dec, GstBuffer * buffer)
     GstClockTime aligned_missing_duration;
     GstClockTime missing_duration = GST_BUFFER_DURATION (bufd);
 
-    if (!GST_CLOCK_TIME_IS_VALID (missing_duration)) {
+    if (!GST_CLOCK_TIME_IS_VALID (missing_duration) || missing_duration == 0) {
       if (GST_CLOCK_TIME_IS_VALID (dec->last_known_buffer_duration)) {
         missing_duration = dec->last_known_buffer_duration;
         GST_WARNING_OBJECT (dec,
@@ -595,7 +595,6 @@ opus_dec_chain_parse_data (GstOpusDec * dec, GstBuffer * buffer)
        not constant over the stream. */
     samples = 120 * dec->sample_rate / 1000;
   }
-
   packet_size = samples * dec->n_channels * 2;
 
   outbuf =
@@ -611,23 +610,44 @@ opus_dec_chain_parse_data (GstOpusDec * dec, GstBuffer * buffer)
   gst_buffer_map (outbuf, &omap, GST_MAP_WRITE);
   out_data = (gint16 *) omap.data;
 
-  if (dec->use_inband_fec) {
-    if (gst_buffer_get_size (dec->last_buffer) > 0) {
-      /* normal delayed decode */
-      GST_LOG_OBJECT (dec, "FEC enabled, decoding last delayed buffer");
+  do {
+    if (dec->use_inband_fec) {
+      if (gst_buffer_get_size (dec->last_buffer) > 0) {
+        /* normal delayed decode */
+        GST_LOG_OBJECT (dec, "FEC enabled, decoding last delayed buffer");
+        n = opus_multistream_decode (dec->state, data, size, out_data, samples,
+            0);
+      } else {
+        /* FEC reconstruction decode */
+        GST_LOG_OBJECT (dec, "FEC enabled, reconstructing last buffer");
+        n = opus_multistream_decode (dec->state, data, size, out_data, samples,
+            1);
+      }
+    } else {
+      /* normal decode */
+      GST_LOG_OBJECT (dec, "FEC disabled, decoding buffer");
       n = opus_multistream_decode (dec->state, data, size, out_data, samples,
           0);
-    } else {
-      /* FEC reconstruction decode */
-      GST_LOG_OBJECT (dec, "FEC enabled, reconstructing last buffer");
-      n = opus_multistream_decode (dec->state, data, size, out_data, samples,
-          1);
     }
-  } else {
-    /* normal decode */
-    GST_LOG_OBJECT (dec, "FEC disabled, decoding buffer");
-    n = opus_multistream_decode (dec->state, data, size, out_data, samples, 0);
-  }
+    if (n == OPUS_BUFFER_TOO_SMALL) {
+      /* if too small, add 2.5 milliseconds and try again, up to the
+       * Opus max size of 120 milliseconds */
+      if (samples >= 120 * dec->sample_rate / 1000)
+        break;
+      samples += 25 * dec->sample_rate / 10000;
+      packet_size = samples * dec->n_channels * 2;
+      gst_buffer_unmap (outbuf, &omap);
+      gst_buffer_unref (outbuf);
+      outbuf =
+          gst_audio_decoder_allocate_output_buffer (GST_AUDIO_DECODER (dec),
+          packet_size);
+      if (!outbuf) {
+        goto buffer_failed;
+      }
+      gst_buffer_map (outbuf, &omap, GST_MAP_WRITE);
+      out_data = (gint16 *) omap.data;
+    }
+  } while (n == OPUS_BUFFER_TOO_SMALL);
   gst_buffer_unmap (outbuf, &omap);
   if (data != NULL)
     gst_buffer_unmap (buf, &map);
@@ -642,6 +662,8 @@ opus_dec_chain_parse_data (GstOpusDec * dec, GstBuffer * buffer)
   }
   GST_DEBUG_OBJECT (dec, "decoded %d samples", n);
   gst_buffer_set_size (outbuf, n * 2 * dec->n_channels);
+  GST_BUFFER_DURATION (outbuf) = samples * GST_SECOND / dec->sample_rate;
+  samples = n;
 
   cmeta = gst_buffer_get_audio_clipping_meta (buf);
 
