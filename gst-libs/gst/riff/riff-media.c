@@ -1299,22 +1299,28 @@ gst_riff_create_audio_caps (guint16 codec_id,
       if (strf != NULL) {
         gint ba = strf->blockalign;
         gint ch = strf->channels;
-        gint wd = ba * 8 / ch;
 
-        caps = gst_caps_new_simple ("audio/x-raw",
-            "format", G_TYPE_STRING, wd == 64 ? "F64LE" : "F32LE",
-            "layout", G_TYPE_STRING, "interleaved",
-            "channels", G_TYPE_INT, ch, NULL);
+        if (ba > 0 && ch > 0 && (ba == (64 / 8) * ch || ba == (32 / 8) * ch)) {
+          gint wd = ba * 8 / ch;
 
-        /* Add default channel layout. We know no default layout for more than
-         * 8 channels. */
-        if (ch > 8)
-          GST_WARNING ("don't know default layout for %d channels", ch);
-        else if (gst_riff_wave_add_default_channel_mask (caps, ch,
-                channel_reorder_map))
-          GST_DEBUG ("using default channel layout for %d channels", ch);
-        else
-          GST_WARNING ("failed to add channel layout");
+          caps = gst_caps_new_simple ("audio/x-raw",
+              "format", G_TYPE_STRING, wd == 64 ? "F64LE" : "F32LE",
+              "layout", G_TYPE_STRING, "interleaved",
+              "channels", G_TYPE_INT, ch, NULL);
+
+          /* Add default channel layout. We know no default layout for more than
+           * 8 channels. */
+          if (ch > 8)
+            GST_WARNING ("don't know default layout for %d channels", ch);
+          else if (gst_riff_wave_add_default_channel_mask (caps, ch,
+                  channel_reorder_map))
+            GST_DEBUG ("using default channel layout for %d channels", ch);
+          else
+            GST_WARNING ("failed to add channel layout");
+        } else {
+          GST_WARNING ("invalid block align %d or channel count %d", ba, ch);
+          return NULL;
+        }
       } else {
         /* FIXME: this is pretty useless - we need fixed caps */
         caps = gst_caps_from_string ("audio/x-raw, "
@@ -1609,7 +1615,8 @@ gst_riff_create_audio_caps (guint16 codec_id,
           subformat_guid[2] == 0xaa000080 && subformat_guid[3] == 0x719b3800) {
         if (subformat_guid[0] == 0x00000001) {
           GST_DEBUG ("PCM");
-          if (strf != NULL) {
+          if (strf != NULL && strf->blockalign != 0 && strf->channels != 0
+              && strf->rate != 0) {
             gint ba = strf->blockalign;
             gint wd = ba * 8 / strf->channels;
             gint ws;
@@ -1642,7 +1649,8 @@ gst_riff_create_audio_caps (guint16 codec_id,
           }
         } else if (subformat_guid[0] == 0x00000003) {
           GST_DEBUG ("FLOAT");
-          if (strf != NULL) {
+          if (strf != NULL && strf->blockalign != 0 && strf->channels != 0
+              && strf->rate != 0) {
             gint ba = strf->blockalign;
             gint wd = ba * 8 / strf->channels;
 
@@ -1707,7 +1715,8 @@ gst_riff_create_audio_caps (guint16 codec_id,
           caps = gst_caps_new_empty_simple ("audio/x-ac3");
           if (codec_name)
             *codec_name = g_strdup ("wavext AC-3 SPDIF audio");
-        } else if (subformat_guid[0] == GST_RIFF_WAVE_FORMAT_EXTENSIBLE) {
+        } else if ((subformat_guid[0] & 0xffff) ==
+            GST_RIFF_WAVE_FORMAT_EXTENSIBLE) {
           GST_DEBUG ("WAVE_FORMAT_EXTENSIBLE nested");
         } else {
           /* recurse where no special consideration has yet to be identified 

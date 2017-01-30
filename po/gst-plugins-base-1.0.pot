@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.10.2\n"
+"Project-Id-Version: gst-plugins-base 1.10.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2016-11-29 15:27+0200\n"
+"POT-Creation-Date: 2017-01-30 15:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,7 +102,7 @@ msgstr ""
 msgid "Could not determine type of stream"
 msgstr ""
 
-#: gst/playback/gstdecodebin2.c:2841 gst/playback/gstparsebin.c:2378
+#: gst/playback/gstdecodebin2.c:2842 gst/playback/gstparsebin.c:2378
 msgid "This appears to be a text file"
 msgstr ""
 
@@ -857,15 +857,15 @@ msgstr ""
 msgid "Do not print any output (apart from errors)"
 msgstr ""
 
-#: tools/gst-play.c:1254
+#: tools/gst-play.c:1256
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."
 msgstr ""
 
-#: tools/gst-play.c:1258
+#: tools/gst-play.c:1260
 msgid "You must provide at least one filename or URI to play."
 msgstr ""
 
-#: tools/gst-play.c:1298
+#: tools/gst-play.c:1300
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr ""
