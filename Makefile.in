@@ -206,7 +206,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/common/release.mak \
 	$(top_srcdir)/common/win32.mak ABOUT-NLS AUTHORS COPYING \
 	COPYING.LIB ChangeLog INSTALL NEWS README compile config.guess \
-	config.rpath config.sub depcomp install-sh ltmain.sh missing
+	config.rpath config.sub install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -591,7 +591,14 @@ win32crlf = $(shell find $(top_srcdir)/win32 -name '*.dsw' -o -name '*.dsp')
 EXTRA_DIST = \
 	depcomp \
 	AUTHORS COPYING COPYING.LIB NEWS README RELEASE REQUIREMENTS \
-	ChangeLog gst-plugins-base.doap autogen.sh $(win32)
+	ChangeLog gst-plugins-base.doap autogen.sh $(win32) \
+	$(shell find "$(top_srcdir)" -type f -name meson.build ! -path "$(top_srcdir)/$(PACKAGE_TARNAME)-*" ) \
+	gst-libs/gst/audio/audio_mkenum.py \
+	gst-libs/gst/pbutils/pbutils_mkenum.py \
+	gst-libs/gst/rtp/rtp_mkenum.py \
+	gst-libs/gst/rtsp/rtsp_mkenum.py \
+	gst-libs/gst/video/video_mkenum.py \
+	meson_options.txt config.h.meson
 
 DISTCLEANFILES = _stdint.h
 

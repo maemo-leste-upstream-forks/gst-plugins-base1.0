@@ -383,6 +383,78 @@
 <a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-buffer-clip" title="gst_audio_buffer_clip ()">gst_audio_buffer_clip</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-free" title="gst_audio_resampler_free ()">gst_audio_resampler_free</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="returnvalue">gsize</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-get-in-frames" title="gst_audio_resampler_get_in_frames ()">gst_audio_resampler_get_in_frames</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="returnvalue">gsize</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-get-max-latency" title="gst_audio_resampler_get_max_latency ()">gst_audio_resampler_get_max_latency</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="returnvalue">gsize</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-get-out-frames" title="gst_audio_resampler_get_out_frames ()">gst_audio_resampler_get_out_frames</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="returnvalue">GstAudioResampler</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-new" title="gst_audio_resampler_new ()">gst_audio_resampler_new</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-options-set-quality" title="gst_audio_resampler_options_set_quality ()">gst_audio_resampler_options_set_quality</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-resample" title="gst_audio_resampler_resample ()">gst_audio_resampler_resample</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-reset" title="gst_audio_resampler_reset ()">gst_audio_resampler_reset</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-update" title="gst_audio_resampler_update ()">gst_audio_resampler_update</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -457,6 +529,82 @@
 <tr>
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-DEF-FORMAT:CAPS" title="GST_AUDIO_DEF_FORMAT">GST_AUDIO_DEF_FORMAT</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler">GstAudioResampler</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerFilterInterpolation" title="enum GstAudioResamplerFilterInterpolation">GstAudioResamplerFilterInterpolation</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerFilterMode" title="enum GstAudioResamplerFilterMode">GstAudioResamplerFilterMode</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerFlags" title="enum GstAudioResamplerFlags">GstAudioResamplerFlags</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerMethod" title="enum GstAudioResamplerMethod">GstAudioResamplerMethod</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-CUBIC-B:CAPS" title="GST_AUDIO_RESAMPLER_OPT_CUBIC_B">GST_AUDIO_RESAMPLER_OPT_CUBIC_B</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-CUBIC-C:CAPS" title="GST_AUDIO_RESAMPLER_OPT_CUBIC_C">GST_AUDIO_RESAMPLER_OPT_CUBIC_C</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-CUTOFF:CAPS" title="GST_AUDIO_RESAMPLER_OPT_CUTOFF">GST_AUDIO_RESAMPLER_OPT_CUTOFF</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-FILTER-INTERPOLATION:CAPS" title="GST_AUDIO_RESAMPLER_OPT_FILTER_INTERPOLATION">GST_AUDIO_RESAMPLER_OPT_FILTER_INTERPOLATION</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-FILTER-MODE:CAPS" title="GST_AUDIO_RESAMPLER_OPT_FILTER_MODE">GST_AUDIO_RESAMPLER_OPT_FILTER_MODE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-FILTER-MODE-THRESHOLD:CAPS" title="GST_AUDIO_RESAMPLER_OPT_FILTER_MODE_THRESHOLD">GST_AUDIO_RESAMPLER_OPT_FILTER_MODE_THRESHOLD</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-FILTER-OVERSAMPLE:CAPS" title="GST_AUDIO_RESAMPLER_OPT_FILTER_OVERSAMPLE">GST_AUDIO_RESAMPLER_OPT_FILTER_OVERSAMPLE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-MAX-PHASE-ERROR:CAPS" title="GST_AUDIO_RESAMPLER_OPT_MAX_PHASE_ERROR">GST_AUDIO_RESAMPLER_OPT_MAX_PHASE_ERROR</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-N-TAPS:CAPS" title="GST_AUDIO_RESAMPLER_OPT_N_TAPS">GST_AUDIO_RESAMPLER_OPT_N_TAPS</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-STOP-ATTENUATION:CAPS" title="GST_AUDIO_RESAMPLER_OPT_STOP_ATTENUATION">GST_AUDIO_RESAMPLER_OPT_STOP_ATTENUATION</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-TRANSITION-BANDWIDTH:CAPS" title="GST_AUDIO_RESAMPLER_OPT_TRANSITION_BANDWIDTH">GST_AUDIO_RESAMPLER_OPT_TRANSITION_BANDWIDTH</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-QUALITY-DEFAULT:CAPS" title="GST_AUDIO_RESAMPLER_QUALITY_DEFAULT">GST_AUDIO_RESAMPLER_QUALITY_DEFAULT</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-QUALITY-MAX:CAPS" title="GST_AUDIO_RESAMPLER_QUALITY_MAX">GST_AUDIO_RESAMPLER_QUALITY_MAX</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-QUALITY-MIN:CAPS" title="GST_AUDIO_RESAMPLER_QUALITY_MIN">GST_AUDIO_RESAMPLER_QUALITY_MIN</a></td>
 </tr>
 </tbody>
 </table></div>
@@ -1384,6 +1532,401 @@ is not clipped. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-resampler-free"></a><h3>gst_audio_resampler_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_resampler_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a> *resampler</code></em>);</pre>
+<p>Free a previously allocated <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a> <em class="parameter"><code>resampler</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-audio-resampler-free.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>resampler</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-resampler-get-in-frames"></a><h3>gst_audio_resampler_get_in_frames ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="returnvalue">gsize</span></a>
+gst_audio_resampler_get_in_frames (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a> *resampler</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> out_frames</code></em>);</pre>
+<p>Get the number of input frames that would currently be needed
+to produce <em class="parameter"><code>out_frames</code></em>
+ from <em class="parameter"><code>resampler</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-audio-resampler-get-in-frames.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>resampler</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_frames</p></td>
+<td class="parameter_description"><p>number of input frames</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-resampler-get-in-frames.returns"></a><h4>Returns</h4>
+<p> The number of input frames needed for producing
+<em class="parameter"><code>out_frames</code></em>
+of data from <em class="parameter"><code>resampler</code></em>
+.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-resampler-get-max-latency"></a><h3>gst_audio_resampler_get_max_latency ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="returnvalue">gsize</span></a>
+gst_audio_resampler_get_max_latency (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a> *resampler</code></em>);</pre>
+<p>Get the maximum number of input samples that the resampler would
+need before producing output.</p>
+<div class="refsect3">
+<a name="gst-audio-resampler-get-max-latency.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>resampler</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-resampler-get-max-latency.returns"></a><h4>Returns</h4>
+<p> the latency of <em class="parameter"><code>resampler</code></em>
+as expressed in the number of
+frames.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-resampler-get-out-frames"></a><h3>gst_audio_resampler_get_out_frames ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="returnvalue">gsize</span></a>
+gst_audio_resampler_get_out_frames (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a> *resampler</code></em>,
+                                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> in_frames</code></em>);</pre>
+<p>Get the number of output frames that would be currently available when
+<em class="parameter"><code>in_frames</code></em>
+ are given to <em class="parameter"><code>resampler</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-audio-resampler-get-out-frames.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>resampler</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>in_frames</p></td>
+<td class="parameter_description"><p>number of input frames</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-resampler-get-out-frames.returns"></a><h4>Returns</h4>
+<p> The number of frames that would be availabe after giving
+<em class="parameter"><code>in_frames</code></em>
+as input to <em class="parameter"><code>resampler</code></em>
+.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-resampler-new"></a><h3>gst_audio_resampler_new ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="returnvalue">GstAudioResampler</span></a> *
+gst_audio_resampler_new (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerMethod" title="enum GstAudioResamplerMethod"><span class="type">GstAudioResamplerMethod</span></a> method</code></em>,
+                         <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerFlags" title="enum GstAudioResamplerFlags"><span class="type">GstAudioResamplerFlags</span></a> flags</code></em>,
+                         <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioFormat" title="enum GstAudioFormat"><span class="type">GstAudioFormat</span></a> format</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> channels</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> in_rate</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> out_rate</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *options</code></em>);</pre>
+<p>Make a new resampler.</p>
+<div class="refsect3">
+<a name="gst-audio-resampler-new.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>method</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerMethod" title="enum GstAudioResamplerMethod"><span class="type">GstAudioResamplerMethod</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerFlags" title="enum GstAudioResamplerFlags"><span class="type">GstAudioResamplerFlags</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>in_rate</p></td>
+<td class="parameter_description"><p>input rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_rate</p></td>
+<td class="parameter_description"><p>output rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>options</p></td>
+<td class="parameter_description"><p>extra options</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-resampler-new.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success. </p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-resampler-options-set-quality"></a><h3>gst_audio_resampler_options_set_quality ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_resampler_options_set_quality
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerMethod" title="enum GstAudioResamplerMethod"><span class="type">GstAudioResamplerMethod</span></a> method</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> quality</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> in_rate</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> out_rate</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *options</code></em>);</pre>
+<p>Set the parameters for resampling from <em class="parameter"><code>in_rate</code></em>
+ to <em class="parameter"><code>out_rate</code></em>
+ using <em class="parameter"><code>method</code></em>
+
+for <em class="parameter"><code>quality</code></em>
+ in <em class="parameter"><code>options</code></em>
+.</p>
+<div class="refsect3">
+<a name="gst-audio-resampler-options-set-quality.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>method</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResamplerMethod" title="enum GstAudioResamplerMethod"><span class="type">GstAudioResamplerMethod</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>quality</p></td>
+<td class="parameter_description"><p>the quality</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>in_rate</p></td>
+<td class="parameter_description"><p>the input rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_rate</p></td>
+<td class="parameter_description"><p>the output rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>options</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-resampler-resample"></a><h3>gst_audio_resampler_resample ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_resampler_resample (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a> *resampler</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> in[]</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> in_frames</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> out[]</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> out_frames</code></em>);</pre>
+<p>Perform resampling on <em class="parameter"><code>in_frames</code></em>
+ frames in <em class="parameter"><code>in</code></em>
+ and write <em class="parameter"><code>out_frames</code></em>
+ to <em class="parameter"><code>out</code></em>
+.</p>
+<p>In case the samples are interleaved, <em class="parameter"><code>in</code></em>
+ and <em class="parameter"><code>out</code></em>
+ must point to an
+array with a single element pointing to a block of interleaved samples.</p>
+<p>If non-interleaved samples are used, <em class="parameter"><code>in</code></em>
+ and <em class="parameter"><code>out</code></em>
+ must point to an
+array with pointers to memory blocks, one for each channel.</p>
+<p><em class="parameter"><code>in</code></em>
+ may be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, in which case <em class="parameter"><code>in_frames</code></em>
+ of silence samples are pushed
+into the resampler.</p>
+<p>This function always produces <em class="parameter"><code>out_frames</code></em>
+ of output and consumes <em class="parameter"><code>in_frames</code></em>
+ of
+input. Use <a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-get-out-frames" title="gst_audio_resampler_get_out_frames ()"><code class="function">gst_audio_resampler_get_out_frames()</code></a> and
+<a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-get-in-frames" title="gst_audio_resampler_get_in_frames ()"><code class="function">gst_audio_resampler_get_in_frames()</code></a> to make sure <em class="parameter"><code>in_frames</code></em>
+ and <em class="parameter"><code>out_frames</code></em>
+
+are matching and <em class="parameter"><code>in</code></em>
+ and <em class="parameter"><code>out</code></em>
+ point to enough memory.</p>
+<div class="refsect3">
+<a name="gst-audio-resampler-resample.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>resampler</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>in</p></td>
+<td class="parameter_description"><p>input samples</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>in_frames</p></td>
+<td class="parameter_description"><p>number of input frames</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out</p></td>
+<td class="parameter_description"><p>output samples</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_frames</p></td>
+<td class="parameter_description"><p>number of output frames</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-resampler-reset"></a><h3>gst_audio_resampler_reset ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_resampler_reset (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a> *resampler</code></em>);</pre>
+<p>Reset <em class="parameter"><code>resampler</code></em>
+ to the state it was when it was first created, discarding
+all sample history.</p>
+<div class="refsect3">
+<a name="gst-audio-resampler-reset.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>resampler</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-resampler-update"></a><h3>gst_audio_resampler_update ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_audio_resampler_update (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a> *resampler</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> in_rate</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> out_rate</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *options</code></em>);</pre>
+<p>Update the resampler parameters for <em class="parameter"><code>resampler</code></em>
+. This function should
+not be called concurrently with any other function on <em class="parameter"><code>resampler</code></em>
+.</p>
+<p>When <em class="parameter"><code>in_rate</code></em>
+ or <em class="parameter"><code>out_rate</code></em>
+ is 0, its value is unchanged.</p>
+<p>When <em class="parameter"><code>options</code></em>
+ is <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the previously configured options are reused.</p>
+<div class="refsect3">
+<a name="gst-audio-resampler-update.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>resampler</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>in_rate</p></td>
+<td class="parameter_description"><p>new input rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_rate</p></td>
+<td class="parameter_description"><p>new output rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>options</p></td>
+<td class="parameter_description"><p>new options or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-resampler-update.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the new parameters could be set</p>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-gstaudio.other_details"></a><h2>Types and Values</h2>
@@ -2095,6 +2638,371 @@ sample * <em class="parameter"><code>channels</code></em>
 <pre class="programlisting">#define GST_AUDIO_DEF_FORMAT "S16LE"
 </pre>
 <p>Standard format used in consumer audio.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioResampler"></a><h3>GstAudioResampler</h3>
+<pre class="programlisting">typedef struct {
+  GstAudioResamplerMethod method;
+  GstAudioResamplerFlags flags;
+  GstAudioFormat format;
+  GstStructure *options;
+  gint format_index;
+  gint channels;
+  gint in_rate;
+  gint out_rate;
+
+  gint bps;
+  gint ostride;
+
+  GstAudioResamplerFilterMode filter_mode;
+  guint filter_threshold;
+  GstAudioResamplerFilterInterpolation filter_interpolation;
+
+  gdouble cutoff;
+  gdouble kaiser_beta;
+  /* for cubic */
+  gdouble b, c;
+
+  /* temp taps */
+  gpointer tmp_taps;
+
+  /* oversampled main filter table */
+  gint oversample;
+  gint n_taps;
+  gpointer taps;
+  gpointer taps_mem;
+  gsize taps_stride;
+  gint n_phases;
+  gint alloc_taps;
+  gint alloc_phases;
+
+  /* cached taps */
+  gpointer *cached_phases;
+  gpointer cached_taps;
+  gpointer cached_taps_mem;
+  gsize cached_taps_stride;
+
+  ConvertTapsFunc convert_taps;
+  InterpolateFunc interpolate;
+  DeinterleaveFunc deinterleave;
+  ResampleFunc resample;
+
+  gint blocks;
+  gint inc;
+  gint samp_inc;
+  gint samp_frac;
+  gint samp_index;
+  gint samp_phase;
+  gint skip;
+
+  gpointer samples;
+  gsize samples_len;
+  gsize samples_avail;
+  gpointer *sbuf;
+} GstAudioResampler;
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioResamplerFilterInterpolation"></a><h3>enum GstAudioResamplerFilterInterpolation</h3>
+<p>The different filter interpolation methods.</p>
+<div class="refsect3">
+<a name="GstAudioResamplerFilterInterpolation.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FILTER-INTERPOLATION-NONE:CAPS"></a>GST_AUDIO_RESAMPLER_FILTER_INTERPOLATION_NONE</p></td>
+<td class="enum_member_description">
+<p>no interpolation</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FILTER-INTERPOLATION-LINEAR:CAPS"></a>GST_AUDIO_RESAMPLER_FILTER_INTERPOLATION_LINEAR</p></td>
+<td class="enum_member_description">
+<p>linear interpolation of the
+  filter coeficients.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FILTER-INTERPOLATION-CUBIC:CAPS"></a>GST_AUDIO_RESAMPLER_FILTER_INTERPOLATION_CUBIC</p></td>
+<td class="enum_member_description">
+<p>cubic interpolation of the
+  filter coeficients.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioResamplerFilterMode"></a><h3>enum GstAudioResamplerFilterMode</h3>
+<p>Select for the filter tables should be set up.</p>
+<div class="refsect3">
+<a name="GstAudioResamplerFilterMode.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FILTER-MODE-INTERPOLATED:CAPS"></a>GST_AUDIO_RESAMPLER_FILTER_MODE_INTERPOLATED</p></td>
+<td class="enum_member_description">
+<p>Use interpolated filter tables. This
+    uses less memory but more CPU and is slightly less accurate but it allows for more
+    efficient variable rate resampling with <a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-update" title="gst_audio_resampler_update ()"><code class="function">gst_audio_resampler_update()</code></a>.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FILTER-MODE-FULL:CAPS"></a>GST_AUDIO_RESAMPLER_FILTER_MODE_FULL</p></td>
+<td class="enum_member_description">
+<p>Use full filter table. This uses more memory
+    but less CPU.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FILTER-MODE-AUTO:CAPS"></a>GST_AUDIO_RESAMPLER_FILTER_MODE_AUTO</p></td>
+<td class="enum_member_description">
+<p>Automatically choose between interpolated
+    and full filter tables.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioResamplerFlags"></a><h3>enum GstAudioResamplerFlags</h3>
+<p>Different resampler flags.</p>
+<div class="refsect3">
+<a name="GstAudioResamplerFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FLAG-NONE:CAPS"></a>GST_AUDIO_RESAMPLER_FLAG_NONE</p></td>
+<td class="enum_member_description">
+<p>no flags</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FLAG-NON-INTERLEAVED-IN:CAPS"></a>GST_AUDIO_RESAMPLER_FLAG_NON_INTERLEAVED_IN</p></td>
+<td class="enum_member_description">
+<p>input samples are non-interleaved.
+   an array of blocks of samples, one for each channel, should be passed to the
+   resample function.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FLAG-NON-INTERLEAVED-OUT:CAPS"></a>GST_AUDIO_RESAMPLER_FLAG_NON_INTERLEAVED_OUT</p></td>
+<td class="enum_member_description">
+<p>output samples are non-interleaved.
+   an array of blocks of samples, one for each channel, should be passed to the
+   resample function.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-FLAG-VARIABLE-RATE:CAPS"></a>GST_AUDIO_RESAMPLER_FLAG_VARIABLE_RATE</p></td>
+<td class="enum_member_description">
+<p>optimize for dynamic updates of the sample
+   rates with <a class="link" href="gst-plugins-base-libs-gstaudio.html#gst-audio-resampler-update" title="gst_audio_resampler_update ()"><code class="function">gst_audio_resampler_update()</code></a>. This will select an interpolating filter
+   when <a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-FILTER-MODE-AUTO:CAPS"><span class="type">GST_AUDIO_RESAMPLER_FILTER_MODE_AUTO</span></a> is configured.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioResamplerMethod"></a><h3>enum GstAudioResamplerMethod</h3>
+<p>Different subsampling and upsampling methods</p>
+<div class="refsect3">
+<a name="GstAudioResamplerMethod.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-METHOD-NEAREST:CAPS"></a>GST_AUDIO_RESAMPLER_METHOD_NEAREST</p></td>
+<td class="enum_member_description">
+<p>Duplicates the samples when
+   upsampling and drops when downsampling</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-METHOD-LINEAR:CAPS"></a>GST_AUDIO_RESAMPLER_METHOD_LINEAR</p></td>
+<td class="enum_member_description">
+<p>Uses linear interpolation to reconstruct
+   missing samples and averaging to downsample</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-METHOD-CUBIC:CAPS"></a>GST_AUDIO_RESAMPLER_METHOD_CUBIC</p></td>
+<td class="enum_member_description">
+<p>Uses cubic interpolation</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-METHOD-BLACKMAN-NUTTALL:CAPS"></a>GST_AUDIO_RESAMPLER_METHOD_BLACKMAN_NUTTALL</p></td>
+<td class="enum_member_description">
+<p>Uses Blackman-Nuttall windowed sinc interpolation</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-AUDIO-RESAMPLER-METHOD-KAISER:CAPS"></a>GST_AUDIO_RESAMPLER_METHOD_KAISER</p></td>
+<td class="enum_member_description">
+<p>Uses Kaiser windowed sinc interpolation</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-CUBIC-B:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_CUBIC_B</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_CUBIC_B      "GstAudioResampler.cubic-b"
+</pre>
+<p>G_TYPE_DOUBLE, B parameter of the cubic filter.
+Values between 0.0 and 2.0 are accepted. 1.0 is the default.</p>
+<p>Below are some values of popular filters:
+                   B       C
+Hermite           0.0     0.0
+Spline            1.0     0.0
+Catmull-Rom       0.0     1/2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-CUBIC-C:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_CUBIC_C</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_CUBIC_C      "GstAudioResampler.cubic-c"
+</pre>
+<p>G_TYPE_DOUBLE, C parameter of the cubic filter.
+Values between 0.0 and 2.0 are accepted. 0.0 is the default.</p>
+<p>See <a class="link" href="gst-plugins-base-libs-gstaudio.html#GST-AUDIO-RESAMPLER-OPT-CUBIC-B:CAPS" title="GST_AUDIO_RESAMPLER_OPT_CUBIC_B"><span class="type">GST_AUDIO_RESAMPLER_OPT_CUBIC_B</span></a> for some more common values</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-CUTOFF:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_CUTOFF</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_CUTOFF      "GstAudioResampler.cutoff"
+</pre>
+<p>G_TYPE_DOUBLE, Cutoff parameter for the filter. 0.940 is the default.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-FILTER-INTERPOLATION:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_FILTER_INTERPOLATION</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_FILTER_INTERPOLATION "GstAudioResampler.filter-interpolation"
+</pre>
+<p>GST_TYPE_AUDIO_RESAMPLER_INTERPOLATION: how the filter coeficients should be
+   interpolated.
+GST_AUDIO_RESAMPLER_FILTER_INTERPOLATION_CUBIC is default.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-FILTER-MODE:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_FILTER_MODE</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_FILTER_MODE      "GstAudioResampler.filter-mode"
+</pre>
+<p>GST_TYPE_AUDIO_RESAMPLER_FILTER_MODE: how the filter tables should be
+constructed.
+GST_AUDIO_RESAMPLER_FILTER_MODE_AUTO is the default.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-FILTER-MODE-THRESHOLD:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_FILTER_MODE_THRESHOLD</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_FILTER_MODE_THRESHOLD "GstAudioResampler.filter-mode-threshold"
+</pre>
+<p>G_TYPE_UINT: the amount of memory to use for full filter tables before
+switching to interpolated filter tables.
+1048576 is the default.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-FILTER-OVERSAMPLE:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_FILTER_OVERSAMPLE</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_FILTER_OVERSAMPLE "GstAudioResampler.filter-oversample"
+</pre>
+<p>G_TYPE_UINT, oversampling to use when interpolating filters
+8 is the default.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-MAX-PHASE-ERROR:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_MAX_PHASE_ERROR</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_MAX_PHASE_ERROR "GstAudioResampler.max-phase-error"
+</pre>
+<p>G_TYPE_DOUBLE: The maximum allowed phase error when switching sample
+rates.
+0.1 is the default.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-N-TAPS:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_N_TAPS</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_N_TAPS      "GstAudioResampler.n-taps"
+</pre>
+<p>G_TYPE_INT: the number of taps to use for the filter.
+0 is the default and selects the taps automatically.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-STOP-ATTENUATION:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_STOP_ATTENUATION</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_STOP_ATTENUATION "GstAudioResampler.stop-attenutation"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-OPT-TRANSITION-BANDWIDTH:CAPS"></a><h3>GST_AUDIO_RESAMPLER_OPT_TRANSITION_BANDWIDTH</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_OPT_TRANSITION_BANDWIDTH "GstAudioResampler.transition-bandwidth"
+</pre>
+<p>G_TYPE_DOUBLE, transition bandwidth. The width of the
+transition band for the kaiser window. 0.087 is the default.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-QUALITY-DEFAULT:CAPS"></a><h3>GST_AUDIO_RESAMPLER_QUALITY_DEFAULT</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_QUALITY_DEFAULT 4
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-QUALITY-MAX:CAPS"></a><h3>GST_AUDIO_RESAMPLER_QUALITY_MAX</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_QUALITY_MAX 10
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-AUDIO-RESAMPLER-QUALITY-MIN:CAPS"></a><h3>GST_AUDIO_RESAMPLER_QUALITY_MIN</h3>
+<pre class="programlisting">#define GST_AUDIO_RESAMPLER_QUALITY_MIN 0
+</pre>
 </div>
 </div>
 </div>

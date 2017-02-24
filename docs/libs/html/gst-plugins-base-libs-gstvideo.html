@@ -334,6 +334,12 @@
 </td>
 </tr>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FORMAT-INFO-IS-TILED:CAPS" title="GST_VIDEO_FORMAT_INFO_IS_TILED()">GST_VIDEO_FORMAT_INFO_IS_TILED</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="function_type">
 <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="returnvalue">GstVideoFormat</span></a>
 </td>
@@ -373,6 +379,14 @@
 </td>
 </tr>
 <tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gconstpointer"><span class="returnvalue">gconstpointer</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-format-get-palette" title="gst_video_format_get_palette ()">gst_video_format_get_palette</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="function_type">const <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormatInfo" title="struct GstVideoFormatInfo"><span class="returnvalue">GstVideoFormatInfo</span></a> *
 </td>
 <td class="function_name">
@@ -383,6 +397,12 @@
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CAPS-MAKE:CAPS" title="GST_VIDEO_CAPS_MAKE()">GST_VIDEO_CAPS_MAKE</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CAPS-MAKE-WITH-FEATURES:CAPS" title="GST_VIDEO_CAPS_MAKE_WITH_FEATURES()">GST_VIDEO_CAPS_MAKE_WITH_FEATURES</a><span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -755,6 +775,36 @@
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-info-align" title="gst_video_info_align ()">gst_video_info_align</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInterlaceMode" title="enum GstVideoInterlaceMode"><span class="returnvalue">GstVideoInterlaceMode</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-interlace-mode-from-string" title="gst_video_interlace_mode_from_string ()">gst_video_interlace_mode_from_string</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-interlace-mode-to-string" title="gst_video_interlace_mode_to_string ()">gst_video_interlace_mode_to_string</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFieldOrder" title="enum GstVideoFieldOrder"><span class="returnvalue">GstVideoFieldOrder</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-field-order-from-string" title="gst_video_field_order_from_string ()">gst_video_field_order_from_string</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-field-order-to-string" title="gst_video_field_order_to_string ()">gst_video_field_order_to_string</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -1151,6 +1201,14 @@
 <span class="returnvalue">void</span>
 </td>
 <td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-init-from-date-time" title="gst_video_time_code_init_from_date_time ()">gst_video_time_code_init_from_date_time</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
 <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-clear" title="gst_video_time_code_clear ()">gst_video_time_code_clear</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -1216,6 +1274,78 @@
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-to-string" title="gst_video_time_code_to_string ()">gst_video_time_code_to_string</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="returnvalue">GstVideoTimeCode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-add-interval" title="gst_video_time_code_add_interval ()">gst_video_time_code_add_interval</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="returnvalue">GstVideoTimeCode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-new-from-string" title="gst_video_time_code_new_from_string ()">gst_video_time_code_new_from_string</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="returnvalue">GstVideoTimeCode</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-new-from-date-time" title="gst_video_time_code_new_from_date_time ()">gst_video_time_code_new_from_date_time</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="returnvalue">GstVideoTimeCodeInterval</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-interval-new" title="gst_video_time_code_interval_new ()">gst_video_time_code_interval_new</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="returnvalue">GstVideoTimeCodeInterval</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-interval-new-from-string" title="gst_video_time_code_interval_new_from_string ()">gst_video_time_code_interval_new_from_string</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-interval-init" title="gst_video_time_code_interval_init ()">gst_video_time_code_interval_init</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-interval-clear" title="gst_video_time_code_interval_clear ()">gst_video_time_code_interval_clear</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="returnvalue">GstVideoTimeCodeInterval</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-interval-copy" title="gst_video_time_code_interval_copy ()">gst_video_time_code_interval_copy</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-interval-free" title="gst_video_time_code_interval_free ()">gst_video_time_code_interval_free</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 </tbody>
@@ -1310,6 +1440,26 @@
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoColorimetry" title="GstVideoColorimetry">GstVideoColorimetry</a></td>
 </tr>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-COLORIMETRY-BT2020:CAPS" title="GST_VIDEO_COLORIMETRY_BT2020">GST_VIDEO_COLORIMETRY_BT2020</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-COLORIMETRY-BT601:CAPS" title="GST_VIDEO_COLORIMETRY_BT601">GST_VIDEO_COLORIMETRY_BT601</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-COLORIMETRY-BT709:CAPS" title="GST_VIDEO_COLORIMETRY_BT709">GST_VIDEO_COLORIMETRY_BT709</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-COLORIMETRY-SMPTE240M:CAPS" title="GST_VIDEO_COLORIMETRY_SMPTE240M">GST_VIDEO_COLORIMETRY_SMPTE240M</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-COLORIMETRY-SRGB:CAPS" title="GST_VIDEO_COLORIMETRY_SRGB">GST_VIDEO_COLORIMETRY_SRGB</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInfo" title="struct GstVideoInfo">GstVideoInfo</a></td>
 </tr>
@@ -1347,6 +1497,10 @@
 </tr>
 <tr>
 <td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFrameMapFlags" title="enum GstVideoFrameMapFlags">GstVideoFrameMapFlags</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoBufferFlags" title="enum GstVideoBufferFlags">GstVideoBufferFlags</a></td>
 </tr>
 <tr>
@@ -1362,6 +1516,114 @@
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoConverter" title="GstVideoConverter">GstVideoConverter</a></td>
 </tr>
 <tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoAlphaMode" title="enum GstVideoAlphaMode">GstVideoAlphaMode</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoChromaMode" title="enum GstVideoChromaMode">GstVideoChromaMode</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoGammaMode" title="enum GstVideoGammaMode">GstVideoGammaMode</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoMatrixMode" title="enum GstVideoMatrixMode">GstVideoMatrixMode</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoPrimariesMode" title="enum GstVideoPrimariesMode">GstVideoPrimariesMode</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-ALPHA-MODE:CAPS" title="GST_VIDEO_CONVERTER_OPT_ALPHA_MODE">GST_VIDEO_CONVERTER_OPT_ALPHA_MODE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-ALPHA-VALUE:CAPS" title="GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE">GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-BORDER-ARGB:CAPS" title="GST_VIDEO_CONVERTER_OPT_BORDER_ARGB">GST_VIDEO_CONVERTER_OPT_BORDER_ARGB</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-CHROMA-MODE:CAPS" title="GST_VIDEO_CONVERTER_OPT_CHROMA_MODE">GST_VIDEO_CONVERTER_OPT_CHROMA_MODE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-CHROMA-RESAMPLER-METHOD:CAPS" title="GST_VIDEO_CONVERTER_OPT_CHROMA_RESAMPLER_METHOD">GST_VIDEO_CONVERTER_OPT_CHROMA_RESAMPLER_METHOD</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-DEST-HEIGHT:CAPS" title="GST_VIDEO_CONVERTER_OPT_DEST_HEIGHT">GST_VIDEO_CONVERTER_OPT_DEST_HEIGHT</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-DEST-WIDTH:CAPS" title="GST_VIDEO_CONVERTER_OPT_DEST_WIDTH">GST_VIDEO_CONVERTER_OPT_DEST_WIDTH</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-DEST-X:CAPS" title="GST_VIDEO_CONVERTER_OPT_DEST_X">GST_VIDEO_CONVERTER_OPT_DEST_X</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-DEST-Y:CAPS" title="GST_VIDEO_CONVERTER_OPT_DEST_Y">GST_VIDEO_CONVERTER_OPT_DEST_Y</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-DITHER-METHOD:CAPS" title="GST_VIDEO_CONVERTER_OPT_DITHER_METHOD">GST_VIDEO_CONVERTER_OPT_DITHER_METHOD</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-DITHER-QUANTIZATION:CAPS" title="GST_VIDEO_CONVERTER_OPT_DITHER_QUANTIZATION">GST_VIDEO_CONVERTER_OPT_DITHER_QUANTIZATION</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-FILL-BORDER:CAPS" title="GST_VIDEO_CONVERTER_OPT_FILL_BORDER">GST_VIDEO_CONVERTER_OPT_FILL_BORDER</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-GAMMA-MODE:CAPS" title="GST_VIDEO_CONVERTER_OPT_GAMMA_MODE">GST_VIDEO_CONVERTER_OPT_GAMMA_MODE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-MATRIX-MODE:CAPS" title="GST_VIDEO_CONVERTER_OPT_MATRIX_MODE">GST_VIDEO_CONVERTER_OPT_MATRIX_MODE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-PRIMARIES-MODE:CAPS" title="GST_VIDEO_CONVERTER_OPT_PRIMARIES_MODE">GST_VIDEO_CONVERTER_OPT_PRIMARIES_MODE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-RESAMPLER-METHOD:CAPS" title="GST_VIDEO_CONVERTER_OPT_RESAMPLER_METHOD">GST_VIDEO_CONVERTER_OPT_RESAMPLER_METHOD</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-RESAMPLER-TAPS:CAPS" title="GST_VIDEO_CONVERTER_OPT_RESAMPLER_TAPS">GST_VIDEO_CONVERTER_OPT_RESAMPLER_TAPS</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-SRC-HEIGHT:CAPS" title="GST_VIDEO_CONVERTER_OPT_SRC_HEIGHT">GST_VIDEO_CONVERTER_OPT_SRC_HEIGHT</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-SRC-WIDTH:CAPS" title="GST_VIDEO_CONVERTER_OPT_SRC_WIDTH">GST_VIDEO_CONVERTER_OPT_SRC_WIDTH</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-SRC-X:CAPS" title="GST_VIDEO_CONVERTER_OPT_SRC_X">GST_VIDEO_CONVERTER_OPT_SRC_X</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-SRC-Y:CAPS" title="GST_VIDEO_CONVERTER_OPT_SRC_Y">GST_VIDEO_CONVERTER_OPT_SRC_Y</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-MULTIVIEW-MAX-FRAME-PACKING:CAPS" title="GST_VIDEO_MULTIVIEW_MAX_FRAME_PACKING">GST_VIDEO_MULTIVIEW_MAX_FRAME_PACKING</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode">GstVideoTimeCode</a></td>
 </tr>
@@ -1372,6 +1634,10 @@
 <tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeFlags" title="enum GstVideoTimeCodeFlags">GstVideoTimeCodeFlags</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval">GstVideoTimeCodeInterval</a></td>
 </tr>
 </tbody>
 </table></div>
@@ -2434,6 +2700,12 @@ beginning of the next row is aligned in a particular way).</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-VIDEO-FORMAT-INFO-IS-TILED:CAPS"></a><h3>GST_VIDEO_FORMAT_INFO_IS_TILED()</h3>
+<pre class="programlisting">#define GST_VIDEO_FORMAT_INFO_IS_TILED(info)     ((info)-&gt;flags &amp; GST_VIDEO_FORMAT_FLAG_TILED)
+</pre>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-video-format-from-masks"></a><h3>gst_video_format_from_masks ()</h3>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="returnvalue">GstVideoFormat</span></a>
 gst_video_format_from_masks (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> depth</code></em>,
@@ -2616,6 +2888,47 @@ the <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormat" ti
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-video-format-get-palette"></a><h3>gst_video_format_get_palette ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gconstpointer"><span class="returnvalue">gconstpointer</span></a>
+gst_video_format_get_palette (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> *size</code></em>);</pre>
+<p>Get the default palette of <em class="parameter"><code>format</code></em>
+. This the palette used in the pack
+function for paletted formats.</p>
+<div class="refsect3">
+<a name="gst-video-format-get-palette.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>size</p></td>
+<td class="parameter_description"><p> size of the palette in bytes. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-format-get-palette.returns"></a><h4>Returns</h4>
+<p> the default palette of <em class="parameter"><code>format</code></em>
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when
+<em class="parameter"><code>format</code></em>
+does not have a palette. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since: 1.2</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-video-format-get-info"></a><h3>gst_video_format_get_info ()</h3>
 <pre class="programlisting">const <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormatInfo" title="struct GstVideoFormatInfo"><span class="returnvalue">GstVideoFormatInfo</span></a> *
 gst_video_format_get_info (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>);</pre>
@@ -2663,6 +2976,37 @@ gst_video_format_get_info (<em class="parameter"><code><a class="link" href="gst
 </tr></tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CAPS-MAKE-WITH-FEATURES:CAPS"></a><h3>GST_VIDEO_CAPS_MAKE_WITH_FEATURES()</h3>
+<pre class="programlisting">#define             GST_VIDEO_CAPS_MAKE_WITH_FEATURES(features,format)</pre>
+<p>Generic caps string for video, for use in pad templates.</p>
+<div class="refsect3">
+<a name="GST-VIDEO-CAPS-MAKE-WITH-FEATURES.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>string format that describes the pixel layout, as string
+(e.g. "I420", "RGB", "YV12", "YUY2", "AYUV", etc.)</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>features</p></td>
+<td class="parameter_description"><p>Requires caps features as a string, e.g.
+"memory:SystemMemory".</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3628,6 +3972,130 @@ is required and <em class="parameter"><code>align</code></em>
 <p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if alignment could not be applied, e.g. because the
 size of a frame can't be represented as a 32 bit integer (Since: 1.12)</p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-interlace-mode-from-string"></a><h3>gst_video_interlace_mode_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInterlaceMode" title="enum GstVideoInterlaceMode"><span class="returnvalue">GstVideoInterlaceMode</span></a>
+gst_video_interlace_mode_from_string (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mode</code></em>);</pre>
+<p>Convert <em class="parameter"><code>mode</code></em>
+ to a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInterlaceMode" title="enum GstVideoInterlaceMode"><span class="type">GstVideoInterlaceMode</span></a></p>
+<div class="refsect3">
+<a name="gst-video-interlace-mode-from-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>mode</p></td>
+<td class="parameter_description"><p>a mode</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-interlace-mode-from-string.returns"></a><h4>Returns</h4>
+<p> the <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInterlaceMode" title="enum GstVideoInterlaceMode"><span class="type">GstVideoInterlaceMode</span></a> of <em class="parameter"><code>mode</code></em>
+or
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-INTERLACE-MODE-PROGRESSIVE:CAPS"><span class="type">GST_VIDEO_INTERLACE_MODE_PROGRESSIVE</span></a> when <em class="parameter"><code>mode</code></em>
+is not a valid
+string representation for a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInterlaceMode" title="enum GstVideoInterlaceMode"><span class="type">GstVideoInterlaceMode</span></a>.</p>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-interlace-mode-to-string"></a><h3>gst_video_interlace_mode_to_string ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_video_interlace_mode_to_string (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInterlaceMode" title="enum GstVideoInterlaceMode"><span class="type">GstVideoInterlaceMode</span></a> mode</code></em>);</pre>
+<p>Convert <em class="parameter"><code>mode</code></em>
+ to its string representation.</p>
+<div class="refsect3">
+<a name="gst-video-interlace-mode-to-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>mode</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoInterlaceMode" title="enum GstVideoInterlaceMode"><span class="type">GstVideoInterlaceMode</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-interlace-mode-to-string.returns"></a><h4>Returns</h4>
+<p> <em class="parameter"><code>mode</code></em>
+as a string or NULL if <em class="parameter"><code>mode</code></em>
+in invalid.</p>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-field-order-from-string"></a><h3>gst_video_field_order_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFieldOrder" title="enum GstVideoFieldOrder"><span class="returnvalue">GstVideoFieldOrder</span></a>
+gst_video_field_order_from_string (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *order</code></em>);</pre>
+<p>Convert <em class="parameter"><code>order</code></em>
+ to a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFieldOrder" title="enum GstVideoFieldOrder"><span class="type">GstVideoFieldOrder</span></a></p>
+<div class="refsect3">
+<a name="gst-video-field-order-from-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>order</p></td>
+<td class="parameter_description"><p>a field order</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-field-order-from-string.returns"></a><h4>Returns</h4>
+<p> the <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFieldOrder" title="enum GstVideoFieldOrder"><span class="type">GstVideoFieldOrder</span></a> of <em class="parameter"><code>order</code></em>
+or
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-FIELD-ORDER-UNKNOWN:CAPS"><span class="type">GST_VIDEO_FIELD_ORDER_UNKNOWN</span></a> when <em class="parameter"><code>order</code></em>
+is not a valid
+string representation for a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFieldOrder" title="enum GstVideoFieldOrder"><span class="type">GstVideoFieldOrder</span></a>.</p>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-field-order-to-string"></a><h3>gst_video_field_order_to_string ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_video_field_order_to_string (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFieldOrder" title="enum GstVideoFieldOrder"><span class="type">GstVideoFieldOrder</span></a> order</code></em>);</pre>
+<p>Convert <em class="parameter"><code>order</code></em>
+ to its string representation.</p>
+<div class="refsect3">
+<a name="gst-video-field-order-to-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>order</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoFieldOrder" title="enum GstVideoFieldOrder"><span class="type">GstVideoFieldOrder</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-field-order-to-string.returns"></a><h4>Returns</h4>
+<p> <em class="parameter"><code>order</code></em>
+as a string or NULL if <em class="parameter"><code>order</code></em>
+in invalid.</p>
+</div>
+<p class="since">Since: 1.12</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -4875,7 +5343,9 @@ gst_video_time_code_new (<em class="parameter"><code><a href="/usr/share/gtk-doc
 </div>
 <div class="refsect3">
 <a name="gst-video-time-code-new.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> with the given values.</p>
+<p> a new <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> with the given values.
+The values are not checked for being in a valid range. To see if your
+timecode actually has valid content, use <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-is-valid" title="gst_video_time_code_is_valid ()"><span class="type">gst_video_time_code_is_valid</span></a>.</p>
 </div>
 <p class="since">Since: 1.10</p>
 </div>
@@ -4960,7 +5430,9 @@ gst_video_time_code_init (<em class="parameter"><code><a class="link" href="gst-
 <em class="parameter"><code>latest_daiy_jam</code></em>
  reference is stolen from caller.</p>
 <p>Initializes <em class="parameter"><code>tc</code></em>
- with the given values.</p>
+ with the given values.
+The values are not checked for being in a valid range. To see if your
+timecode actually has valid content, use <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-is-valid" title="gst_video_time_code_is_valid ()"><span class="type">gst_video_time_code_is_valid</span></a>.</p>
 <div class="refsect3">
 <a name="gst-video-time-code-init.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -5027,6 +5499,63 @@ gst_video_time_code_init (<em class="parameter"><code><a class="link" href="gst-
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-video-time-code-init-from-date-time"></a><h3>gst_video_time_code_init_from_date_time ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_video_time_code_init_from_date_time
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> *tc</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> fps_n</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> fps_d</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a> *dt</code></em>,
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeFlags" title="enum GstVideoTimeCodeFlags"><span class="type">GstVideoTimeCodeFlags</span></a> flags</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> field_count</code></em>);</pre>
+<p>The resulting config-&gt;latest_daily_jam is set to
+midnight, and timecode is set to the given time.</p>
+<div class="refsect3">
+<a name="gst-video-time-code-init-from-date-time.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>tc</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>fps_n</p></td>
+<td class="parameter_description"><p>Numerator of the frame rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>fps_d</p></td>
+<td class="parameter_description"><p>Denominator of the frame rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>dt</p></td>
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glibglib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a> to convert</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeFlags" title="enum GstVideoTimeCodeFlags"><span class="type">GstVideoTimeCodeFlags</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>field_count</p></td>
+<td class="parameter_description"><p>Interlaced video field count</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-video-time-code-clear"></a><h3>gst_video_time_code_clear ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_time_code_clear (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> *tc</code></em>);</pre>
@@ -5089,7 +5618,7 @@ gst_video_time_code_compare (<em class="parameter"><code>const <a class="link" h
 taken into account. Otherwise, it is assumed that the daily jam of both
 <em class="parameter"><code>tc1</code></em>
  and <em class="parameter"><code>tc2</code></em>
- was at the same time.</p>
+ was at the same time. Both time codes must be valid.</p>
 <div class="refsect3">
 <a name="gst-video-time-code-compare.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -5139,7 +5668,7 @@ gst_video_time_code_increment_frame (<em class="parameter"><code><a class="link"
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>tc</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
+<td class="parameter_description"><p>a valid <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -5154,7 +5683,8 @@ gst_video_time_code_add_frames (<em class="parameter"><code><a class="link" href
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="type">gint64</span></a> frames</code></em>);</pre>
 <p>Adds or subtracts <em class="parameter"><code>frames</code></em>
  amount of frames to <em class="parameter"><code>tc</code></em>
- .</p>
+. tc needs to
+contain valid data, as verified by <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-time-code-is-valid" title="gst_video_time_code_is_valid ()"><span class="type">gst_video_time_code_is_valid</span></a>.</p>
 <div class="refsect3">
 <a name="gst-video-time-code-add-frames.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -5166,7 +5696,7 @@ gst_video_time_code_add_frames (<em class="parameter"><code><a class="link" href
 <tbody>
 <tr>
 <td class="parameter_name"><p>tc</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
+<td class="parameter_description"><p>a valid <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -5195,7 +5725,7 @@ gst_video_time_code_frames_since_daily_jam
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>tc</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
+<td class="parameter_description"><p>a valid <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -5223,7 +5753,7 @@ gst_video_time_code_nsec_since_daily_jam
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>tc</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
+<td class="parameter_description"><p>a valid <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -5252,7 +5782,7 @@ gst_video_time_code_to_date_time (<em class="parameter"><code>const <a class="li
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>tc</p></td>
-<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> to convert</p></td>
+<td class="parameter_description"><p>A valid <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> to convert</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -5298,6 +5828,337 @@ interlaced field 2
 '.' for non-drop-frame interlaced field 1</p>
 </div>
 <p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-time-code-add-interval"></a><h3>gst_video_time_code_add_interval ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="returnvalue">GstVideoTimeCode</span></a> *
+gst_video_time_code_add_interval (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> *tc</code></em>,
+                                  <em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a> *tc_inter</code></em>);</pre>
+<p>This makes a component-wise addition of <em class="parameter"><code>tc_inter</code></em>
+ to <em class="parameter"><code>tc</code></em>
+. For example,
+adding ("01:02:03:04", "00:01:00:00") will return "01:03:03:04".
+When it comes to drop-frame timecodes,
+adding ("00:00:00;00", "00:01:00:00") will return "00:01:00;02"
+because of drop-frame oddities. However,
+adding ("00:09:00;02", "00:01:00:00") will return "00:10:00;00"
+because this time we can have an exact minute.</p>
+<div class="refsect3">
+<a name="gst-video-time-code-add-interval.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>tc</p></td>
+<td class="parameter_description"><p>The <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> where the diff should be added. This
+must contain valid timecode values.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>tc_inter</p></td>
+<td class="parameter_description"><p>The <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a> to add to <em class="parameter"><code>tc</code></em>
+.
+The interval must contain valid values, except that for drop-frame
+timecode, it may also contain timecodes which would normally
+be dropped. These are then corrected to the next reasonable timecode.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-time-code-add-interval.returns"></a><h4>Returns</h4>
+<p> A new <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> with <em class="parameter"><code>tc_inter</code></em>
+added.</p>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-time-code-new-from-string"></a><h3>gst_video_time_code_new_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="returnvalue">GstVideoTimeCode</span></a> *
+gst_video_time_code_new_from_string (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tc_str</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-video-time-code-new-from-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>tc_str</p></td>
+<td class="parameter_description"><p>The string that represents the <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-time-code-new-from-string.returns"></a><h4>Returns</h4>
+<p> a new <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> from the given string</p>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-time-code-new-from-date-time"></a><h3>gst_video_time_code_new_from_date_time ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="returnvalue">GstVideoTimeCode</span></a> *
+gst_video_time_code_new_from_date_time
+                               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> fps_n</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> fps_d</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a> *dt</code></em>,
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeFlags" title="enum GstVideoTimeCodeFlags"><span class="type">GstVideoTimeCodeFlags</span></a> flags</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> field_count</code></em>);</pre>
+<p>The resulting config-&gt;latest_daily_jam is set to
+midnight, and timecode is set to the given time.</p>
+<div class="refsect3">
+<a name="gst-video-time-code-new-from-date-time.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>fps_n</p></td>
+<td class="parameter_description"><p>Numerator of the frame rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>fps_d</p></td>
+<td class="parameter_description"><p>Denominator of the frame rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>dt</p></td>
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glibglib-GDateTime.html#GDateTime"><span class="type">GDateTime</span></a> to convert</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeFlags" title="enum GstVideoTimeCodeFlags"><span class="type">GstVideoTimeCodeFlags</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>field_count</p></td>
+<td class="parameter_description"><p>Interlaced video field count</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-time-code-new-from-date-time.returns"></a><h4>Returns</h4>
+<p> the <span class="type">GVideoTimeCode</span> representation of <em class="parameter"><code>dt</code></em>
+.</p>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-time-code-interval-new"></a><h3>gst_video_time_code_interval_new ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="returnvalue">GstVideoTimeCodeInterval</span></a> *
+gst_video_time_code_interval_new (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> hours</code></em>,
+                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> minutes</code></em>,
+                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> seconds</code></em>,
+                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> frames</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-video-time-code-interval-new.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>hours</p></td>
+<td class="parameter_description"><p>the hours field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>minutes</p></td>
+<td class="parameter_description"><p>the minutes field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>seconds</p></td>
+<td class="parameter_description"><p>the seconds field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>frames</p></td>
+<td class="parameter_description"><p>the frames field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-time-code-interval-new.returns"></a><h4>Returns</h4>
+<p> a new <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a> with the given values.</p>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-time-code-interval-new-from-string"></a><h3>gst_video_time_code_interval_new_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="returnvalue">GstVideoTimeCodeInterval</span></a> *
+gst_video_time_code_interval_new_from_string
+                               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *tc_inter_str</code></em>);</pre>
+<p><em class="parameter"><code>tc_inter_str</code></em>
+ must only have ":" as separators.</p>
+<div class="refsect3">
+<a name="gst-video-time-code-interval-new-from-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>tc_inter_str</p></td>
+<td class="parameter_description"><p>The string that represents the <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-time-code-interval-new-from-string.returns"></a><h4>Returns</h4>
+<p> a new <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a> from the given string</p>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-time-code-interval-init"></a><h3>gst_video_time_code_interval_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_video_time_code_interval_init (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a> *tc</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> hours</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> minutes</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> seconds</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> frames</code></em>);</pre>
+<p>Initializes <em class="parameter"><code>tc</code></em>
+ with the given values.</p>
+<div class="refsect3">
+<a name="gst-video-time-code-interval-init.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>tc</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>hours</p></td>
+<td class="parameter_description"><p>the hours field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>minutes</p></td>
+<td class="parameter_description"><p>the minutes field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>seconds</p></td>
+<td class="parameter_description"><p>the seconds field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>frames</p></td>
+<td class="parameter_description"><p>the frames field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-time-code-interval-clear"></a><h3>gst_video_time_code_interval_clear ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_video_time_code_interval_clear (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a> *tc</code></em>);</pre>
+<p>Initializes <em class="parameter"><code>tc</code></em>
+ with empty/zero/NULL values.</p>
+<div class="refsect3">
+<a name="gst-video-time-code-interval-clear.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>tc</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-time-code-interval-copy"></a><h3>gst_video_time_code_interval_copy ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="returnvalue">GstVideoTimeCodeInterval</span></a> *
+gst_video_time_code_interval_copy (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a> *tc</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-video-time-code-interval-copy.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>tc</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-time-code-interval-copy.returns"></a><h4>Returns</h4>
+<p> a new <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a> with the same values as <em class="parameter"><code>tc</code></em>
+.</p>
+</div>
+<p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-time-code-interval-free"></a><h3>gst_video_time_code_interval_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_video_time_code_interval_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a> *tc</code></em>);</pre>
+<p>Frees <em class="parameter"><code>tc</code></em>
+ .</p>
+<div class="refsect3">
+<a name="gst-video-time-code-interval-free.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>tc</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
 </div>
 </div>
 <div class="refsect1">
@@ -6622,6 +7483,36 @@ non-linear RGB (R'G'B')</p></td>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-VIDEO-COLORIMETRY-BT2020:CAPS"></a><h3>GST_VIDEO_COLORIMETRY_BT2020</h3>
+<pre class="programlisting">#define GST_VIDEO_COLORIMETRY_BT2020      "bt2020"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-COLORIMETRY-BT601:CAPS"></a><h3>GST_VIDEO_COLORIMETRY_BT601</h3>
+<pre class="programlisting">#define GST_VIDEO_COLORIMETRY_BT601       "bt601"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-COLORIMETRY-BT709:CAPS"></a><h3>GST_VIDEO_COLORIMETRY_BT709</h3>
+<pre class="programlisting">#define GST_VIDEO_COLORIMETRY_BT709       "bt709"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-COLORIMETRY-SMPTE240M:CAPS"></a><h3>GST_VIDEO_COLORIMETRY_SMPTE240M</h3>
+<pre class="programlisting">#define GST_VIDEO_COLORIMETRY_SMPTE240M   "smpte240m"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-COLORIMETRY-SRGB:CAPS"></a><h3>GST_VIDEO_COLORIMETRY_SRGB</h3>
+<pre class="programlisting">#define GST_VIDEO_COLORIMETRY_SRGB        "sRGB"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstVideoInfo"></a><h3>struct GstVideoInfo</h3>
 <pre class="programlisting">struct GstVideoInfo {
   const GstVideoFormatInfo *finfo;
@@ -7347,6 +8238,41 @@ indentify the frame in case of multiview video.</p></td>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GstVideoFrameMapFlags"></a><h3>enum GstVideoFrameMapFlags</h3>
+<p>Additional mapping flags for <a class="link" href="gst-plugins-base-libs-gstvideo.html#gst-video-frame-map" title="gst_video_frame_map ()"><code class="function">gst_video_frame_map()</code></a>.</p>
+<div class="refsect3">
+<a name="GstVideoFrameMapFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-FRAME-MAP-FLAG-NO-REF:CAPS"></a>GST_VIDEO_FRAME_MAP_FLAG_NO_REF</p></td>
+<td class="enum_member_description">
+<p>Don't take another reference of the buffer and store it in
+                                   the GstVideoFrame. This makes sure that the buffer stays
+                                   writable while the frame is mapped, but requires that the
+                                   buffer reference stays valid until the frame is unmapped again.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-FRAME-MAP-FLAG-LAST:CAPS"></a>GST_VIDEO_FRAME_MAP_FLAG_LAST</p></td>
+<td class="enum_member_description">
+<p>Offset to define more flags</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstVideoBufferFlags"></a><h3>enum GstVideoBufferFlags</h3>
 <p>Additional video buffer flags. These flags can potentially be used on any
 buffers carrying video data - even encoded data.</p>
@@ -7491,6 +8417,391 @@ They can conflict with other extended buffer flags.</p>
 <div class="refsect2">
 <a name="GstVideoConverter"></a><h3>GstVideoConverter</h3>
 <pre class="programlisting">typedef struct _GstVideoConverter GstVideoConverter;</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoAlphaMode"></a><h3>enum GstVideoAlphaMode</h3>
+<p>Different alpha modes.</p>
+<div class="refsect3">
+<a name="GstVideoAlphaMode.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-ALPHA-MODE-COPY:CAPS"></a>GST_VIDEO_ALPHA_MODE_COPY</p></td>
+<td class="enum_member_description">
+<p>When input and output have alpha, it will be copied.
+        When the input has no alpha, alpha will be set to
+        <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-ALPHA-VALUE:CAPS" title="GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE"><span class="type">GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE</span></a></p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-ALPHA-MODE-SET:CAPS"></a>GST_VIDEO_ALPHA_MODE_SET</p></td>
+<td class="enum_member_description">
+<p>set all alpha to
+   <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-ALPHA-VALUE:CAPS" title="GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE"><span class="type">GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE</span></a></p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-ALPHA-MODE-MULT:CAPS"></a>GST_VIDEO_ALPHA_MODE_MULT</p></td>
+<td class="enum_member_description">
+<p>multiply all alpha with
+        <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-ALPHA-VALUE:CAPS" title="GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE"><span class="type">GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE</span></a>.
+        When the input format has no alpha but the output format has, the
+        alpha value will be set to <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-ALPHA-VALUE:CAPS" title="GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE"><span class="type">GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE</span></a></p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoChromaMode"></a><h3>enum GstVideoChromaMode</h3>
+<p>Different chroma downsampling and upsampling modes</p>
+<div class="refsect3">
+<a name="GstVideoChromaMode.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-CHROMA-MODE-FULL:CAPS"></a>GST_VIDEO_CHROMA_MODE_FULL</p></td>
+<td class="enum_member_description">
+<p>do full chroma up and down sampling</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-CHROMA-MODE-UPSAMPLE-ONLY:CAPS"></a>GST_VIDEO_CHROMA_MODE_UPSAMPLE_ONLY</p></td>
+<td class="enum_member_description">
+<p>only perform chroma upsampling</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-CHROMA-MODE-DOWNSAMPLE-ONLY:CAPS"></a>GST_VIDEO_CHROMA_MODE_DOWNSAMPLE_ONLY</p></td>
+<td class="enum_member_description">
+<p>only perform chroma downsampling</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-CHROMA-MODE-NONE:CAPS"></a>GST_VIDEO_CHROMA_MODE_NONE</p></td>
+<td class="enum_member_description">
+<p>disable chroma resampling</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoGammaMode"></a><h3>enum GstVideoGammaMode</h3>
+<div class="refsect3">
+<a name="GstVideoGammaMode.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-GAMMA-MODE-NONE:CAPS"></a>GST_VIDEO_GAMMA_MODE_NONE</p></td>
+<td class="enum_member_description">
+<p>disable gamma handling</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-GAMMA-MODE-REMAP:CAPS"></a>GST_VIDEO_GAMMA_MODE_REMAP</p></td>
+<td class="enum_member_description">
+<p>convert between input and output gamma
+Different gamma conversion modes</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoMatrixMode"></a><h3>enum GstVideoMatrixMode</h3>
+<p>Different color matrix conversion modes</p>
+<div class="refsect3">
+<a name="GstVideoMatrixMode.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-MATRIX-MODE-FULL:CAPS"></a>GST_VIDEO_MATRIX_MODE_FULL</p></td>
+<td class="enum_member_description">
+<p>do conversion between color matrices</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-MATRIX-MODE-INPUT-ONLY:CAPS"></a>GST_VIDEO_MATRIX_MODE_INPUT_ONLY</p></td>
+<td class="enum_member_description">
+<p>use the input color matrix to convert
+  to and from R'G'B</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-MATRIX-MODE-OUTPUT-ONLY:CAPS"></a>GST_VIDEO_MATRIX_MODE_OUTPUT_ONLY</p></td>
+<td class="enum_member_description">
+<p>use the output color matrix to convert
+  to and from R'G'B</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-MATRIX-MODE-NONE:CAPS"></a>GST_VIDEO_MATRIX_MODE_NONE</p></td>
+<td class="enum_member_description">
+<p>disable color matrix conversion.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoPrimariesMode"></a><h3>enum GstVideoPrimariesMode</h3>
+<p>Different primaries conversion modes</p>
+<div class="refsect3">
+<a name="GstVideoPrimariesMode.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-PRIMARIES-MODE-NONE:CAPS"></a>GST_VIDEO_PRIMARIES_MODE_NONE</p></td>
+<td class="enum_member_description">
+<p>disable conversion between primaries</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-PRIMARIES-MODE-MERGE-ONLY:CAPS"></a>GST_VIDEO_PRIMARIES_MODE_MERGE_ONLY</p></td>
+<td class="enum_member_description">
+<p>do conversion between primaries only
+  when it can be merged with color matrix conversion.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-VIDEO-PRIMARIES-MODE-FAST:CAPS"></a>GST_VIDEO_PRIMARIES_MODE_FAST</p></td>
+<td class="enum_member_description">
+<p>fast conversion between primaries</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.6</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-ALPHA-MODE:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_ALPHA_MODE</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_ALPHA_MODE   "GstVideoConverter.alpha-mode"
+</pre>
+<p><span class="type">GST_TYPE_VIDEO_ALPHA_MODE</span>, the alpha mode to use.
+Default is <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-ALPHA-MODE-COPY:CAPS"><span class="type">GST_VIDEO_ALPHA_MODE_COPY</span></a>.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-ALPHA-VALUE:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE   "GstVideoConverter.alpha-value"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-DOUBLE:CAPS"><span class="type">G_TYPE_DOUBLE</span></a>, the alpha color value to use.
+Default to 1.0</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-BORDER-ARGB:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_BORDER_ARGB</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_BORDER_ARGB   "GstVideoConverter.border-argb"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, the border color to use if <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-FILL-BORDER:CAPS" title="GST_VIDEO_CONVERTER_OPT_FILL_BORDER"><span class="type">GST_VIDEO_CONVERTER_OPT_FILL_BORDER</span></a>
+is set to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>. The color is in ARGB format.
+Default 0xff000000</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-CHROMA-MODE:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_CHROMA_MODE</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_CHROMA_MODE   "GstVideoConverter.chroma-mode"
+</pre>
+<p><span class="type">GST_TYPE_VIDEO_CHROMA_MODE</span>, set the chroma resample mode subsampled
+formats. Default is <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CHROMA-MODE-FULL:CAPS"><span class="type">GST_VIDEO_CHROMA_MODE_FULL</span></a>.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-CHROMA-RESAMPLER-METHOD:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_CHROMA_RESAMPLER_METHOD</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_CHROMA_RESAMPLER_METHOD   "GstVideoConverter.chroma-resampler-method"
+</pre>
+<p><span class="type">GST_TYPE_RESAMPLER_METHOD</span>, The resampler method to use for
+chroma resampling. Other options for the resampler can be used, see
+the <span class="type">GstResampler</span>. Default is <span class="type">GST_RESAMPLER_METHOD_LINEAR</span></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-DEST-HEIGHT:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_DEST_HEIGHT</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_DEST_HEIGHT   "GstVideoConverter.dest-height"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-INT:CAPS"><span class="type">G_TYPE_INT</span></a>, height in the destination frame, default destination height</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-DEST-WIDTH:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_DEST_WIDTH</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_DEST_WIDTH   "GstVideoConverter.dest-width"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-INT:CAPS"><span class="type">G_TYPE_INT</span></a>, width in the destination frame, default destination width</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-DEST-X:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_DEST_X</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_DEST_X   "GstVideoConverter.dest-x"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-INT:CAPS"><span class="type">G_TYPE_INT</span></a>, x position in the destination frame, default 0</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-DEST-Y:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_DEST_Y</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_DEST_Y   "GstVideoConverter.dest-y"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-INT:CAPS"><span class="type">G_TYPE_INT</span></a>, y position in the destination frame, default 0</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-DITHER-METHOD:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_DITHER_METHOD</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_DITHER_METHOD   "GstVideoConverter.dither-method"
+</pre>
+<p><span class="type">GST_TYPE_VIDEO_DITHER_METHOD</span>, The dither method to use when
+changing bit depth.
+Default is <a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GST-VIDEO-DITHER-BAYER:CAPS"><span class="type">GST_VIDEO_DITHER_BAYER</span></a>.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-DITHER-QUANTIZATION:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_DITHER_QUANTIZATION</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_DITHER_QUANTIZATION   "GstVideoConverter.dither-quantization"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, The quantization amount to dither to. Components will be
+quantized to multiples of this value.
+Default is 1</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-FILL-BORDER:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_FILL_BORDER</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_FILL_BORDER   "GstVideoConverter.fill-border"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-BOOLEAN:CAPS"><span class="type">G_TYPE_BOOLEAN</span></a>, if the destination rectangle does not fill the complete
+destination image, render a border with
+<a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-CONVERTER-OPT-BORDER-ARGB:CAPS" title="GST_VIDEO_CONVERTER_OPT_BORDER_ARGB"><span class="type">GST_VIDEO_CONVERTER_OPT_BORDER_ARGB</span></a>. Otherwise the unusded pixels in the
+destination are untouched. Default <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-GAMMA-MODE:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_GAMMA_MODE</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_GAMMA_MODE   "GstVideoConverter.gamma-mode"
+</pre>
+<p><span class="type">GST_TYPE_VIDEO_GAMMA_MODE</span>, set the gamma mode.
+Default is <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-GAMMA-MODE-NONE:CAPS"><span class="type">GST_VIDEO_GAMMA_MODE_NONE</span></a>.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-MATRIX-MODE:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_MATRIX_MODE</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_MATRIX_MODE   "GstVideoConverter.matrix-mode"
+</pre>
+<p><span class="type">GST_TYPE_VIDEO_MATRIX_MODE</span>, set the color matrix conversion mode for
+converting between Y'PbPr and non-linear RGB (R'G'B').
+Default is <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-MATRIX-MODE-FULL:CAPS"><span class="type">GST_VIDEO_MATRIX_MODE_FULL</span></a>.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-PRIMARIES-MODE:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_PRIMARIES_MODE</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_PRIMARIES_MODE   "GstVideoConverter.primaries-mode"
+</pre>
+<p><span class="type">GST_TYPE_VIDEO_PRIMARIES_MODE</span>, set the primaries conversion mode.
+Default is <a class="link" href="gst-plugins-base-libs-gstvideo.html#GST-VIDEO-PRIMARIES-MODE-NONE:CAPS"><span class="type">GST_VIDEO_PRIMARIES_MODE_NONE</span></a>.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-RESAMPLER-METHOD:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_RESAMPLER_METHOD</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_RESAMPLER_METHOD   "GstVideoConverter.resampler-method"
+</pre>
+<p><span class="type">GST_TYPE_RESAMPLER_METHOD</span>, The resampler method to use for
+resampling. Other options for the resampler can be used, see
+the <span class="type">GstResampler</span>. Default is <span class="type">GST_RESAMPLER_METHOD_CUBIC</span></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-RESAMPLER-TAPS:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_RESAMPLER_TAPS</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_RESAMPLER_TAPS   "GstVideoConverter.resampler-taps"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-UINT:CAPS"><span class="type">G_TYPE_UINT</span></a>, The number of taps for the resampler.
+Default is 0: let the resampler choose a good value.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-SRC-HEIGHT:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_SRC_HEIGHT</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_SRC_HEIGHT   "GstVideoConverter.src-height"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-INT:CAPS"><span class="type">G_TYPE_INT</span></a>, source height to convert, default source height</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-SRC-WIDTH:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_SRC_WIDTH</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_SRC_WIDTH   "GstVideoConverter.src-width"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-INT:CAPS"><span class="type">G_TYPE_INT</span></a>, source width to convert, default source width</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-SRC-X:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_SRC_X</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_SRC_X   "GstVideoConverter.src-x"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-INT:CAPS"><span class="type">G_TYPE_INT</span></a>, source x position to start conversion, default 0</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-CONVERTER-OPT-SRC-Y:CAPS"></a><h3>GST_VIDEO_CONVERTER_OPT_SRC_Y</h3>
+<pre class="programlisting">#define GST_VIDEO_CONVERTER_OPT_SRC_Y   "GstVideoConverter.src-y"
+</pre>
+<p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#G-TYPE-INT:CAPS"><span class="type">G_TYPE_INT</span></a>, source y position to start conversion, default 0</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-MULTIVIEW-MAX-FRAME-PACKING:CAPS"></a><h3>GST_VIDEO_MULTIVIEW_MAX_FRAME_PACKING</h3>
+<pre class="programlisting">#define GST_VIDEO_MULTIVIEW_MAX_FRAME_PACKING GST_VIDEO_MULTIVIEW_FRAME_PACKING_CHECKERBOARD
+</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -7648,6 +8959,52 @@ For drop frame, only 30000/1001 and 60000/1001 frame rates are supported.</p>
 </table></div>
 </div>
 <p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoTimeCodeInterval"></a><h3>struct GstVideoTimeCodeInterval</h3>
+<pre class="programlisting">struct GstVideoTimeCodeInterval {
+  guint hours;
+  guint minutes;
+  guint seconds;
+  guint frames;
+};
+</pre>
+<p>A representation of a difference between two <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCode" title="struct GstVideoTimeCode"><span class="type">GstVideoTimeCode</span></a> instances.
+Will not necessarily correspond to a real timecode (e.g. 00:00:10;00)</p>
+<div class="refsect3">
+<a name="GstVideoTimeCodeInterval.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstVideoTimeCodeInterval.hours"></a>hours</code></em>;</p></td>
+<td class="struct_member_description"><p>the hours field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstVideoTimeCodeInterval.minutes"></a>minutes</code></em>;</p></td>
+<td class="struct_member_description"><p>the minutes field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstVideoTimeCodeInterval.seconds"></a>seconds</code></em>;</p></td>
+<td class="struct_member_description"><p>the seconds field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstVideoTimeCodeInterval.frames"></a>frames</code></em>;</p></td>
+<td class="struct_member_description"><p>the frames field of <a class="link" href="gst-plugins-base-libs-gstvideo.html#GstVideoTimeCodeInterval" title="struct GstVideoTimeCodeInterval"><span class="type">GstVideoTimeCodeInterval</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.12</p>
 </div>
 </div>
 </div>

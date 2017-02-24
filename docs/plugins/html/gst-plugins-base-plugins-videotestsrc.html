@@ -132,6 +132,21 @@
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--yoffset" title="The “yoffset” property">yoffset</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><span class="type">GstVideoTestSrcAnimationMode</span></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--animation-mode" title="The “animation-mode” property">animation-mode</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--flip" title="The “flip” property">flip</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><span class="type">GstVideoTestSrcMotionType</span></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--motion" title="The “motion” property">motion</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -612,6 +627,30 @@ patterns.  Default is white (0xffffffff).</p>
 <p>Zoneplate 2nd order products y offset.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: 0</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoTestSrc--animation-mode"></a><h3>The <code class="literal">“animation-mode”</code> property</h3>
+<pre class="programlisting">  “animation-mode”           <span class="type">GstVideoTestSrcAnimationMode</span></pre>
+<p>For pattern=ball, which counter defines the position of the ball.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: frame count</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoTestSrc--flip"></a><h3>The <code class="literal">“flip”</code> property</h3>
+<pre class="programlisting">  “flip”                     <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>For pattern=ball, invert colors every second.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoTestSrc--motion"></a><h3>The <code class="literal">“motion”</code> property</h3>
+<pre class="programlisting">  “motion”                   <span class="type">GstVideoTestSrcMotionType</span></pre>
+<p>For pattern=ball, what motion the ball does.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: Ball waves back and forth, up and down</p>
 </div>
 </div>
 </div>
