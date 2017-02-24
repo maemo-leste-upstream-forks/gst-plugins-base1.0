@@ -429,6 +429,7 @@
     <keyword type="property" name="The “gamma-mode” property" link="gst-plugins-base-plugins-videoconvert.html#GstVideoConvert--gamma-mode"/>
     <keyword type="property" name="The “matrix-mode” property" link="gst-plugins-base-plugins-videoconvert.html#GstVideoConvert--matrix-mode"/>
     <keyword type="property" name="The “primaries-mode” property" link="gst-plugins-base-plugins-videoconvert.html#GstVideoConvert--primaries-mode"/>
+    <keyword type="property" name="The “n-threads” property" link="gst-plugins-base-plugins-videoconvert.html#GstVideoConvert--n-threads"/>
     <keyword type="struct" name="struct GstVideoRate" link="gst-plugins-base-plugins-videorate.html#GstVideoRate-struct"/>
     <keyword type="property" name="The “average-period” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--average-period"/>
     <keyword type="property" name="The “drop” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--drop"/>
@@ -450,6 +451,7 @@
     <keyword type="property" name="The “sharpen” property" link="gst-plugins-base-plugins-videoscale.html#GstVideoScale--sharpen"/>
     <keyword type="property" name="The “sharpness” property" link="gst-plugins-base-plugins-videoscale.html#GstVideoScale--sharpness"/>
     <keyword type="property" name="The “gamma-decode” property" link="gst-plugins-base-plugins-videoscale.html#GstVideoScale--gamma-decode"/>
+    <keyword type="property" name="The “n-threads” property" link="gst-plugins-base-plugins-videoscale.html#GstVideoScale--n-threads"/>
     <keyword type="struct" name="struct GstVideoTestSrc" link="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc-struct"/>
     <keyword type="enum" name="enum GstVideoTestSrcPattern" link="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrcPattern"/>
     <keyword type="property" name="The “background-color” property" link="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--background-color"/>
@@ -470,6 +472,9 @@
     <keyword type="property" name="The “timestamp-offset” property" link="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--timestamp-offset"/>
     <keyword type="property" name="The “xoffset” property" link="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--xoffset"/>
     <keyword type="property" name="The “yoffset” property" link="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--yoffset"/>
+    <keyword type="property" name="The “animation-mode” property" link="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--animation-mode"/>
+    <keyword type="property" name="The “flip” property" link="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--flip"/>
+    <keyword type="property" name="The “motion” property" link="gst-plugins-base-plugins-videotestsrc.html#GstVideoTestSrc--motion"/>
     <keyword type="struct" name="struct GstVolume" link="gst-plugins-base-plugins-volume.html#GstVolume-struct"/>
     <keyword type="property" name="The “mute” property" link="gst-plugins-base-plugins-volume.html#GstVolume--mute"/>
     <keyword type="property" name="The “volume” property" link="gst-plugins-base-plugins-volume.html#GstVolume--volume"/>

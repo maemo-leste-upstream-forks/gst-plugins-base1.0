@@ -446,6 +446,14 @@
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-gstrtpbuffer.html#GST-RTP-BUFFER-INIT:CAPS" title="GST_RTP_BUFFER_INIT">GST_RTP_BUFFER_INIT</a></td>
 </tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstrtpbuffer.html#GstRTPBufferFlags" title="enum GstRTPBufferFlags">GstRTPBufferFlags</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-gstrtpbuffer.html#GstRTPBufferMapFlags" title="enum GstRTPBufferMapFlags">GstRTPBufferMapFlags</a></td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -2312,6 +2320,76 @@ The size of the structure is made public to allow stack allocations.</p>
 <div class="refsect2">
 <a name="GST-RTP-BUFFER-INIT:CAPS"></a><h3>GST_RTP_BUFFER_INIT</h3>
 <pre class="programlisting">#define             GST_RTP_BUFFER_INIT</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstRTPBufferFlags"></a><h3>enum GstRTPBufferFlags</h3>
+<p>Additional RTP buffer flags. These flags can potentially be used on any
+buffers carrying RTP packets.</p>
+<p>Note that these are only valid for <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> of type: application/x-rtp (x-rtcp).
+They can conflict with other extended buffer flags.</p>
+<div class="refsect3">
+<a name="GstRTPBufferFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-RTP-BUFFER-FLAG-RETRANSMISSION:CAPS"></a>GST_RTP_BUFFER_FLAG_RETRANSMISSION</p></td>
+<td class="enum_member_description">
+<p>The <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> was once wrapped
+          in a retransmitted packet as specified by RFC 4588.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-RTP-BUFFER-FLAG-LAST:CAPS"></a>GST_RTP_BUFFER_FLAG_LAST</p></td>
+<td class="enum_member_description">
+<p>Offset to define more flags.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstRTPBufferMapFlags"></a><h3>enum GstRTPBufferMapFlags</h3>
+<p>Additional mapping flags for <a class="link" href="gst-plugins-base-libs-gstrtpbuffer.html#gst-rtp-buffer-map" title="gst_rtp_buffer_map ()"><code class="function">gst_rtp_buffer_map()</code></a>.</p>
+<div class="refsect3">
+<a name="GstRTPBufferMapFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-RTP-BUFFER-MAP-FLAG-SKIP-PADDING:CAPS"></a>GST_RTP_BUFFER_MAP_FLAG_SKIP_PADDING</p></td>
+<td class="enum_member_description">
+<p>Skip mapping and validation of RTP
+          padding and RTP pad count when present. Useful for buffers where
+          the padding may be encrypted.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-RTP-BUFFER-MAP-FLAG-LAST:CAPS"></a>GST_RTP_BUFFER_MAP_FLAG_LAST</p></td>
+<td class="enum_member_description">
+<p>Offset to define more flags</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: 1.6.1</p>
 </div>
 </div>
 <div class="refsect1">
