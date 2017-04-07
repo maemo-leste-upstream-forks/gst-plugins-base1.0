@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-audio.html" title="Audio Library">
-<link rel="prev" href="gst-plugins-base-libs-gstaudiochannels.html" title="gstaudiochannels">
+<link rel="prev" href="gst-plugins-base-libs-Audio-channels.html" title="Audio-channels">
 <link rel="next" href="gst-plugins-base-libs-GstAudioQuantize.html" title="GstAudioQuantize">
 <meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -19,7 +19,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-audio.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gst-plugins-base-libs-gstaudiochannels.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gst-plugins-base-libs-Audio-channels.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="gst-plugins-base-libs-GstAudioQuantize.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -166,8 +166,8 @@
 <a name="gst-audio-converter-new"></a><h3>gst_audio_converter_new ()</h3>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudioConverter.html#GstAudioConverter" title="GstAudioConverter"><span class="returnvalue">GstAudioConverter</span></a> *
 gst_audio_converter_new (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudioConverter.html#GstAudioConverterFlags" title="enum GstAudioConverterFlags"><span class="type">GstAudioConverterFlags</span></a> flags</code></em>,
-                         <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *in_info</code></em>,
-                         <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *out_info</code></em>,
+                         <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *in_info</code></em>,
+                         <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *out_info</code></em>,
                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *config</code></em>);</pre>
 <p>Create a new <a class="link" href="gst-plugins-base-libs-GstAudioConverter.html#GstAudioConverter" title="GstAudioConverter"><span class="type">GstAudioConverter</span></a> that is able to convert between <em class="parameter"><code>in</code></em>
  and <em class="parameter"><code>out</code></em>
@@ -193,12 +193,12 @@ parameters for details about the options and values.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>in_info</p></td>
-<td class="parameter_description"><p>a source <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a source <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>out_info</p></td>
-<td class="parameter_description"><p>a destination <a class="link" href="gst-plugins-base-libs-gstaudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a destination <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>

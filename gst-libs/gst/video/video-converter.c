@@ -39,27 +39,17 @@
 
 /**
  * SECTION:videoconverter
+ * @title: GstVideoConverter
  * @short_description: Generic video conversion
  *
- * <refsect2>
- * <para>
  * This object is used to convert video frames from one format to another.
  * The object can perform conversion of:
- * <itemizedlist>
- *  <listitem><para>
- *    video format
- *  </para></listitem>
- *  <listitem><para>
- *    video colorspace
- *  </para></listitem>
- *  <listitem><para>
- *    chroma-siting
- *  </para></listitem>
- *  <listitem><para>
- *    video size
- *  </para></listitem>
- * </para>
- * </refsect2>
+ *
+ *  * video format
+ *  * video colorspace
+ *  * chroma-siting
+ *  * video size
+ *
  */
 
 /*
@@ -5812,6 +5802,7 @@ get_scale_format (GstVideoFormat format, gint plane)
     case GST_VIDEO_FORMAT_YUV9:
     case GST_VIDEO_FORMAT_YVU9:
     case GST_VIDEO_FORMAT_GBR:
+    case GST_VIDEO_FORMAT_GBRA:
       res = GST_VIDEO_FORMAT_GRAY8;
       break;
     case GST_VIDEO_FORMAT_GRAY16_BE:
@@ -5866,8 +5857,20 @@ get_scale_format (GstVideoFormat format, gint plane)
     case GST_VIDEO_FORMAT_I422_10LE:
     case GST_VIDEO_FORMAT_Y444_10BE:
     case GST_VIDEO_FORMAT_Y444_10LE:
+    case GST_VIDEO_FORMAT_I420_12BE:
+    case GST_VIDEO_FORMAT_I420_12LE:
+    case GST_VIDEO_FORMAT_I422_12BE:
+    case GST_VIDEO_FORMAT_I422_12LE:
+    case GST_VIDEO_FORMAT_Y444_12BE:
+    case GST_VIDEO_FORMAT_Y444_12LE:
     case GST_VIDEO_FORMAT_GBR_10BE:
     case GST_VIDEO_FORMAT_GBR_10LE:
+    case GST_VIDEO_FORMAT_GBRA_10BE:
+    case GST_VIDEO_FORMAT_GBRA_10LE:
+    case GST_VIDEO_FORMAT_GBR_12BE:
+    case GST_VIDEO_FORMAT_GBR_12LE:
+    case GST_VIDEO_FORMAT_GBRA_12BE:
+    case GST_VIDEO_FORMAT_GBRA_12LE:
     case GST_VIDEO_FORMAT_NV12_64Z32:
     case GST_VIDEO_FORMAT_A420_10BE:
     case GST_VIDEO_FORMAT_A420_10LE:
@@ -5907,7 +5910,7 @@ setup_scale (GstVideoConverter * convert)
   GstVideoInfo *in_info, *out_info;
   const GstVideoFormatInfo *in_finfo, *out_finfo;
   GstVideoFormat in_format, out_format;
-  guint n_threads = g_get_num_processors ();
+  guint n_threads = convert->conversion_runner->n_threads;
 
   in_info = &convert->in_info;
   out_info = &convert->out_info;
