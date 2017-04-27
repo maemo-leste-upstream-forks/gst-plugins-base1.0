@@ -1,3 +1,9 @@
+gst-plugins-base1.0 (1.11.91-1) experimental; urgency=medium
+
+  * New upstream release canditate
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 27 Apr 2017 16:52:14 +0300
+
 gst-plugins-base1.0 (1.11.90-1) experimental; urgency=medium
 
   * New upstream release candidate.
