@@ -1,291 +1,288 @@
-# English (British) translation.
-# Copyright (C) 2004 Free Software Foundation, Inc.
-# Gareth Owen <gowen72@yahoo.com>, 2004.
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# Fabio Tomat <f.t.public@gmail.com>, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins 0.8.1\n"
+"Project-Id-Version: gst-plugins-base 1.10.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
 "POT-Creation-Date: 2017-04-27 15:49+0300\n"
-"PO-Revision-Date: 2004-04-26 10:41-0400\n"
-"Last-Translator: Gareth Owen <gowen72@yahoo.com>\n"
-"Language-Team: English (British) <en_gb@li.org>\n"
-"Language: en_GB\n"
+"PO-Revision-Date: 2017-02-20 15:34+0100\n"
+"Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
+"Language-Team: Friulian <f.t.public@gmail.com>\n"
+"Language: fur\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"X-Generator: Poedit 1.8.11\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#, fuzzy
 msgid "Could not open device for playback in mono mode."
-msgstr "Could not open CD device for reading."
+msgstr "Impussibil vierzi il dispositîf pe riproduzion in modalitât mono."
 
-#, fuzzy
 msgid "Could not open device for playback in stereo mode."
-msgstr "Could not open CD device for reading."
+msgstr "Impussibil vierzi il dispositîf pe riproduzion in modalitât stereo."
 
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open device for playback in %d-channel mode."
-msgstr "Could not open CD device for reading."
+msgstr "Impussibil vierzi il dispositîf pe riproduzion in modalitât %d-canâi."
 
 msgid ""
 "Could not open audio device for playback. Device is being used by another "
 "application."
 msgstr ""
+"Impussibil vierzi il dispositîf audio pe riproduzion. Il dispositîf al è "
+"doprât di une altre aplicazion."
 
-#, fuzzy
 msgid "Could not open audio device for playback."
-msgstr "Could not open audio device \"%s\" for writing."
+msgstr "Impussibil vierzi il dispositîf audio pe riproduzion."
 
 msgid "Error outputting to audio device. The device has been disconnected."
-msgstr ""
+msgstr "Erôr tal butâ tal dispositîf audio. Il dispositîf al è stât distacât."
 
-#, fuzzy
 msgid "Could not open device for recording in mono mode."
-msgstr "Could not open CD device for reading."
+msgstr ""
+"Impussibil vierzi il dispositîf audio pe regjistrazion in modalitât mono."
 
-#, fuzzy
 msgid "Could not open device for recording in stereo mode."
-msgstr "Could not open CD device for reading."
+msgstr ""
+"Impussibil vierzi il dispositîf audio pe regjistrazion in modalitât stereo."
 
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open device for recording in %d-channel mode"
-msgstr "Could not open CD device for reading."
+msgstr "Impussibil vierzi il dispositîf pe regjistrazion in modalitât %d-canâi"
 
-#, fuzzy
 msgid ""
 "Could not open audio device for recording. Device is being used by another "
 "application."
-msgstr "Could not open device \"%s\" for reading and writing."
+msgstr ""
+"Impussibil vierzi il dispositîf audio pe regjistrazion. Il dispositîf al è "
+"doprât di une altre aplicazion."
 
-#, fuzzy
 msgid "Could not open audio device for recording."
-msgstr "Could not open CD device for reading."
+msgstr "Impussibil vierzi il dispositîf audio pe regjistrazion."
 
 msgid "Error recording from audio device. The device has been disconnected."
 msgstr ""
+"Erôr tal regjistrâ dal dispositîf audio. Il dispositîf al è stât distacât."
 
 msgid "Could not open CD device for reading."
-msgstr "Could not open CD device for reading."
+msgstr "Impussibil vierzi il dispositîf CD par lei."
 
-#, fuzzy
 msgid "Could not seek CD."
-msgstr "Could not close vfs file \"%s\"."
+msgstr "Impussibil cirî tal CD."
 
-#, fuzzy
 msgid "Could not read CD."
-msgstr "Could not write to device \"%s\"."
+msgstr "Impussibil lei il CD."
 
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
-msgstr ""
+msgstr "Al mancje l'element '%s' - controlâ la instalazion di GStreamer."
 
-#, fuzzy
 msgid "Could not determine type of stream"
-msgstr "Could not write to file \"%s\"."
+msgstr "Impussibil determinâ il gjenar di flus"
 
 msgid "This appears to be a text file"
-msgstr ""
+msgstr "Chest al semee jessi un file di test"
 
-#, fuzzy
 msgid "Could not create \"uridecodebin\" element."
-msgstr "Could not write to file \"%s\"."
+msgstr "Impussibil creâ l'element \"uridecodebin\"."
 
-#, fuzzy
 msgid "Could not create \"decodebin3\" element."
-msgstr "Could not write to file \"%s\"."
+msgstr "Impussibil creâ l'element \"decodebin3\"."
 
-#, fuzzy
 msgid "Could not create \"urisourcebin\" element."
-msgstr "Could not write to file \"%s\"."
+msgstr "Impussibil creâ l'element \"urisourcebin\"."
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
-msgstr ""
+msgstr "Ducj i dôi i elements autovideosink e %s a mancjin."
 
 msgid "The autovideosink element is missing."
-msgstr ""
+msgstr "L'element autovideosink al mancje."
 
 #, c-format
 msgid "Configured videosink %s is not working."
-msgstr ""
+msgstr "Il videosink %s configurât nol funzione."
 
 #, c-format
 msgid "Both autovideosink and %s elements are not working."
-msgstr ""
+msgstr "Ducj i dôi i elements autovideosink e %s no funzionin."
 
 msgid "The autovideosink element is not working."
-msgstr ""
+msgstr "L'element autovideosink nol funzione."
 
 msgid "Custom text sink element is not usable."
-msgstr ""
+msgstr "L'element sink di test personalizât no si pues doprâ."
 
 msgid "No volume control found"
-msgstr ""
+msgstr "Nissun control di volum cjatât"
 
 #, c-format
 msgid "Both autoaudiosink and %s elements are missing."
-msgstr ""
+msgstr "Ducj i dôi i elements autoaudiosink e %s a mancjin."
 
 msgid "The autoaudiosink element is missing."
-msgstr ""
+msgstr "L'element autoaudiosink al mancje."
 
 #, c-format
 msgid "Configured audiosink %s is not working."
-msgstr ""
+msgstr "Il audiosink %s configurât nol funzione."
 
 #, c-format
 msgid "Both autoaudiosink and %s elements are not working."
-msgstr ""
+msgstr "Ducj i dôi i elements autoaudiosink e %s no funzionin."
 
 msgid "The autoaudiosink element is not working."
-msgstr ""
+msgstr "L'element autoaudiosink nol funzione."
 
 msgid "Can't play a text file without video or visualizations."
-msgstr ""
+msgstr "Impussibil riprodusi un file di test cence video o visualizazions."
 
 #, c-format
 msgid "No decoder available for type '%s'."
-msgstr ""
+msgstr "Nissune decodifiche disponibile pal gjenar '%s'."
 
 msgid "No URI specified to play from."
-msgstr ""
+msgstr "Nissun URI specificât di dulà riprodusi."
 
 #, c-format
 msgid "Invalid URI \"%s\"."
-msgstr ""
+msgstr "URI \"%s\" no valit."
 
 msgid "This stream type cannot be played yet."
-msgstr ""
+msgstr "Chest gjenar di flus nol pues ancjemò jessi riprodot."
 
 #, c-format
 msgid "No URI handler implemented for \"%s\"."
-msgstr ""
+msgstr "Nissun gjestôr di URI implementât par \"%s\"."
 
 msgid "Source element is invalid."
-msgstr ""
+msgstr "L'element sorzint nol è valit."
 
-#, fuzzy, c-format
+#, c-format
 msgid "Error while sending data to \"%s:%d\"."
-msgstr "Error closing file \"%s\"."
+msgstr "Erôr tal inviâ dâts a \"%s:%d\"."
 
 msgid "Can't record audio fast enough"
-msgstr ""
+msgstr "Impussibil regjistrâ audio a velocitât adeguade"
 
 msgid "This CD has no audio tracks"
-msgstr ""
+msgstr "Chest CD nol à tocs audio"
 
 msgid "ID3 tag"
-msgstr ""
+msgstr "Etichete ID3"
 
 msgid "APE tag"
-msgstr ""
+msgstr "Etichete APE"
 
 msgid "ICY internet radio"
-msgstr ""
+msgstr "Radio internet ICY"
 
 msgid "Apple Lossless Audio (ALAC)"
-msgstr ""
+msgstr "Apple Lossless Audio (ALAC)"
 
 msgid "Free Lossless Audio Codec (FLAC)"
-msgstr ""
+msgstr "Free Lossless Audio Codec (FLAC)"
 
 msgid "Lossless True Audio (TTA)"
-msgstr ""
+msgstr "Lossless True Audio (TTA)"
 
 msgid "Windows Media Speech"
-msgstr ""
+msgstr "Windows Media Speech"
 
 msgid "CYUV Lossless"
-msgstr ""
+msgstr "CYUV cence pierdite"
 
 msgid "FFMpeg v1"
-msgstr ""
+msgstr "FFMpeg v1"
 
 msgid "Lossless MSZH"
-msgstr ""
+msgstr "MSZH cence pierdite"
 
 msgid "Run-length encoding"
-msgstr ""
+msgstr "Run-length encoding (RLE)"
 
 msgid "Timed Text"
-msgstr ""
+msgstr "Test a timp"
 
 msgid "Subtitle"
-msgstr ""
+msgstr "Sottitul"
 
 msgid "MPL2 subtitle format"
-msgstr ""
+msgstr "Formât sottitul MPL2"
 
 msgid "DKS subtitle format"
-msgstr ""
+msgstr "Formât sottitul DKS"
 
 msgid "QTtext subtitle format"
-msgstr ""
+msgstr "Formât sottitul QTtext"
 
 msgid "Sami subtitle format"
-msgstr ""
+msgstr "Formât sottitul Sami"
 
 msgid "TMPlayer subtitle format"
-msgstr ""
+msgstr "Formât sottitul TMPlayer"
 
 msgid "Kate subtitle format"
-msgstr ""
+msgstr "Formât sottitul Kate"
 
 msgid "WebVTT subtitle format"
-msgstr ""
+msgstr "Formât sottitul WebVTT"
 
 msgid "Uncompressed video"
-msgstr ""
+msgstr "Video cence compression"
 
 msgid "Uncompressed gray"
-msgstr ""
+msgstr "Grîs cence compression"
 
 #, c-format
 msgid "Uncompressed packed YUV %s"
-msgstr ""
+msgstr "YUV %s impachetât cence compression"
 
 #, c-format
 msgid "Uncompressed semi-planar YUV %s"
-msgstr ""
+msgstr "YUV %s semi-planâr cence compression"
 
 #, c-format
 msgid "Uncompressed planar YUV %s"
-msgstr ""
+msgstr "YUV %s planâr cence compression"
 
 #, c-format
 msgid "Uncompressed palettized %d-bit %s"
-msgstr ""
+msgstr "%d-bit %s cun palete cence compression"
 
 #, c-format
 msgid "Uncompressed %d-bit %s"
-msgstr ""
+msgstr "%d-bit %s cence compression"
 
 #, c-format
 msgid "DivX MPEG-4 Version %d"
-msgstr ""
+msgstr "MPEG-4 DivX Version %d"
 
 msgid "Uncompressed audio"
-msgstr ""
+msgstr "Audio cence compression"
 
 #, c-format
 msgid "Raw %d-bit %s audio"
-msgstr ""
+msgstr "Audio grês (raw) %d-bit %s"
 
 msgid "Audio CD source"
-msgstr ""
+msgstr "Sorzint CD audio"
 
 msgid "DVD source"
-msgstr ""
+msgstr "Sorzint DVD"
 
 msgid "Real Time Streaming Protocol (RTSP) source"
-msgstr ""
+msgstr "Sorzint RTSP (protocol di flus in timp reâl)"
 
 msgid "Microsoft Media Server (MMS) protocol source"
-msgstr ""
+msgstr "Sorzint protocol MMS (servidôr multimediâl Microsoft)"
 
 #, c-format
 msgid "%s protocol source"
-msgstr ""
+msgstr "Sorzint protocol %s"
 
 #, c-format
 msgid "%s video RTP depayloader"
@@ -325,62 +322,62 @@ msgstr ""
 
 #, c-format
 msgid "%s encoder"
-msgstr ""
+msgstr "Codificadôr %s"
 
 #, c-format
 msgid "GStreamer element %s"
-msgstr ""
+msgstr "Element GStreamer %s"
 
 msgid "Unknown source element"
-msgstr ""
+msgstr "Element sorzint no cognossût"
 
 msgid "Unknown sink element"
-msgstr ""
+msgstr "Element sink no cognossût"
 
 msgid "Unknown element"
-msgstr ""
+msgstr "Element no cognossût"
 
 msgid "Unknown decoder element"
-msgstr ""
+msgstr "Element decodificadôr no cognossût"
 
 msgid "Unknown encoder element"
-msgstr ""
+msgstr "Element codificadôr no cognossût"
 
 msgid "Plugin or element of unknown type"
-msgstr ""
+msgstr "Plugin o element di gjenar no cognossût"
 
 msgid "Failed to read tag: not enough data"
-msgstr ""
+msgstr "No si è rivâts a lei la etichete: no vonde dâts"
 
 msgid "track ID"
-msgstr ""
+msgstr "ID toc"
 
 msgid "MusicBrainz track ID"
-msgstr ""
+msgstr "ID MusicBrainz dal toc"
 
 msgid "artist ID"
-msgstr ""
+msgstr "ID artist"
 
 msgid "MusicBrainz artist ID"
-msgstr ""
+msgstr "ID MusicBrainz dal artist"
 
 msgid "album ID"
-msgstr ""
+msgstr "ID album"
 
 msgid "MusicBrainz album ID"
-msgstr ""
+msgstr "ID MusicBrainz dal album"
 
 msgid "album artist ID"
-msgstr ""
+msgstr "ID artist dal album"
 
 msgid "MusicBrainz album artist ID"
-msgstr ""
+msgstr "ID MusicBrainz dal artist dal album"
 
 msgid "track TRM ID"
-msgstr ""
+msgstr "ID TRM dal toc"
 
 msgid "MusicBrainz TRM ID"
-msgstr ""
+msgstr "ID MusicBrainz dal TRM"
 
 msgid "capturing shutter speed"
 msgstr ""
@@ -414,7 +411,7 @@ msgid "Digital zoom ratio used when capturing an image"
 msgstr ""
 
 msgid "capturing iso speed"
-msgstr ""
+msgstr "velocitât iso di cature"
 
 msgid "The ISO speed used when capturing an image"
 msgstr ""
@@ -530,74 +527,73 @@ msgid ""
 "added/removed."
 msgstr ""
 
-#, fuzzy, c-format
+#, c-format
 msgid "Volume: %.0f%%"
-msgstr "Volume"
+msgstr "Volum: %.0f%%"
 
 msgid "Buffering..."
-msgstr ""
+msgstr "Daûr a jemplâ il buffer..."
 
 msgid "Clock lost, selecting a new one\n"
-msgstr ""
+msgstr "Orloi pierdût, daûr a selezionâ un gnûf\n"
 
 msgid "Reached end of play list."
-msgstr ""
+msgstr "Si è rivâts ae fin de liste di riproduzion."
 
 msgid "Paused"
-msgstr ""
+msgstr "In pause"
 
 #, c-format
 msgid "Now playing %s\n"
-msgstr ""
+msgstr "Daûr a sunâ %s\n"
 
 #, c-format
 msgid "About to finish, preparing next title: %s"
-msgstr ""
+msgstr "Daûr a finî, si prepare il prossim titul: %s"
 
 #, c-format
 msgid "Playback rate: %.2f"
 msgstr ""
 
-#, fuzzy, c-format
+#, c-format
 msgid "Could not change playback rate to %.2f"
-msgstr "Could not open CD device for reading."
+msgstr ""
 
 msgid "space"
-msgstr ""
+msgstr "spazi"
 
 msgid "pause/unpause"
-msgstr ""
+msgstr "pause/continue"
 
 msgid "q or ESC"
-msgstr ""
+msgstr "q o ESC"
 
 msgid "quit"
-msgstr ""
+msgstr "jes"
 
 msgid "> or n"
-msgstr ""
+msgstr "> o n"
 
 msgid "play next"
 msgstr ""
 
 msgid "< or b"
-msgstr ""
+msgstr "< o b"
 
 msgid "play previous"
 msgstr ""
 
 msgid "seek forward"
-msgstr ""
+msgstr "cîr indenant"
 
 msgid "seek backward"
-msgstr ""
+msgstr "cîr indaûr"
 
-#, fuzzy
 msgid "volume up"
-msgstr "Volume"
+msgstr "alce volum"
 
 msgid "volume down"
-msgstr ""
+msgstr "sbasse volum"
 
 msgid "increase playback rate"
 msgstr ""
@@ -606,28 +602,29 @@ msgid "decrease playback rate"
 msgstr ""
 
 msgid "change playback direction"
-msgstr ""
+msgstr "cambie direzion di riproduzion"
 
 msgid "enable/disable trick modes"
-msgstr ""
+msgstr "abilite/disabilite modalitâts truc"
 
 msgid "change audio track"
-msgstr ""
+msgstr "cambie toc audio"
 
 msgid "change video track"
-msgstr ""
+msgstr "cambie toc video"
 
 msgid "change subtitle track"
-msgstr ""
+msgstr "cambie toc sottitul"
 
+#, fuzzy
 msgid "seek to beginning"
-msgstr ""
+msgstr "cîr dal inizi"
 
 msgid "show keyboard shortcuts"
-msgstr ""
+msgstr "mostre scurtis tastiere"
 
 msgid "Interactive mode - keyboard controls:"
-msgstr ""
+msgstr "modalitât interative - controi tastiere:"
 
 msgid "Output status information and property notifications"
 msgstr ""
@@ -636,219 +633,35 @@ msgid "Control playback behaviour setting playbin 'flags' property"
 msgstr ""
 
 msgid "Video sink to use (default is autovideosink)"
-msgstr ""
+msgstr "\"Sink\" video di doprâ (il predefinît al è autovideosink)"
 
 msgid "Audio sink to use (default is autoaudiosink)"
-msgstr ""
+msgstr "\"Sink\" audio di doprâ (il predefinît al è autoaudiosink)"
 
 msgid "Enable gapless playback"
-msgstr ""
+msgstr "Abilite riproduzion cence pausis"
 
 msgid "Shuffle playlist"
-msgstr ""
+msgstr "Liste di riproduzion messedade"
 
 msgid "Disable interactive control via the keyboard"
-msgstr ""
+msgstr "Disabilite control interatîf cun la tastiere"
 
 msgid "Volume"
-msgstr "Volume"
+msgstr "Volum"
 
 msgid "Playlist file containing input media files"
-msgstr ""
+msgstr "Il file de liste di riproduzion al conten file multimediâi di jentrade"
 
 msgid "Do not print any output (apart from errors)"
-msgstr ""
+msgstr "No sta a stampâ nissun output (infûr dai erôrs)"
 
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."
-msgstr ""
+msgstr "Ûs: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."
 
 msgid "You must provide at least one filename or URI to play."
-msgstr ""
+msgstr "Si scugne furnî almancul un non di file o URI par riprodusi."
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
-msgstr ""
-
-#~ msgid "Bass"
-#~ msgstr "Bass"
-
-#~ msgid "Treble"
-#~ msgstr "Treble"
-
-#~ msgid "PCM"
-#~ msgstr "PCM"
-
-#~ msgid "Synth"
-#~ msgstr "Synth"
-
-#~ msgid "Line-in"
-#~ msgstr "Line-in"
-
-#~ msgid "CD"
-#~ msgstr "CD"
-
-#~ msgid "Microphone"
-#~ msgstr "Microphone"
-
-#, fuzzy
-#~ msgid "PC Speaker"
-#~ msgstr "Speaker"
-
-#, fuzzy
-#~ msgid "Could not open vfs file \"%s\" for writing: %s."
-#~ msgstr "Could not open vfs file \"%s\" for writing."
-
-#~ msgid "No filename given"
-#~ msgstr "No filename given"
-
-#~ msgid "Could not close vfs file \"%s\"."
-#~ msgstr "Could not close vfs file \"%s\"."
-
-#, fuzzy
-#~ msgid "Error while writing to file \"%s\"."
-#~ msgstr "Error closing file \"%s\"."
-
-#, fuzzy
-#~ msgid "This is not a media file"
-#~ msgstr "Device \"%s\" is not a capture device."
-
-#~ msgid "No device specified."
-#~ msgstr "No device specified."
-
-#~ msgid "Device \"%s\" does not exist."
-#~ msgstr "Device \"%s\" does not exist."
-
-#, fuzzy
-#~ msgid "Device \"%s\" is already being used."
-#~ msgstr "OSS device \"%s\" is already in use by another program."
-
-#~ msgid "Could not open device \"%s\" for reading and writing."
-#~ msgstr "Could not open device \"%s\" for reading and writing."
-
-#, fuzzy
-#~ msgid "No Temp directory specified."
-#~ msgstr "No device specified."
-
-#, fuzzy
-#~ msgid "Could not create temp file \"%s\"."
-#~ msgstr "Could not write to file \"%s\"."
-
-#~ msgid "Could not open file \"%s\" for reading."
-#~ msgstr "Could not open file \"%s\" for reading."
-
-#~ msgid "Device is not open."
-#~ msgstr "Device is not open."
-
-#~ msgid "Device is open."
-#~ msgstr "Device is open."
-
-#~ msgid "Could not open vfs file \"%s\" for reading."
-#~ msgstr "Could not open vfs file \"%s\" for reading."
-
-#, fuzzy
-#~ msgid "No filename given."
-#~ msgstr "No filename given"
-
-#~ msgid "Could not open file \"%s\" for writing."
-#~ msgstr "Could not open file \"%s\" for writing."
-
-#~ msgid "No filename specified."
-#~ msgstr "No filename specified."
-
-#~ msgid "No or invalid input audio, AVI stream will be corrupt."
-#~ msgstr "No or invalid input audio, AVI stream will be corrupt."
-
-#~ msgid "Could not open control device \"%s\" for writing."
-#~ msgstr "Could not open control device \"%s\" for writing."
-
-#~ msgid "Could not configure audio device \"%s\"."
-#~ msgstr "Could not configure audio device \"%s\"."
-
-#~ msgid "Could not set audio device \"%s\" to %d Hz."
-#~ msgstr "Could not set audio device \"%s\" to %d Hz."
-
-#~ msgid "Could not close audio device \"%s\"."
-#~ msgstr "Could not close audio device \"%s\"."
-
-#~ msgid "Could not close control device \"%s\"."
-#~ msgstr "Could not close control device \"%s\"."
-
-#~ msgid "Could not open video device \"%s\" for writing."
-#~ msgstr "Could not open video device \"%s\" for writing."
-
-#~ msgid "Could not close video device \"%s\"."
-#~ msgstr "Could not close video device \"%s\"."
-
-#~ msgid "Could not access device \"%s\", check its permissions."
-#~ msgstr "Could not access device \"%s\", check its permissions."
-
-#~ msgid "Could not open device \"%s\" for writing."
-#~ msgstr "Could not open device \"%s\" for writing."
-
-#~ msgid "Could not open device \"%s\" for reading."
-#~ msgstr "Could not open device \"%s\" for reading."
-
-#, fuzzy
-#~ msgid "Your OSS device doesn't support mono or stereo."
-#~ msgstr "Your oss device could not be probed correctly"
-
-#, fuzzy
-#~ msgid "Your OSS device could not be probed correctly"
-#~ msgstr "Your oss device could not be probed correctly"
-
-#~ msgid "Speaker"
-#~ msgstr "Speaker"
-
-#~ msgid "Mixer"
-#~ msgstr "Mixer"
-
-#~ msgid "PCM-2"
-#~ msgstr "PCM-2"
-
-#~ msgid "Record"
-#~ msgstr "Record"
-
-#~ msgid "In-gain"
-#~ msgstr "In-gain"
-
-#~ msgid "Out-gain"
-#~ msgstr "Out-gain"
-
-#~ msgid "Line-1"
-#~ msgstr "Line-1"
-
-#~ msgid "Line-2"
-#~ msgstr "Line-2"
-
-#~ msgid "Line-3"
-#~ msgstr "Line-3"
-
-#~ msgid "Digital-1"
-#~ msgstr "Digital-1"
-
-#~ msgid "Digital-2"
-#~ msgstr "Digital-2"
-
-#~ msgid "Digital-3"
-#~ msgstr "Digital-3"
-
-#~ msgid "Phone-in"
-#~ msgstr "Phone-in"
-
-#~ msgid "Phone-out"
-#~ msgstr "Phone-out"
-
-#~ msgid "Video"
-#~ msgstr "Video"
-
-#~ msgid "Radio"
-#~ msgstr "Radio"
-
-#~ msgid "Monitor"
-#~ msgstr "Monitor"
-
-#~ msgid "Could not get buffers from device \"%s\"."
-#~ msgstr "Could not get buffers from device \"%s\"."
-
-#~ msgid "Could not get enough buffers from device \"%s\"."
-#~ msgstr "Could not get enough buffers from device \"%s\"."
+msgstr "Fracâ 'k' par viodi un liste des scurtis di tastiere.\n"

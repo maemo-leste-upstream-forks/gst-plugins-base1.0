@@ -642,7 +642,7 @@ gst_encoding_profile_set_description (GstEncodingProfile * profile,
 /**
  * gst_encoding_profile_set_format:
  * @profile: a #GstEncodingProfile
- * @format: (transfer-none): the media format to use in the profile.
+ * @format: (transfer none): the media format to use in the profile.
  *
  * Sets the media format used in the profile.
  */
@@ -1135,7 +1135,7 @@ common_creation (GType objtype, GstCaps * format, const gchar * preset,
  * @name: (allow-none): The name of the container profile, can be %NULL
  * @description: (allow-none): The description of the container profile,
  *     can be %NULL
- * @format: (transfer-none): The format to use for this profile
+ * @format: (transfer none): The format to use for this profile
  * @preset: (allow-none): The preset to use for this profile.
  *
  * Creates a new #GstEncodingContainerProfile.
@@ -1155,7 +1155,7 @@ gst_encoding_container_profile_new (const gchar * name,
 
 /**
  * gst_encoding_video_profile_new:
- * @format: (transfer-none): the #GstCaps
+ * @format: (transfer none): the #GstCaps
  * @preset: (allow-none): the preset(s) to use on the encoder, can be #NULL
  * @restriction: (allow-none): the #GstCaps used to restrict the input to the encoder, can be
  * NULL. See gst_encoding_profile_get_restriction() for more details.
@@ -1186,7 +1186,7 @@ gst_encoding_video_profile_new (GstCaps * format, const gchar * preset,
 
 /**
  * gst_encoding_audio_profile_new:
- * @format: (transfer-none): the #GstCaps
+ * @format: (transfer none): the #GstCaps
  * @preset: (allow-none): the preset(s) to use on the encoder, can be #NULL
  * @restriction: (allow-none): the #GstCaps used to restrict the input to the encoder, can be
  * NULL. See gst_encoding_profile_get_restriction() for more details.
@@ -1633,7 +1633,7 @@ create_encoding_stream_profile (gchar * serialized_profile)
 
     presence = g_ascii_strtoll (strpresence_v[1], &endptr, 10);
     if (endptr == strpresence_v[1]) {
-      GST_ERROR ("Wrong presence %s\n", strpresence_v[1]);
+      GST_ERROR ("Wrong presence %s", strpresence_v[1]);
 
       return NULL;
     }
@@ -1836,7 +1836,7 @@ add_stream_to_profile (GstEncodingContainerProfile * profile,
     gst_structure_remove_field (s, "alignment");
   }
 
-  GST_LOG ("Stream: %" GST_PTR_FORMAT "\n", caps);
+  GST_LOG ("Stream: %" GST_PTR_FORMAT, caps);
   if (GST_IS_DISCOVERER_AUDIO_INFO (sinfo)) {
     sprofile =
         (GstEncodingProfile *) gst_encoding_audio_profile_new (caps, NULL,
@@ -1903,7 +1903,7 @@ gst_encoding_profile_from_discoverer (GstDiscovererInfo * info)
     return NULL;
 
   caps = gst_discoverer_stream_info_get_caps (sinfo);
-  GST_LOG ("Container: %" GST_PTR_FORMAT "\n", caps);
+  GST_LOG ("Container: %" GST_PTR_FORMAT, caps);
   profile =
       gst_encoding_container_profile_new ("auto-generated",
       "Automatically generated from GstDiscovererInfo", caps, NULL);

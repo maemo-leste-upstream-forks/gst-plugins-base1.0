@@ -2027,7 +2027,7 @@
     <keyword type="constant" name="GST_AUDIO_BASE_SINK_DISCONT_REASON_ALIGNMENT" link="GstAudioBaseSink.html#GST-AUDIO-BASE-SINK-DISCONT-REASON-ALIGNMENT:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_BASE_SINK_DISCONT_REASON_DEVICE_FAILURE" link="GstAudioBaseSink.html#GST-AUDIO-BASE-SINK-DISCONT-REASON-DEVICE-FAILURE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_BASE_SRC_SLAVE_RESAMPLE" link="GstAudioBaseSrc.html#GST-AUDIO-BASE-SRC-SLAVE-RESAMPLE:CAPS"/>
-    <keyword type="constant" name="GST_AUDIO_BASE_SRC_SLAVE_RETIMESTAMP" link="GstAudioBaseSrc.html#GST-AUDIO-BASE-SRC-SLAVE-RETIMESTAMP:CAPS"/>
+    <keyword type="constant" name="GST_AUDIO_BASE_SRC_SLAVE_RE_TIMESTAMP" link="GstAudioBaseSrc.html#GST-AUDIO-BASE-SRC-SLAVE-RE-TIMESTAMP:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_BASE_SRC_SLAVE_SKEW" link="GstAudioBaseSrc.html#GST-AUDIO-BASE-SRC-SLAVE-SKEW:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_BASE_SRC_SLAVE_NONE" link="GstAudioBaseSrc.html#GST-AUDIO-BASE-SRC-SLAVE-NONE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_CHANNEL_POSITION_NONE" link="gst-plugins-base-libs-Audio-channels.html#GST-AUDIO-CHANNEL-POSITION-NONE:CAPS"/>
