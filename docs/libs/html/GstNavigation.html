@@ -491,9 +491,9 @@ associated command.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>command</p></td>
-<td class="parameter_description"><p>Pointer to GstNavigationCommand to receive the type of the
-navigation event.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Pointer to GstNavigationCommand to receive the
+type of the navigation event. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -525,10 +525,10 @@ gst_navigation_event_parse_key_event (<em class="parameter"><code><a href="/usr/
 </tr>
 <tr>
 <td class="parameter_name"><p>key</p></td>
-<td class="parameter_description"><p>A pointer to a location to receive the string identifying the key
-press. The returned string is owned by the event, and valid only until the
-event is unreffed.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> A pointer to a location to receive
+the string identifying the key press. The returned string is owned by the
+event, and valid only until the event is unreffed. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -562,21 +562,21 @@ a mouse button release event. Determine which type the event is using
 </tr>
 <tr>
 <td class="parameter_name"><p>button</p></td>
-<td class="parameter_description"><p>Pointer to a gint that will receive the button number associated
-with the event.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Pointer to a gint that will receive the button
+number associated with the event. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>x</p></td>
-<td class="parameter_description"><p>Pointer to a gdouble to receive the x coordinate of the mouse button
-event.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Pointer to a gdouble to receive the x coordinate of the
+mouse button event. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>y</p></td>
-<td class="parameter_description"><p>Pointer to a gdouble to receive the y coordinate of the mouse button
-event.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Pointer to a gdouble to receive the y coordinate of the
+mouse button event. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -613,13 +613,15 @@ of the event.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>x</p></td>
-<td class="parameter_description"><p>Pointer to a gdouble to receive the x coordinate of the mouse movement.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Pointer to a gdouble to receive the x coordinate of the
+mouse movement. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>y</p></td>
-<td class="parameter_description"><p>Pointer to a gdouble to receive the y coordinate of the mouse movement.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Pointer to a gdouble to receive the y coordinate of the
+mouse movement. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -830,14 +832,15 @@ and extract the <em class="parameter"><code>cur_angle</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>cur_angle</p></td>
-<td class="parameter_description"><p>A pointer to a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> to receive the new current angle number,
-or NULL</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> A pointer to a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> to receive the new
+current angle number, or NULL. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>n_angles</p></td>
-<td class="parameter_description"><p>A pointer to a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> to receive the new angle count, or NULL.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> A pointer to a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> to receive the new angle
+count, or NULL. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -873,9 +876,9 @@ with it.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>event</p></td>
-<td class="parameter_description"><p> a pointer to a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstEvent.html#GstEvent-struct"><span class="type">GstEvent</span></a> to receive the
-contained navigation event. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_description"><p> a pointer to a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstEvent.html#GstEvent-struct"><span class="type">GstEvent</span></a> to receive
+the contained navigation event. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -912,9 +915,9 @@ active, it indicates that the mouse is over a clickable area.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>active</p></td>
-<td class="parameter_description"><p>A pointer to a gboolean to receive the active/inactive state,
-or NULL.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> A pointer to a gboolean to receive the
+active/inactive state, or NULL. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1006,15 +1009,15 @@ angles into the <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint
 </tr>
 <tr>
 <td class="parameter_name"><p>cur_angle</p></td>
-<td class="parameter_description"><p>Pointer to a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> into which to store the currently selected
-angle value from the query, or NULL</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Pointer to a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> into which to store the
+currently selected angle value from the query, or NULL. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>n_angles</p></td>
-<td class="parameter_description"><p>Pointer to a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> into which to store the number of angles
-value from the query, or NULL</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Pointer to a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> into which to store the
+number of angles value from the query, or NULL. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1050,7 +1053,7 @@ gst_navigation_query_parse_commands_length
 <tr>
 <td class="parameter_name"><p>n_cmds</p></td>
 <td class="parameter_description"><p> the number of commands in this query. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1097,7 +1100,7 @@ set to <a class="link" href="GstNavigation.html#GST-NAVIGATION-COMMAND-INVALID:C
 <tr>
 <td class="parameter_name"><p>cmd</p></td>
 <td class="parameter_description"><p> a pointer to store the nth command into. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1217,10 +1220,10 @@ of commands passed must be equal to <em class="parameter"><code>n_commands</code
 </tr>
 <tr>
 <td class="parameter_name"><p>cmds</p></td>
-<td class="parameter_description"><p>An array containing <em class="parameter"><code>n_cmds</code></em>
+<td class="parameter_description"><p> An array containing <em class="parameter"><code>n_cmds</code></em>
 <em class="parameter"><code>GstNavigationCommand</code></em>
-values.</p></td>
-<td class="parameter_annotations"> </td>
+values. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_cmds]</span></td>
 </tr>
 </tbody>
 </table></div>
