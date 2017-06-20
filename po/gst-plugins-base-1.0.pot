@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.12.0\n"
+"Project-Id-Version: gst-plugins-base 1.12.1\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2017-05-04 15:02+0300\n"
+"POT-Creation-Date: 2017-06-20 11:14+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,7 +93,7 @@ msgstr ""
 #: gst/playback/gstplaysink.c:3173 gst/playback/gstplaysink.c:3576
 #: gst/playback/gstplaysink.c:4450 gst/playback/gstplaysinkconvertbin.c:97
 #: gst/playback/gstplaysinkconvertbin.c:117 gst/playback/gsturidecodebin.c:1482
-#: gst/playback/gsturisourcebin.c:1699
+#: gst/playback/gsturisourcebin.c:1697
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr ""
@@ -181,25 +181,25 @@ msgstr ""
 msgid "No decoder available for type '%s'."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:1388 gst/playback/gsturisourcebin.c:1593
+#: gst/playback/gsturidecodebin.c:1388 gst/playback/gsturisourcebin.c:1591
 msgid "No URI specified to play from."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:1394 gst/playback/gsturisourcebin.c:1599
+#: gst/playback/gsturidecodebin.c:1394 gst/playback/gsturisourcebin.c:1597
 #, c-format
 msgid "Invalid URI \"%s\"."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:1401 gst/playback/gsturisourcebin.c:1606
+#: gst/playback/gsturidecodebin.c:1401 gst/playback/gsturisourcebin.c:1604
 msgid "This stream type cannot be played yet."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:1419 gst/playback/gsturisourcebin.c:1624
+#: gst/playback/gsturidecodebin.c:1419 gst/playback/gsturisourcebin.c:1622
 #, c-format
 msgid "No URI handler implemented for \"%s\"."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:2285 gst/playback/gsturisourcebin.c:2327
+#: gst/playback/gsturidecodebin.c:2285 gst/playback/gsturisourcebin.c:2325
 msgid "Source element is invalid."
 msgstr ""
 
