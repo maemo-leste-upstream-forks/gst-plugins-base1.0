@@ -194,7 +194,7 @@ immediately. Here is an example on how to do that correctly:</p>
         <td class="listing_code"><pre class="programlisting"><span class="gtkdoc kwb">static</span> GstBusSyncReply
 <span class="function">create_window</span> <span class="gtkdoc opt">(</span>GstBus <span class="gtkdoc opt">*</span> bus<span class="gtkdoc opt">,</span> GstMessage <span class="gtkdoc opt">*</span> message<span class="gtkdoc opt">,</span> GstPipeline <span class="gtkdoc opt">*</span> pipeline<span class="gtkdoc opt">)</span>
 <span class="gtkdoc opt">{</span>
- <span class="gtkdoc slc">// ignore anything but 'prepare-window-handle' element messages</span>
+ <span class="gtkdoc slc">// ignore anything but &apos;prepare-window-handle&apos; element messages</span>
  <span class="keyword">if</span> <span class="gtkdoc opt">(!</span><span class="function"><a href="GstVideoOverlay.html#gst-is-video-overlay-prepare-window-handle-message">gst_is_video_overlay_prepare_window_handle_message</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">))</span>
    <span class="keyword">return</span> GST_BUS_PASS<span class="gtkdoc opt">;</span>
 
@@ -385,7 +385,7 @@ used in the callback).</p>
 <span class="gtkdoc kwb">static</span> GstBusSyncReply
 <span class="function">bus_sync_handler</span> <span class="gtkdoc opt">(</span>GstBus <span class="gtkdoc opt">*</span> bus<span class="gtkdoc opt">,</span> GstMessage <span class="gtkdoc opt">*</span> message<span class="gtkdoc opt">,</span> gpointer user_data<span class="gtkdoc opt">)</span>
 <span class="gtkdoc opt">{</span>
- <span class="gtkdoc slc">// ignore anything but 'prepare-window-handle' element messages</span>
+ <span class="gtkdoc slc">// ignore anything but &apos;prepare-window-handle&apos; element messages</span>
  <span class="keyword">if</span> <span class="gtkdoc opt">(!</span><span class="function"><a href="GstVideoOverlay.html#gst-is-video-overlay-prepare-window-handle-message">gst_is_video_overlay_prepare_window_handle_message</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">))</span>
    <span class="keyword">return</span> GST_BUS_PASS<span class="gtkdoc opt">;</span>
 
@@ -412,7 +412,7 @@ used in the callback).</p>
   <span class="gtkdoc slc">// This is here just for pedagogical purposes, GDK_WINDOW_XID will call</span>
   <span class="gtkdoc slc">// it as well in newer Gtk versions</span>
   <span class="keyword">if</span> <span class="gtkdoc opt">(!</span><span class="function"><a href="/usr/share/gtk-doc/html/gdk3gdk3-Windows.html#gdk-window-ensure-native">gdk_window_ensure_native</a></span> <span class="gtkdoc opt">(</span>widget<span class="gtkdoc opt">-&gt;</span>window<span class="gtkdoc opt">))</span>
-    <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Message-Logging.html#g-error">g_error</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Couldn't create native window needed for GstVideoOverlay!&quot;</span><span class="gtkdoc opt">);</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Message-Logging.html#g-error">g_error</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Couldn&apos;t create native window needed for GstVideoOverlay!&quot;</span><span class="gtkdoc opt">);</span>
 <span class="gtkdoc ppc">#endif</span>
 
 <span class="gtkdoc ppc">#ifdef GDK_WINDOWING_X11</span>
@@ -575,7 +575,7 @@ used in the callback).</p>
     <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> GST_STATE_NULL<span class="gtkdoc opt">);</span>
     <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">);</span>
     <span class="gtkdoc slc">// Exit application</span>
-    QTimer<span class="gtkdoc opt">::</span><span class="function">singleShot</span><span class="gtkdoc opt">(</span><span class="number">0</span><span class="gtkdoc opt">,</span> QApplication<span class="gtkdoc opt">::</span><span class="function">activeWindow</span><span class="gtkdoc opt">(),</span> <span class="function">SLOT</span><span class="gtkdoc opt">(</span><span class="function">quit</span><span class="gtkdoc opt">()));</span>
+    <span class="gtkdoc kwc">QTimer</span><span class="gtkdoc opt">::</span><span class="function">singleShot</span><span class="gtkdoc opt">(</span><span class="number">0</span><span class="gtkdoc opt">,</span> <span class="gtkdoc kwc">QApplication</span><span class="gtkdoc opt">::</span><span class="function">activeWindow</span><span class="gtkdoc opt">(),</span> <span class="function">SLOT</span><span class="gtkdoc opt">(</span><span class="function">quit</span><span class="gtkdoc opt">()));</span>
   <span class="gtkdoc opt">}</span>
 
   <span class="gtkdoc kwb">int</span> ret <span class="gtkdoc opt">=</span> app<span class="gtkdoc opt">.</span><span class="function">exec</span><span class="gtkdoc opt">();</span>
