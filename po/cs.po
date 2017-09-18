@@ -4,20 +4,21 @@
 #
 # Miloslav Trmac <mitr@volny.cz>, 2004.
 # Petr Kovar <pknbe@volny.cz>, 2007, 2008, 2009, 2010, 2011.
-# Marek Černocký <marek@manet.cz>, 2013, 2014, 2015, 2016.
+# Marek Černocký <marek@manet.cz>, 2013, 2014, 2015, 2016, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base-1.7.90\n"
+"Project-Id-Version: gst-plugins-base-1.10.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2017-07-14 13:25+0300\n"
-"PO-Revision-Date: 2016-03-03 15:35+0100\n"
+"POT-Creation-Date: 2017-09-18 16:04+0300\n"
+"PO-Revision-Date: 2017-09-13 15:20+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
@@ -89,13 +90,11 @@ msgstr "Zdá se, že se jedná o textový soubor"
 msgid "Could not create \"uridecodebin\" element."
 msgstr "Nelze vytvořit prvek „uridecodebin“."
 
-#, fuzzy
 msgid "Could not create \"decodebin3\" element."
-msgstr "Nelze vytvořit prvek „uridecodebin“."
+msgstr "Nelze vytvořit prvek „decodebin3“."
 
-#, fuzzy
 msgid "Could not create \"urisourcebin\" element."
-msgstr "Nelze vytvořit prvek „uridecodebin“."
+msgstr "Nelze vytvořit prvek „urisourcebin“."
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
@@ -230,9 +229,8 @@ msgstr "Formát titulků TMPlayer"
 msgid "Kate subtitle format"
 msgstr "Formát titulků Kate"
 
-#, fuzzy
 msgid "WebVTT subtitle format"
-msgstr "Formát titulků Kate"
+msgstr "Formát titulků WebVTT"
 
 msgid "Uncompressed video"
 msgstr "Nekomprimované video"
@@ -400,14 +398,14 @@ msgstr "ohnisková vzdálenost při zachytávání"
 msgid "Focal length of the lens used capturing the image, in mm"
 msgstr "Ohnisková vzdálenost čoček použitá při záchytávání obrazu, v mm"
 
-#, fuzzy
 msgid "capturing 35 mm equivalent focal length"
-msgstr "ohnisková vzdálenost při zachytávání"
+msgstr "ohnisková vzdálenost při zachytávání ekvivalentní 35 mm"
 
-#, fuzzy
 msgid ""
 "35 mm equivalent focal length of the lens used capturing the image, in mm"
-msgstr "Ohnisková vzdálenost čoček použitá při záchytávání obrazu, v mm"
+msgstr ""
+"Ohnisková vzdálenost čoček ekvivalentní 35 mm použitá při záchytávání "
+"obrazu, v mm"
 
 msgid "capturing digital zoom ratio"
 msgstr "stupeň digitálního přiblížení při zachytávání"
@@ -675,6 +673,3 @@ msgstr "Musíte zadat minimálně jeden název souboru nebo adresu URI k přehr�
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr "Zmáčknutím „k“ si zobrazíte seznam klávesových zkratek.\n"
-
-#~ msgid "Internal data stream error."
-#~ msgstr "Vnitřní chyba datového proudu."
