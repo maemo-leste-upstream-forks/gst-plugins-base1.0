@@ -79,7 +79,7 @@ gst_rtcp_buffer_new_take_data (gpointer data, guint len)
  * Returns: A newly allocated buffer with a copy of @data and of size @len.
  */
 GstBuffer *
-gst_rtcp_buffer_new_copy_data (gpointer data, guint len)
+gst_rtcp_buffer_new_copy_data (gconstpointer data, guint len)
 {
   return gst_rtcp_buffer_new_take_data (g_memdup (data, len), len);
 }
@@ -990,7 +990,8 @@ gst_rtcp_packet_add_rb (GstRTCPPacket * packet, guint32 ssrc,
 
   GST_WRITE_UINT32_BE (data, ssrc);
   data += 4;
-  GST_WRITE_UINT32_BE (data, (fractionlost << 24) | (packetslost & 0xffffff));
+  GST_WRITE_UINT32_BE (data,
+      ((guint32) fractionlost << 24) | (packetslost & 0xffffff));
   data += 4;
   GST_WRITE_UINT32_BE (data, exthighestseq);
   data += 4;

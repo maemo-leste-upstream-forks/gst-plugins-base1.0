@@ -662,7 +662,7 @@ gst_ogg_demux_chain_peer (GstOggPad * pad, ogg_packet * packet,
     out_offset = 0;
     out_offset_end = -1;
   } else {
-    if (packet->granulepos != -1) {
+    if (packet->granulepos > -1) {
       gint64 granule = gst_ogg_stream_granulepos_to_granule (&pad->map,
           packet->granulepos);
       if (granule < 0) {
@@ -1271,6 +1271,15 @@ gst_ogg_pad_stream_out (GstOggPad * pad, gint npackets)
         break;
       case 1:
         GST_LOG_OBJECT (ogg, "packetout gave packet of size %ld", packet.bytes);
+
+        if (packet.granulepos < -1) {
+          GST_WARNING_OBJECT (ogg,
+              "Invalid granulepos (%" G_GINT64_FORMAT "), resetting stream",
+              packet.granulepos);
+          gst_ogg_pad_reset (pad);
+          break;
+        }
+
         if (packet.bytes > ogg->max_packet_size)
           ogg->max_packet_size = packet.bytes;
         result = gst_ogg_pad_submit_packet (pad, &packet);
@@ -1639,7 +1648,7 @@ gst_ogg_pad_handle_push_mode_state (GstOggPad * pad, ogg_page * page)
   ogg_int64_t granpos = ogg_page_granulepos (page);
 
   GST_PUSH_LOCK (ogg);
-  if (granpos >= 0) {
+  if (granpos >= 0 && pad->have_type) {
     if (ogg->push_start_time == GST_CLOCK_TIME_NONE) {
       ogg->push_start_time =
           gst_ogg_stream_get_start_time_for_granulepos (&pad->map, granpos);
@@ -4966,11 +4975,23 @@ gst_ogg_demux_clear_chains (GstOggDemux * ogg)
   for (i = 0; i < ogg->chains->len; i++) {
     GstOggChain *chain = g_array_index (ogg->chains, GstOggChain *, i);
 
+    if (chain == ogg->current_chain)
+      ogg->current_chain = NULL;
+    if (chain == ogg->building_chain)
+      ogg->building_chain = NULL;
     gst_ogg_chain_free (chain);
   }
   ogg->chains = g_array_set_size (ogg->chains, 0);
-  ogg->current_chain = NULL;
-  ogg->building_chain = NULL;
+  if (ogg->current_chain != NULL) {
+    GST_FIXME_OBJECT (ogg, "current chain was tracked in existing chains !");
+    gst_ogg_chain_free (ogg->current_chain);
+    ogg->current_chain = NULL;
+  }
+  if (ogg->building_chain != NULL) {
+    GST_FIXME_OBJECT (ogg, "building chain was tracked in existing chains !");
+    gst_ogg_chain_free (ogg->building_chain);
+    ogg->building_chain = NULL;
+  }
   GST_CHAIN_UNLOCK (ogg);
 }
 

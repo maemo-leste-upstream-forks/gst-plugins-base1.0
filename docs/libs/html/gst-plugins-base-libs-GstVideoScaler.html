@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-video.html" title="Video Library">
 <link rel="prev" href="gst-plugins-base-libs-GstVideoResampler.html" title="GstVideoResampler">
 <link rel="next" href="GstVideoSink.html" title="GstVideoSink">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -64,7 +64,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#gst-video-scaler-get-coeff" title="gst_video_scaler_get_coeff ()">gst_video_scaler_get_coeff</a> <span class="c_punctuation">()</span>
@@ -96,7 +96,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#gst-video-scaler-get-max-taps" title="gst_video_scaler_get_max_taps ()">gst_video_scaler_get_max_taps</a> <span class="c_punctuation">()</span>
@@ -142,14 +142,14 @@ video frames using various interpolation / sampling methods.</p>
 gst_video_scaler_2d (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *hscale</code></em>,
                      <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *vscale</code></em>,
                      <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> src_stride</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> dest_stride</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> x</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> y</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> height</code></em>);</pre>
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> src_stride</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> dest_stride</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> x</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> y</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> height</code></em>);</pre>
 <p>Scale a rectangle of pixels in <em class="parameter"><code>src</code></em>
  with <em class="parameter"><code>src_stride</code></em>
  to <em class="parameter"><code>dest</code></em>
@@ -312,11 +312,11 @@ gst_video_scaler_free (<em class="parameter"><code><a class="link" href="gst-plu
 <hr>
 <div class="refsect2">
 <a name="gst-video-scaler-get-coeff"></a><h3>gst_video_scaler_get_coeff ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a> *
 gst_video_scaler_get_coeff (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *scale</code></em>,
-                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> out_offset</code></em>,
-                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> *in_offset</code></em>,
-                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> *n_taps</code></em>);</pre>
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> out_offset</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *in_offset</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *n_taps</code></em>);</pre>
 <p>For a given pixel at <em class="parameter"><code>out_offset</code></em>
 , get the first required input pixel at
 <em class="parameter"><code>in_offset</code></em>
@@ -369,10 +369,10 @@ gdouble values with filter coefficients.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_scaler_horizontal (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *scale</code></em>,
                              <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> dest_offset</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>);</pre>
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src</code></em>,
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> dest_offset</code></em>,
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>);</pre>
 <p>Horizontally scale the pixels in <em class="parameter"><code>src</code></em>
  to <em class="parameter"><code>dest</code></em>
 , starting from <em class="parameter"><code>dest_offset</code></em>
@@ -430,10 +430,10 @@ and <em class="parameter"><code>dest</code></em>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="returnvalue">GstVideoScaler</span></a> *
 gst_video_scaler_new (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoResampler.html#GstVideoResamplerMethod" title="enum GstVideoResamplerMethod"><span class="type">GstVideoResamplerMethod</span></a> method</code></em>,
                       <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScalerFlags" title="enum GstVideoScalerFlags"><span class="type">GstVideoScalerFlags</span></a> flags</code></em>,
-                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> n_taps</code></em>,
-                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> in_size</code></em>,
-                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> out_size</code></em>,
-                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *options</code></em>);</pre>
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_taps</code></em>,
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> in_size</code></em>,
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> out_size</code></em>,
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *options</code></em>);</pre>
 <p>Make a new <em class="parameter"><code>method</code></em>
  video scaler. <em class="parameter"><code>in_size</code></em>
  source lines/pixels will
@@ -483,7 +483,7 @@ on the <em class="parameter"><code>method</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>options</p></td>
-<td class="parameter_description"><p> extra options. </p></td>
+<td class="parameter_description"><p>extra options. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -500,10 +500,10 @@ on the <em class="parameter"><code>method</code></em>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_scaler_vertical (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *scale</code></em>,
                            <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
-                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src_lines[]</code></em>,
-                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
-                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> dest_offset</code></em>,
-                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>);</pre>
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src_lines[]</code></em>,
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> dest_offset</code></em>,
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>);</pre>
 <p>Vertically combine <em class="parameter"><code>width</code></em>
  pixels in the lines in <em class="parameter"><code>src_lines</code></em>
  to <em class="parameter"><code>dest</code></em>
@@ -563,7 +563,7 @@ and <em class="parameter"><code>dest</code></em>
 <hr>
 <div class="refsect2">
 <a name="gst-video-scaler-get-max-taps"></a><h3>gst_video_scaler_get_max_taps ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gst_video_scaler_get_max_taps (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *scale</code></em>);</pre>
 <p>Get the maximum number of taps for <em class="parameter"><code>scale</code></em>
 .</p>
@@ -628,6 +628,6 @@ gst_video_scaler_get_max_taps (<em class="parameter"><code><a class="link" href=
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

@@ -172,7 +172,7 @@ gst_ogg_stream_granulepos_to_key_granule (GstOggStream * pad, gint64 granulepos)
   if (mappers[pad->map].granulepos_to_key_granule_func)
     return mappers[pad->map].granulepos_to_key_granule_func (pad, granulepos);
 
-  if (granulepos == -1 || granulepos == 0) {
+  if (granulepos == -1 || granulepos == 0 || pad->granuleshift == G_MAXUINT32) {
     return granulepos;
   }
 
@@ -311,7 +311,7 @@ granulepos_to_granule_default (GstOggStream * pad, gint64 granulepos)
 {
   gint64 keyindex, keyoffset;
 
-  if (pad->granuleshift != 0) {
+  if (pad->granuleshift != 0 && pad->granuleshift != G_MAXUINT32) {
     keyindex = granulepos >> pad->granuleshift;
     keyoffset = granulepos - (keyindex << pad->granuleshift);
     return keyindex + keyoffset;
@@ -327,7 +327,7 @@ granule_to_granulepos_default (GstOggStream * pad, gint64 granule,
 {
   gint64 keyoffset;
 
-  if (pad->granuleshift != 0) {
+  if (pad->granuleshift != 0 && pad->granuleshift != G_MAXUINT32) {
     /* If we don't know where the previous keyframe is yet, assume it is
        at 0 or 1, depending on bitstream version. If nothing else, this
        avoids getting negative granpos back. */
@@ -478,7 +478,7 @@ granulepos_to_granule_theora (GstOggStream * pad, gint64 granulepos)
 {
   gint64 keyindex, keyoffset;
 
-  if (pad->granuleshift != 0) {
+  if (pad->granuleshift != 0 && pad->granuleshift != G_MAXUINT32) {
     keyindex = granulepos >> pad->granuleshift;
     keyoffset = granulepos - (keyindex << pad->granuleshift);
     if (pad->theora_has_zero_keyoffset) {
@@ -495,7 +495,7 @@ is_granulepos_keyframe_theora (GstOggStream * pad, gint64 granulepos)
 {
   gint64 frame_mask;
 
-  if (granulepos == (gint64) - 1)
+  if (granulepos == (gint64) - 1 || pad->granuleshift == G_MAXUINT32)
     return FALSE;
 
   frame_mask = (G_GUINT64_CONSTANT (1) << pad->granuleshift) - 1;
@@ -810,6 +810,9 @@ extract_tags_vp8 (GstOggStream * pad, ogg_packet * packet)
   if (packet->bytes >= 7 && memcmp (packet->packet, "OVP80\2 ", 7) == 0) {
     tag_list_from_vorbiscomment_packet (packet,
         (const guint8 *) "OVP80\2 ", 7, &pad->taglist);
+
+    if (!pad->taglist)
+      pad->taglist = gst_tag_list_new_empty ();
 
     gst_tag_list_add (pad->taglist, GST_TAG_MERGE_REPLACE,
         GST_TAG_VIDEO_CODEC, "VP8", NULL);
@@ -1142,6 +1145,9 @@ extract_tags_flac (GstOggStream * pad, ogg_packet * packet)
     tag_list_from_vorbiscomment_packet (packet,
         packet->packet, 4, &pad->taglist);
 
+    if (!pad->taglist)
+      pad->taglist = gst_tag_list_new_empty ();
+
     gst_tag_list_add (pad->taglist, GST_TAG_MERGE_REPLACE,
         GST_TAG_AUDIO_CODEC, "FLAC", NULL);
   }
@@ -1155,6 +1161,11 @@ setup_fishead_mapper (GstOggStream * pad, ogg_packet * packet)
   guint8 *data;
   gint64 prestime_n, prestime_d;
   gint64 basetime_n, basetime_d;
+
+  if (packet->bytes < 44) {
+    GST_DEBUG ("Not enough data for fishead header");
+    return FALSE;
+  }
 
   data = packet->packet;
 
@@ -1564,7 +1575,7 @@ static gint64
 packet_duration_ogm (GstOggStream * pad, ogg_packet * packet)
 {
   const guint8 *data;
-  int samples;
+  gint64 samples;
   int offset;
   int n;
 
@@ -2113,6 +2124,9 @@ extract_tags_opus (GstOggStream * pad, ogg_packet * packet)
     tag_list_from_vorbiscomment_packet (packet,
         (const guint8 *) "OpusTags", 8, &pad->taglist);
 
+    if (!pad->taglist)
+      pad->taglist = gst_tag_list_new_empty ();
+
     gst_tag_list_add (pad->taglist, GST_TAG_MERGE_REPLACE,
         GST_TAG_AUDIO_CODEC, "Opus", NULL);
   }
@@ -2184,7 +2198,7 @@ granulepos_to_granule_daala (GstOggStream * pad, gint64 granulepos)
 {
   gint64 keyindex, keyoffset;
 
-  if (pad->granuleshift != 0) {
+  if (pad->granuleshift != 0 && pad->granuleshift != G_MAXUINT32) {
     keyindex = granulepos >> pad->granuleshift;
     keyoffset = granulepos - (keyindex << pad->granuleshift);
     return keyindex + keyoffset;
@@ -2198,7 +2212,7 @@ is_granulepos_keyframe_daala (GstOggStream * pad, gint64 granulepos)
 {
   gint64 frame_mask;
 
-  if (granulepos == (gint64) - 1)
+  if (granulepos == (gint64) - 1 || pad->granuleshift == G_MAXUINT32)
     return FALSE;
 
   frame_mask = (G_GUINT64_CONSTANT (1) << pad->granuleshift) - 1;
@@ -2242,6 +2256,23 @@ extract_tags_daala (GstOggStream * pad, ogg_packet * packet)
 /* *INDENT-OFF* */
 /* indent hates our freedoms */
 const GstOggMap mappers[] = {
+  {
+    /* Empty mapper for uninitialized pads/streams */
+    NULL, 0, G_MAXINT32,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   {
     "\200theora", 7, 42,
     "video/x-theora",

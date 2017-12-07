@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-audio.html" title="Audio Library">
 <link rel="prev" href="GstAudioCdSrc.html" title="GstAudioCdSrc">
 <link rel="next" href="GstAudioDecoder.html" title="GstAudioDecoder">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -42,7 +42,7 @@
 <tbody>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
 </td>
 <td class="function_name">
 <span class="c_punctuation">(</span><a class="link" href="GstAudioClock.html#GstAudioClockGetTimeFunc" title="GstAudioClockGetTimeFunc ()">*GstAudioClockGetTimeFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
@@ -50,7 +50,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"><span class="returnvalue">GstClock</span></a> *
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClock-struct"><span class="returnvalue">GstClock</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstAudioClock.html#gst-audio-clock-new" title="gst_audio_clock_new ()">gst_audio_clock_new</a> <span class="c_punctuation">()</span>
@@ -58,7 +58,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstAudioClock.html#gst-audio-clock-adjust" title="gst_audio_clock_adjust ()">gst_audio_clock_adjust</a> <span class="c_punctuation">()</span>
@@ -66,7 +66,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstAudioClock.html#gst-audio-clock-get-time" title="gst_audio_clock_get_time ()">gst_audio_clock_get_time</a> <span class="c_punctuation">()</span>
@@ -106,11 +106,11 @@
 </div>
 <div class="refsect1">
 <a name="GstAudioClock.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
-    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstObject.html#GstObject-struct">GstObject</a>
-            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct">GstClock</a>
-                <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstSystemClock.html#GstSystemClock-struct">GstSystemClock</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClock-struct">GstClock</a>
+                <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstSystemClock.html#GstSystemClock-struct">GstSystemClock</a>
                     <span class="lineart">╰──</span> GstAudioClock
 </pre>
 </div>
@@ -121,7 +121,7 @@
 </div>
 <div class="refsect1">
 <a name="GstAudioClock.description"></a><h2>Description</h2>
-<p><a class="link" href="GstAudioClock.html" title="GstAudioClock"><span class="type">GstAudioClock</span></a> makes it easy for elements to implement a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"><span class="type">GstClock</span></a>, they
+<p><a class="link" href="GstAudioClock.html" title="GstAudioClock"><span class="type">GstAudioClock</span></a> makes it easy for elements to implement a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClock-struct"><span class="type">GstClock</span></a>, they
 simply need to provide a function that returns the current clock time.</p>
 <p>This object is internally used to implement the clock in <a class="link" href="GstAudioBaseSink.html" title="GstAudioBaseSink"><span class="type">GstAudioBaseSink</span></a>.</p>
 </div>
@@ -129,11 +129,11 @@ simply need to provide a function that returns the current clock time.</p>
 <a name="GstAudioClock.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="GstAudioClockGetTimeFunc"></a><h3>GstAudioClockGetTimeFunc ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
-<span class="c_punctuation">(</span>*GstAudioClockGetTimeFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"><span class="type">GstClock</span></a> *clock</code></em>,
-                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+<span class="c_punctuation">(</span>*GstAudioClockGetTimeFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClock-struct"><span class="type">GstClock</span></a> *clock</code></em>,
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>This function will be called whenever the current clock time needs to be
-calculated. If this function returns <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><span class="type">GST_CLOCK_TIME_NONE</span></a>, the last reported
+calculated. If this function returns <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><span class="type">GST_CLOCK_TIME_NONE</span></a>, the last reported
 time will be returned by the clock.</p>
 <div class="refsect3">
 <a name="GstAudioClockGetTimeFunc.parameters"></a><h4>Parameters</h4>
@@ -159,24 +159,24 @@ time will be returned by the clock.</p>
 </div>
 <div class="refsect3">
 <a name="GstAudioClockGetTimeFunc.returns"></a><h4>Returns</h4>
-<p> the current time or <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><span class="type">GST_CLOCK_TIME_NONE</span></a> if the previous time should
+<p> the current time or <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><span class="type">GST_CLOCK_TIME_NONE</span></a> if the previous time should
 be used.</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-clock-new"></a><h3>gst_audio_clock_new ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"><span class="returnvalue">GstClock</span></a> *
-gst_audio_clock_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClock-struct"><span class="returnvalue">GstClock</span></a> *
+gst_audio_clock_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                      <em class="parameter"><code><a class="link" href="GstAudioClock.html#GstAudioClockGetTimeFunc" title="GstAudioClockGetTimeFunc ()"><span class="type">GstAudioClockGetTimeFunc</span></a> func</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
-                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy_notify</code></em>);</pre>
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy_notify</code></em>);</pre>
 <p>Create a new <a class="link" href="GstAudioClock.html" title="GstAudioClock"><span class="type">GstAudioClock</span></a> instance. Whenever the clock time should be
 calculated it will call <em class="parameter"><code>func</code></em>
  with <em class="parameter"><code>user_data</code></em>
 . When <em class="parameter"><code>func</code></em>
  returns
-<a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><span class="type">GST_CLOCK_TIME_NONE</span></a>, the clock will return the last reported time.</p>
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GST-CLOCK-TIME-NONE:CAPS"><span class="type">GST_CLOCK_TIME_NONE</span></a>, the clock will return the last reported time.</p>
 <div class="refsect3">
 <a name="gst-audio-clock-new.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -203,7 +203,7 @@ calculated it will call <em class="parameter"><code>func</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>destroy_notify</p></td>
-<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glibglib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> for <em class="parameter"><code>user_data</code></em>
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> for <em class="parameter"><code>user_data</code></em>
 </p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -212,15 +212,15 @@ calculated it will call <em class="parameter"><code>func</code></em>
 </div>
 <div class="refsect3">
 <a name="gst-audio-clock-new.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GstAudioClock.html" title="GstAudioClock"><span class="type">GstAudioClock</span></a> casted to a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"><span class="type">GstClock</span></a>.</p>
+<p> a new <a class="link" href="GstAudioClock.html" title="GstAudioClock"><span class="type">GstAudioClock</span></a> casted to a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClock-struct"><span class="type">GstClock</span></a>.</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-clock-adjust"></a><h3>gst_audio_clock_adjust ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
 gst_audio_clock_adjust (<em class="parameter"><code><a class="link" href="GstAudioClock.html" title="GstAudioClock"><span class="type">GstAudioClock</span></a> *clock</code></em>,
-                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> time</code></em>);</pre>
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> time</code></em>);</pre>
 <p>Adjust <em class="parameter"><code>time</code></em>
  with the internal offset of the audio clock.</p>
 <div class="refsect3">
@@ -239,7 +239,7 @@ gst_audio_clock_adjust (<em class="parameter"><code><a class="link" href="GstAud
 </tr>
 <tr>
 <td class="parameter_name"><p>time</p></td>
-<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -254,7 +254,7 @@ adjusted with the internal offset.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-clock-get-time"></a><h3>gst_audio_clock_get_time ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
 gst_audio_clock_get_time (<em class="parameter"><code><a class="link" href="GstAudioClock.html" title="GstAudioClock"><span class="type">GstAudioClock</span></a> *clock</code></em>);</pre>
 <p>Report the time as returned by the <a class="link" href="GstAudioClock.html#GstAudioClockGetTimeFunc" title="GstAudioClockGetTimeFunc ()"><span class="type">GstAudioClockGetTimeFunc</span></a> without applying
 any offsets.</p>
@@ -283,13 +283,13 @@ any offsets.</p>
 <a name="gst-audio-clock-reset"></a><h3>gst_audio_clock_reset ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_audio_clock_reset (<em class="parameter"><code><a class="link" href="GstAudioClock.html" title="GstAudioClock"><span class="type">GstAudioClock</span></a> *clock</code></em>,
-                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> time</code></em>);</pre>
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> time</code></em>);</pre>
 <p>Inform <em class="parameter"><code>clock</code></em>
  that future calls to <a class="link" href="GstAudioClock.html#GstAudioClockGetTimeFunc" title="GstAudioClockGetTimeFunc ()"><span class="type">GstAudioClockGetTimeFunc</span></a> will return values
 starting from <em class="parameter"><code>time</code></em>
 . The clock will update an internal offset to make sure that
 future calls to internal_time will return an increasing result as required by
-the <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"><span class="type">GstClock</span></a> object.</p>
+the <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClock-struct"><span class="type">GstClock</span></a> object.</p>
 <div class="refsect3">
 <a name="gst-audio-clock-reset.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -306,7 +306,7 @@ the <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClock-struct"
 </tr>
 <tr>
 <td class="parameter_name"><p>time</p></td>
-<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -351,10 +351,10 @@ the rest of its lifetime.</p>
 </div>
 <div class="refsect1">
 <a name="GstAudioClock.see-also"></a><h2>See Also</h2>
-<p><a class="link" href="GstAudioBaseSink.html" title="GstAudioBaseSink"><span class="type">GstAudioBaseSink</span></a>, <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstSystemClock.html#GstSystemClock-struct"><span class="type">GstSystemClock</span></a></p>
+<p><a class="link" href="GstAudioBaseSink.html" title="GstAudioBaseSink"><span class="type">GstAudioBaseSink</span></a>, <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstSystemClock.html#GstSystemClock-struct"><span class="type">GstSystemClock</span></a></p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

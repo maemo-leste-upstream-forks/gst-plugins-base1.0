@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-ffft.html" title="FFT Library">
 <link rel="prev" href="gst-plugins-base-libs-GstFFTS32.html" title="GstFFTS32">
 <link rel="next" href="gst-plugins-base-libs-GstFFTF64.html" title="GstFFTF64">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -138,8 +138,8 @@ the magnitude of the frequency data.</p>
 <div class="refsect2">
 <a name="gst-fft-f32-new"></a><h3>gst_fft_f32_new ()</h3>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstFFTF32.html#GstFFTF32" title="GstFFTF32"><span class="returnvalue">GstFFTF32</span></a> *
-gst_fft_f32_new (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> len</code></em>,
-                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> inverse</code></em>);</pre>
+gst_fft_f32_new (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> len</code></em>,
+                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> inverse</code></em>);</pre>
 <p>This returns a new <a class="link" href="gst-plugins-base-libs-GstFFTF32.html#GstFFTF32" title="GstFFTF32"><span class="type">GstFFTF32</span></a> instance with the given parameters. It makes
 sense to keep one instance for several calls for speed reasons.</p>
 <p><em class="parameter"><code>len</code></em>
@@ -163,7 +163,7 @@ sense to keep one instance for several calls for speed reasons.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>inverse</p></td>
-<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <a class="link" href="gst-plugins-base-libs-GstFFTF32.html#GstFFTF32" title="GstFFTF32"><span class="type">GstFFTF32</span></a> instance should be used for the inverse FFT</p></td>
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <a class="link" href="gst-plugins-base-libs-GstFFTF32.html#GstFFTF32" title="GstFFTF32"><span class="type">GstFFTF32</span></a> instance should be used for the inverse FFT</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -179,7 +179,7 @@ sense to keep one instance for several calls for speed reasons.</p>
 <a name="gst-fft-f32-fft"></a><h3>gst_fft_f32_fft ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_fft_f32_fft (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstFFTF32.html#GstFFTF32" title="GstFFTF32"><span class="type">GstFFTF32</span></a> *self</code></em>,
-                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *timedata</code></em>,
+                 <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *timedata</code></em>,
                  <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstFFTF32.html#GstFFTF32Complex" title="struct GstFFTF32Complex"><span class="type">GstFFTF32Complex</span></a> *freqdata</code></em>);</pre>
 <p>This performs the FFT on <em class="parameter"><code>timedata</code></em>
  and puts the result in <em class="parameter"><code>freqdata</code></em>
@@ -226,7 +226,7 @@ domain samples.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_fft_f32_inverse_fft (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstFFTF32.html#GstFFTF32" title="GstFFTF32"><span class="type">GstFFTF32</span></a> *self</code></em>,
                          <em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstFFTF32.html#GstFFTF32Complex" title="struct GstFFTF32Complex"><span class="type">GstFFTF32Complex</span></a> *freqdata</code></em>,
-                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *timedata</code></em>);</pre>
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *timedata</code></em>);</pre>
 <p>This performs the inverse FFT on <em class="parameter"><code>freqdata</code></em>
  and puts the result in <em class="parameter"><code>timedata</code></em>
 .</p>
@@ -271,7 +271,7 @@ while allocating the <a class="link" href="gst-plugins-base-libs-GstFFTF32.html#
 <a name="gst-fft-f32-window"></a><h3>gst_fft_f32_window ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_fft_f32_window (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstFFTF32.html#GstFFTF32" title="GstFFTF32"><span class="type">GstFFTF32</span></a> *self</code></em>,
-                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *timedata</code></em>,
+                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *timedata</code></em>,
                     <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstFFT.html#GstFFTWindow" title="enum GstFFTWindow"><span class="type">GstFFTWindow</span></a> window</code></em>);</pre>
 <p>This calls the window function <em class="parameter"><code>window</code></em>
  on the <em class="parameter"><code>timedata</code></em>
@@ -354,12 +354,12 @@ gst_fft_f32_free (<em class="parameter"><code><a class="link" href="gst-plugins-
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> <em class="structfield"><code><a name="GstFFTF32Complex.r"></a>r</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> <em class="structfield"><code><a name="GstFFTF32Complex.r"></a>r</code></em>;</p></td>
 <td class="struct_member_description"><p>Real part</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> <em class="structfield"><code><a name="GstFFTF32Complex.i"></a>i</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> <em class="structfield"><code><a name="GstFFTF32Complex.i"></a>i</code></em>;</p></td>
 <td class="struct_member_description"><p>Imaginary part</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -370,6 +370,6 @@ gst_fft_f32_free (<em class="parameter"><code><a class="link" href="gst-plugins-
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

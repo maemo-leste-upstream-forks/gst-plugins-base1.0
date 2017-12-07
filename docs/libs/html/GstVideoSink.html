@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-video.html" title="Video Library">
 <link rel="prev" href="gst-plugins-base-libs-GstVideoScaler.html" title="GstVideoScaler">
 <link rel="next" href="GstColorBalance.html" title="GstColorBalance">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -79,7 +79,7 @@
 <col width="200px" class="properties_flags">
 </colgroup>
 <tbody><tr>
-<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GstVideoSink.html#GstVideoSink--show-preroll-frame" title="The “show-preroll-frame” property">show-preroll-frame</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr></tbody>
@@ -110,11 +110,11 @@
 </div>
 <div class="refsect1">
 <a name="GstVideoSink.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
-    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstObject.html#GstObject-struct">GstObject</a>
-            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#GstElement-struct">GstElement</a>
-                <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstBaseSink.html#GstBaseSink-struct">GstBaseSink</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstElement-struct">GstElement</a>
+                <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstBaseSink.html#GstBaseSink-struct">GstBaseSink</a>
                     <span class="lineart">╰──</span> GstVideoSink
 </pre>
 </div>
@@ -142,7 +142,7 @@ observing out-of-sync frames.</p>
 <a name="GST-VIDEO-SINK-PAD:CAPS"></a><h3>GST_VIDEO_SINK_PAD()</h3>
 <pre class="programlisting">#define GST_VIDEO_SINK_PAD(obj) GST_BASE_SINK_PAD(obj)
 </pre>
-<p>Get the sink <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPad.html#GstPad-struct"><span class="type">GstPad</span></a> of <em class="parameter"><code>obj</code></em>
+<p>Get the sink <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a> of <em class="parameter"><code>obj</code></em>
 .</p>
 <div class="refsect3">
 <a name="GST-VIDEO-SINK-PAD.parameters"></a><h4>Parameters</h4>
@@ -173,7 +173,7 @@ observing out-of-sync frames.</p>
 gst_video_sink_center_rect (<em class="parameter"><code><a class="link" href="GstVideoSink.html#GstVideoRectangle" title="struct GstVideoRectangle"><span class="type">GstVideoRectangle</span></a> src</code></em>,
                             <em class="parameter"><code><a class="link" href="GstVideoSink.html#GstVideoRectangle" title="struct GstVideoRectangle"><span class="type">GstVideoRectangle</span></a> dst</code></em>,
                             <em class="parameter"><code><a class="link" href="GstVideoSink.html#GstVideoRectangle" title="struct GstVideoRectangle"><span class="type">GstVideoRectangle</span></a> *result</code></em>,
-                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> scaling</code></em>);</pre>
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> scaling</code></em>);</pre>
 <p>Takes <em class="parameter"><code>src</code></em>
  rectangle and position it at the center of <em class="parameter"><code>dst</code></em>
  rectangle with or
@@ -209,7 +209,7 @@ the <em class="parameter"><code>dst</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>scaling</p></td>
-<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating if scaling should be applied or not</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating if scaling should be applied or not</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -239,12 +239,12 @@ the <em class="parameter"><code>dst</code></em>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoSink-struct.width"></a>width</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoSink-struct.width"></a>width</code></em>;</p></td>
 <td class="struct_member_description"><p>video width (derived class needs to set this)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoSink-struct.height"></a>height</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoSink-struct.height"></a>height</code></em>;</p></td>
 <td class="struct_member_description"><p>video height (derived class needs to set this)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -274,10 +274,10 @@ the <em class="parameter"><code>dst</code></em>
 </colgroup>
 <tbody><tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstVideoSinkClass.show-frame"></a>show_frame</code></em> ()</p></td>
-<td class="struct_member_description"><p>render a video frame. Maps to <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> and
-<a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstBaseSink.html#GstBaseSinkClass.preroll"><code class="function">GstBaseSinkClass.preroll()</code></a> vfuncs. Rendering during preroll will be
+<td class="struct_member_description"><p>render a video frame. Maps to <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstBaseSink.html#GstBaseSinkClass.render"><code class="function">GstBaseSinkClass.render()</code></a> and
+<a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstBaseSink.html#GstBaseSinkClass.preroll"><code class="function">GstBaseSinkClass.preroll()</code></a> vfuncs. Rendering during preroll will be
 suppressed if the <a class="link" href="GstVideoSink.html#GstVideoSink--show-preroll-frame" title="The “show-preroll-frame” property"><span class="type">“show-preroll-frame”</span></a> property is set to
-<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p></td>
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -304,22 +304,22 @@ suppressed if the <a class="link" href="GstVideoSink.html#GstVideoSink--show-pre
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoRectangle.x"></a>x</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoRectangle.x"></a>x</code></em>;</p></td>
 <td class="struct_member_description"><p>X coordinate of rectangle's top-left point</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoRectangle.y"></a>y</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoRectangle.y"></a>y</code></em>;</p></td>
 <td class="struct_member_description"><p>Y coordinate of rectangle's top-left point</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoRectangle.w"></a>w</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoRectangle.w"></a>w</code></em>;</p></td>
 <td class="struct_member_description"><p>width of the rectangle</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoRectangle.h"></a>h</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstVideoRectangle.h"></a>h</code></em>;</p></td>
 <td class="struct_member_description"><p>height of the rectangle</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -332,8 +332,8 @@ suppressed if the <a class="link" href="GstVideoSink.html#GstVideoSink--show-pre
 <a name="GstVideoSink.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GstVideoSink--show-preroll-frame"></a><h3>The <code class="literal">“show-preroll-frame”</code> property</h3>
-<pre class="programlisting">  “show-preroll-frame”       <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>Whether to show video frames during preroll. If set to <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><span class="type">FALSE</span></a>, video
+<pre class="programlisting">  “show-preroll-frame”       <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Whether to show video frames during preroll. If set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><span class="type">FALSE</span></a>, video
 frames will only be rendered in PLAYING state.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: TRUE</p>
@@ -341,6 +341,6 @@ frames will only be rendered in PLAYING state.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>
