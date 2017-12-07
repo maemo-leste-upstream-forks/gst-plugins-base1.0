@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-video.html" title="Video Library">
 <link rel="prev" href="gst-plugins-base-libs-GstVideoDither.html" title="GstVideoDither">
 <link rel="next" href="gst-plugins-base-libs-GstVideoResampler.html" title="GstVideoResampler">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -48,7 +48,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstVideoChroma.html#gst-video-chroma-to-string" title="gst_video_chroma_to_string ()">gst_video_chroma_to_string</a> <span class="c_punctuation">()</span>
@@ -133,7 +133,7 @@ and converting between different chroma sampling sitings.</p>
 <div class="refsect2">
 <a name="gst-video-chroma-from-string"></a><h3>gst_video_chroma_from_string ()</h3>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstVideoChroma.html#GstVideoChromaSite" title="enum GstVideoChromaSite"><span class="returnvalue">GstVideoChromaSite</span></a>
-gst_video_chroma_from_string (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s</code></em>);</pre>
+gst_video_chroma_from_string (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s</code></em>);</pre>
 <p>Convert <em class="parameter"><code>s</code></em>
  to a <a class="link" href="gst-plugins-base-libs-GstVideoChroma.html#GstVideoChromaSite" title="enum GstVideoChromaSite"><span class="type">GstVideoChromaSite</span></a></p>
 <div class="refsect3">
@@ -161,7 +161,7 @@ not contain a valid chroma description.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-video-chroma-to-string"></a><h3>gst_video_chroma_to_string ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_video_chroma_to_string (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoChroma.html#GstVideoChromaSite" title="enum GstVideoChromaSite"><span class="type">GstVideoChromaSite</span></a> site</code></em>);</pre>
 <p>Converts <em class="parameter"><code>site</code></em>
  to its string representation.</p>
@@ -191,8 +191,8 @@ gst_video_chroma_to_string (<em class="parameter"><code><a class="link" href="gs
 <a name="gst-video-chroma-resample"></a><h3>gst_video_chroma_resample ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_chroma_resample (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoChroma.html#GstVideoChromaResample" title="GstVideoChromaResample"><span class="type">GstVideoChromaResample</span></a> *resample</code></em>,
-                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> lines[]</code></em>,
-                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> width</code></em>);</pre>
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> lines[]</code></em>,
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> width</code></em>);</pre>
 <p>Perform resampling of <em class="parameter"><code>width</code></em>
  chroma pixels in <em class="parameter"><code>lines</code></em>
 .</p>
@@ -252,8 +252,8 @@ gst_video_chroma_resample_free (<em class="parameter"><code><a class="link" href
 <a name="gst-video-chroma-resample-get-info"></a><h3>gst_video_chroma_resample_get_info ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_chroma_resample_get_info (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoChroma.html#GstVideoChromaResample" title="GstVideoChromaResample"><span class="type">GstVideoChromaResample</span></a> *resample</code></em>,
-                                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> *n_lines</code></em>,
-                                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> *offset</code></em>);</pre>
+                                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *n_lines</code></em>,
+                                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *offset</code></em>);</pre>
 <p>The resampler must be fed <em class="parameter"><code>n_lines</code></em>
  at a time. The first line should be
 at <em class="parameter"><code>offset</code></em>
@@ -294,8 +294,8 @@ gst_video_chroma_resample_new (<em class="parameter"><code><a class="link" href=
                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoChroma.html#GstVideoChromaSite" title="enum GstVideoChromaSite"><span class="type">GstVideoChromaSite</span></a> site</code></em>,
                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoChroma.html#GstVideoChromaFlags" title="enum GstVideoChromaFlags"><span class="type">GstVideoChromaFlags</span></a> flags</code></em>,
                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
-                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> h_factor</code></em>,
-                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> v_factor</code></em>);</pre>
+                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> h_factor</code></em>,
+                               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> v_factor</code></em>);</pre>
 <p>Create a new resampler object for the given parameters. When <em class="parameter"><code>h_factor</code></em>
  or
 <em class="parameter"><code>v_factor</code></em>
@@ -504,6 +504,6 @@ performed.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

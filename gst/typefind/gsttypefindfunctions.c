@@ -264,9 +264,9 @@ check_utf32 (const guint8 * data, gint len, gint endianness)
   while (len > 3) {
     guint32 v;
     if (endianness == G_BIG_ENDIAN)
-      v = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
+      v = GST_READ_UINT32_BE (data);
     else
-      v = (data[3] << 24) | (data[2] << 16) | (data[1] << 8) | data[0];
+      v = GST_READ_UINT32_LE (data);
     if (v >= 0x10FFFF)
       return FALSE;
     data += 4;
@@ -1716,7 +1716,7 @@ ac3_type_find (GstTypeFind * tf, gpointer unused)
    * frame is followed by a second frame at the expected offset.
    * We could also check the two ac3 CRCs, but we don't do that right now */
   while (c.offset < 1024) {
-    if (G_UNLIKELY (!data_scan_ctx_ensure_data (tf, &c, 5)))
+    if (G_UNLIKELY (!data_scan_ctx_ensure_data (tf, &c, 6)))
       break;
 
     if (c.data[0] == 0x0b && c.data[1] == 0x77) {
@@ -3012,7 +3012,7 @@ static GstStaticCaps aiff_caps = GST_STATIC_CAPS ("audio/x-aiff");
 static void
 aiff_type_find (GstTypeFind * tf, gpointer unused)
 {
-  const guint8 *data = gst_type_find_peek (tf, 0, 4);
+  const guint8 *data = gst_type_find_peek (tf, 0, 16);
 
   if (data && memcmp (data, "FORM", 4) == 0) {
     data += 8;
@@ -3029,7 +3029,7 @@ static GstStaticCaps svx_caps = GST_STATIC_CAPS ("audio/x-svx");
 static void
 svx_type_find (GstTypeFind * tf, gpointer unused)
 {
-  const guint8 *data = gst_type_find_peek (tf, 0, 4);
+  const guint8 *data = gst_type_find_peek (tf, 0, 16);
 
   if (data && memcmp (data, "FORM", 4) == 0) {
     data += 8;
@@ -3266,7 +3266,7 @@ qt_type_find (GstTypeFind * tf, gpointer unused)
     if ((STRNCMP (&data[4], "ftyp", 4) == 0) && (size >= 16)) {
       new_offset = offset + 12;
       while (new_offset + 4 <= offset + size) {
-        data = gst_type_find_peek (tf, new_offset, 4);
+        data = gst_type_find_peek (tf, new_offset, 8);
         if (data == NULL)
           goto done;
         if (STRNCMP (&data[4], "isom", 4) == 0 ||
@@ -4054,15 +4054,24 @@ pnm_type_find (GstTypeFind * tf, gpointer ununsed)
 
     /* need to skip any comment lines first */
     data_scan_ctx_advance (tf, &c, 3);
+
+    if (!data_scan_ctx_ensure_data (tf, &c, 1))
+      return;
+
     while (c.data[0] == '#') {  /* we know there's still data left */
       data_scan_ctx_advance (tf, &c, 1);
+      if (!data_scan_ctx_ensure_data (tf, &c, 1))
+        return;
+
       while (c.data[0] != '\n' && c.data[0] != '\r') {
-        if (!data_scan_ctx_ensure_data (tf, &c, 4))
-          return;
         data_scan_ctx_advance (tf, &c, 1);
+        if (!data_scan_ctx_ensure_data (tf, &c, 1))
+          return;
       }
       data_scan_ctx_advance (tf, &c, 1);
       GST_LOG ("skipped comment line in PNM header");
+      if (!data_scan_ctx_ensure_data (tf, &c, 1))
+        return;
     }
 
     if (!data_scan_ctx_ensure_data (tf, &c, 32) &&
@@ -4696,7 +4705,7 @@ webvtt_type_find (GstTypeFind * tf, gpointer private)
 {
   const guint8 *data;
 
-  data = gst_type_find_peek (tf, 0, 9);
+  data = gst_type_find_peek (tf, 0, 10);
 
   if (data == NULL)
     return;
@@ -5234,7 +5243,7 @@ windows_icon_typefind (GstTypeFind * find, gpointer user_data)
   gint32 size, offset;
 
   datalen = gst_type_find_get_length (find);
-  if (datalen < 18)
+  if (datalen < 22)
     return;
   if ((data = gst_type_find_peek (find, 0, 6)) == NULL)
     return;

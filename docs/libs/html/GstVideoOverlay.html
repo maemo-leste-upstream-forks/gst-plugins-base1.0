@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-video.html" title="Video Library">
 <link rel="prev" href="GstVideoOrientation.html" title="GstVideoOrientation">
 <link rel="next" href="gst-plugins-base-libs-GstVideoDecoder.html" title="GstVideoDecoder">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -84,7 +84,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstVideoOverlay.html#gst-video-overlay-set-render-rectangle" title="gst_video_overlay_set_render_rectangle ()">gst_video_overlay_set_render_rectangle</a> <span class="c_punctuation">()</span>
@@ -92,7 +92,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstVideoOverlay.html#gst-is-video-overlay-prepare-window-handle-message" title="gst_is_video_overlay_prepare_window_handle_message ()">gst_is_video_overlay_prepare_window_handle_message</a> <span class="c_punctuation">()</span>
@@ -122,7 +122,7 @@
 </div>
 <div class="refsect1">
 <a name="GstVideoOverlay.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/GTypeModule.html">GInterface</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/GTypeModule.html">GInterface</a>
     <span class="lineart">╰──</span> GstVideoOverlay
 </pre>
 </div>
@@ -140,7 +140,7 @@ This is achieved by either being informed about the Window identifier that
 the video sink element generated, or by forcing the video sink element to use
 a specific Window identifier for rendering.</p></li>
 <li class="listitem"><p>To force a redrawing of the latest video frame the video sink element
-displayed on the Window. Indeed if the <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPipeline.html#GstPipeline-struct"><span class="type">GstPipeline</span></a> is in <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#GST-STATE-PAUSED:CAPS"><span class="type">GST_STATE_PAUSED</span></a>
+displayed on the Window. Indeed if the <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPipeline.html#GstPipeline-struct"><span class="type">GstPipeline</span></a> is in <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GST-STATE-PAUSED:CAPS"><span class="type">GST_STATE_PAUSED</span></a>
 state, moving the Window around will damage its content. Application
 developers will want to handle the Expose events themselves and force the
 video sink element to refresh the Window's content.</p></li>
@@ -152,7 +152,7 @@ clicks.</p>
 <p>Setting a specific Window identifier on the video sink element is the most
 flexible solution but it has some issues. Indeed the application needs to set
 its Window identifier at the right time to avoid internal Window creation
-from the video sink element. To solve this issue a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMessage.html#GstMessage-struct"><span class="type">GstMessage</span></a> is posted on
+from the video sink element. To solve this issue a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMessage.html#GstMessage-struct"><span class="type">GstMessage</span></a> is posted on
 the bus to inform the application that it should set the Window identifier
 immediately. Here is an example on how to do that correctly:</p>
 <div class="informalexample">
@@ -206,10 +206,10 @@ immediately. Here is an example on how to do that correctly:</p>
 
  <span class="function">XSync</span> <span class="gtkdoc opt">(</span>disp<span class="gtkdoc opt">,</span> FALSE<span class="gtkdoc opt">);</span>
 
- <span class="function"><a href="GstVideoOverlay.html#gst-video-overlay-set-window-handle">gst_video_overlay_set_window_handle</a></span> <span class="gtkdoc opt">(</span><span class="function">GST_VIDEO_OVERLAY</span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMessage.html#GST-MESSAGE-SRC:CAPS">GST_MESSAGE_SRC</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">)),</span>
+ <span class="function"><a href="GstVideoOverlay.html#gst-video-overlay-set-window-handle">gst_video_overlay_set_window_handle</a></span> <span class="gtkdoc opt">(</span><span class="function">GST_VIDEO_OVERLAY</span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMessage.html#GST-MESSAGE-SRC:CAPS">GST_MESSAGE_SRC</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">)),</span>
      win<span class="gtkdoc opt">);</span>
 
- <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMessage.html#gst-message-unref">gst_message_unref</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">);</span>
+ <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMessage.html#gst-message-unref">gst_message_unref</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">);</span>
 
  <span class="keyword">return</span> GST_BUS_DROP<span class="gtkdoc opt">;</span>
 <span class="gtkdoc opt">}</span>
@@ -218,8 +218,8 @@ immediately. Here is an example on how to do that correctly:</p>
 <span class="function">main</span> <span class="gtkdoc opt">(</span><span class="gtkdoc kwb">int</span> argc<span class="gtkdoc opt">,</span> <span class="gtkdoc kwb">char</span> <span class="gtkdoc opt">**</span>argv<span class="gtkdoc opt">)</span>
 <span class="gtkdoc opt">{</span>
 <span class="gtkdoc opt">...</span>
- bus <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPipeline.html#gst-pipeline-get-bus">gst_pipeline_get_bus</a></span> <span class="gtkdoc opt">(</span><span class="function">GST_PIPELINE</span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">));</span>
- <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBus.html#gst-bus-set-sync-handler">gst_bus_set_sync_handler</a></span> <span class="gtkdoc opt">(</span>bus<span class="gtkdoc opt">, (</span>GstBusSyncHandler<span class="gtkdoc opt">)</span> create_window<span class="gtkdoc opt">,</span> pipeline<span class="gtkdoc opt">,</span>
+ bus <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPipeline.html#gst-pipeline-get-bus">gst_pipeline_get_bus</a></span> <span class="gtkdoc opt">(</span><span class="function">GST_PIPELINE</span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">));</span>
+ <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBus.html#gst-bus-set-sync-handler">gst_bus_set_sync_handler</a></span> <span class="gtkdoc opt">(</span>bus<span class="gtkdoc opt">, (</span>GstBusSyncHandler<span class="gtkdoc opt">)</span> create_window<span class="gtkdoc opt">,</span> pipeline<span class="gtkdoc opt">,</span>
         NULL<span class="gtkdoc opt">);</span>
 <span class="gtkdoc opt">...</span>
 <span class="gtkdoc opt">}</span></pre></td>
@@ -263,10 +263,10 @@ prepare-window-handle message is handled, because most GUI toolkits and
 windowing systems are not thread-safe at all and a lot of care would be
 required to co-ordinate the toolkit and window system calls of the
 different threads (Gtk+ users please note: prior to Gtk+ 2.18
-<a href="/usr/share/gtk-doc/html/gdk3gdk3-X-Window-System-Interaction.html#GDK-WINDOW-XID:CAPS"><code class="function">GDK_WINDOW_XID()</code></a> was just a simple structure access, so generally fine to do
+<a href="/usr/share/gtk-doc/html/gdk3/gdk3-X-Window-System-Interaction.html#GDK-WINDOW-XID:CAPS"><code class="function">GDK_WINDOW_XID()</code></a> was just a simple structure access, so generally fine to do
 within the bus sync handler; this macro was changed to a function call in
 Gtk+ 2.18 and later, which is likely to cause problems when called from a
-sync handler; see below for a better approach without <a href="/usr/share/gtk-doc/html/gdk3gdk3-X-Window-System-Interaction.html#GDK-WINDOW-XID:CAPS"><code class="function">GDK_WINDOW_XID()</code></a>
+sync handler; see below for a better approach without <a href="/usr/share/gtk-doc/html/gdk3/gdk3-X-Window-System-Interaction.html#GDK-WINDOW-XID:CAPS"><code class="function">GDK_WINDOW_XID()</code></a>
 used in the callback).</p>
 </div>
 <div class="refsect3">
@@ -393,13 +393,13 @@ used in the callback).</p>
    GstVideoOverlay <span class="gtkdoc opt">*</span>overlay<span class="gtkdoc opt">;</span>
 
    <span class="gtkdoc slc">// GST_MESSAGE_SRC (message) will be the video sink element</span>
-   overlay <span class="gtkdoc opt">=</span> <span class="function">GST_VIDEO_OVERLAY</span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMessage.html#GST-MESSAGE-SRC:CAPS">GST_MESSAGE_SRC</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">));</span>
+   overlay <span class="gtkdoc opt">=</span> <span class="function">GST_VIDEO_OVERLAY</span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMessage.html#GST-MESSAGE-SRC:CAPS">GST_MESSAGE_SRC</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">));</span>
    <span class="function"><a href="GstVideoOverlay.html#gst-video-overlay-set-window-handle">gst_video_overlay_set_window_handle</a></span> <span class="gtkdoc opt">(</span>overlay<span class="gtkdoc opt">,</span> video_window_handle<span class="gtkdoc opt">);</span>
  <span class="gtkdoc opt">}</span> <span class="keyword">else</span> <span class="gtkdoc opt">{</span>
-   <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Message-Logging.html#g-warning">g_warning</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Should have obtained video_window_handle by now!&quot;</span><span class="gtkdoc opt">);</span>
+   <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-Message-Logging.html#g-warning">g_warning</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Should have obtained video_window_handle by now!&quot;</span><span class="gtkdoc opt">);</span>
  <span class="gtkdoc opt">}</span>
 
- <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMessage.html#gst-message-unref">gst_message_unref</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">);</span>
+ <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMessage.html#gst-message-unref">gst_message_unref</a></span> <span class="gtkdoc opt">(</span>message<span class="gtkdoc opt">);</span>
  <span class="keyword">return</span> GST_BUS_DROP<span class="gtkdoc opt">;</span>
 <span class="gtkdoc opt">}</span>
 <span class="gtkdoc opt">...</span>
@@ -411,19 +411,19 @@ used in the callback).</p>
   <span class="gtkdoc slc">// drawing onto the parent widget.</span>
   <span class="gtkdoc slc">// This is here just for pedagogical purposes, GDK_WINDOW_XID will call</span>
   <span class="gtkdoc slc">// it as well in newer Gtk versions</span>
-  <span class="keyword">if</span> <span class="gtkdoc opt">(!</span><span class="function"><a href="/usr/share/gtk-doc/html/gdk3gdk3-Windows.html#gdk-window-ensure-native">gdk_window_ensure_native</a></span> <span class="gtkdoc opt">(</span>widget<span class="gtkdoc opt">-&gt;</span>window<span class="gtkdoc opt">))</span>
-    <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Message-Logging.html#g-error">g_error</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Couldn&apos;t create native window needed for GstVideoOverlay!&quot;</span><span class="gtkdoc opt">);</span>
+  <span class="keyword">if</span> <span class="gtkdoc opt">(!</span><span class="function"><a href="/usr/share/gtk-doc/html/gdk3/gdk3-Windows.html#gdk-window-ensure-native">gdk_window_ensure_native</a></span> <span class="gtkdoc opt">(</span>widget<span class="gtkdoc opt">-&gt;</span>window<span class="gtkdoc opt">))</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-Message-Logging.html#g-error">g_error</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Couldn&apos;t create native window needed for GstVideoOverlay!&quot;</span><span class="gtkdoc opt">);</span>
 <span class="gtkdoc ppc">#endif</span>
 
 <span class="gtkdoc ppc">#ifdef GDK_WINDOWING_X11</span>
   <span class="gtkdoc opt">{</span>
-    gulong xid <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gdk3gdk3-X-Window-System-Interaction.html#GDK-WINDOW-XID:CAPS">GDK_WINDOW_XID</a></span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gtk3GtkWidget.html#gtk-widget-get-window">gtk_widget_get_window</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">));</span>
+    gulong xid <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gdk3/gdk3-X-Window-System-Interaction.html#GDK-WINDOW-XID:CAPS">GDK_WINDOW_XID</a></span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html#gtk-widget-get-window">gtk_widget_get_window</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">));</span>
     video_window_handle <span class="gtkdoc opt">=</span> xid<span class="gtkdoc opt">;</span>
   <span class="gtkdoc opt">}</span>
 <span class="gtkdoc ppc">#endif</span>
 <span class="gtkdoc ppc">#ifdef GDK_WINDOWING_WIN32</span>
   <span class="gtkdoc opt">{</span>
-    HWND wnd <span class="gtkdoc opt">=</span> <span class="function">GDK_WINDOW_HWND</span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gtk3GtkWidget.html#gtk-widget-get-window">gtk_widget_get_window</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">));</span>
+    HWND wnd <span class="gtkdoc opt">=</span> <span class="function">GDK_WINDOW_HWND</span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html#gtk-widget-get-window">gtk_widget_get_window</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">));</span>
     video_window_handle <span class="gtkdoc opt">= (</span>guintptr<span class="gtkdoc opt">)</span> wnd<span class="gtkdoc opt">;</span>
   <span class="gtkdoc opt">}</span>
 <span class="gtkdoc ppc">#endif</span>
@@ -435,36 +435,36 @@ used in the callback).</p>
   GtkWidget <span class="gtkdoc opt">*</span>video_window<span class="gtkdoc opt">;</span>
   GtkWidget <span class="gtkdoc opt">*</span>app_window<span class="gtkdoc opt">;</span>
   <span class="gtkdoc opt">...</span>
-  app_window <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gtk3GtkWindow.html#gtk-window-new">gtk_window_new</a></span> <span class="gtkdoc opt">(</span>GTK_WINDOW_TOPLEVEL<span class="gtkdoc opt">);</span>
+  app_window <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gtk3/GtkWindow.html#gtk-window-new">gtk_window_new</a></span> <span class="gtkdoc opt">(</span>GTK_WINDOW_TOPLEVEL<span class="gtkdoc opt">);</span>
   <span class="gtkdoc opt">...</span>
-  video_window <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gtk3GtkDrawingArea.html#gtk-drawing-area-new">gtk_drawing_area_new</a></span> <span class="gtkdoc opt">();</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#g-signal-connect">g_signal_connect</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">,</span> <span class="string">&quot;realize&quot;</span><span class="gtkdoc opt">,</span>
-      <span class="function"><a href="/usr/share/gtk-doc/html/gobjectgobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span> <span class="gtkdoc opt">(</span>video_widget_realize_cb<span class="gtkdoc opt">),</span> NULL<span class="gtkdoc opt">);</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gtk3GtkWidget.html#gtk-widget-set-double-buffered">gtk_widget_set_double_buffered</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">,</span> FALSE<span class="gtkdoc opt">);</span>
+  video_window <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gtk3/GtkDrawingArea.html#gtk-drawing-area-new">gtk_drawing_area_new</a></span> <span class="gtkdoc opt">();</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">,</span> <span class="string">&quot;realize&quot;</span><span class="gtkdoc opt">,</span>
+      <span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span> <span class="gtkdoc opt">(</span>video_widget_realize_cb<span class="gtkdoc opt">),</span> NULL<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html#gtk-widget-set-double-buffered">gtk_widget_set_double_buffered</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">,</span> FALSE<span class="gtkdoc opt">);</span>
   <span class="gtkdoc opt">...</span>
   <span class="gtkdoc slc">// usually the video_window will not be directly embedded into the</span>
   <span class="gtkdoc slc">// application window like this, but there will be many other widgets</span>
   <span class="gtkdoc slc">// and the video window will be embedded in one of them instead</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gtk3GtkContainer.html#gtk-container-add">gtk_container_add</a></span> <span class="gtkdoc opt">(</span><span class="function">GTK_CONTAINER</span> <span class="gtkdoc opt">(</span>ap_window<span class="gtkdoc opt">),</span> video_window<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gtk3/GtkContainer.html#gtk-container-add">gtk_container_add</a></span> <span class="gtkdoc opt">(</span><span class="function">GTK_CONTAINER</span> <span class="gtkdoc opt">(</span>ap_window<span class="gtkdoc opt">),</span> video_window<span class="gtkdoc opt">);</span>
   <span class="gtkdoc opt">...</span>
   <span class="gtkdoc slc">// show the GUI</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gtk3GtkWidget.html#gtk-widget-show-all">gtk_widget_show_all</a></span> <span class="gtkdoc opt">(</span>app_window<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html#gtk-widget-show-all">gtk_widget_show_all</a></span> <span class="gtkdoc opt">(</span>app_window<span class="gtkdoc opt">);</span>
 
   <span class="gtkdoc slc">// realize window now so that the video window gets created and we can</span>
   <span class="gtkdoc slc">// obtain its XID/HWND before the pipeline is started up and the videosink</span>
   <span class="gtkdoc slc">// asks for the XID/HWND of the window to render onto</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gtk3GtkWidget.html#gtk-widget-realize">gtk_widget_realize</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html#gtk-widget-realize">gtk_widget_realize</a></span> <span class="gtkdoc opt">(</span>video_window<span class="gtkdoc opt">);</span>
 
   <span class="gtkdoc slc">// we should have the XID/HWND now</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Testing.html#g-assert">g_assert</a></span> <span class="gtkdoc opt">(</span>video_window_handle <span class="gtkdoc opt">!=</span> <span class="number">0</span><span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-Testing.html#g-assert">g_assert</a></span> <span class="gtkdoc opt">(</span>video_window_handle <span class="gtkdoc opt">!=</span> <span class="number">0</span><span class="gtkdoc opt">);</span>
   <span class="gtkdoc opt">...</span>
   <span class="gtkdoc slc">// set up sync handler for setting the xid once the pipeline is started</span>
-  bus <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPipeline.html#gst-pipeline-get-bus">gst_pipeline_get_bus</a></span> <span class="gtkdoc opt">(</span><span class="function">GST_PIPELINE</span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">));</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBus.html#gst-bus-set-sync-handler">gst_bus_set_sync_handler</a></span> <span class="gtkdoc opt">(</span>bus<span class="gtkdoc opt">, (</span>GstBusSyncHandler<span class="gtkdoc opt">)</span> bus_sync_handler<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">,</span>
+  bus <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPipeline.html#gst-pipeline-get-bus">gst_pipeline_get_bus</a></span> <span class="gtkdoc opt">(</span><span class="function">GST_PIPELINE</span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">));</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBus.html#gst-bus-set-sync-handler">gst_bus_set_sync_handler</a></span> <span class="gtkdoc opt">(</span>bus<span class="gtkdoc opt">, (</span>GstBusSyncHandler<span class="gtkdoc opt">)</span> bus_sync_handler<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">,</span>
       NULL<span class="gtkdoc opt">);</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>bus<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>bus<span class="gtkdoc opt">);</span>
   <span class="gtkdoc opt">...</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> GST_STATE_PLAYING<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> GST_STATE_PLAYING<span class="gtkdoc opt">);</span>
   <span class="gtkdoc opt">...</span>
 <span class="gtkdoc opt">}</span></pre></td>
       </tr>
@@ -543,20 +543,20 @@ used in the callback).</p>
 
 <span class="gtkdoc kwb">int</span> <span class="function">main</span><span class="gtkdoc opt">(</span><span class="gtkdoc kwb">int</span> argc<span class="gtkdoc opt">,</span> <span class="gtkdoc kwb">char</span> <span class="gtkdoc opt">*</span>argv<span class="gtkdoc opt">[])</span>
 <span class="gtkdoc opt">{</span>
-  <span class="keyword">if</span> <span class="gtkdoc opt">(!</span><span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Deprecated-Thread-APIs.html#g-thread-supported">g_thread_supported</a></span> <span class="gtkdoc opt">())</span>
-    <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Deprecated-Thread-APIs.html#g-thread-init">g_thread_init</a></span> <span class="gtkdoc opt">(</span>NULL<span class="gtkdoc opt">);</span>
+  <span class="keyword">if</span> <span class="gtkdoc opt">(!</span><span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-Deprecated-Thread-APIs.html#g-thread-supported">g_thread_supported</a></span> <span class="gtkdoc opt">())</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-Deprecated-Thread-APIs.html#g-thread-init">g_thread_init</a></span> <span class="gtkdoc opt">(</span>NULL<span class="gtkdoc opt">);</span>
 
-  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0gstreamer-Gst.html#gst-init">gst_init</a></span> <span class="gtkdoc opt">(&amp;</span>argc<span class="gtkdoc opt">, &amp;</span>argv<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-Gst.html#gst-init">gst_init</a></span> <span class="gtkdoc opt">(&amp;</span>argc<span class="gtkdoc opt">, &amp;</span>argv<span class="gtkdoc opt">);</span>
   QApplication <span class="function">app</span><span class="gtkdoc opt">(</span>argc<span class="gtkdoc opt">,</span> argv<span class="gtkdoc opt">);</span>
   app<span class="gtkdoc opt">.</span><span class="function">connect</span><span class="gtkdoc opt">(&amp;</span>app<span class="gtkdoc opt">,</span> <span class="function">SIGNAL</span><span class="gtkdoc opt">(</span><span class="function">lastWindowClosed</span><span class="gtkdoc opt">()), &amp;</span>app<span class="gtkdoc opt">,</span> <span class="function">SLOT</span><span class="gtkdoc opt">(</span><span class="function">quit</span> <span class="gtkdoc opt">()));</span>
 
   <span class="gtkdoc slc">// prepare the pipeline</span>
 
-  GstElement <span class="gtkdoc opt">*</span>pipeline <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPipeline.html#gst-pipeline-new">gst_pipeline_new</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;xvoverlay&quot;</span><span class="gtkdoc opt">);</span>
-  GstElement <span class="gtkdoc opt">*</span>src <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElementFactory.html#gst-element-factory-make">gst_element_factory_make</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;videotestsrc&quot;</span><span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
-  GstElement <span class="gtkdoc opt">*</span>sink <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElementFactory.html#gst-element-factory-make">gst_element_factory_make</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;xvimagesink&quot;</span><span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBin.html#gst-bin-add-many">gst_bin_add_many</a></span> <span class="gtkdoc opt">(</span><span class="function">GST_BIN</span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">),</span> src<span class="gtkdoc opt">,</span> sink<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-link">gst_element_link</a></span> <span class="gtkdoc opt">(</span>src<span class="gtkdoc opt">,</span> sink<span class="gtkdoc opt">);</span>
+  GstElement <span class="gtkdoc opt">*</span>pipeline <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPipeline.html#gst-pipeline-new">gst_pipeline_new</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;xvoverlay&quot;</span><span class="gtkdoc opt">);</span>
+  GstElement <span class="gtkdoc opt">*</span>src <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElementFactory.html#gst-element-factory-make">gst_element_factory_make</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;videotestsrc&quot;</span><span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
+  GstElement <span class="gtkdoc opt">*</span>sink <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElementFactory.html#gst-element-factory-make">gst_element_factory_make</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;xvimagesink&quot;</span><span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBin.html#gst-bin-add-many">gst_bin_add_many</a></span> <span class="gtkdoc opt">(</span><span class="function">GST_BIN</span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">),</span> src<span class="gtkdoc opt">,</span> sink<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-link">gst_element_link</a></span> <span class="gtkdoc opt">(</span>src<span class="gtkdoc opt">,</span> sink<span class="gtkdoc opt">);</span>
 
   <span class="gtkdoc slc">// prepare the ui</span>
 
@@ -569,11 +569,11 @@ used in the callback).</p>
 
   <span class="gtkdoc slc">// run the pipeline</span>
 
-  GstStateChangeReturn sret <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span>
+  GstStateChangeReturn sret <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span>
       GST_STATE_PLAYING<span class="gtkdoc opt">);</span>
   <span class="keyword">if</span> <span class="gtkdoc opt">(</span>sret <span class="gtkdoc opt">==</span> GST_STATE_CHANGE_FAILURE<span class="gtkdoc opt">) {</span>
-    <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> GST_STATE_NULL<span class="gtkdoc opt">);</span>
-    <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">);</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> GST_STATE_NULL<span class="gtkdoc opt">);</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">);</span>
     <span class="gtkdoc slc">// Exit application</span>
     <span class="gtkdoc kwc">QTimer</span><span class="gtkdoc opt">::</span><span class="function">singleShot</span><span class="gtkdoc opt">(</span><span class="number">0</span><span class="gtkdoc opt">,</span> <span class="gtkdoc kwc">QApplication</span><span class="gtkdoc opt">::</span><span class="function">activeWindow</span><span class="gtkdoc opt">(),</span> <span class="function">SLOT</span><span class="gtkdoc opt">(</span><span class="function">quit</span><span class="gtkdoc opt">()));</span>
   <span class="gtkdoc opt">}</span>
@@ -581,8 +581,8 @@ used in the callback).</p>
   <span class="gtkdoc kwb">int</span> ret <span class="gtkdoc opt">=</span> app<span class="gtkdoc opt">.</span><span class="function">exec</span><span class="gtkdoc opt">();</span>
 
   window<span class="gtkdoc opt">.</span><span class="function">hide</span><span class="gtkdoc opt">();</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> GST_STATE_NULL<span class="gtkdoc opt">);</span>
-  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-set-state">gst_element_set_state</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">,</span> GST_STATE_NULL<span class="gtkdoc opt">);</span>
+  <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#gst-object-unref">gst_object_unref</a></span> <span class="gtkdoc opt">(</span>pipeline<span class="gtkdoc opt">);</span>
 
   <span class="keyword">return</span> ret<span class="gtkdoc opt">;</span>
 <span class="gtkdoc opt">}</span></pre></td>
@@ -600,7 +600,7 @@ used in the callback).</p>
 <a name="gst-video-overlay-got-window-handle"></a><h3>gst_video_overlay_got_window_handle ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_overlay_got_window_handle (<em class="parameter"><code><a class="link" href="GstVideoOverlay.html" title="GstVideoOverlay"><span class="type">GstVideoOverlay</span></a> *overlay</code></em>,
-                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guintptr"><span class="type">guintptr</span></a> handle</code></em>);</pre>
+                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guintptr"><span class="type">guintptr</span></a> handle</code></em>);</pre>
 <p>This will post a "have-window-handle" element message on the bus.</p>
 <p>This function should only be used by video overlay plugin developers.</p>
 <div class="refsect3">
@@ -631,7 +631,7 @@ gst_video_overlay_got_window_handle (<em class="parameter"><code><a class="link"
 <a name="gst-video-overlay-set-window-handle"></a><h3>gst_video_overlay_set_window_handle ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_overlay_set_window_handle (<em class="parameter"><code><a class="link" href="GstVideoOverlay.html" title="GstVideoOverlay"><span class="type">GstVideoOverlay</span></a> *overlay</code></em>,
-                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guintptr"><span class="type">guintptr</span></a> handle</code></em>);</pre>
+                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guintptr"><span class="type">guintptr</span></a> handle</code></em>);</pre>
 <p>This will call the video overlay's set_window_handle method. You
 should use this method to tell to an overlay to display video output to a
 specific window (e.g. an XWindow on X11). Passing 0 as the  <em class="parameter"><code>handle</code></em>
@@ -715,7 +715,7 @@ in the drawable even if the pipeline is PAUSED.</p>
 <a name="gst-video-overlay-handle-events"></a><h3>gst_video_overlay_handle_events ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_overlay_handle_events (<em class="parameter"><code><a class="link" href="GstVideoOverlay.html" title="GstVideoOverlay"><span class="type">GstVideoOverlay</span></a> *overlay</code></em>,
-                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> handle_events</code></em>);</pre>
+                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> handle_events</code></em>);</pre>
 <p>Tell an overlay that it should handle events from the window system. These
 events are forwarded upstream as navigation events. In some window system,
 events are not propagated in the window hierarchy if a client is listening
@@ -737,7 +737,7 @@ from the <a class="link" href="GstVideoOverlay.html" title="GstVideoOverlay"><sp
 </tr>
 <tr>
 <td class="parameter_name"><p>handle_events</p></td>
-<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating if events should be handled or not.</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> indicating if events should be handled or not.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -747,13 +747,13 @@ from the <a class="link" href="GstVideoOverlay.html" title="GstVideoOverlay"><sp
 <hr>
 <div class="refsect2">
 <a name="gst-video-overlay-set-render-rectangle"></a><h3>gst_video_overlay_set_render_rectangle ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_video_overlay_set_render_rectangle
                                (<em class="parameter"><code><a class="link" href="GstVideoOverlay.html" title="GstVideoOverlay"><span class="type">GstVideoOverlay</span></a> *overlay</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> x</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> width</code></em>,
-                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> height</code></em>);</pre>
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> width</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> height</code></em>);</pre>
 <p>Configure a subregion as a video target within the window set by
 <a class="link" href="GstVideoOverlay.html#gst-video-overlay-set-window-handle" title="gst_video_overlay_set_window_handle ()"><code class="function">gst_video_overlay_set_window_handle()</code></a>. If this is not used or not supported
 the video will fill the area of the window set as the overlay to 100%.
@@ -804,15 +804,15 @@ do not support subwindows.</p>
 </div>
 <div class="refsect3">
 <a name="gst-video-overlay-set-render-rectangle.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if not supported by the sink.</p>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if not supported by the sink.</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-is-video-overlay-prepare-window-handle-message"></a><h3>gst_is_video_overlay_prepare_window_handle_message ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_is_video_overlay_prepare_window_handle_message
-                               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMessage.html#GstMessage-struct"><span class="type">GstMessage</span></a> *msg</code></em>);</pre>
+                               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMessage.html#GstMessage-struct"><span class="type">GstMessage</span></a> *msg</code></em>);</pre>
 <p>Convenience function to check if the given message is a
 "prepare-window-handle" message from a <a class="link" href="GstVideoOverlay.html" title="GstVideoOverlay"><span class="type">GstVideoOverlay</span></a>.</p>
 <div class="refsect3">
@@ -825,7 +825,7 @@ gst_is_video_overlay_prepare_window_handle_message
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>msg</p></td>
-<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMessage.html#GstMessage-struct"><span class="type">GstMessage</span></a></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMessage.html#GstMessage-struct"><span class="type">GstMessage</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -873,7 +873,7 @@ is a "prepare-window-handle" message</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gobjectgobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GstVideoOverlayInterface.iface"></a>iface</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GstVideoOverlayInterface.iface"></a>iface</code></em>;</p></td>
 <td class="struct_member_description"><p>parent interface type.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -904,6 +904,6 @@ is a "prepare-window-handle" message</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

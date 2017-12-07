@@ -572,10 +572,14 @@ gst_ogm_parse_stream_header (GstOgmParse * ogm, const guint8 * data, guint size)
       caps = gst_riff_create_video_caps (fourcc, NULL, NULL, NULL, NULL, NULL);
 
       if (caps == NULL) {
-        GST_WARNING_OBJECT (ogm, "could not find video caps for fourcc %"
-            GST_FOURCC_FORMAT, GST_FOURCC_ARGS (fourcc));
-        caps = gst_caps_new_simple ("video/x-ogm-unknown", "fourcc",
-            G_TYPE_STRING, ogm->hdr.subtype, NULL);
+        gchar *fstr =
+            g_strdup_printf ("%" GST_FOURCC_FORMAT, GST_FOURCC_ARGS (fourcc));
+        GST_WARNING_OBJECT (ogm, "could not find video caps for fourcc '%s'",
+            fstr);
+        caps =
+            gst_caps_new_simple ("video/x-ogm-unknown", "fourcc", G_TYPE_STRING,
+            fstr, NULL);
+        g_free (fstr);
         break;
       }
 
@@ -590,10 +594,10 @@ gst_ogm_parse_stream_header (GstOgmParse * ogm, const guint8 * data, guint size)
           ogm->hdr.buffersize, ogm->hdr.bits_per_sample, caps);
 
       /* GST_TYPE_FRACTION contains gint */
-      if (ogm->hdr.time_unit > G_MAXINT || ogm->hdr.time_unit < G_MININT)
+      if (ogm->hdr.time_unit > G_MAXINT || ogm->hdr.time_unit < 1)
         GST_WARNING_OBJECT (ogm, "timeunit is out of range");
 
-      time_unit = (gint) CLAMP (ogm->hdr.time_unit, G_MININT, G_MAXINT);
+      time_unit = (gint) CLAMP (ogm->hdr.time_unit, 1, G_MAXINT);
       gst_caps_set_simple (caps,
           "width", G_TYPE_INT, ogm->hdr.s.video.width,
           "height", G_TYPE_INT, ogm->hdr.s.video.height,

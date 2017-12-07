@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-video.html" title="Video Library">
 <link rel="prev" href="GstColorBalance.html" title="GstColorBalance">
 <link rel="next" href="GstVideoDirection.html" title="GstVideoDirection">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -45,7 +45,7 @@
 <tbody><tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GstColorBalanceChannel.html#GstColorBalanceChannel-value-changed" title="The “value-changed” signal">value-changed</a></td>
-<td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
+<td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -70,7 +70,7 @@
 </div>
 <div class="refsect1">
 <a name="GstColorBalanceChannel.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">╰──</span> GstColorBalanceChannel
 </pre>
 </div>
@@ -109,17 +109,17 @@ for modifying the color balance implemented by an element providing the
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstColorBalanceChannel-struct.label"></a>label</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstColorBalanceChannel-struct.label"></a>label</code></em>;</p></td>
 <td class="struct_member_description"><p>A string containing a descriptive name for this channel</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstColorBalanceChannel-struct.min-value"></a>min_value</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstColorBalanceChannel-struct.min-value"></a>min_value</code></em>;</p></td>
 <td class="struct_member_description"><p>The minimum valid value for this channel.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstColorBalanceChannel-struct.max-value"></a>max_value</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstColorBalanceChannel-struct.max-value"></a>max_value</code></em>;</p></td>
 <td class="struct_member_description"><p>The maximum valid value for this channel.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -149,7 +149,7 @@ for modifying the color balance implemented by an element providing the
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="GstColorBalanceChannelClass.parent"></a>parent</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="GstColorBalanceChannelClass.parent"></a>parent</code></em>;</p></td>
 <td class="struct_member_description"><p>the parent class</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -169,8 +169,8 @@ for modifying the color balance implemented by an element providing the
 <a name="GstColorBalanceChannel-value-changed"></a><h3>The <code class="literal">“value-changed”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GstColorBalanceChannel.html" title="GstColorBalanceChannel"><span class="type">GstColorBalanceChannel</span></a> *channel,
-               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a>                    value,
-               <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                user_data)</pre>
+               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a>                    value,
+               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                user_data)</pre>
 <p>Fired when the value of the indicated channel has changed.</p>
 <div class="refsect3">
 <a name="GstColorBalanceChannel-value-changed.parameters"></a><h4>Parameters</h4>
@@ -199,11 +199,11 @@ user_function (<a class="link" href="GstColorBalanceChannel.html" title="GstColo
 </tbody>
 </table></div>
 </div>
-<p>Flags: <a href="/usr/share/gtk-doc/html/gobjectgobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
+<p>Flags: <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

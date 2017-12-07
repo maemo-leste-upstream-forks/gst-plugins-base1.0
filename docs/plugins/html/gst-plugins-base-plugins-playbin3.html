@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="gst-plugins-base Elements">
 <link rel="prev" href="gst-plugins-base-plugins-playbin.html" title="playbin">
 <link rel="next" href="gst-plugins-base-plugins-playsink.html" title="playsink">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -36,7 +36,7 @@
 <p>playbin3 provides a stand-alone everything-in-one abstraction for an
 audio and/or video player. It differs from the previous playbin (playbin2)
 by supporting publication and selection of available streams via the
-<a href="/usr/share/gtk-doc/html/gstreamer-1.0gstreamer-GstStreamCollection.html#GstStreamCollection"><span class="type">GstStreamCollection</span></a> message and <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstEvent.html#GST-EVENT-SELECT-STREAMS:CAPS"><span class="type">GST_EVENT_SELECT_STREAMS</span></a> event API.</p>
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstStreamCollection.html#GstStreamCollection"><span class="type">GstStreamCollection</span></a> message and <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstEvent.html#GST-EVENT-SELECT-STREAMS:CAPS"><span class="type">GST_EVENT_SELECT_STREAMS</span></a> event API.</p>
 <p><span class="emphasis"><em>playbin3 is still experimental API and a technology preview.
 Its behaviour and exposed API is subject to change.</em></span></p>
 <p>playbin3 can handle both audio and video files and features</p>
@@ -56,15 +56,15 @@ files.</p></li>
 <div class="refsect3">
 <a name="id-1.2.34.3.6"></a><h4>Usage</h4>
 <p>A playbin element can be created just like any other element using
-<a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElementFactory.html#gst-element-factory-make"><code class="function">gst_element_factory_make()</code></a>. The file/URI to play should be set via the <span class="type">“uri”</span>
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElementFactory.html#gst-element-factory-make"><code class="function">gst_element_factory_make()</code></a>. The file/URI to play should be set via the <span class="type">“uri”</span>
 property. This must be an absolute URI, relative file paths are not allowed.
 Example URIs are file:///home/joe/movie.avi or http://www.joedoe.com/foo.ogg</p>
-<p>Playbin3 is a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstPipeline.html#GstPipeline-struct"><span class="type">GstPipeline</span></a>. It will notify the application of everything
+<p>Playbin3 is a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPipeline.html#GstPipeline-struct"><span class="type">GstPipeline</span></a>. It will notify the application of everything
 that's happening (errors, end of stream, tags found, state changes, etc.)
-by posting messages on its <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBus.html#GstBus-struct"><span class="type">GstBus</span></a>. The application needs to watch the
+by posting messages on its <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBus.html#GstBus-struct"><span class="type">GstBus</span></a>. The application needs to watch the
 bus.</p>
 <p>Playback can be initiated by setting the element to PLAYING state using
-<a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-set-state"><code class="function">gst_element_set_state()</code></a>. Note that the state change will take place in
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-set-state"><code class="function">gst_element_set_state()</code></a>. Note that the state change will take place in
 the background in a separate thread, when the function returns playback
 is probably not happening yet and any errors might not have occured yet.
 Applications using playbin3 should ideally be written to deal with things
@@ -74,15 +74,15 @@ or an error has occured (an ERROR message has been received on the bus) or
 the user wants to play a different track, playbin3 should be set back to
 READY or NULL state, then the <span class="type">“uri”</span> property should be set to the
 new location and then playbin3 be set to PLAYING state again.</p>
-<p>Seeking can be done using <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-seek-simple"><code class="function">gst_element_seek_simple()</code></a> or <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-seek"><code class="function">gst_element_seek()</code></a>
+<p>Seeking can be done using <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-seek-simple"><code class="function">gst_element_seek_simple()</code></a> or <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-seek"><code class="function">gst_element_seek()</code></a>
 on the playbin3 element. Again, the seek will not be executed
 instantaneously, but will be done in a background thread. When the seek
 call returns the seek will most likely still be in process. An application
-may wait for the seek to finish (or fail) using <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-get-state"><code class="function">gst_element_get_state()</code></a> with
+may wait for the seek to finish (or fail) using <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-get-state"><code class="function">gst_element_get_state()</code></a> with
 -1 as the timeout, but this will block the user interface and is not
 recommended at all.</p>
 <p>Applications may query the current position and duration of the stream
-via <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-query-position"><code class="function">gst_element_query_position()</code></a> and <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-query-duration"><code class="function">gst_element_query_duration()</code></a> and
+via <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-query-position"><code class="function">gst_element_query_position()</code></a> and <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-query-duration"><code class="function">gst_element_query_duration()</code></a> and
 setting the format passed to GST_FORMAT_TIME. If the query was successful,
 the duration or position will have been returned in units of nanoseconds.</p>
 </div>
@@ -96,7 +96,7 @@ the user or application might want to specify more explicitly what to use
 for audio and video output.</p>
 <p>If the application wants more control over how audio or video should be
 output, it may create the audio/video sink elements itself (for example
-using <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElementFactory.html#gst-element-factory-make"><code class="function">gst_element_factory_make()</code></a>) and provide them to playbin3 using the
+using <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElementFactory.html#gst-element-factory-make"><code class="function">gst_element_factory_make()</code></a>) and provide them to playbin3 using the
 <span class="type">“audio-sink”</span> or <span class="type">“video-sink”</span> property.</p>
 <p>GNOME-based applications, for example, will usually want to create
 gconfaudiosink and gconfvideosink elements and make playbin3 use those,
@@ -105,8 +105,8 @@ Multimedia System Selector configuration dialog.</p>
 <p>The sink elements do not necessarily need to be ready-made sinks. It is
 possible to create container elements that look like a sink to playbin3,
 but in reality contain a number of custom elements linked together. This
-can be achieved by creating a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBin.html#GstBin-struct"><span class="type">GstBin</span></a> and putting elements in there and
-linking them, and then creating a sink <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstGhostPad.html#GstGhostPad-struct"><span class="type">GstGhostPad</span></a> for the bin and pointing
+can be achieved by creating a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBin.html#GstBin-struct"><span class="type">GstBin</span></a> and putting elements in there and
+linking them, and then creating a sink <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstGhostPad.html#GstGhostPad-struct"><span class="type">GstGhostPad</span></a> for the bin and pointing
 it to the sink pad of the first element within the bin. This can be used
 for a number of purposes, for example to force output to a particular
 format or to modify or observe the data before it is output.</p>
@@ -144,11 +144,11 @@ way. Here is how to extract the percentage information from the message:</p>
 7
 8
 9</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
+        <td class="listing_code"><pre class="programlisting"><span class="keyword">switch</span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMessage.html#GST-MESSAGE-TYPE:CAPS">GST_MESSAGE_TYPE</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">)) {</span>
   <span class="keyword">case</span> GST_MESSAGE_BUFFERING<span class="gtkdoc opt">: {</span>
     gint percent <span class="gtkdoc opt">=</span> <span class="number">0</span><span class="gtkdoc opt">;</span>
-    <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstMessage.html#gst-message-parse-buffering">gst_message_parse_buffering</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>percent<span class="gtkdoc opt">);</span>
-    <span class="function"><a href="/usr/share/gtk-doc/html/glibglib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Buffering (%u percent done)&quot;</span><span class="gtkdoc opt">,</span> percent<span class="gtkdoc opt">);</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMessage.html#gst-message-parse-buffering">gst_message_parse_buffering</a></span> <span class="gtkdoc opt">(</span>msg<span class="gtkdoc opt">, &amp;</span>percent<span class="gtkdoc opt">);</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-Warnings-and-Assertions.html#g-print">g_print</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Buffering (%u percent done)&quot;</span><span class="gtkdoc opt">,</span> percent<span class="gtkdoc opt">);</span>
     <span class="keyword">break</span><span class="gtkdoc opt">;</span>
   <span class="gtkdoc opt">}</span>
   <span class="gtkdoc opt">...</span>
@@ -282,6 +282,6 @@ the drive is detected automatically by the plugin).</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>

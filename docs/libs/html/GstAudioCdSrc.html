@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-audio.html" title="Audio Library">
 <link rel="prev" href="gst-plugins-base-libs-GstAudioDownmixMeta.html" title="GstAudioDownmixMeta">
 <link rel="next" href="GstAudioClock.html" title="GstAudioClock">
-<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -43,7 +43,7 @@
 </colgroup>
 <tbody><tr>
 <td class="function_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstAudioCdSrc.html#gst-audio-cd-src-add-track" title="gst_audio_cd_src_add_track ()">gst_audio_cd_src_add_track</a> <span class="c_punctuation">()</span>
@@ -62,7 +62,7 @@
 <tbody>
 <tr>
 <td class="property_type">
-<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GstAudioCdSrc.html#GstAudioCdSrc--device" title="The “device” property">device</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -72,7 +72,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
 <td class="property_name"><a class="link" href="GstAudioCdSrc.html#GstAudioCdSrc--track" title="The “track” property">track</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -108,12 +108,12 @@
 </div>
 <div class="refsect1">
 <a name="GstAudioCdSrc.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
-    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstObject.html#GstObject-struct">GstObject</a>
-            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#GstElement-struct">GstElement</a>
-                <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstBaseSrc.html#GstBaseSrc-struct">GstBaseSrc</a>
-                    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstPushSrc.html#GstPushSrc-struct">GstPushSrc</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstElement-struct">GstElement</a>
+                <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstBaseSrc.html#GstBaseSrc-struct">GstBaseSrc</a>
+                    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstPushSrc.html#GstPushSrc-struct">GstPushSrc</a>
                         <span class="lineart">╰──</span> GstAudioCdSrc
 </pre>
 </div>
@@ -121,7 +121,7 @@
 <a name="GstAudioCdSrc.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 GstAudioCdSrc implements
- <a href="/usr/share/gtk-doc/html/gstreamer-1.0gstreamer-GstUriHandler.html#GstURIHandler-struct">GstURIHandler</a>.</p>
+ <a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstUriHandler.html#GstURIHandler-struct">GstURIHandler</a>.</p>
 </div>
 <div class="refsect1">
 <a name="GstAudioCdSrc.includes"></a><h2>Includes</h2>
@@ -135,13 +135,13 @@ things like seeking, querying, discid calculation, tags, and buffer
 timestamping.</p>
 <div class="refsect3">
 <a name="id-1.2.6.5.9.3"></a><h4>Using GstAudioCdSrc-based elements in applications</h4>
-<p>GstAudioCdSrc registers two <a href="/usr/share/gtk-doc/html/gstreamer-1.0gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>s of its own, namely
+<p>GstAudioCdSrc registers two <a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>s of its own, namely
 the "track" format and the "sector" format. Applications will usually
-only find the "track" format interesting. You can retrieve that <a href="/usr/share/gtk-doc/html/gstreamer-1.0gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>
+only find the "track" format interesting. You can retrieve that <a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a>
 for use in seek events or queries with gst_format_get_by_nick("track").</p>
 <p>In order to query the number of tracks, for example, an application would
 set the CDDA source element to READY or PAUSED state and then query the
-the number of tracks via <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstElement.html#gst-element-query-duration"><code class="function">gst_element_query_duration()</code></a> using the track
+the number of tracks via <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#gst-element-query-duration"><code class="function">gst_element_query_duration()</code></a> using the track
 format acquired above. Applications can query the currently playing track
 in the same way.</p>
 <p>Alternatively, applications may retrieve the currently playing track and
@@ -164,10 +164,10 @@ among others.</p>
 <div class="refsect3">
 <a name="id-1.2.6.5.9.5"></a><h4>Tracks and Table of Contents (TOC)</h4>
 <p>Applications will be informed of the available tracks via a TOC message
-on the pipeline's <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBus.html#GstBus-struct"><span class="type">GstBus</span></a>. The <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstToc.html#GstToc-struct"><span class="type">GstToc</span></a> will contain a <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstToc.html#GstTocEntry-struct"><span class="type">GstTocEntry</span></a> for
+on the pipeline's <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBus.html#GstBus-struct"><span class="type">GstBus</span></a>. The <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstToc.html#GstToc-struct"><span class="type">GstToc</span></a> will contain a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstToc.html#GstTocEntry-struct"><span class="type">GstTocEntry</span></a> for
 each track, with information about each track. The duration for each
-track can be retrieved via the <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstTagList.html#GST-TAG-DURATION:CAPS"><span class="type">GST_TAG_DURATION</span></a> tag from each entry's
-tag list, or calculated via <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstToc.html#gst-toc-entry-get-start-stop-times"><code class="function">gst_toc_entry_get_start_stop_times()</code></a>.
+track can be retrieved via the <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstTagList.html#GST-TAG-DURATION:CAPS"><span class="type">GST_TAG_DURATION</span></a> tag from each entry's
+tag list, or calculated via <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstToc.html#gst-toc-entry-get-start-stop-times"><code class="function">gst_toc_entry_get_start_stop_times()</code></a>.
 The track entries in the TOC will be sorted by track number.</p>
 </div>
 </div>
@@ -175,7 +175,7 @@ The track entries in the TOC will be sorted by track number.</p>
 <a name="GstAudioCdSrc.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="gst-audio-cd-src-add-track"></a><h3>gst_audio_cd_src_add_track ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_audio_cd_src_add_track (<em class="parameter"><code><a class="link" href="GstAudioCdSrc.html" title="GstAudioCdSrc"><span class="type">GstAudioCdSrc</span></a> *src</code></em>,
                             <em class="parameter"><code><a class="link" href="GstAudioCdSrc.html#GstAudioCdSrcTrack" title="struct GstAudioCdSrcTrack"><span class="type">GstAudioCdSrcTrack</span></a> *track</code></em>);</pre>
 <p>CDDA sources use this function from their start vfunc to announce the
@@ -251,7 +251,7 @@ copy of the structure (and take ownership of the taglist if there is one).</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0GstPushSrc.html#GstPushSrcClass"><span class="type">GstPushSrcClass</span></a> <em class="structfield"><code><a name="GstAudioCdSrcClass.pushsrc-class"></a>pushsrc_class</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstPushSrc.html#GstPushSrcClass"><span class="type">GstPushSrcClass</span></a> <em class="structfield"><code><a name="GstAudioCdSrcClass.pushsrc-class"></a>pushsrc_class</code></em>;</p></td>
 <td class="struct_member_description"><p>the parent class</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -299,7 +299,7 @@ copy of the structure (and take ownership of the taglist if there is one).</p>
 <p>This structure is only for use by sub-classed in connection with
 <a class="link" href="GstAudioCdSrc.html#gst-audio-cd-src-add-track" title="gst_audio_cd_src_add_track ()"><code class="function">gst_audio_cd_src_add_track()</code></a>.</p>
 <p>Applications will be informed of the available tracks via a TOC message
-on the pipeline's <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBus.html#GstBus-struct"><span class="type">GstBus</span></a> instead.</p>
+on the pipeline's <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBus.html#GstBus-struct"><span class="type">GstBus</span></a> instead.</p>
 <div class="refsect3">
 <a name="GstAudioCdSrcTrack.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -310,27 +310,27 @@ on the pipeline's <a href="/usr/share/gtk-doc/html/gstreamer-1.0GstBus.html#GstB
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="GstAudioCdSrcTrack.is-audio"></a>is_audio</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="GstAudioCdSrcTrack.is-audio"></a>is_audio</code></em>;</p></td>
 <td class="struct_member_description"><p>Whether this is an audio track</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstAudioCdSrcTrack.num"></a>num</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstAudioCdSrcTrack.num"></a>num</code></em>;</p></td>
 <td class="struct_member_description"><p>Track number in TOC (usually starts from 1, but not always)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstAudioCdSrcTrack.start"></a>start</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstAudioCdSrcTrack.start"></a>start</code></em>;</p></td>
 <td class="struct_member_description"><p>The first sector of this track (LBA)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstAudioCdSrcTrack.end"></a>end</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstAudioCdSrcTrack.end"></a>end</code></em>;</p></td>
 <td class="struct_member_description"><p>The last sector of this track (LBA)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0GstTagList.html#GstTagList-struct"><span class="type">GstTagList</span></a> *<em class="structfield"><code><a name="GstAudioCdSrcTrack.tags"></a>tags</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstTagList.html#GstTagList-struct"><span class="type">GstTagList</span></a> *<em class="structfield"><code><a name="GstAudioCdSrcTrack.tags"></a>tags</code></em>;</p></td>
 <td class="struct_member_description"><p>Track-specific tags (e.g. from cd-text information), or NULL</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -375,7 +375,7 @@ EOS handling and seeking.</p>
 <a name="GstAudioCdSrc.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GstAudioCdSrc--device"></a><h3>The <code class="literal">“device”</code> property</h3>
-<pre class="programlisting">  “device”                   <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “device”                   <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>CD device location.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: NULL</p>
@@ -391,7 +391,7 @@ EOS handling and seeking.</p>
 <hr>
 <div class="refsect2">
 <a name="GstAudioCdSrc--track"></a><h3>The <code class="literal">“track”</code> property</h3>
-<pre class="programlisting">  “track”                    <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<pre class="programlisting">  “track”                    <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
 <p>Track.</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: [1,99]</p>
@@ -400,6 +400,6 @@ EOS handling and seeking.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25</div>
+<hr>Generated by GTK-Doc V1.26</div>
 </body>
 </html>
