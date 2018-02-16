@@ -7,6 +7,7 @@ audio_src= [
   'audio-info.c',
   'audio-quantize.c',
   'audio-resampler.c',
+  'gstaudioaggregator.c',
   'gstaudiobasesink.c',
   'gstaudiobasesrc.c',
   'gstaudiocdsrc.c',
@@ -21,6 +22,7 @@ audio_src= [
   'gstaudiosrc.c',
   'gstaudioutilsprivate.c',
   'streamvolume.c',
+  'gstaudiostreamalign.c',
 ]
 
 audio_mkenum_headers = [
@@ -32,10 +34,12 @@ audio_mkenum_headers = [
   'audio-info.h',
   'audio-quantize.h',
   'audio-resampler.h',
+  'gstaudioaggregator.h',
   'gstaudioringbuffer.h',
   'gstaudiobasesrc.h',
   'gstaudiocdsrc.h',
   'gstaudiobasesink.h',
+  'gstaudiostreamalign.h',
 ]
 
 # FIXME: check headers
@@ -97,12 +101,12 @@ simd_dependencies = []
 if have_sse
   audio_resampler_sse = static_library('audio_resampler_sse',
     ['audio-resampler-x86-sse.c', gstaudio_h],
-    c_args : gst_plugins_base_args + [sse_args] + [pic_args],
+    c_args : gst_plugins_base_args + [sse_args],
     include_directories : [configinc, libsinc],
     dependencies : [gst_base_dep],
+    pic : true,
     install : false
   )
-
   simd_cargs += ['-DHAVE_SSE']
   simd_dependencies += audio_resampler_sse
 endif
@@ -110,9 +114,10 @@ endif
 if have_sse2
   audio_resampler_sse2 = static_library('audio_resampler_sse2',
     ['audio-resampler-x86-sse2.c', gstaudio_h],
-    c_args : gst_plugins_base_args + [sse2_args] + [pic_args],
+    c_args : gst_plugins_base_args + [sse2_args],
     include_directories : [configinc, libsinc],
     dependencies : [gst_base_dep],
+    pic : true,
     install : false
   )
 
@@ -123,9 +128,10 @@ endif
 if have_sse41
   audio_resampler_sse41 = static_library('audio_resampler_sse41',
     ['audio-resampler-x86-sse41.c', gstaudio_h],
-    c_args : gst_plugins_base_args + [sse41_args] + [pic_args],
+    c_args : gst_plugins_base_args + [sse41_args],
     include_directories : [configinc, libsinc],
     dependencies : [gst_base_dep],
+    pic : true,
     install : false
   )
 
@@ -142,7 +148,6 @@ gstaudio = library('gstaudio-@0@'.format(api_version),
   soversion : soversion,
   install : true,
   dependencies : gstaudio_deps,
-  vs_module_defs: vs_module_defs_dir + 'libgstaudio.def',
 )
 
 if build_gir

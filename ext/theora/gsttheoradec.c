@@ -465,6 +465,9 @@ theora_handle_type_packet (GstTheoraDec * dec)
   GST_DEBUG_OBJECT (dec, "after fixup frame dimension %dx%d, offset %d:%d",
       info->width, info->height, dec->info.pic_x, dec->info.pic_y);
 
+  if (info->width == 0 || info->height == 0)
+    goto invalid_dimensions;
+
   /* done */
   dec->decoder = th_decode_alloc (&dec->info, dec->setup);
 
@@ -516,7 +519,8 @@ theora_handle_type_packet (GstTheoraDec * dec)
 
   dec->uncropped_info = state->info;
 
-  gst_video_decoder_negotiate (GST_VIDEO_DECODER (dec));
+  if (!gst_video_decoder_negotiate (GST_VIDEO_DECODER (dec)))
+    goto not_negotiated;
 
   dec->have_header = TRUE;
 
@@ -526,6 +530,19 @@ theora_handle_type_packet (GstTheoraDec * dec)
 unsupported_format:
   {
     GST_ERROR_OBJECT (dec, "Invalid pixel format %d", dec->info.pixel_fmt);
+    return GST_FLOW_ERROR;
+  }
+
+not_negotiated:
+  {
+    GST_ERROR_OBJECT (dec, "Failed to negotiate");
+    return GST_FLOW_NOT_NEGOTIATED;
+  }
+
+invalid_dimensions:
+  {
+    GST_ERROR_OBJECT (dec, "Invalid dimensions (width:%d, height:%d)",
+        info->width, info->height);
     return GST_FLOW_ERROR;
   }
 }

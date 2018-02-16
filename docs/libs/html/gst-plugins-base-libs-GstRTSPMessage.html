@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-rtsp.html" title="RTSP Library">
 <link rel="prev" href="gst-plugins-base-libs-GstRTSPExtension.html" title="GstRTSPExtension">
 <link rel="next" href="gst-plugins-base-libs-GstRTSPTimeRange.html" title="GstRTSPTimeRange">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -560,7 +560,7 @@ gst_rtsp_message_parse_request (<em class="parameter"><code><a class="link" href
 , <em class="parameter"><code>uri</code></em>
  and
 <em class="parameter"><code>version</code></em>
-. The result locations can be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if one is not interested in its
+. The result locations can be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if one is not interested in its
 value.</p>
 <p><em class="parameter"><code>uri</code></em>
  remains valid for as long as <em class="parameter"><code>msg</code></em>
@@ -616,10 +616,10 @@ gst_rtsp_message_new_response (<em class="parameter"><code><a class="link" href=
 result message in <em class="parameter"><code>msg</code></em>
 . Free with <a class="link" href="gst-plugins-base-libs-GstRTSPMessage.html#gst-rtsp-message-free" title="gst_rtsp_message_free ()"><code class="function">gst_rtsp_message_free()</code></a>.</p>
 <p>When <em class="parameter"><code>reason</code></em>
- is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, the default reason for <em class="parameter"><code>code</code></em>
+ is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the default reason for <em class="parameter"><code>code</code></em>
  will be used.</p>
 <p>When <em class="parameter"><code>request</code></em>
- is not <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, the relevant headers will be copied to the new
+ is not <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the relevant headers will be copied to the new
 response message.</p>
 <div class="refsect3">
 <a name="gst-rtsp-message-new-response.parameters"></a><h4>Parameters</h4>
@@ -671,10 +671,10 @@ gst_rtsp_message_init_response (<em class="parameter"><code><a class="link" href
  and <em class="parameter"><code>reason</code></em>
 .</p>
 <p>When <em class="parameter"><code>reason</code></em>
- is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, the default reason for <em class="parameter"><code>code</code></em>
+ is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the default reason for <em class="parameter"><code>code</code></em>
  will be used.</p>
 <p>When <em class="parameter"><code>request</code></em>
- is not <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, the relevant headers will be copied to the new
+ is not <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, the relevant headers will be copied to the new
 response message.</p>
 <div class="refsect3">
 <a name="gst-rtsp-message-init-response.parameters"></a><h4>Parameters</h4>
@@ -726,7 +726,7 @@ gst_rtsp_message_parse_response (<em class="parameter"><code><a class="link" hre
 , <em class="parameter"><code>reason</code></em>
  and
 <em class="parameter"><code>version</code></em>
-. The result locations can be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if one is not interested in its
+. The result locations can be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if one is not interested in its
 value.</p>
 <p><em class="parameter"><code>reason</code></em>
  remains valid for as long as <em class="parameter"><code>msg</code></em>
@@ -1109,7 +1109,7 @@ of <em class="parameter"><code>value</code></em>
 <a name="gst-rtsp-message-add-header-by-name.returns"></a><h4>Returns</h4>
 <p> a <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="type">GstRTSPResult</span></a>.</p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1156,7 +1156,7 @@ ownership of <em class="parameter"><code>value</code></em>
 <a name="gst-rtsp-message-take-header-by-name.returns"></a><h4>Returns</h4>
 <p> a <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="type">GstRTSPResult</span></a>.</p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1203,7 +1203,7 @@ all matching headers will be removed.</p>
 <a name="gst-rtsp-message-remove-header-by-name.returns"></a><h4>Returns</h4>
 <p> a <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="type">GstRTSPResult</span></a></p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1258,7 +1258,7 @@ stays valid as long as it remains present in <em class="parameter"><code>msg</co
 was found, <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-ENOTIMPL:CAPS"><span class="type">GST_RTSP_ENOTIMPL</span></a> if the key
 was not found.</p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1443,7 +1443,7 @@ gst_rtsp_message_steal_body (<em class="parameter"><code><a class="link" href="g
  and <em class="parameter"><code>size</code></em>
 . After this method,
 the body and size of <em class="parameter"><code>msg</code></em>
- will be set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> and 0 respectively.</p>
+ will be set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> and 0 respectively.</p>
 <div class="refsect3">
 <a name="gst-rtsp-message-steal-body.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1511,7 +1511,7 @@ gst_rtsp_message_parse_auth_credentials
 <a name="gst-rtsp-message-parse-auth-credentials.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated array of GstRTSPAuthCredential or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1535,7 +1535,7 @@ gst_rtsp_auth_credentials_free (<em class="parameter"><code><a class="link" href
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.12</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1698,6 +1698,6 @@ the <em class="parameter"><code>type</code></em>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

@@ -310,14 +310,29 @@ format_value (GtkScale * scale, gdouble value, PlaybackApp * app)
 {
   gint64 real;
   gint64 seconds;
-  gint64 subseconds;
 
   real = value * app->duration / N_GRAD;
   seconds = (gint64) real / GST_SECOND;
-  subseconds = (gint64) real / (GST_MSECOND);
+  /* Use two different formatting depending on the amount */
+  if (seconds < 60 * 60) {
+    gint64 subseconds = (gint64) real / (GST_MSECOND);
 
-  return g_strdup_printf ("%02" G_GINT64_FORMAT ":%02" G_GINT64_FORMAT ":%03"
-      G_GINT64_FORMAT, seconds / 60, seconds % 60, subseconds % 1000);
+    /* Sub hour positioning */
+    return g_strdup_printf ("%02" G_GINT64_FORMAT ":%02" G_GINT64_FORMAT ":%03"
+        G_GINT64_FORMAT, seconds / 60, seconds % 60, subseconds % 1000);
+  } else {
+    gint64 days = seconds / (24 * 60 * 60);
+    gint64 hours = (seconds / (60 * 60)) % 60;
+    gint64 minutes = (seconds / 60) % 60;
+
+    if (days) {
+      return g_strdup_printf ("%02" G_GINT64_FORMAT "d%02" G_GINT64_FORMAT
+          "h%02" G_GINT64_FORMAT "m", days, hours, minutes);
+    } else {
+      return g_strdup_printf ("%02" G_GINT64_FORMAT "h%02" G_GINT64_FORMAT
+          "m%02" G_GINT64_FORMAT "s", hours, minutes, seconds % 60);
+    }
+  }
 }
 
 static gchar *
@@ -2567,10 +2582,11 @@ subtitle_encoding_activate_cb (GtkEntry * entry, PlaybackApp * app)
 static void
 subtitle_fontdesc_cb (GtkFontButton * button, PlaybackApp * app)
 {
-  const gchar *text;
+  gchar *text;
 
-  text = gtk_font_button_get_font_name (button);
+  text = gtk_font_chooser_get_font (GTK_FONT_CHOOSER (button));
   g_object_set (app->pipeline, "subtitle-font-desc", text, NULL);
+  g_free (text);
 }
 
 static void
@@ -3478,7 +3494,10 @@ main (int argc, char **argv)
   }
 
   pipelines[app.pipeline_type].func (&app, app.current_path->data);
-  g_assert (app.pipeline);
+  if (!app.pipeline || !GST_IS_PIPELINE (app.pipeline)) {
+    g_print ("Pipeline failed on %s\n", argv[3]);
+    exit (-1);
+  }
 
   create_ui (&app);
 

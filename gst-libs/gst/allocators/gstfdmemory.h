@@ -46,7 +46,7 @@ typedef struct _GstFdAllocatorClass GstFdAllocatorClass;
  * @GST_FD_MEMORY_FLAG_MAP_PRIVATE: do a private mapping instead of
  *        the default shared mapping.
  * @GST_FD_MEMORY_FLAG_DONT_CLOSE: don't close the file descriptor when
- *        the memory is freed. Since: 1.10.
+ *        the memory is freed. Since: 1.10
  *
  * Various flags to control the operation of the fd backed memory.
  *
@@ -76,13 +76,20 @@ struct _GstFdAllocatorClass
   GstAllocatorClass parent_class;
 };
 
-GType gst_fd_allocator_get_type (void);
+GST_EXPORT
+GType           gst_fd_allocator_get_type (void);
 
+GST_EXPORT
 GstAllocator *  gst_fd_allocator_new    (void);
+
+GST_EXPORT
 GstMemory *     gst_fd_allocator_alloc  (GstAllocator * allocator, gint fd,
                                          gsize size, GstFdMemoryFlags flags);
 
+GST_EXPORT
 gboolean        gst_is_fd_memory        (GstMemory *mem);
+
+GST_EXPORT
 gint            gst_fd_memory_get_fd    (GstMemory *mem);
 
 #ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC

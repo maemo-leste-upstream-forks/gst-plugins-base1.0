@@ -15,7 +15,6 @@
 @SET_MAKE@
 
 
-
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -118,14 +117,15 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/introspection.m4 \
 	$(top_srcdir)/common/m4/orc.m4 $(top_srcdir)/common/m4/pkg.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gst-alsa.m4 \
-	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
-	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/lrint.m4 $(top_srcdir)/m4/lrintf.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/gst-gl.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/lrint.m4 \
+	$(top_srcdir)/m4/lrintf.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am \
@@ -162,8 +162,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" \
-	"$(DESTDIR)$(typelibsdir)" \
+am__installdirs = "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(libgstfft_@GST_API_VERSION@_includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
@@ -234,7 +233,6 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(gir_DATA) $(typelibs_DATA)
 HEADERS = $(libgstfft_@GST_API_VERSION@_include_HEADERS) \
 	$(noinst_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
@@ -279,6 +277,12 @@ CCDEPMODE = @CCDEPMODE@
 CDPARANOIA_CFLAGS = @CDPARANOIA_CFLAGS@
 CDPARANOIA_LIBS = @CDPARANOIA_LIBS@
 CFLAGS = @CFLAGS@
+CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
+CLUTTER_GLX_CFLAGS = @CLUTTER_GLX_CFLAGS@
+CLUTTER_GLX_LIBS = @CLUTTER_GLX_LIBS@
+CLUTTER_LIBS = @CLUTTER_LIBS@
+CLUTTER_X11_CFLAGS = @CLUTTER_X11_CFLAGS@
+CLUTTER_X11_LIBS = @CLUTTER_X11_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -300,15 +304,21 @@ DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
+EGL_CFLAGS = @EGL_CFLAGS@
+EGL_LIBS = @EGL_LIBS@
 EGREP = @EGREP@
 ERROR_CFLAGS = @ERROR_CFLAGS@
 ERROR_CXXFLAGS = @ERROR_CXXFLAGS@
+ERROR_OBJCFLAGS = @ERROR_OBJCFLAGS@
 EXEEXT = @EXEEXT@
+EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
 GCOV = @GCOV@
 GCOV_CFLAGS = @GCOV_CFLAGS@
 GCOV_LIBS = @GCOV_LIBS@
+GDK_PIXBUF_CFLAGS = @GDK_PIXBUF_CFLAGS@
+GDK_PIXBUF_LIBS = @GDK_PIXBUF_LIBS@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GIO_CFLAGS = @GIO_CFLAGS@
@@ -316,6 +326,8 @@ GIO_LDFLAGS = @GIO_LDFLAGS@
 GIO_LIBS = @GIO_LIBS@
 GIO_UNIX_2_0_CFLAGS = @GIO_UNIX_2_0_CFLAGS@
 GIO_UNIX_2_0_LIBS = @GIO_UNIX_2_0_LIBS@
+GLES2_CFLAGS = @GLES2_CFLAGS@
+GLES2_LIBS = @GLES2_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_EXTRA_CFLAGS = @GLIB_EXTRA_CFLAGS@
 GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
@@ -323,8 +335,18 @@ GLIB_LIBS = @GLIB_LIBS@
 GLIB_MKENUMS = @GLIB_MKENUMS@
 GLIB_PREFIX = @GLIB_PREFIX@
 GLIB_REQ = @GLIB_REQ@
+GL_APIS = @GL_APIS@
+GL_CFLAGS = @GL_CFLAGS@
+GL_LIBS = @GL_LIBS@
+GL_OBJCFLAGS = @GL_OBJCFLAGS@
+GL_PLATFORMS = @GL_PLATFORMS@
+GL_WINDOWS = @GL_WINDOWS@
+GMODULE_NO_EXPORT_CFLAGS = @GMODULE_NO_EXPORT_CFLAGS@
+GMODULE_NO_EXPORT_LIBS = @GMODULE_NO_EXPORT_LIBS@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
+GRAPHENE_CFLAGS = @GRAPHENE_CFLAGS@
+GRAPHENE_LIBS = @GRAPHENE_LIBS@
 GREP = @GREP@
 GST_AGE = @GST_AGE@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
@@ -358,7 +380,6 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGINS_NONPORTED = @GST_PLUGINS_NONPORTED@
 GST_PLUGINS_SELECTED = @GST_PLUGINS_SELECTED@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
-GST_PLUGIN_LIBTOOLFLAGS = @GST_PLUGIN_LIBTOOLFLAGS@
 GST_PREFIX = @GST_PREFIX@
 GST_REVISION = @GST_REVISION@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
@@ -374,6 +395,15 @@ GTK_QUARTZ_LIBS = @GTK_QUARTZ_LIBS@
 GTK_X11_CFLAGS = @GTK_X11_CFLAGS@
 GTK_X11_LIBS = @GTK_X11_LIBS@
 HAVE_CDPARANOIA = @HAVE_CDPARANOIA@
+HAVE_CLUTTER = @HAVE_CLUTTER@
+HAVE_CLUTTER_GLX = @HAVE_CLUTTER_GLX@
+HAVE_CLUTTER_X11 = @HAVE_CLUTTER_X11@
+HAVE_EGL = @HAVE_EGL@
+HAVE_GL = @HAVE_GL@
+HAVE_GLES2 = @HAVE_GLES2@
+HAVE_GRAPHENE = @HAVE_GRAPHENE@
+HAVE_JPEG = @HAVE_JPEG@
+HAVE_PNG = @HAVE_PNG@
 HAVE_XSHM = @HAVE_XSHM@
 HAVE_ZLIB = @HAVE_ZLIB@
 HTML_DIR = @HTML_DIR@
@@ -395,12 +425,15 @@ INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
 INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
 IVORBIS_CFLAGS = @IVORBIS_CFLAGS@
 IVORBIS_LIBS = @IVORBIS_LIBS@
+JPEG_LIBS = @JPEG_LIBS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBM = @LIBM@
 LIBOBJS = @LIBOBJS@
+LIBPNG_CFLAGS = @LIBPNG_CFLAGS@
+LIBPNG_LIBS = @LIBPNG_LIBS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIBVISUAL_CFLAGS = @LIBVISUAL_CFLAGS@
@@ -421,6 +454,9 @@ MSGFMT_015 = @MSGFMT_015@
 MSGMERGE = @MSGMERGE@
 NM = @NM@
 NMEDIT = @NMEDIT@
+OBJC = @OBJC@
+OBJCDEPMODE = @OBJCDEPMODE@
+OBJCFLAGS = @OBJCFLAGS@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OGG_CFLAGS = @OGG_CFLAGS@
@@ -465,6 +501,9 @@ QT_CFLAGS = @QT_CFLAGS@
 QT_LIBS = @QT_LIBS@
 QT_MOC = @QT_MOC@
 RANLIB = @RANLIB@
+SDL_CFLAGS = @SDL_CFLAGS@
+SDL_CLUTTER = @SDL_CLUTTER@
+SDL_LIBS = @SDL_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -474,16 +513,27 @@ SSE_CFLAGS = @SSE_CFLAGS@
 STRIP = @STRIP@
 THEORA_CFLAGS = @THEORA_CFLAGS@
 THEORA_LIBS = @THEORA_LIBS@
+USE_GLES2 = @USE_GLES2@
 USE_NLS = @USE_NLS@
+USE_OPENGL = @USE_OPENGL@
 VALGRIND_CFLAGS = @VALGRIND_CFLAGS@
 VALGRIND_LIBS = @VALGRIND_LIBS@
 VALGRIND_PATH = @VALGRIND_PATH@
 VERSION = @VERSION@
+VISIBILITY_CFLAGS = @VISIBILITY_CFLAGS@
+VISIBILITY_CXXFLAGS = @VISIBILITY_CXXFLAGS@
 VORBIS_CFLAGS = @VORBIS_CFLAGS@
 VORBIS_LIBS = @VORBIS_LIBS@
 WARNING_CFLAGS = @WARNING_CFLAGS@
 WARNING_CXXFLAGS = @WARNING_CXXFLAGS@
+WARNING_OBJCFLAGS = @WARNING_OBJCFLAGS@
+WAYLAND_EGL_CFLAGS = @WAYLAND_EGL_CFLAGS@
+WAYLAND_EGL_LIBS = @WAYLAND_EGL_LIBS@
 WIN32_LIBS = @WIN32_LIBS@
+X11_XCB_CFLAGS = @X11_XCB_CFLAGS@
+X11_XCB_LIBS = @X11_XCB_LIBS@
+XCOMPOSITE_CFLAGS = @XCOMPOSITE_CFLAGS@
+XCOMPOSITE_LIBS = @XCOMPOSITE_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -503,6 +553,7 @@ ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_OBJC = @ac_ct_OBJC@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -602,17 +653,6 @@ libgstfft_@GST_API_VERSION@_la_LIBADD = $(GST_LIBS) $(LIBM)
 libgstfft_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_CFLAGS)
 libgstfft_@GST_API_VERSION@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
 EXTRA_DIST = kiss_version
-@HAVE_INTROSPECTION_TRUE@BUILT_GIRSOURCES = GstFft-@GST_API_VERSION@.gir
-@HAVE_INTROSPECTION_TRUE@gir_headers = $(patsubst %,$(srcdir)/%, $(libgstfft_@GST_API_VERSION@_include_HEADERS))
-@HAVE_INTROSPECTION_TRUE@gir_sources = $(patsubst %,$(srcdir)/%, $(libgstfft_@GST_API_VERSION@_la_SOURCES))
-
-# INTROSPECTION_GIRDIR/INTROSPECTION_TYPELIBDIR aren't the right place to
-# install anything - we need to install inside our prefix.
-@HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
-@HAVE_INTROSPECTION_TRUE@gir_DATA = $(BUILT_GIRSOURCES)
-@HAVE_INTROSPECTION_TRUE@typelibsdir = $(libdir)/girepository-1.0/
-@HAVE_INTROSPECTION_TRUE@typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
-@HAVE_INTROSPECTION_TRUE@CLEANFILES = $(BUILT_GIRSOURCES) $(typelibs_DATA)
 all: all-am
 
 .SUFFIXES:
@@ -825,48 +865,6 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-girDATA: $(gir_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(gir_DATA)'; test -n "$(girdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(girdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(girdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(girdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(girdir)" || exit $$?; \
-	done
-
-uninstall-girDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(gir_DATA)'; test -n "$(girdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(girdir)'; $(am__uninstall_files_from_dir)
-install-typelibsDATA: $(typelibs_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(typelibs_DATA)'; test -n "$(typelibsdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(typelibsdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(typelibsdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(typelibsdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(typelibsdir)" || exit $$?; \
-	done
-
-uninstall-typelibsDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(typelibs_DATA)'; test -n "$(typelibsdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(typelibsdir)'; $(am__uninstall_files_from_dir)
 install-libgstfft_@GST_API_VERSION@_includeHEADERS: $(libgstfft_@GST_API_VERSION@_include_HEADERS)
 	@$(NORMAL_INSTALL)
 	@list='$(libgstfft_@GST_API_VERSION@_include_HEADERS)'; test -n "$(libgstfft_@GST_API_VERSION@_includedir)" || list=; \
@@ -973,9 +971,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" "$(DESTDIR)$(typelibsdir)" "$(DESTDIR)$(libgstfft_@GST_API_VERSION@_includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libgstfft_@GST_API_VERSION@_includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -1000,7 +998,6 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -1032,9 +1029,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-girDATA \
-	install-libgstfft_@GST_API_VERSION@_includeHEADERS \
-	install-typelibsDATA
+install-data-am: install-libgstfft_@GST_API_VERSION@_includeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -1080,9 +1075,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
-	uninstall-libgstfft_@GST_API_VERSION@_includeHEADERS \
-	uninstall-typelibsDATA
+uninstall-am: uninstall-libLTLIBRARIES \
+	uninstall-libgstfft_@GST_API_VERSION@_includeHEADERS
 
 .MAKE: install-am install-strip
 
@@ -1092,51 +1086,19 @@ uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-girDATA install-html install-html-am \
-	install-info install-info-am install-libLTLIBRARIES \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-libLTLIBRARIES \
 	install-libgstfft_@GST_API_VERSION@_includeHEADERS install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip install-typelibsDATA installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-girDATA \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am \
 	uninstall-libLTLIBRARIES \
-	uninstall-libgstfft_@GST_API_VERSION@_includeHEADERS \
-	uninstall-typelibsDATA
+	uninstall-libgstfft_@GST_API_VERSION@_includeHEADERS
 
 .PRECIOUS: Makefile
 
-
-@HAVE_INTROSPECTION_TRUE@GstFft-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstfft-@GST_API_VERSION@.la
-@HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
-@HAVE_INTROSPECTION_TRUE@		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
-@HAVE_INTROSPECTION_TRUE@		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
-@HAVE_INTROSPECTION_TRUE@		$(INTROSPECTION_SCANNER) -v --namespace GstFft \
-@HAVE_INTROSPECTION_TRUE@		--nsversion=@GST_API_VERSION@ \
-@HAVE_INTROSPECTION_TRUE@		--identifier-prefix=Gst \
-@HAVE_INTROSPECTION_TRUE@		--symbol-prefix=gst \
-@HAVE_INTROSPECTION_TRUE@		--warn-all \
-@HAVE_INTROSPECTION_TRUE@		--c-include "gst/fft/fft.h" \
-@HAVE_INTROSPECTION_TRUE@		-I$(top_srcdir)/gst-libs \
-@HAVE_INTROSPECTION_TRUE@		-I$(top_builddir)/gst-libs \
-@HAVE_INTROSPECTION_TRUE@		--add-include-path=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-@GST_API_VERSION@` \
-@HAVE_INTROSPECTION_TRUE@		--library=libgstfft-@GST_API_VERSION@.la \
-@HAVE_INTROSPECTION_TRUE@		--include=Gst-@GST_API_VERSION@ \
-@HAVE_INTROSPECTION_TRUE@		--libtool="$(top_builddir)/libtool" \
-@HAVE_INTROSPECTION_TRUE@		--pkg gstreamer-@GST_API_VERSION@ \
-@HAVE_INTROSPECTION_TRUE@		--pkg-export gstreamer-fft-@GST_API_VERSION@ \
-@HAVE_INTROSPECTION_TRUE@		--output $@ \
-@HAVE_INTROSPECTION_TRUE@		$(gir_headers) \
-@HAVE_INTROSPECTION_TRUE@		$(gir_sources)
-
-@HAVE_INTROSPECTION_TRUE@%.typelib: %.gir $(INTROSPECTION_COMPILER)
-@HAVE_INTROSPECTION_TRUE@	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" \
-@HAVE_INTROSPECTION_TRUE@		$(INTROSPECTION_COMPILER) \
-@HAVE_INTROSPECTION_TRUE@		--includedir=$(srcdir) \
-@HAVE_INTROSPECTION_TRUE@		--includedir=$(builddir) \
-@HAVE_INTROSPECTION_TRUE@		--includedir=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-@GST_API_VERSION@` \
-@HAVE_INTROSPECTION_TRUE@		$(INTROSPECTION_COMPILER_OPTS) $< -o $(@F)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

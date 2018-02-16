@@ -17,6 +17,9 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <gst/gst.h>
 #include <gst/check/gstcheck.h>
@@ -304,7 +307,7 @@ validate_event (guint index, const gchar * name, const gchar * field, ...)
 }
 
 static void
-validate_normal_start_events (uint index)
+validate_normal_start_events (guint index)
 {
   validate_event (index, "stream-start", NULL);
 

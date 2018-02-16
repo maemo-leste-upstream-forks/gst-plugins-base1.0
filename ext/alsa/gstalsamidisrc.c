@@ -80,7 +80,6 @@ GST_DEBUG_CATEGORY_STATIC (gst_alsa_midi_src_debug);
 
 #define DEFAULT_BUFSIZE 65536
 #define DEFAULT_CLIENT_NAME "alsamidisrc"
-#define DEFAULT_POLL_TIMEOUT_MS (MIDI_TICK_PERIOD_MS / 2)
 
 static int
 init_seq (GstAlsaMidiSrc * alsamidisrc)
@@ -93,6 +92,12 @@ init_seq (GstAlsaMidiSrc * alsamidisrc)
         snd_strerror (ret));
     goto error;
   }
+
+  /*
+   * Prevent Valgrind from reporting cached configuration as memory leaks, see:
+   * http://git.alsa-project.org/?p=alsa-lib.git;a=blob;f=MEMORY-LEAK;hb=HEAD
+   */
+  snd_config_update_free_global ();
 
   ret = snd_seq_set_client_name (alsamidisrc->seq, DEFAULT_CLIENT_NAME);
   if (ret < 0) {
@@ -122,7 +127,7 @@ parse_ports (const char *arg, GstAlsaMidiSrc * alsamidisrc)
   /*
    * Assume that ports are separated by commas.
    *
-   * Commas are used instead of spaces because those are valid in client
+   * Commas are used instead of spaces because spaces are valid in client
    * names.
    */
   ports_list = g_strsplit (arg, ",", 0);
@@ -157,17 +162,108 @@ out_free_ports_list:
 }
 
 static int
-create_port (GstAlsaMidiSrc * alsamidisrc)
+start_queue_timer (GstAlsaMidiSrc * alsamidisrc)
 {
   int ret;
 
-  ret = snd_seq_create_simple_port (alsamidisrc->seq, DEFAULT_CLIENT_NAME,
-      SND_SEQ_PORT_CAP_WRITE |
-      SND_SEQ_PORT_CAP_SUBS_WRITE,
-      SND_SEQ_PORT_TYPE_MIDI_GENERIC | SND_SEQ_PORT_TYPE_APPLICATION);
+  ret = snd_seq_start_queue (alsamidisrc->seq, alsamidisrc->queue, NULL);
+  if (ret < 0) {
+    GST_ERROR_OBJECT (alsamidisrc, "Timer event output error: %s\n",
+        snd_strerror (ret));
+    return ret;
+  }
+
+  ret = snd_seq_drain_output (alsamidisrc->seq);
   if (ret < 0)
+    GST_ERROR_OBJECT (alsamidisrc, "Drain output error: %s\n",
+        snd_strerror (ret));
+
+  return ret;
+}
+
+static void
+schedule_next_tick (GstAlsaMidiSrc * alsamidisrc)
+{
+  snd_seq_event_t ev;
+  snd_seq_real_time_t time;
+  int ret;
+
+  snd_seq_ev_clear (&ev);
+  snd_seq_ev_set_source (&ev, 0);
+  snd_seq_ev_set_dest (&ev, snd_seq_client_id (alsamidisrc->seq), 0);
+
+  ev.type = SND_SEQ_EVENT_TICK;
+
+  alsamidisrc->tick += 1;
+  GST_TIME_TO_TIMESPEC (alsamidisrc->tick * MIDI_TICK_PERIOD_MS * GST_MSECOND,
+      time);
+
+  snd_seq_ev_schedule_real (&ev, alsamidisrc->queue, SND_SEQ_TIME_MODE_ABS,
+      &time);
+
+  ret = snd_seq_event_output (alsamidisrc->seq, &ev);
+  if (ret < 0)
+    GST_ERROR_OBJECT (alsamidisrc, "Event output error: %s\n",
+        snd_strerror (ret));
+
+  ret = snd_seq_drain_output (alsamidisrc->seq);
+  if (ret < 0)
+    GST_ERROR_OBJECT (alsamidisrc, "Event drain error: %s\n",
+        snd_strerror (ret));
+}
+
+static int
+create_port (GstAlsaMidiSrc * alsamidisrc)
+{
+  snd_seq_port_info_t *pinfo;
+  int ret;
+
+  snd_seq_port_info_alloca (&pinfo);
+  snd_seq_port_info_set_name (pinfo, DEFAULT_CLIENT_NAME);
+  snd_seq_port_info_set_type (pinfo,
+      SND_SEQ_PORT_TYPE_MIDI_GENERIC | SND_SEQ_PORT_TYPE_APPLICATION);
+  snd_seq_port_info_set_capability (pinfo,
+      SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE);
+
+  ret = snd_seq_alloc_named_queue (alsamidisrc->seq, DEFAULT_CLIENT_NAME);
+  if (ret < 0) {
+    GST_ERROR_OBJECT (alsamidisrc, "Cannot allocate queue: %s\n",
+        snd_strerror (ret));
+    return ret;
+  }
+
+  /*
+   * Sequencer queues are "per-system" entities, so it's important to remember
+   * the queue id to make sure alsamidisrc refers to this very one in future
+   * operations, and not to some other port created by another sequencer user.
+   */
+  alsamidisrc->queue = ret;
+
+  snd_seq_port_info_set_timestamping (pinfo, 1);
+  snd_seq_port_info_set_timestamp_real (pinfo, 1);
+  snd_seq_port_info_set_timestamp_queue (pinfo, alsamidisrc->queue);
+
+  ret = snd_seq_create_port (alsamidisrc->seq, pinfo);
+  if (ret < 0) {
     GST_ERROR_OBJECT (alsamidisrc, "Cannot create port - %s",
         snd_strerror (ret));
+    return ret;
+  }
+
+  /*
+   * Conversely, it's not strictly necessary to remember the port id because
+   * ports are per-client and alsamidisrc is only creating one port (id = 0).
+   *
+   * If multiple ports were to be created, the ids could be retrieved with
+   * something like:
+   *
+   *   alsamidisrc->port = snd_seq_port_info_get_port(pinfo);
+   */
+
+  ret = start_queue_timer (alsamidisrc);
+  if (ret < 0)
+    GST_ERROR_OBJECT (alsamidisrc, "Cannot start timer for queue: %d - %s",
+        alsamidisrc->queue, snd_strerror (ret));
 
   return ret;
 }
@@ -219,6 +315,10 @@ static void gst_alsa_midi_src_get_property (GObject * object, guint prop_id,
 
 static gboolean gst_alsa_midi_src_start (GstBaseSrc * basesrc);
 static gboolean gst_alsa_midi_src_stop (GstBaseSrc * basesrc);
+static gboolean gst_alsa_midi_src_unlock (GstBaseSrc * basesrc);
+static gboolean gst_alsa_midi_src_unlock_stop (GstBaseSrc * basesrc);
+static void gst_alsa_midi_src_state_changed (GstElement * element,
+    GstState oldstate, GstState newstate, GstState pending);
 
 static GstFlowReturn
 gst_alsa_midi_src_create (GstPushSrc * src, GstBuffer ** buf);
@@ -252,7 +352,12 @@ gst_alsa_midi_src_class_init (GstAlsaMidiSrcClass * klass)
 
   gstbase_src_class->start = GST_DEBUG_FUNCPTR (gst_alsa_midi_src_start);
   gstbase_src_class->stop = GST_DEBUG_FUNCPTR (gst_alsa_midi_src_stop);
+  gstbase_src_class->unlock = GST_DEBUG_FUNCPTR (gst_alsa_midi_src_unlock);
+  gstbase_src_class->unlock_stop =
+      GST_DEBUG_FUNCPTR (gst_alsa_midi_src_unlock_stop);
   gstpush_src_class->create = GST_DEBUG_FUNCPTR (gst_alsa_midi_src_create);
+  gstelement_class->state_changed =
+      GST_DEBUG_FUNCPTR (gst_alsa_midi_src_state_changed);
 }
 
 static void
@@ -303,21 +408,17 @@ gst_alsa_midi_src_get_property (GObject * object, guint prop_id, GValue * value,
   }
 }
 
-static GstBuffer *
-prepare_buffer (GstAlsaMidiSrc * alsamidisrc, gpointer data, guint size)
+static void
+push_buffer (GstAlsaMidiSrc * alsamidisrc, gpointer data, guint size,
+    GstClockTime time, GstBufferList * buffer_list)
 {
-  GstClockTime time;
   gpointer local_data;
   GstBuffer *buffer;
 
   buffer = gst_buffer_new ();
 
-  time = alsamidisrc->tick * MIDI_TICK_PERIOD_MS * GST_MSECOND;
-
   GST_BUFFER_DTS (buffer) = time;
   GST_BUFFER_PTS (buffer) = time;
-  GST_BUFFER_OFFSET (buffer) = time;
-  GST_BUFFER_DURATION (buffer) = MIDI_TICK_PERIOD_MS * GST_MSECOND;
 
   local_data = g_memdup (data, size);
 
@@ -327,23 +428,15 @@ prepare_buffer (GstAlsaMidiSrc * alsamidisrc, gpointer data, guint size)
 
   GST_MEMDUMP_OBJECT (alsamidisrc, "MIDI data:", local_data, size);
 
-  alsamidisrc->tick += 1;
-
-  return buffer;
+  gst_buffer_list_add (buffer_list, buffer);
 }
 
 static void
-push_buffer (GstAlsaMidiSrc * alsamidisrc, gpointer data, guint size,
+push_tick_buffer (GstAlsaMidiSrc * alsamidisrc, GstClockTime time,
     GstBufferList * buffer_list)
 {
-  gst_buffer_list_add (buffer_list, prepare_buffer (alsamidisrc, data, size));
-}
-
-static void
-push_tick_buffer (GstAlsaMidiSrc * alsamidisrc, GstBufferList * buffer_list)
-{
   alsamidisrc->buffer[0] = MIDI_TICK;
-  push_buffer (alsamidisrc, alsamidisrc->buffer, 1, buffer_list);
+  push_buffer (alsamidisrc, alsamidisrc->buffer, 1, time, buffer_list);
 }
 
 static GstFlowReturn
@@ -351,6 +444,7 @@ gst_alsa_midi_src_create (GstPushSrc * src, GstBuffer ** buf)
 {
   GstAlsaMidiSrc *alsamidisrc;
   GstBufferList *buffer_list;
+  GstClockTime time;
   long size_ev = 0;
   int err;
   int ret;
@@ -360,27 +454,14 @@ gst_alsa_midi_src_create (GstPushSrc * src, GstBuffer ** buf)
 
   buffer_list = gst_buffer_list_new ();
 
-  snd_seq_poll_descriptors (alsamidisrc->seq, alsamidisrc->pfds,
-      alsamidisrc->npfds, POLLIN);
-
-  /*
-   * The file descriptors are polled with a timeout _less_ than 10ms (the MIDI
-   * tick period) in order not to loose events because of possible overlaps
-   * with MIDI ticks.
-   *
-   * If the polling times out (no new events) then a MIDI-tick event gets
-   * generated in order to keep the pipeline alive and progressing.
-   *
-   * If new events are present, then they are decoded and queued in
-   * a buffer_list. One buffer per event will be queued, all with different
-   * timestamps (see the prepare_buffer() function); maybe this can be
-   * optimized but a as a proof-of-concept mechanism it works OK.
-   */
-  ret = poll (alsamidisrc->pfds, alsamidisrc->npfds, DEFAULT_POLL_TIMEOUT_MS);
-  if (ret < 0) {
+poll:
+  ret = gst_poll_wait (alsamidisrc->poll, GST_CLOCK_TIME_NONE);
+  if (ret <= 0) {
+    if (ret < 0 && errno == EBUSY) {
+      GST_INFO_OBJECT (alsamidisrc, "flushing");
+      return GST_FLOW_FLUSHING;
+    }
     GST_ERROR_OBJECT (alsamidisrc, "ERROR in poll: %s", strerror (errno));
-  } else if (ret == 0) {
-    push_tick_buffer (alsamidisrc, buffer_list);
   } else {
     /* There are events available */
     do {
@@ -390,6 +471,18 @@ gst_alsa_midi_src_create (GstPushSrc * src, GstBuffer ** buf)
         break;                  /* Processed all events */
 
       if (event) {
+        time = GST_TIMESPEC_TO_TIME (event->time.time) - alsamidisrc->delay;
+
+        /*
+         * Special handling is needed because decoding SND_SEQ_EVENT_TICK is
+         * not supported by alsa-lib.
+         */
+        if (event->type == SND_SEQ_EVENT_TICK) {
+          push_tick_buffer (alsamidisrc, time, buffer_list);
+          schedule_next_tick (alsamidisrc);
+          continue;
+        }
+
         size_ev =
             snd_midi_event_decode (alsamidisrc->parser, alsamidisrc->buffer,
             DEFAULT_BUFSIZE, event);
@@ -398,7 +491,7 @@ gst_alsa_midi_src_create (GstPushSrc * src, GstBuffer ** buf)
           if (-ENOENT == size_ev) {
             GST_WARNING_OBJECT (alsamidisrc,
                 "Warning: Received non-MIDI message");
-            push_tick_buffer (alsamidisrc, buffer_list);
+            goto poll;
           } else {
             GST_ERROR_OBJECT (alsamidisrc,
                 "Error decoding event from ALSA to output: %s",
@@ -406,7 +499,8 @@ gst_alsa_midi_src_create (GstPushSrc * src, GstBuffer ** buf)
             goto error;
           }
         } else {
-          push_buffer (alsamidisrc, alsamidisrc->buffer, size_ev, buffer_list);
+          push_buffer (alsamidisrc, alsamidisrc->buffer, size_ev, time,
+              buffer_list);
         }
       }
     } while (err > 0);
@@ -421,7 +515,7 @@ gst_alsa_midi_src_create (GstPushSrc * src, GstBuffer ** buf)
   gst_buffer_list_remove (buffer_list, len - 1, 1);
   --len;
 
-  /* 
+  /*
    * If there are no more buffers left, free the list, otherwise push all the
    * _previous_ buffers left in the list.
    *
@@ -483,17 +577,28 @@ gst_alsa_midi_src_start (GstBaseSrc * basesrc)
   if (alsamidisrc->buffer == NULL)
     goto error_free_parser;
 
-  alsamidisrc->npfds =
-      snd_seq_poll_descriptors_count (alsamidisrc->seq, POLLIN);
-  alsamidisrc->pfds =
-      g_try_malloc (sizeof (*alsamidisrc->pfds) * alsamidisrc->npfds);
-  if (alsamidisrc->pfds == NULL)
-    goto error_free_buffer;
+  {
+    struct pollfd *pfds;
+    int npfds, i;
+
+    npfds = snd_seq_poll_descriptors_count (alsamidisrc->seq, POLLIN);
+    pfds = g_newa (struct pollfd, npfds);
+
+    snd_seq_poll_descriptors (alsamidisrc->seq, pfds, npfds, POLLIN);
+
+    alsamidisrc->poll = gst_poll_new (TRUE);
+    for (i = 0; i < npfds; ++i) {
+      GstPollFD fd = GST_POLL_FD_INIT;
+
+      fd.fd = pfds[i].fd;
+      gst_poll_add_fd (alsamidisrc->poll, &fd);
+      gst_poll_fd_ctl_read (alsamidisrc->poll, &fd, TRUE);
+      gst_poll_fd_ctl_write (alsamidisrc->poll, &fd, FALSE);
+    }
+  }
 
   return TRUE;
 
-error_free_buffer:
-  g_free (alsamidisrc->buffer);
 error_free_parser:
   snd_midi_event_free (alsamidisrc->parser);
 error_free_seq_ports:
@@ -511,11 +616,78 @@ gst_alsa_midi_src_stop (GstBaseSrc * basesrc)
 
   alsamidisrc = GST_ALSA_MIDI_SRC (basesrc);
 
-  g_free (alsamidisrc->pfds);
+  if (alsamidisrc->poll != NULL) {
+    gst_poll_free (alsamidisrc->poll);
+    alsamidisrc->poll = NULL;
+  }
+  g_free (alsamidisrc->ports);
   g_free (alsamidisrc->buffer);
   snd_midi_event_free (alsamidisrc->parser);
   g_free (alsamidisrc->seq_ports);
   snd_seq_close (alsamidisrc->seq);
 
   return TRUE;
+}
+
+static gboolean
+gst_alsa_midi_src_unlock (GstBaseSrc * basesrc)
+{
+  GstAlsaMidiSrc *alsamidisrc = GST_ALSA_MIDI_SRC (basesrc);
+
+  gst_poll_set_flushing (alsamidisrc->poll, TRUE);
+  return TRUE;
+}
+
+static gboolean
+gst_alsa_midi_src_unlock_stop (GstBaseSrc * basesrc)
+{
+  GstAlsaMidiSrc *alsamidisrc = GST_ALSA_MIDI_SRC (basesrc);
+
+  gst_poll_set_flushing (alsamidisrc->poll, FALSE);
+  return TRUE;
+}
+
+static void
+gst_alsa_midi_src_state_changed (GstElement * element, GstState oldstate,
+    GstState newstate, GstState pending)
+{
+  GstAlsaMidiSrc *alsamidisrc;
+
+  alsamidisrc = GST_ALSA_MIDI_SRC (element);
+
+  if (newstate == GST_STATE_PLAYING) {
+    GstClockTime gst_time;
+    GstClockTime base_time;
+    GstClockTime running_time;
+    GstClockTime queue_time;
+    GstClock *clock;
+    snd_seq_queue_status_t *status;
+
+    clock = gst_element_get_clock (element);
+    if (clock == NULL) {
+      GST_WARNING_OBJECT (element, "No clock present");
+      return;
+    }
+    gst_time = gst_clock_get_time (clock);
+    gst_object_unref (clock);
+    base_time = gst_element_get_base_time (element);
+    running_time = gst_time - base_time;
+
+    snd_seq_queue_status_malloc (&status);
+    snd_seq_get_queue_status (alsamidisrc->seq, alsamidisrc->queue, status);
+    queue_time =
+        GST_TIMESPEC_TO_TIME (*snd_seq_queue_status_get_real_time (status));
+    snd_seq_queue_status_free (status);
+
+    /*
+     * The fact that the ALSA sequencer queue started before the pipeline
+     * transition to the PLAYING state ensures that the pipeline delay is
+     * always positive.
+     */
+    alsamidisrc->delay = queue_time - running_time;
+
+    if (alsamidisrc->tick == 0) {
+      schedule_next_tick (alsamidisrc);
+    }
+  }
 }

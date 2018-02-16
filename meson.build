@@ -1,19 +1,21 @@
-project('gst-plugins-base', 'c', 'cpp',
-  version : '1.12.4',
+project('gst-plugins-base', 'c',
+  version : '1.13.1',
   meson_version : '>= 0.36.0',
   default_options : [ 'warning_level=1',
                       'buildtype=debugoptimized' ])
 
 gst_version = meson.project_version()
 version_arr = gst_version.split('.')
-gst_version_major = version_arr[0]
-gst_version_minor = version_arr[1]
-gst_version_micro = version_arr[2]
+gst_version_major = version_arr[0].to_int()
+gst_version_minor = version_arr[1].to_int()
+gst_version_micro = version_arr[2].to_int()
 if version_arr.length() == 4
-  gst_version_nano = version_arr[3]
+  gst_version_nano = version_arr[3].to_int()
 else
   gst_version_nano = 0
 endif
+
+have_cxx = add_languages('cpp', required : false)
 
 glib_req = '>= 2.40.0'
 orc_req = '>= 0.4.24'
@@ -24,7 +26,7 @@ soversion = 0
 # maintaining compatibility with the previous libtool versioning
 # current = minor * 100 + micro
 # FIXME: should be able to convert string to int somehow so we can just do maths
-libversion = '@0@.@1@.0'.format(soversion, gst_version_minor.to_int() * 100 + gst_version_micro.to_int())
+libversion = '@0@.@1@.0'.format(soversion, gst_version_minor * 100 + gst_version_micro)
 
 plugins_install_dir = '@0@/gstreamer-1.0'.format(get_option('libdir'))
 
@@ -46,6 +48,16 @@ if cc.get_id() == 'msvc'
   noseh_link_args = ['/SAFESEH:NO']
 else
   noseh_link_args = []
+endif
+
+# Symbol visibility
+if cc.has_argument('-fvisibility=hidden')
+  add_project_arguments('-fvisibility=hidden', language: 'c')
+endif
+
+# Disable strict aliasing
+if cc.has_argument('-fno-strict-aliasing')
+  add_project_arguments('-fno-strict-aliasing', language: 'c')
 endif
 
 core_conf = configuration_data()
@@ -99,12 +111,25 @@ core_conf.set('GETTEXT_PACKAGE', '"gst-plugins-base-1.0"')
 core_conf.set('PACKAGE', '"gst-plugins-base"')
 core_conf.set('VERSION', '"@0@"'.format(gst_version))
 core_conf.set('PACKAGE_VERSION', '"@0@"'.format(gst_version))
-core_conf.set('GST_PACKAGE_NAME', '"GStreamer Base Plug-ins"')
-core_conf.set('GST_PACKAGE_ORIGIN', '"Unknown package origin"')
 core_conf.set('GST_API_VERSION', '"@0@"'.format(api_version))
 core_conf.set('GST_INSTALL_PLUGINS_HELPER', '"/FIXME"')
 core_conf.set('GST_DATADIR', '"/FIXME"')
 core_conf.set('GST_LICENSE', '"LGPL"')
+
+# GStreamer package name and origin url
+gst_package_name = get_option('with-package-name')
+if gst_package_name == ''
+  if gst_version_nano == 0
+    gst_package_name = 'GStreamer Base Plug-ins source release'
+  elif gst_version_nano == 1
+    gst_package_name = 'GStreamer Base Plug-ins git'
+  else
+    gst_package_name = 'GStreamer Base Plug-ins prerelease'
+  endif
+endif
+core_conf.set_quoted('GST_PACKAGE_NAME', gst_package_name)
+core_conf.set_quoted('GST_PACKAGE_ORIGIN', get_option('with-package-origin'))
+
 # FIXME: These should be configure options
 core_conf.set('DEFAULT_VIDEOSINK', '"autovideosink"')
 core_conf.set('DEFAULT_AUDIOSINK', '"autoaudiosink"')
@@ -122,24 +147,28 @@ x11_dep = dependency('x11', required : false)
 # GLib checks are for the entire project
 giounix_dep = dependency('gio-unix-2.0', version : glib_req, required : false)
 # Almost everything that uses glib also uses gobject
-glib_deps = [dependency('glib-2.0', version : glib_req),
-	     dependency('gobject-2.0', version : glib_req)]
-gio_dep = dependency('gio-2.0', version : glib_req)
+glib_deps = [dependency('glib-2.0', version : glib_req, fallback: ['glib', 'libglib_dep']),
+             dependency('gobject-2.0', fallback: ['glib', 'libgobject_dep'])]
+gio_dep = dependency('gio-2.0', fallback: ['glib', 'libgio_dep'])
 
 core_conf.set('HAVE_X', x11_dep.found())
-core_conf.set('HAVE_GIO_UNIX_2_0', giounix_dep.found())
+core_conf.set('HAVE_GIO_UNIX_2_0',
+    (gio_dep.type_name() != 'pkgconfig' and host_machine.system() != 'windows')
+    or giounix_dep.found())
 
-runcmd = run_command('pkg-config', '--variable=giomoduledir', 'gio-2.0')
-if runcmd.returncode() == 0
-  core_conf.set('GIO_MODULE_DIR', '"@0@"'.format(runcmd.stdout().strip()))
-endif
-runcmd = run_command('pkg-config', '--variable=libdir', 'gio-2.0')
-if runcmd.returncode() == 0
-  core_conf.set('GIO_LIBDIR', '"@0@"'.format(runcmd.stdout().strip()))
-endif
-runcmd = run_command('pkg-config', '--variable=prefix', 'gio-2.0')
-if runcmd.returncode() == 0
-  core_conf.set('GIO_PREFIX', '"@0@"'.format(runcmd.stdout().strip()))
+if gio_dep.type_name() == 'pkgconfig'
+    core_conf.set_quoted('GIO_MODULE_DIR',
+        gio_dep.get_pkgconfig_variable('giomoduledir'))
+    core_conf.set_quoted('GIO_LIBDIR',
+        gio_dep.get_pkgconfig_variable('libdir'))
+    core_conf.set_quoted('GIO_PREFIX',
+        gio_dep.get_pkgconfig_variable('prefix'))
+else
+    core_conf.set_quoted('GIO_MODULE_DIR', join_paths(get_option('prefix'),
+      get_option('libdir'), 'gio/modules'))
+    core_conf.set_quoted('GIO_LIBDIR', join_paths(get_option('prefix'),
+      get_option('libdir')))
+    core_conf.set_quoted('GIO_PREFIX', get_option('prefix'))
 endif
 
 configinc = include_directories('.')
@@ -159,8 +188,6 @@ if host_machine.system() != 'windows'
 endif
 gst_controller_dep = dependency('gstreamer-controller-1.0', version : gst_req,
   fallback : ['gstreamer', 'gst_controller_dep'])
-
-vs_module_defs_dir = meson.current_source_dir() + '/win32/common/'
 
 # Used by the *_mkenum.py helper scripts
 glib_mkenums = find_program('glib-mkenums')
@@ -193,14 +220,6 @@ have_sse = cc.has_argument(sse_args)
 have_sse2 = cc.has_argument(sse2_args)
 have_sse41 = cc.has_argument(sse41_args)
 
-# FIXME: Meson should have a way for portably adding -fPIC when needed for use
-# with static libraries that are linked into shared libraries. Or, it should
-# add it by default with an option to turn it off if needed.
-pic_args = ['-fPIC']
-if host_machine.system() == 'windows'
-  pic_args = []
-endif
-
 if gst_dep.type_name() == 'internal'
     gst_proj = subproject('gstreamer')
 
@@ -229,6 +248,7 @@ gir = find_program('g-ir-scanner', required : false)
 gnome = import('gnome')
 build_gir = gir.found() and not meson.is_cross_build() and not get_option('disable_introspection')
 gir_init_section = [ '--add-init-section=extern void gst_init(gint*,gchar**);' + \
+    'g_setenv("GST_REGISTRY_DISABLE", "yes", TRUE);' + \
     'g_setenv("GST_REGISTRY_1.0", "@0@", TRUE);'.format(meson.current_build_dir() + '/gir_empty_registry.reg') + \
     'g_setenv("GST_PLUGIN_PATH_1_0", "", TRUE);' + \
     'g_setenv("GST_PLUGIN_SYSTEM_PATH_1_0", "", TRUE);' + \
@@ -241,6 +261,11 @@ subdir('sys')
 subdir('tools')
 subdir('tests')
 subdir('pkgconfig')
+
+# xgettext is optional (on Windows for instance)
+if find_program('xgettext', required : false).found()
+  subdir('po')
+endif
 
 if build_machine.system() == 'windows'
   message('Disabling gtk-doc while building on Windows')
@@ -255,9 +280,7 @@ else
 endif
 
 # Use core_conf after all subdirs have set values
-configure_file(input : 'config.h.meson',
-  output : 'config.h',
-  configuration : core_conf)
+configure_file(output : 'config.h', configuration : core_conf)
 
-python3 = find_program('python3')
+python3 = import('python3').find_python()
 run_command(python3, '-c', 'import shutil; shutil.copy("hooks/pre-commit.hook", ".git/hooks/pre-commit")')

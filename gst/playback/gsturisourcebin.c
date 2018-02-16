@@ -151,8 +151,6 @@ struct _GstURISourceBin
   /* for dynamic sources */
   guint src_np_sig_id;          /* new-pad signal id */
 
-  gboolean async_pending;       /* async-start has been emitted */
-
   guint64 ring_buffer_max_size; /* 0 means disabled */
 
   GList *pending_pads;          /* Pads we have blocked pending assignment
@@ -169,28 +167,12 @@ struct _GstURISourceBinClass
 {
   GstBinClass parent_class;
 
-  /* signal fired when we found a pad that we cannot decode */
-  void (*unknown_type) (GstElement * element, GstPad * pad, GstCaps * caps);
-
-  /* signal fired to know if we continue trying to decode the given caps */
-    gboolean (*autoplug_continue) (GstElement * element, GstPad * pad,
-      GstCaps * caps);
-  /* signal fired to get a list of factories to try to autoplug */
-  GValueArray *(*autoplug_factories) (GstElement * element, GstPad * pad,
-      GstCaps * caps);
-  /* signal fired to sort the factories */
-  GValueArray *(*autoplug_sort) (GstElement * element, GstPad * pad,
-      GstCaps * caps, GValueArray * factories);
-  /* signal fired to select from the proposed list of factories */
-    GstAutoplugSelectResult (*autoplug_select) (GstElement * element,
-      GstPad * pad, GstCaps * caps, GstElementFactory * factory);
-  /* signal fired when a autoplugged element that is not linked downstream
-   * or exposed wants to query something */
-    gboolean (*autoplug_query) (GstElement * element, GstPad * pad,
-      GstQuery * query);
-
-  /* emitted when all data is decoded */
+  /* emitted when all data has been drained out
+   * FIXME : What do we need this for ?? */
   void (*drained) (GstElement * element);
+  /* emitted when all data has been fed into buffering slots (i.e the
+   * actual sources are done) */
+  void (*about_to_finish) (GstElement * element);
 };
 
 static GstStaticPadTemplate srctemplate = GST_STATIC_PAD_TEMPLATE ("src_%u",
@@ -206,13 +188,8 @@ GST_DEBUG_CATEGORY_STATIC (gst_uri_source_bin_debug);
 /* signals */
 enum
 {
-  SIGNAL_UNKNOWN_TYPE,
-  SIGNAL_AUTOPLUG_CONTINUE,
-  SIGNAL_AUTOPLUG_FACTORIES,
-  SIGNAL_AUTOPLUG_SELECT,
-  SIGNAL_AUTOPLUG_SORT,
-  SIGNAL_AUTOPLUG_QUERY,
   SIGNAL_DRAINED,
+  SIGNAL_ABOUT_TO_FINISH,
   SIGNAL_SOURCE_SETUP,
   LAST_SIGNAL
 };
@@ -272,172 +249,6 @@ static void free_output_slot_async (GstURISourceBin * urisrc,
     OutputSlotInfo * slot);
 static GstPad *create_output_pad (GstURISourceBin * urisrc, GstPad * pad);
 static void remove_buffering_msgs (GstURISourceBin * bin, GstObject * src);
-
-static gboolean
-_gst_boolean_accumulator (GSignalInvocationHint * ihint,
-    GValue * return_accu, const GValue * handler_return, gpointer dummy)
-{
-  gboolean myboolean;
-
-  myboolean = g_value_get_boolean (handler_return);
-  if (!(ihint->run_type & G_SIGNAL_RUN_CLEANUP))
-    g_value_set_boolean (return_accu, myboolean);
-
-  /* stop emission if FALSE */
-  return myboolean;
-}
-
-static gboolean
-_gst_boolean_or_accumulator (GSignalInvocationHint * ihint,
-    GValue * return_accu, const GValue * handler_return, gpointer dummy)
-{
-  gboolean myboolean;
-  gboolean retboolean;
-
-  myboolean = g_value_get_boolean (handler_return);
-  retboolean = g_value_get_boolean (return_accu);
-
-  if (!(ihint->run_type & G_SIGNAL_RUN_CLEANUP))
-    g_value_set_boolean (return_accu, myboolean || retboolean);
-
-  return TRUE;
-}
-
-static gboolean
-_gst_array_accumulator (GSignalInvocationHint * ihint,
-    GValue * return_accu, const GValue * handler_return, gpointer dummy)
-{
-  gpointer array;
-
-  array = g_value_get_boxed (handler_return);
-  if (!(ihint->run_type & G_SIGNAL_RUN_CLEANUP))
-    g_value_set_boxed (return_accu, array);
-
-  return FALSE;
-}
-
-static gboolean
-_gst_select_accumulator (GSignalInvocationHint * ihint,
-    GValue * return_accu, const GValue * handler_return, gpointer dummy)
-{
-  GstAutoplugSelectResult res;
-
-  res = g_value_get_enum (handler_return);
-  if (!(ihint->run_type & G_SIGNAL_RUN_CLEANUP))
-    g_value_set_enum (return_accu, res);
-
-  /* Call the next handler in the chain (if any) when the current callback
-   * returns TRY. This makes it possible to register separate autoplug-select
-   * handlers that implement different TRY/EXPOSE/SKIP strategies.
-   */
-  if (res == GST_AUTOPLUG_SELECT_TRY)
-    return TRUE;
-
-  return FALSE;
-}
-
-static gboolean
-_gst_array_hasvalue_accumulator (GSignalInvocationHint * ihint,
-    GValue * return_accu, const GValue * handler_return, gpointer dummy)
-{
-  gpointer array;
-
-  array = g_value_get_boxed (handler_return);
-  if (!(ihint->run_type & G_SIGNAL_RUN_CLEANUP))
-    g_value_set_boxed (return_accu, array);
-
-  if (array != NULL)
-    return FALSE;
-
-  return TRUE;
-}
-
-static gboolean
-gst_uri_source_bin_autoplug_continue (GstElement * element, GstPad * pad,
-    GstCaps * caps)
-{
-  /* by default we always continue */
-  return TRUE;
-}
-
-/* Must be called with factories lock! */
-static void
-gst_uri_source_bin_update_factories_list (GstURISourceBin * dec)
-{
-  guint32 cookie;
-
-  cookie = gst_registry_get_feature_list_cookie (gst_registry_get ());
-  if (!dec->factories || dec->factories_cookie != cookie) {
-    if (dec->factories)
-      gst_plugin_feature_list_free (dec->factories);
-    dec->factories =
-        gst_element_factory_list_get_elements
-        (GST_ELEMENT_FACTORY_TYPE_DECODABLE, GST_RANK_MARGINAL);
-    dec->factories =
-        g_list_sort (dec->factories, gst_playback_utils_compare_factories_func);
-    dec->factories_cookie = cookie;
-  }
-}
-
-static GValueArray *
-gst_uri_source_bin_autoplug_factories (GstElement * element, GstPad * pad,
-    GstCaps * caps)
-{
-  GList *list, *tmp;
-  GValueArray *result;
-  GstURISourceBin *dec = GST_URI_SOURCE_BIN_CAST (element);
-
-  GST_DEBUG_OBJECT (element, "finding factories");
-
-  /* return all compatible factories for caps */
-  g_mutex_lock (&dec->factories_lock);
-  gst_uri_source_bin_update_factories_list (dec);
-  list =
-      gst_element_factory_list_filter (dec->factories, caps, GST_PAD_SINK,
-      gst_caps_is_fixed (caps));
-  g_mutex_unlock (&dec->factories_lock);
-
-  result = g_value_array_new (g_list_length (list));
-  for (tmp = list; tmp; tmp = tmp->next) {
-    GstElementFactory *factory = GST_ELEMENT_FACTORY_CAST (tmp->data);
-    GValue val = { 0, };
-
-    g_value_init (&val, G_TYPE_OBJECT);
-    g_value_set_object (&val, factory);
-    g_value_array_append (result, &val);
-    g_value_unset (&val);
-  }
-  gst_plugin_feature_list_free (list);
-
-  GST_DEBUG_OBJECT (element, "autoplug-factories returns %p", result);
-
-  return result;
-}
-
-static GValueArray *
-gst_uri_source_bin_autoplug_sort (GstElement * element, GstPad * pad,
-    GstCaps * caps, GValueArray * factories)
-{
-  return NULL;
-}
-
-static GstAutoplugSelectResult
-gst_uri_source_bin_autoplug_select (GstElement * element, GstPad * pad,
-    GstCaps * caps, GstElementFactory * factory)
-{
-  GST_DEBUG_OBJECT (element, "default autoplug-select returns TRY");
-
-  /* Try factory. */
-  return GST_AUTOPLUG_SELECT_TRY;
-}
-
-static gboolean
-gst_uri_source_bin_autoplug_query (GstElement * element, GstPad * pad,
-    GstQuery * query)
-{
-  /* No query handled here */
-  return FALSE;
-}
 
 static void
 gst_uri_source_bin_class_init (GstURISourceBinClass * klass)
@@ -520,171 +331,6 @@ gst_uri_source_bin_class_init (GstURISourceBinClass * klass)
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * GstURISourceBin::unknown-type:
-   * @bin: The urisourcebin.
-   * @pad: the new pad containing caps that cannot be resolved to a 'final'.
-   * stream type.
-   * @caps: the #GstCaps of the pad that cannot be resolved.
-   *
-   * This signal is emitted when a pad for which there is no further possible
-   * decoding is added to the urisourcebin.
-   */
-  gst_uri_source_bin_signals[SIGNAL_UNKNOWN_TYPE] =
-      g_signal_new ("unknown-type", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstURISourceBinClass, unknown_type),
-      NULL, NULL, g_cclosure_marshal_generic, G_TYPE_NONE, 2,
-      GST_TYPE_PAD, GST_TYPE_CAPS);
-
-  /**
-   * GstURISourceBin::autoplug-continue:
-   * @bin: The urisourcebin.
-   * @pad: The #GstPad.
-   * @caps: The #GstCaps found.
-   *
-   * This signal is emitted whenever urisourcebin finds a new stream. It is
-   * emitted before looking for any elements that can handle that stream.
-   *
-   * >   Invocation of signal handlers stops after the first signal handler
-   * >   returns #FALSE. Signal handlers are invoked in the order they were
-   * >   connected in.
-   *
-   * Returns: #TRUE if you wish urisourcebin to look for elements that can
-   * handle the given @caps. If #FALSE, those caps will be considered as
-   * final and the pad will be exposed as such (see 'pad-added' signal of
-   * #GstElement).
-   */
-  gst_uri_source_bin_signals[SIGNAL_AUTOPLUG_CONTINUE] =
-      g_signal_new ("autoplug-continue", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstURISourceBinClass,
-          autoplug_continue), _gst_boolean_accumulator, NULL,
-      g_cclosure_marshal_generic, G_TYPE_BOOLEAN, 2, GST_TYPE_PAD,
-      GST_TYPE_CAPS);
-
-  /**
-   * GstURISourceBin::autoplug-factories:
-   * @bin: The urisourcebin.
-   * @pad: The #GstPad.
-   * @caps: The #GstCaps found.
-   *
-   * This function is emitted when an array of possible factories for @caps on
-   * @pad is needed. urisourcebin will by default return an array with all
-   * compatible factories, sorted by rank.
-   *
-   * If this function returns NULL, @pad will be exposed as a final caps.
-   *
-   * If this function returns an empty array, the pad will be considered as
-   * having an unhandled type media type.
-   *
-   * >   Only the signal handler that is connected first will ever by invoked.
-   * >   Don't connect signal handlers with the #G_CONNECT_AFTER flag to this
-   * >   signal, they will never be invoked!
-   *
-   * Returns: a #GValueArray* with a list of factories to try. The factories are
-   * by default tried in the returned order or based on the index returned by
-   * "autoplug-select".
-   */
-  gst_uri_source_bin_signals[SIGNAL_AUTOPLUG_FACTORIES] =
-      g_signal_new ("autoplug-factories", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstURISourceBinClass,
-          autoplug_factories), _gst_array_accumulator, NULL,
-      g_cclosure_marshal_generic, G_TYPE_VALUE_ARRAY, 2,
-      GST_TYPE_PAD, GST_TYPE_CAPS);
-
-  /**
-   * GstURISourceBin::autoplug-sort:
-   * @bin: The urisourcebin.
-   * @pad: The #GstPad.
-   * @caps: The #GstCaps.
-   * @factories: A #GValueArray of possible #GstElementFactory to use.
-   *
-   * Once decodebin has found the possible #GstElementFactory objects to try
-   * for @caps on @pad, this signal is emited. The purpose of the signal is for
-   * the application to perform additional sorting or filtering on the element
-   * factory array.
-   *
-   * The callee should copy and modify @factories or return #NULL if the
-   * order should not change.
-   *
-   * >   Invocation of signal handlers stops after one signal handler has
-   * >   returned something else than #NULL. Signal handlers are invoked in
-   * >   the order they were connected in.
-   * >   Don't connect signal handlers with the #G_CONNECT_AFTER flag to this
-   * >   signal, they will never be invoked!
-   *
-   * Returns: A new sorted array of #GstElementFactory objects.
-   *
-   * Since: 0.10.33
-   */
-  gst_uri_source_bin_signals[SIGNAL_AUTOPLUG_SORT] =
-      g_signal_new ("autoplug-sort", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstURISourceBinClass, autoplug_sort),
-      _gst_array_hasvalue_accumulator, NULL,
-      g_cclosure_marshal_generic, G_TYPE_VALUE_ARRAY, 3, GST_TYPE_PAD,
-      GST_TYPE_CAPS, G_TYPE_VALUE_ARRAY | G_SIGNAL_TYPE_STATIC_SCOPE);
-
-  /**
-   * GstURISourceBin::autoplug-select:
-   * @bin: The urisourcebin.
-   * @pad: The #GstPad.
-   * @caps: The #GstCaps.
-   * @factory: A #GstElementFactory to use.
-   *
-   * This signal is emitted once urisourcebin has found all the possible
-   * #GstElementFactory that can be used to handle the given @caps. For each of
-   * those factories, this signal is emitted.
-   *
-   * The signal handler should return a #GST_TYPE_AUTOPLUG_SELECT_RESULT enum
-   * value indicating what decodebin should do next.
-   *
-   * A value of #GST_AUTOPLUG_SELECT_TRY will try to autoplug an element from
-   * @factory.
-   *
-   * A value of #GST_AUTOPLUG_SELECT_EXPOSE will expose @pad without plugging
-   * any element to it.
-   *
-   * A value of #GST_AUTOPLUG_SELECT_SKIP will skip @factory and move to the
-   * next factory.
-   *
-   * >   The signal handler will not be invoked if any of the previously
-   * >   registered signal handlers (if any) return a value other than
-   * >   GST_AUTOPLUG_SELECT_TRY. Which also means that if you return
-   * >   GST_AUTOPLUG_SELECT_TRY from one signal handler, handlers that get
-   * >   registered next (again, if any) can override that decision.
-   *
-   * Returns: a #GST_TYPE_AUTOPLUG_SELECT_RESULT that indicates the required
-   * operation. The default handler will always return
-   * #GST_AUTOPLUG_SELECT_TRY.
-   */
-  gst_uri_source_bin_signals[SIGNAL_AUTOPLUG_SELECT] =
-      g_signal_new ("autoplug-select", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstURISourceBinClass,
-          autoplug_select), _gst_select_accumulator, NULL,
-      g_cclosure_marshal_generic,
-      GST_TYPE_AUTOPLUG_SELECT_RESULT, 3, GST_TYPE_PAD, GST_TYPE_CAPS,
-      GST_TYPE_ELEMENT_FACTORY);
-
-  /**
-   * GstDecodeBin::autoplug-query:
-   * @bin: The decodebin.
-   * @child: The child element doing the query
-   * @pad: The #GstPad.
-   * @query: The #GstQuery.
-   *
-   * This signal is emitted whenever an autoplugged element that is
-   * not linked downstream yet and not exposed does a query. It can
-   * be used to tell the element about the downstream supported caps
-   * for example.
-   *
-   * Returns: #TRUE if the query was handled, #FALSE otherwise.
-   */
-  gst_uri_source_bin_signals[SIGNAL_AUTOPLUG_QUERY] =
-      g_signal_new ("autoplug-query", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstURISourceBinClass, autoplug_query),
-      _gst_boolean_or_accumulator, NULL, g_cclosure_marshal_generic,
-      G_TYPE_BOOLEAN, 3, GST_TYPE_PAD, GST_TYPE_ELEMENT,
-      GST_TYPE_QUERY | G_SIGNAL_TYPE_STATIC_SCOPE);
-
-  /**
    * GstURISourceBin::drained:
    *
    * This signal is emitted when the data for the current uri is played.
@@ -693,6 +339,17 @@ gst_uri_source_bin_class_init (GstURISourceBinClass * klass)
       g_signal_new ("drained", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
       G_STRUCT_OFFSET (GstURISourceBinClass, drained), NULL, NULL,
+      g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
+
+    /**
+   * GstURISourceBin::about-to-finish:
+   *
+   * This signal is emitted when the data for the current uri is played.
+   */
+  gst_uri_source_bin_signals[SIGNAL_ABOUT_TO_FINISH] =
+      g_signal_new ("about-to-finish", G_TYPE_FROM_CLASS (klass),
+      G_SIGNAL_RUN_LAST,
+      G_STRUCT_OFFSET (GstURISourceBinClass, about_to_finish), NULL, NULL,
       g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
 
   /**
@@ -725,15 +382,6 @@ gst_uri_source_bin_class_init (GstURISourceBinClass * klass)
       GST_DEBUG_FUNCPTR (gst_uri_source_bin_change_state);
 
   gstbin_class->handle_message = GST_DEBUG_FUNCPTR (handle_message);
-
-  klass->autoplug_continue =
-      GST_DEBUG_FUNCPTR (gst_uri_source_bin_autoplug_continue);
-  klass->autoplug_factories =
-      GST_DEBUG_FUNCPTR (gst_uri_source_bin_autoplug_factories);
-  klass->autoplug_sort = GST_DEBUG_FUNCPTR (gst_uri_source_bin_autoplug_sort);
-  klass->autoplug_select =
-      GST_DEBUG_FUNCPTR (gst_uri_source_bin_autoplug_select);
-  klass->autoplug_query = GST_DEBUG_FUNCPTR (gst_uri_source_bin_autoplug_query);
 }
 
 static void
@@ -865,32 +513,6 @@ gst_uri_source_bin_get_property (GObject * object, guint prop_id,
   }
 }
 
-static void
-do_async_start (GstURISourceBin * dbin)
-{
-  GstMessage *message;
-
-  dbin->async_pending = TRUE;
-
-  message = gst_message_new_async_start (GST_OBJECT_CAST (dbin));
-  GST_BIN_CLASS (parent_class)->handle_message (GST_BIN_CAST (dbin), message);
-}
-
-static void
-do_async_done (GstURISourceBin * dbin)
-{
-  GstMessage *message;
-
-  if (dbin->async_pending) {
-    GST_DEBUG_OBJECT (dbin, "posting ASYNC_DONE");
-    message =
-        gst_message_new_async_done (GST_OBJECT_CAST (dbin),
-        GST_CLOCK_TIME_NONE);
-    GST_BIN_CLASS (parent_class)->handle_message (GST_BIN_CAST (dbin), message);
-
-    dbin->async_pending = FALSE;
-  }
-}
 
 #define DEFAULT_QUEUE_SIZE          (3 * GST_SECOND)
 #define DEFAULT_QUEUE_MIN_THRESHOLD ((DEFAULT_QUEUE_SIZE * 30) / 100)
@@ -1089,6 +711,20 @@ link_pending_pad_to_output (GstURISourceBin * urisrc, OutputSlotInfo * slot)
   return res;
 }
 
+/* Called with lock held */
+static gboolean
+all_slots_are_eos (GstURISourceBin * urisrc)
+{
+  GSList *tmp;
+
+  for (tmp = urisrc->out_slots; tmp; tmp = tmp->next) {
+    OutputSlotInfo *slot = (OutputSlotInfo *) tmp->data;
+    if (slot->is_eos == FALSE)
+      return FALSE;
+  }
+  return TRUE;
+}
+
 static GstPadProbeReturn
 demux_pad_events (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
 {
@@ -1112,6 +748,7 @@ demux_pad_events (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
     case GST_EVENT_EOS:
     {
       GstStructure *s;
+      gboolean all_streams_eos;
 
       GST_LOG_OBJECT (urisrc, "EOS on pad %" GST_PTR_FORMAT, pad);
 
@@ -1126,6 +763,7 @@ demux_pad_events (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
       BUFFERING_LOCK (urisrc);
       /* Mark that we fed an EOS to this slot */
       child_info->output_slot->is_eos = TRUE;
+      all_streams_eos = all_slots_are_eos (urisrc);
       BUFFERING_UNLOCK (urisrc);
 
       /* EOS means this element is no longer buffering */
@@ -1138,6 +776,11 @@ demux_pad_events (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
       s = gst_event_writable_structure (ev);
       gst_structure_set (s, "urisourcebin-custom-eos", G_TYPE_BOOLEAN, TRUE,
           NULL);
+      if (all_streams_eos) {
+        GST_DEBUG_OBJECT (urisrc, "POSTING ABOUT TO FINISH");
+        g_signal_emit (urisrc,
+            gst_uri_source_bin_signals[SIGNAL_ABOUT_TO_FINISH], 0, NULL);
+      }
     }
       break;
     case GST_EVENT_CAPS:
@@ -1160,6 +803,28 @@ demux_pad_events (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
   GST_URI_SOURCE_BIN_UNLOCK (urisrc);
 
 done:
+  return ret;
+}
+
+static GstPadProbeReturn
+pre_queue_event_probe (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
+{
+  GstURISourceBin *urisrc = GST_URI_SOURCE_BIN (user_data);
+  GstPadProbeReturn ret = GST_PAD_PROBE_OK;
+  GstEvent *ev = GST_PAD_PROBE_INFO_EVENT (info);
+
+  switch (GST_EVENT_TYPE (ev)) {
+    case GST_EVENT_EOS:
+    {
+      GST_LOG_OBJECT (urisrc, "EOS on pad %" GST_PTR_FORMAT, pad);
+      GST_DEBUG_OBJECT (urisrc, "POSTING ABOUT TO FINISH");
+      g_signal_emit (urisrc,
+          gst_uri_source_bin_signals[SIGNAL_ABOUT_TO_FINISH], 0, NULL);
+    }
+      break;
+    default:
+      break;
+  }
   return ret;
 }
 
@@ -1370,6 +1035,9 @@ create_output_pad (GstURISourceBin * urisrc, GstPad * pad)
   gst_object_unref (pad_tmpl);
   g_free (padname);
 
+  GST_DEBUG_OBJECT (urisrc, "Created output pad %s:%s for pad %s:%s",
+      GST_DEBUG_PAD_NAME (newpad), GST_DEBUG_PAD_NAME (pad));
+
   return newpad;
 }
 
@@ -1388,9 +1056,6 @@ expose_output_pad (GstURISourceBin * urisrc, GstPad * pad)
 
   gst_pad_set_active (pad, TRUE);
   gst_element_add_pad (GST_ELEMENT_CAST (urisrc), pad);
-
-  /* Once we expose a pad, we're no longer async */
-  do_async_done (urisrc);
 }
 
 static void
@@ -1709,7 +1374,6 @@ post_missing_plugin_error (GstElement * dec, const gchar * element_name)
   GST_ELEMENT_ERROR (dec, CORE, MISSING_PLUGIN,
       (_("Missing element '%s' - check your GStreamer installation."),
           element_name), (NULL));
-  do_async_done (GST_URI_SOURCE_BIN (dec));
 }
 
 /**
@@ -1919,7 +1583,6 @@ no_demuxer:
     /* FIXME: Fire the right error */
     GST_ELEMENT_ERROR (urisrc, CORE, MISSING_PLUGIN, (NULL),
         ("No demuxer element, check your installation"));
-    do_async_done (urisrc);
     return NULL;
   }
 }
@@ -1994,7 +1657,7 @@ handle_new_pad (GstURISourceBin * urisrc, GstPad * srcpad, GstCaps * caps)
       gst_query_unref (query);
     }
 
-    GST_DEBUG_OBJECT (urisrc, "check media-type %s, %d", media_type,
+    GST_DEBUG_OBJECT (urisrc, "check media-type %s, do_download:%d", media_type,
         do_download);
 
     GST_URI_SOURCE_BIN_LOCK (urisrc);
@@ -2002,6 +1665,9 @@ handle_new_pad (GstURISourceBin * urisrc, GstPad * srcpad, GstCaps * caps)
 
     if (slot == NULL || gst_pad_link (srcpad, slot->sinkpad) != GST_PAD_LINK_OK)
       goto could_not_link;
+
+    gst_pad_add_probe (srcpad, GST_PAD_PROBE_TYPE_EVENT_DOWNSTREAM,
+        pre_queue_event_probe, urisrc, NULL);
 
     expose_output_pad (urisrc, slot->srcpad);
     GST_URI_SOURCE_BIN_UNLOCK (urisrc);
@@ -2019,7 +1685,6 @@ no_demuxer_sink:
   {
     GST_ELEMENT_ERROR (urisrc, CORE, NEGOTIATION,
         (NULL), ("Adaptive demuxer element has no 'sink' pad"));
-    do_async_done (urisrc);
     return;
   }
 could_not_link:
@@ -2027,7 +1692,6 @@ could_not_link:
     GST_URI_SOURCE_BIN_UNLOCK (urisrc);
     GST_ELEMENT_ERROR (urisrc, CORE, NEGOTIATION,
         (NULL), ("Can't link typefind to adaptive demuxer element"));
-    do_async_done (urisrc);
     return;
   }
 }
@@ -2096,7 +1760,6 @@ no_typefind:
     post_missing_plugin_error (GST_ELEMENT_CAST (urisrc), "typefind");
     GST_ELEMENT_ERROR (urisrc, CORE, MISSING_PLUGIN, (NULL),
         ("No typefind element, check your installation"));
-    do_async_done (urisrc);
     return FALSE;
   }
 could_not_link:
@@ -2104,7 +1767,6 @@ could_not_link:
     GST_ELEMENT_ERROR (urisrc, CORE, NEGOTIATION,
         (NULL), ("Can't link source to typefind element"));
     gst_bin_remove (GST_BIN_CAST (urisrc), typefind);
-    do_async_done (urisrc);
     return FALSE;
   }
 }
@@ -2272,7 +1934,6 @@ setup_source (GstURISourceBin * urisrc)
     /* source provides raw data, we added the pads and we can now signal a
      * no_more pads because we are done. */
     gst_element_no_more_pads (GST_ELEMENT_CAST (urisrc));
-    do_async_done (urisrc);
     return TRUE;
   }
   if (!have_out && !is_dynamic) {
@@ -2906,12 +2567,6 @@ done:
   return res;
 }
 
-static void
-sync_slot_queue (OutputSlotInfo * slot)
-{
-  gst_element_sync_state_with_parent (slot->queue);
-}
-
 static GstStateChangeReturn
 gst_uri_source_bin_change_state (GstElement * element,
     GstStateChange transition)
@@ -2921,7 +2576,9 @@ gst_uri_source_bin_change_state (GstElement * element,
 
   switch (transition) {
     case GST_STATE_CHANGE_READY_TO_PAUSED:
-      do_async_start (urisrc);
+      GST_DEBUG ("ready to paused");
+      if (!setup_source (urisrc))
+        goto source_failed;
       break;
     default:
       break;
@@ -2930,44 +2587,14 @@ gst_uri_source_bin_change_state (GstElement * element,
   ret = GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
   if (ret == GST_STATE_CHANGE_FAILURE)
     goto setup_failed;
-  else if (ret == GST_STATE_CHANGE_NO_PREROLL)
-    do_async_done (urisrc);
 
   switch (transition) {
     case GST_STATE_CHANGE_READY_TO_PAUSED:
-      GST_DEBUG ("ready to paused");
-      if (!setup_source (urisrc))
-        goto source_failed;
-
-      ret = GST_STATE_CHANGE_ASYNC;
-
-      /* And now sync the states of everything we added */
-      g_slist_foreach (urisrc->out_slots, (GFunc) sync_slot_queue, NULL);
-      if (urisrc->typefinds) {
-        GList *iter;
-        for (iter = urisrc->typefinds; iter; iter = iter->next) {
-          GstElement *typefind = iter->data;
-          ret = gst_element_set_state (typefind, GST_STATE_PAUSED);
-          if (ret == GST_STATE_CHANGE_FAILURE)
-            goto setup_failed;
-        }
-      }
-      if (urisrc->source)
-        ret = gst_element_set_state (urisrc->source, GST_STATE_PAUSED);
-      if (ret == GST_STATE_CHANGE_FAILURE)
-        goto setup_failed;
-
-      if (ret == GST_STATE_CHANGE_SUCCESS)
-        ret = GST_STATE_CHANGE_ASYNC;
-      else if (ret == GST_STATE_CHANGE_NO_PREROLL)
-        do_async_done (urisrc);
-
       break;
     case GST_STATE_CHANGE_PAUSED_TO_READY:
       GST_DEBUG ("paused to ready");
       remove_demuxer (urisrc);
       remove_source (urisrc);
-      do_async_done (urisrc);
       g_list_free_full (urisrc->buffering_status,
           (GDestroyNotify) gst_message_unref);
       urisrc->buffering_status = NULL;
@@ -2986,13 +2613,11 @@ gst_uri_source_bin_change_state (GstElement * element,
   /* ERRORS */
 source_failed:
   {
-    do_async_done (urisrc);
     return GST_STATE_CHANGE_FAILURE;
   }
 setup_failed:
   {
     /* clean up leftover groups */
-    do_async_done (urisrc);
     return GST_STATE_CHANGE_FAILURE;
   }
 }

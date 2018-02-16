@@ -55,15 +55,16 @@ struct _GstAlsaMidiSrc
 
   /*< private > */
   snd_seq_t *seq;
+  int queue;
   int port_count;
   snd_seq_addr_t *seq_ports;
   snd_midi_event_t *parser;
   unsigned char *buffer;
 
-  struct pollfd *pfds;
-  int npfds;
+  GstPoll *poll;
 
   guint64 tick;
+  guint64 delay;
 };
 
 struct _GstAlsaMidiSrcClass

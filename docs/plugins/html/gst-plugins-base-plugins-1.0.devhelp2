@@ -9,6 +9,8 @@
       <sub name="alsasrc" link="gst-plugins-base-plugins-alsasrc.html"/>
       <sub name="appsrc" link="gst-plugins-base-plugins-appsrc.html"/>
       <sub name="audioconvert" link="gst-plugins-base-plugins-audioconvert.html"/>
+      <sub name="audiointerleave" link="gst-plugins-base-plugins-audiointerleave.html"/>
+      <sub name="audiomixer" link="gst-plugins-base-plugins-audiomixer.html"/>
       <sub name="audiorate" link="gst-plugins-base-plugins-audiorate.html"/>
       <sub name="audioresample" link="gst-plugins-base-plugins-audioresample.html"/>
       <sub name="audiotestsrc" link="gst-plugins-base-plugins-audiotestsrc.html"/>
@@ -21,6 +23,47 @@
       <sub name="giosrc" link="gst-plugins-base-plugins-giosrc.html"/>
       <sub name="giostreamsink" link="gst-plugins-base-plugins-giostreamsink.html"/>
       <sub name="giostreamsrc" link="gst-plugins-base-plugins-giostreamsrc.html"/>
+      <sub name="glcolorbalance" link="gst-plugins-base-plugins-glcolorbalance.html"/>
+      <sub name="glcolorconvert" link="gst-plugins-base-plugins-glcolorconvert.html"/>
+      <sub name="glcolorscale" link="gst-plugins-base-plugins-glcolorscale.html"/>
+      <sub name="gldeinterlace" link="gst-plugins-base-plugins-gldeinterlace.html"/>
+      <sub name="gldifferencematte" link="gst-plugins-base-plugins-gldifferencematte.html"/>
+      <sub name="gldownload" link="gst-plugins-base-plugins-gldownload.html"/>
+      <sub name="gleffects_blur" link="gst-plugins-base-plugins-gleffects-blur.html"/>
+      <sub name="gleffects_bulge" link="gst-plugins-base-plugins-gleffects-bulge.html"/>
+      <sub name="gleffects_fisheye" link="gst-plugins-base-plugins-gleffects-fisheye.html"/>
+      <sub name="gleffects_glow" link="gst-plugins-base-plugins-gleffects-glow.html"/>
+      <sub name="gleffects_heat" link="gst-plugins-base-plugins-gleffects-heat.html"/>
+      <sub name="gleffects_identity" link="gst-plugins-base-plugins-gleffects-identity.html"/>
+      <sub name="gleffects_laplacian" link="gst-plugins-base-plugins-gleffects-laplacian.html"/>
+      <sub name="gleffects_lumaxpro" link="gst-plugins-base-plugins-gleffects-lumaxpro.html"/>
+      <sub name="gleffects_mirror" link="gst-plugins-base-plugins-gleffects-mirror.html"/>
+      <sub name="gleffects_sepia" link="gst-plugins-base-plugins-gleffects-sepia.html"/>
+      <sub name="gleffects_sin" link="gst-plugins-base-plugins-gleffects-sin.html"/>
+      <sub name="gleffects_sobel" link="gst-plugins-base-plugins-gleffects-sobel.html"/>
+      <sub name="gleffects_square" link="gst-plugins-base-plugins-gleffects-square.html"/>
+      <sub name="gleffects_squeeze" link="gst-plugins-base-plugins-gleffects-squeeze.html"/>
+      <sub name="gleffects_stretch" link="gst-plugins-base-plugins-gleffects-stretch.html"/>
+      <sub name="gleffects_tunnel" link="gst-plugins-base-plugins-gleffects-tunnel.html"/>
+      <sub name="gleffects_twirl" link="gst-plugins-base-plugins-gleffects-twirl.html"/>
+      <sub name="gleffects" link="gst-plugins-base-plugins-gleffects.html"/>
+      <sub name="gleffects_xpro" link="gst-plugins-base-plugins-gleffects-xpro.html"/>
+      <sub name="gleffects_xray" link="gst-plugins-base-plugins-gleffects-xray.html"/>
+      <sub name="glfilterapp" link="gst-plugins-base-plugins-glfilterapp.html"/>
+      <sub name="glfilterbin" link="gst-plugins-base-plugins-glfilterbin.html"/>
+      <sub name="glfiltercube" link="gst-plugins-base-plugins-glfiltercube.html"/>
+      <sub name="glfilterglass" link="gst-plugins-base-plugins-glfilterglass.html"/>
+      <sub name="glimagesinkelement" link="gst-plugins-base-plugins-glimagesinkelement.html"/>
+      <sub name="glimagesink" link="gst-plugins-base-plugins-glimagesink.html"/>
+      <sub name="gloverlay" link="gst-plugins-base-plugins-gloverlay.html"/>
+      <sub name="glshader" link="gst-plugins-base-plugins-glshader.html"/>
+      <sub name="glsinkbin" link="gst-plugins-base-plugins-glsinkbin.html"/>
+      <sub name="glsrcbin" link="gst-plugins-base-plugins-glsrcbin.html"/>
+      <sub name="glstereosplit" link="gst-plugins-base-plugins-glstereosplit.html"/>
+      <sub name="gltestsrc" link="gst-plugins-base-plugins-gltestsrc.html"/>
+      <sub name="gltransformation" link="gst-plugins-base-plugins-gltransformation.html"/>
+      <sub name="glupload" link="gst-plugins-base-plugins-glupload.html"/>
+      <sub name="glviewconvert" link="gst-plugins-base-plugins-glviewconvert.html"/>
       <sub name="multifdsink" link="gst-plugins-base-plugins-multifdsink.html"/>
       <sub name="multisocketsink" link="gst-plugins-base-plugins-multisocketsink.html"/>
       <sub name="oggaviparse" link="gst-plugins-base-plugins-oggaviparse.html"/>
@@ -74,6 +117,7 @@
       <sub name="alsa" link="gst-plugins-base-plugins-plugin-alsa.html"/>
       <sub name="app" link="gst-plugins-base-plugins-plugin-app.html"/>
       <sub name="audioconvert" link="gst-plugins-base-plugins-plugin-audioconvert.html"/>
+      <sub name="audiomixer" link="gst-plugins-base-plugins-plugin-audiomixer.html"/>
       <sub name="audiorate" link="gst-plugins-base-plugins-plugin-audiorate.html"/>
       <sub name="audioresample" link="gst-plugins-base-plugins-plugin-audioresample.html"/>
       <sub name="audiotestsrc" link="gst-plugins-base-plugins-plugin-audiotestsrc.html"/>
@@ -84,6 +128,7 @@
       <sub name="libvisual" link="gst-plugins-base-plugins-plugin-libvisual.html"/>
       <sub name="ogg" link="gst-plugins-base-plugins-plugin-ogg.html"/>
       <sub name="opus" link="gst-plugins-base-plugins-plugin-opus.html"/>
+      <sub name="opengl" link="gst-plugins-base-plugins-plugin-opengl.html"/>
       <sub name="pango" link="gst-plugins-base-plugins-plugin-pango.html"/>
       <sub name="playback" link="gst-plugins-base-plugins-plugin-playback.html"/>
       <sub name="rawparse" link="gst-plugins-base-plugins-plugin-rawparse.html"/>
@@ -149,9 +194,15 @@
     <keyword type="signal" name="The “push-buffer” signal" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc-push-buffer"/>
     <keyword type="signal" name="The “seek-data” signal" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc-seek-data"/>
     <keyword type="signal" name="The “push-sample” signal" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc-push-sample"/>
+    <keyword type="signal" name="The “push-buffer-list” signal" link="gst-plugins-base-plugins-appsrc.html#GstAppSrc-push-buffer-list"/>
     <keyword type="struct" name="struct GstAudioConvert" link="gst-plugins-base-plugins-audioconvert.html#GstAudioConvert-struct"/>
     <keyword type="property" name="The “dithering” property" link="gst-plugins-base-plugins-audioconvert.html#GstAudioConvert--dithering"/>
     <keyword type="property" name="The “noise-shaping” property" link="gst-plugins-base-plugins-audioconvert.html#GstAudioConvert--noise-shaping"/>
+    <keyword type="property" name="The “mix-matrix” property" link="gst-plugins-base-plugins-audioconvert.html#GstAudioConvert--mix-matrix"/>
+    <keyword type="struct" name="struct GstAudioInterleave" link="gst-plugins-base-plugins-audiointerleave.html#GstAudioInterleave-struct"/>
+    <keyword type="property" name="The “channel-positions” property" link="gst-plugins-base-plugins-audiointerleave.html#GstAudioInterleave--channel-positions"/>
+    <keyword type="property" name="The “channel-positions-from-input” property" link="gst-plugins-base-plugins-audiointerleave.html#GstAudioInterleave--channel-positions-from-input"/>
+    <keyword type="struct" name="struct GstAudioMixer" link="gst-plugins-base-plugins-audiomixer.html#GstAudioMixer-struct"/>
     <keyword type="struct" name="struct GstAudioRate" link="gst-plugins-base-plugins-audiorate.html#GstAudioRate-struct"/>
     <keyword type="property" name="The “add” property" link="gst-plugins-base-plugins-audiorate.html#GstAudioRate--add"/>
     <keyword type="property" name="The “drop” property" link="gst-plugins-base-plugins-audiorate.html#GstAudioRate--drop"/>
@@ -226,6 +277,97 @@
     <keyword type="property" name="The “stream” property" link="gst-plugins-base-plugins-giostreamsink.html#GstGioStreamSink--stream"/>
     <keyword type="struct" name="struct GstGioStreamSrc" link="gst-plugins-base-plugins-giostreamsrc.html#GstGioStreamSrc-struct"/>
     <keyword type="property" name="The “stream” property" link="gst-plugins-base-plugins-giostreamsrc.html#GstGioStreamSrc--stream"/>
+    <keyword type="struct" name="struct GstGLColorBalance" link="gst-plugins-base-plugins-glcolorbalance.html#GstGLColorBalance-struct"/>
+    <keyword type="property" name="The “brightness” property" link="gst-plugins-base-plugins-glcolorbalance.html#GstGLColorBalance--brightness"/>
+    <keyword type="property" name="The “contrast” property" link="gst-plugins-base-plugins-glcolorbalance.html#GstGLColorBalance--contrast"/>
+    <keyword type="property" name="The “hue” property" link="gst-plugins-base-plugins-glcolorbalance.html#GstGLColorBalance--hue"/>
+    <keyword type="property" name="The “saturation” property" link="gst-plugins-base-plugins-glcolorbalance.html#GstGLColorBalance--saturation"/>
+    <keyword type="struct" name="struct GstGLColorConvertElement" link="gst-plugins-base-plugins-glcolorconvert.html#GstGLColorConvertElement-struct"/>
+    <keyword type="struct" name="struct GstGLColorscale" link="gst-plugins-base-plugins-glcolorscale.html#GstGLColorscale-struct"/>
+    <keyword type="struct" name="struct GstGLDeinterlace" link="gst-plugins-base-plugins-gldeinterlace.html#GstGLDeinterlace-struct"/>
+    <keyword type="property" name="The “method” property" link="gst-plugins-base-plugins-gldeinterlace.html#GstGLDeinterlace--method"/>
+    <keyword type="struct" name="struct GstGLDifferenceMatte" link="gst-plugins-base-plugins-gldifferencematte.html#GstGLDifferenceMatte-struct"/>
+    <keyword type="property" name="The “location” property" link="gst-plugins-base-plugins-gldifferencematte.html#GstGLDifferenceMatte--location"/>
+    <keyword type="struct" name="struct GstGLDownloadElement" link="gst-plugins-base-plugins-gldownload.html#GstGLDownloadElement-struct"/>
+    <keyword type="struct" name="struct GstGLFilterApp" link="gst-plugins-base-plugins-glfilterapp.html#GstGLFilterApp-struct"/>
+    <keyword type="signal" name="The “client-draw” signal" link="gst-plugins-base-plugins-glfilterapp.html#GstGLFilterApp-client-draw"/>
+    <keyword type="struct" name="struct GstGLFilterBin" link="gst-plugins-base-plugins-glfilterbin.html#GstGLFilterBin-struct"/>
+    <keyword type="property" name="The “filter” property" link="gst-plugins-base-plugins-glfilterbin.html#GstGLFilterBin--filter"/>
+    <keyword type="signal" name="The “create-element” signal" link="gst-plugins-base-plugins-glfilterbin.html#GstGLFilterBin-create-element"/>
+    <keyword type="struct" name="struct GstGLFilterCube" link="gst-plugins-base-plugins-glfiltercube.html#GstGLFilterCube-struct"/>
+    <keyword type="property" name="The “aspect” property" link="gst-plugins-base-plugins-glfiltercube.html#GstGLFilterCube--aspect"/>
+    <keyword type="property" name="The “blue” property" link="gst-plugins-base-plugins-glfiltercube.html#GstGLFilterCube--blue"/>
+    <keyword type="property" name="The “fovy” property" link="gst-plugins-base-plugins-glfiltercube.html#GstGLFilterCube--fovy"/>
+    <keyword type="property" name="The “green” property" link="gst-plugins-base-plugins-glfiltercube.html#GstGLFilterCube--green"/>
+    <keyword type="property" name="The “red” property" link="gst-plugins-base-plugins-glfiltercube.html#GstGLFilterCube--red"/>
+    <keyword type="property" name="The “zfar” property" link="gst-plugins-base-plugins-glfiltercube.html#GstGLFilterCube--zfar"/>
+    <keyword type="property" name="The “znear” property" link="gst-plugins-base-plugins-glfiltercube.html#GstGLFilterCube--znear"/>
+    <keyword type="struct" name="struct GstGLFilterGlass" link="gst-plugins-base-plugins-glfilterglass.html#GstGLFilterGlass-struct"/>
+    <keyword type="struct" name="struct GstGLImageSink" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink-struct"/>
+    <keyword type="property" name="The “context” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--context"/>
+    <keyword type="property" name="The “force-aspect-ratio” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--force-aspect-ratio"/>
+    <keyword type="property" name="The “handle-events” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--handle-events"/>
+    <keyword type="property" name="The “ignore-alpha” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--ignore-alpha"/>
+    <keyword type="property" name="The “output-multiview-downmix-mode” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--output-multiview-downmix-mode"/>
+    <keyword type="property" name="The “output-multiview-flags” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--output-multiview-flags"/>
+    <keyword type="property" name="The “output-multiview-mode” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--output-multiview-mode"/>
+    <keyword type="property" name="The “pixel-aspect-ratio” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--pixel-aspect-ratio"/>
+    <keyword type="property" name="The “rotate-method” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--rotate-method"/>
+    <keyword type="property" name="The “render-rectangle” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--render-rectangle"/>
+    <keyword type="signal" name="The “client-draw” signal" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink-client-draw"/>
+    <keyword type="signal" name="The “client-reshape” signal" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink-client-reshape"/>
+    <keyword type="struct" name="struct GstGLOverlay" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay-struct"/>
+    <keyword type="property" name="The “alpha” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--alpha"/>
+    <keyword type="property" name="The “location” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--location"/>
+    <keyword type="property" name="The “offset-x” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--offset-x"/>
+    <keyword type="property" name="The “offset-y” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--offset-y"/>
+    <keyword type="property" name="The “overlay-height” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--overlay-height"/>
+    <keyword type="property" name="The “overlay-width” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--overlay-width"/>
+    <keyword type="property" name="The “relative-x” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--relative-x"/>
+    <keyword type="property" name="The “relative-y” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--relative-y"/>
+    <keyword type="struct" name="struct GstGLFilterShader" link="gst-plugins-base-plugins-glshader.html#GstGLFilterShader-struct"/>
+    <keyword type="property" name="The “fragment” property" link="gst-plugins-base-plugins-glshader.html#GstGLFilterShader--fragment"/>
+    <keyword type="property" name="The “shader” property" link="gst-plugins-base-plugins-glshader.html#GstGLFilterShader--shader"/>
+    <keyword type="property" name="The “uniforms” property" link="gst-plugins-base-plugins-glshader.html#GstGLFilterShader--uniforms"/>
+    <keyword type="property" name="The “update-shader” property" link="gst-plugins-base-plugins-glshader.html#GstGLFilterShader--update-shader"/>
+    <keyword type="property" name="The “vertex” property" link="gst-plugins-base-plugins-glshader.html#GstGLFilterShader--vertex"/>
+    <keyword type="signal" name="The “create-shader” signal" link="gst-plugins-base-plugins-glshader.html#GstGLFilterShader-create-shader"/>
+    <keyword type="struct" name="struct GstGLSinkBin" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin-struct"/>
+    <keyword type="property" name="The “async” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--async"/>
+    <keyword type="property" name="The “blocksize” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--blocksize"/>
+    <keyword type="property" name="The “brightness” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--brightness"/>
+    <keyword type="property" name="The “contrast” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--contrast"/>
+    <keyword type="property" name="The “enable-last-sample” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--enable-last-sample"/>
+    <keyword type="property" name="The “force-aspect-ratio” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--force-aspect-ratio"/>
+    <keyword type="property" name="The “hue” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--hue"/>
+    <keyword type="property" name="The “last-sample” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--last-sample"/>
+    <keyword type="property" name="The “max-bitrate” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--max-bitrate"/>
+    <keyword type="property" name="The “max-lateness” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--max-lateness"/>
+    <keyword type="property" name="The “qos” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--qos"/>
+    <keyword type="property" name="The “render-delay” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--render-delay"/>
+    <keyword type="property" name="The “saturation” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--saturation"/>
+    <keyword type="property" name="The “sink” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--sink"/>
+    <keyword type="property" name="The “sync” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--sync"/>
+    <keyword type="property" name="The “throttle-time” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--throttle-time"/>
+    <keyword type="property" name="The “ts-offset” property" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin--ts-offset"/>
+    <keyword type="signal" name="The “create-element” signal" link="gst-plugins-base-plugins-glsinkbin.html#GstGLSinkBin-create-element"/>
+    <keyword type="struct" name="struct GstGLSrcBin" link="gst-plugins-base-plugins-glsrcbin.html#GstGLSrcBin-struct"/>
+    <keyword type="property" name="The “src” property" link="gst-plugins-base-plugins-glsrcbin.html#GstGLSrcBin--src"/>
+    <keyword type="signal" name="The “create-element” signal" link="gst-plugins-base-plugins-glsrcbin.html#GstGLSrcBin-create-element"/>
+    <keyword type="struct" name="struct GstGLStereoSplit" link="gst-plugins-base-plugins-glstereosplit.html#GstGLStereoSplit-struct"/>
+    <keyword type="struct" name="GstGLTestSrc" link="gst-plugins-base-plugins-gltestsrc.html#GstGLTestSrc-struct"/>
+    <keyword type="enum" name="enum GstGLTestSrcPattern" link="gst-plugins-base-plugins-gltestsrc.html#GstGLTestSrcPattern"/>
+    <keyword type="property" name="The “is-live” property" link="gst-plugins-base-plugins-gltestsrc.html#GstGLTestSrc--is-live"/>
+    <keyword type="property" name="The “pattern” property" link="gst-plugins-base-plugins-gltestsrc.html#GstGLTestSrc--pattern"/>
+    <keyword type="property" name="The “timestamp-offset” property" link="gst-plugins-base-plugins-gltestsrc.html#GstGLTestSrc--timestamp-offset"/>
+    <keyword type="struct" name="struct GstGLTransformation" link="gst-plugins-base-plugins-gltransformation.html#GstGLTransformation"/>
+    <keyword type="struct" name="struct GstGLUploadElement" link="gst-plugins-base-plugins-glupload.html#GstGLUploadElement-struct"/>
+    <keyword type="struct" name="struct GstGLViewConvertElement" link="gst-plugins-base-plugins-glviewconvert.html#GstGLViewConvertElement-struct"/>
+    <keyword type="property" name="The “downmix-mode” property" link="gst-plugins-base-plugins-glviewconvert.html#GstGLViewConvertElement--downmix-mode"/>
+    <keyword type="property" name="The “input-flags-override” property" link="gst-plugins-base-plugins-glviewconvert.html#GstGLViewConvertElement--input-flags-override"/>
+    <keyword type="property" name="The “input-mode-override” property" link="gst-plugins-base-plugins-glviewconvert.html#GstGLViewConvertElement--input-mode-override"/>
+    <keyword type="property" name="The “output-flags-override” property" link="gst-plugins-base-plugins-glviewconvert.html#GstGLViewConvertElement--output-flags-override"/>
+    <keyword type="property" name="The “output-mode-override” property" link="gst-plugins-base-plugins-glviewconvert.html#GstGLViewConvertElement--output-mode-override"/>
     <keyword type="struct" name="struct GstMultiFdSink" link="gst-plugins-base-plugins-multifdsink.html#GstMultiFdSink-struct"/>
     <keyword type="property" name="The “handle-read” property" link="gst-plugins-base-plugins-multifdsink.html#GstMultiFdSink--handle-read"/>
     <keyword type="signal" name="The “add” signal" link="gst-plugins-base-plugins-multifdsink.html#GstMultiFdSink-add"/>
@@ -549,6 +691,7 @@
     <keyword type="property" name="The “synchronous” property" link="gst-plugins-base-plugins-xvimagesink.html#GstXvImageSink--synchronous"/>
     <keyword type="property" name="The “window-height” property" link="gst-plugins-base-plugins-xvimagesink.html#GstXvImageSink--window-height"/>
     <keyword type="property" name="The “window-width” property" link="gst-plugins-base-plugins-xvimagesink.html#GstXvImageSink--window-width"/>
+    <keyword type="property" name="The “render-rectangle” property" link="gst-plugins-base-plugins-xvimagesink.html#GstXvImageSink--render-rectangle"/>
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_SINE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-SINE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_SQUARE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-SQUARE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_SAW" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-SAW:CAPS"/>
@@ -562,6 +705,20 @@
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_RED_NOISE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-RED-NOISE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_BLUE_NOISE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-BLUE-NOISE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_VIOLET_NOISE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-VIOLET-NOISE:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_SMPTE" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-SMPTE:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_SNOW" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-SNOW:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_BLACK" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-BLACK:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_WHITE" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-WHITE:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_RED" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-RED:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_GREEN" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-GREEN:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_BLUE" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-BLUE:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_CHECKERS1" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-CHECKERS1:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_CHECKERS2" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-CHECKERS2:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_CHECKERS4" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-CHECKERS4:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_CHECKERS8" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-CHECKERS8:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_CIRCULAR" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-CIRCULAR:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_BLINK" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-BLINK:CAPS"/>
+    <keyword type="constant" name="GST_GL_TEST_SRC_MANDELBROT" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-MANDELBROT:CAPS"/>
     <keyword type="constant" name="BITRATE_TYPE_CBR" link="gst-plugins-base-plugins-opusenc.html#BITRATE-TYPE-CBR:CAPS"/>
     <keyword type="constant" name="BITRATE_TYPE_VBR" link="gst-plugins-base-plugins-opusenc.html#BITRATE-TYPE-VBR:CAPS"/>
     <keyword type="constant" name="BITRATE_TYPE_CONSTRAINED_VBR" link="gst-plugins-base-plugins-opusenc.html#BITRATE-TYPE-CONSTRAINED-VBR:CAPS"/>

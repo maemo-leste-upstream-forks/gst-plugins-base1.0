@@ -185,7 +185,8 @@ enum
   PROP_COLORKEY,
   PROP_DRAW_BORDERS,
   PROP_WINDOW_WIDTH,
-  PROP_WINDOW_HEIGHT
+  PROP_WINDOW_HEIGHT,
+  PROP_LAST
 };
 
 /* ============================================================= */
@@ -407,7 +408,7 @@ static void
 gst_xv_image_sink_handle_xevents (GstXvImageSink * xvimagesink)
 {
   XEvent e;
-  guint pointer_x = 0, pointer_y = 0;
+  gint pointer_x = 0, pointer_y = 0;
   gboolean pointer_moved = FALSE;
   gboolean exposed = FALSE, configured = FALSE;
 
@@ -792,6 +793,13 @@ gst_xv_image_sink_setcaps (GstBaseSink * bsink, GstCaps * caps)
         GST_VIDEO_SINK_HEIGHT (xvimagesink));
   }
 
+  if (xvimagesink->pending_render_rect) {
+    xvimagesink->pending_render_rect = FALSE;
+    gst_xwindow_set_render_rectangle (xvimagesink->xwindow,
+        xvimagesink->render_rect.x, xvimagesink->render_rect.y,
+        xvimagesink->render_rect.w, xvimagesink->render_rect.h);
+  }
+
   xvimagesink->info = info;
 
   /* After a resize, we want to redraw the borders in case the new frame size
@@ -835,7 +843,7 @@ no_disp_ratio:
 no_display_size:
   {
     GST_ELEMENT_ERROR (xvimagesink, CORE, NEGOTIATION, (NULL),
-        ("Error calculating the output display ratio of the video."));
+        ("Error calculating the output display size of the video."));
     return FALSE;
   }
 }
@@ -1051,6 +1059,7 @@ gst_xv_image_sink_propose_allocation (GstBaseSink * bsink, GstQuery * query)
   GstXvImageSink *xvimagesink = GST_XV_IMAGE_SINK (bsink);
   GstBufferPool *pool = NULL;
   GstCaps *caps;
+  GstVideoInfo info;
   guint size;
   gboolean need_pool;
 
@@ -1059,27 +1068,24 @@ gst_xv_image_sink_propose_allocation (GstBaseSink * bsink, GstQuery * query)
   if (caps == NULL)
     goto no_caps;
 
+  if (!gst_video_info_from_caps (&info, caps))
+    goto invalid_caps;
+
+  /* the normal size of a frame */
+  size = info.size;
+
   if (need_pool) {
-    GstVideoInfo info;
-
-    if (!gst_video_info_from_caps (&info, caps))
-      goto invalid_caps;
-
     GST_DEBUG_OBJECT (xvimagesink, "create new pool");
     pool = gst_xv_image_sink_create_pool (xvimagesink, caps, info.size, 0);
-
-    /* the normal size of a frame */
-    size = info.size;
 
     if (pool == NULL)
       goto no_pool;
   }
 
-  if (pool) {
-    /* we need at least 2 buffer because we hold on to the last one */
-    gst_query_add_allocation_pool (query, pool, size, 2, 0);
+  /* we need at least 2 buffer because we hold on to the last one */
+  gst_query_add_allocation_pool (query, pool, size, 2, 0);
+  if (pool)
     gst_object_unref (pool);
-  }
 
   /* we also support various metadata */
   gst_query_add_allocation_meta (query, GST_VIDEO_META_API_TYPE, NULL);
@@ -1273,9 +1279,16 @@ gst_xv_image_sink_set_render_rectangle (GstVideoOverlay * overlay, gint x,
   GstXvImageSink *xvimagesink = GST_XV_IMAGE_SINK (overlay);
 
   g_mutex_lock (&xvimagesink->flow_lock);
-  if (G_LIKELY (xvimagesink->xwindow))
+  if (G_LIKELY (xvimagesink->xwindow)) {
     gst_xwindow_set_render_rectangle (xvimagesink->xwindow, x, y, width,
         height);
+  } else {
+    xvimagesink->render_rect.x = x;
+    xvimagesink->render_rect.y = y;
+    xvimagesink->render_rect.w = width;
+    xvimagesink->render_rect.h = height;
+    xvimagesink->pending_render_rect = TRUE;
+  }
   g_mutex_unlock (&xvimagesink->flow_lock);
 }
 
@@ -1625,7 +1638,8 @@ gst_xv_image_sink_set_property (GObject * object, guint prop_id,
       xvimagesink->draw_borders = g_value_get_boolean (value);
       break;
     default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      if (!gst_video_overlay_set_property (object, PROP_LAST, prop_id, value))
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
   }
 }
@@ -1935,6 +1949,9 @@ gst_xv_image_sink_class_init (GstXvImageSinkClass * klass)
       g_param_spec_string ("device-name", "Adaptor name",
           "The name of the video adaptor", NULL,
           G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
+
+  gst_video_overlay_install_properties (gobject_class, PROP_LAST);
+
   /**
    * GstXvImageSink:handle-expose
    *

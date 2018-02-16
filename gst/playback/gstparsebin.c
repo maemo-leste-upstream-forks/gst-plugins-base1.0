@@ -169,8 +169,6 @@ struct _GstParseBin
   gboolean have_type;           /* if we received the have_type signal */
   guint have_type_id;           /* signal id for have-type from typefind */
 
-  gboolean async_pending;       /* async-start has been emitted */
-
   GMutex dyn_lock;              /* lock protecting pad blocking */
   gboolean shutdown;            /* if we are shutting down */
   GList *blocked_pads;          /* pads that have set to block */
@@ -179,6 +177,13 @@ struct _GstParseBin
 
   GList *filtered;              /* elements for which error messages are filtered */
   GList *filtered_errors;       /* filtered error messages */
+
+  GMutex cleanup_lock;          /* Mutex used to protect the cleanup thread */
+  GThread *cleanup_thread;      /* thread used to free chains asynchronously.
+                                 * We store it to make sure we end up joining it
+                                 * before stopping the element.
+                                 * Protected by the object lock */
+
 };
 
 struct _GstParseBinClass
@@ -243,9 +248,6 @@ enum
 static GstBinClass *parent_class;
 static guint gst_parse_bin_signals[LAST_SIGNAL] = { 0 };
 
-static void do_async_start (GstParseBin * parsebin);
-static void do_async_done (GstParseBin * parsebin);
-
 static void type_found (GstElement * typefind, guint probability,
     GstCaps * caps, GstParseBin * parse_bin);
 
@@ -279,6 +281,7 @@ static void gst_parse_pad_update_stream_collection (GstParsePad * parsepad,
     GstStreamCollection * collection);
 
 static GstCaps *get_pad_caps (GstPad * pad);
+static GstStreamType guess_stream_type_from_caps (GstCaps * caps);
 
 #define EXPOSE_LOCK(parsebin) G_STMT_START {				\
     GST_LOG_OBJECT (parsebin,						\
@@ -650,11 +653,11 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
    * emitted before looking for any elements that can handle that stream.
    *
    * >   Invocation of signal handlers stops after the first signal handler
-   * >   returns #FALSE. Signal handlers are invoked in the order they were
+   * >   returns %FALSE. Signal handlers are invoked in the order they were
    * >   connected in.
    *
-   * Returns: #TRUE if you wish ParseBin to look for elements that can
-   * handle the given @caps. If #FALSE, those caps will be considered as
+   * Returns: %TRUE if you wish ParseBin to look for elements that can
+   * handle the given @caps. If %FALSE, those caps will be considered as
    * final and the pad will be exposed as such (see 'pad-added' signal of
    * #GstElement).
    */
@@ -706,11 +709,11 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
    * the application to perform additional sorting or filtering on the element
    * factory array.
    *
-   * The callee should copy and modify @factories or return #NULL if the
+   * The callee should copy and modify @factories or return %NULL if the
    * order should not change.
    *
    * >   Invocation of signal handlers stops after one signal handler has
-   * >   returned something else than #NULL. Signal handlers are invoked in
+   * >   returned something else than %NULL. Signal handlers are invoked in
    * >   the order they were connected in.
    * >   Don't connect signal handlers with the #G_CONNECT_AFTER flag to this
    * >   signal, they will never be invoked!
@@ -778,7 +781,7 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
    * be used to tell the element about the downstream supported caps
    * for example.
    *
-   * Returns: #TRUE if the query was handled, #FALSE otherwise.
+   * Returns: %TRUE if the query was handled, %FALSE otherwise.
    */
   gst_parse_bin_signals[SIGNAL_AUTOPLUG_QUERY] =
       g_signal_new ("autoplug-query", G_TYPE_FROM_CLASS (klass),
@@ -938,6 +941,9 @@ gst_parse_bin_init (GstParseBin * parse_bin)
   parse_bin->expose_allstreams = DEFAULT_EXPOSE_ALL_STREAMS;
   parse_bin->connection_speed = DEFAULT_CONNECTION_SPEED;
 
+  g_mutex_init (&parse_bin->cleanup_lock);
+  parse_bin->cleanup_thread = NULL;
+
   GST_OBJECT_FLAG_SET (parse_bin, GST_BIN_FLAG_STREAMS_AWARE);
 }
 
@@ -976,6 +982,7 @@ gst_parse_bin_finalize (GObject * object)
   g_mutex_clear (&parse_bin->dyn_lock);
   g_mutex_clear (&parse_bin->subtitle_lock);
   g_mutex_clear (&parse_bin->factories_lock);
+  g_mutex_clear (&parse_bin->cleanup_lock);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -1514,6 +1521,7 @@ unknown_type:
 
     chain->deadend_details = deadend_details;
     chain->deadend = TRUE;
+    chain->drained = TRUE;
     chain->endcaps = caps;
     gst_object_replace ((GstObject **) & chain->current_pad, NULL);
 
@@ -1537,7 +1545,6 @@ unknown_type:
         GST_ELEMENT_ERROR (parsebin, STREAM, TYPE_NOT_FOUND,
             (_("Could not determine type of stream")), (NULL));
       }
-      do_async_done (parsebin);
     }
     return;
   }
@@ -2944,10 +2951,18 @@ gst_parse_chain_start_free_hidden_groups_thread (GstParseChain * chain)
   GThread *thread;
   GError *error = NULL;
   GList *old_groups;
+  GstParseBin *parsebin = chain->parsebin;
 
   old_groups = chain->old_groups;
   if (!old_groups)
     return;
+
+  /* If we already have a thread running, wait for it to finish */
+  g_mutex_lock (&parsebin->cleanup_lock);
+  if (parsebin->cleanup_thread) {
+    g_thread_join (parsebin->cleanup_thread);
+    parsebin->cleanup_thread = NULL;
+  }
 
   chain->old_groups = NULL;
   thread = g_thread_try_new ("free-hidden-groups",
@@ -2957,11 +2972,14 @@ gst_parse_chain_start_free_hidden_groups_thread (GstParseChain * chain)
         error ? error->message : "unknown reason");
     g_clear_error (&error);
     chain->old_groups = old_groups;
+    g_mutex_unlock (&parsebin->cleanup_lock);
     return;
   }
+
+  parsebin->cleanup_thread = thread;
+  g_mutex_unlock (&parsebin->cleanup_lock);
+
   GST_DEBUG_OBJECT (chain->parsebin, "Started free-hidden-groups thread");
-  /* We do not need to wait for it or get any results from it */
-  g_thread_unref (thread);
 }
 
 /* gst_parse_group_new:
@@ -3216,13 +3234,12 @@ drain_and_switch_chains (GstParseChain * chain, GstParsePad * drainpad,
 beach:
   CHAIN_MUTEX_UNLOCK (chain);
 
-  GST_DEBUG ("Chain %p (handled:%d, last_group:%d, drained:%d, switched:%d)",
-      chain, handled, *last_group, chain->drained, *switched);
+  GST_DEBUG
+      ("Chain %p (%s:%s handled:%d, last_group:%d, drained:%d, switched:%d, deadend:%d)",
+      chain, GST_DEBUG_PAD_NAME (chain->pad), handled, *last_group,
+      chain->drained, *switched, chain->deadend);
 
   *drained = chain->drained;
-
-  if (*drained)
-    g_signal_emit (parsebin, gst_parse_bin_signals[SIGNAL_DRAINED], 0, NULL);
 
   return handled;
 }
@@ -3244,11 +3261,18 @@ gst_parse_pad_handle_eos (GstParsePad * pad)
     drain_and_switch_chains (parsebin->parse_chain, pad, &last_group, &drained,
         &switched);
 
+    GST_LOG_OBJECT (parsebin, "drained:%d switched:%d", drained, switched);
     if (switched) {
       /* If we resulted in a group switch, expose what's needed */
       if (gst_parse_chain_is_complete (parsebin->parse_chain))
         gst_parse_bin_expose (parsebin);
     }
+
+    if (drained) {
+      GST_DEBUG_OBJECT (parsebin, "We are fully drained, emitting signal");
+      g_signal_emit (parsebin, gst_parse_bin_signals[SIGNAL_DRAINED], 0, NULL);
+    }
+
   }
   EXPOSE_UNLOCK (parsebin);
 
@@ -3485,7 +3509,6 @@ retry:
       }
     }
 
-    do_async_done (parsebin);
     return FALSE;
   }
 
@@ -3531,6 +3554,15 @@ retry:
   /* re-order pads : video, then audio, then others */
   endpads = g_list_sort (endpads, (GCompareFunc) sort_end_pads);
 
+  /* Don't expose if we're currently shutting down */
+  DYN_LOCK (parsebin);
+  if (G_UNLIKELY (parsebin->shutdown)) {
+    GST_WARNING_OBJECT (parsebin,
+        "Currently, shutting down, aborting exposing");
+    DYN_UNLOCK (parsebin);
+    return FALSE;
+  }
+
   /* Expose pads */
   for (tmp = endpads; tmp; tmp = tmp->next) {
     GstParsePad *parsepad = (GstParsePad *) tmp->data;
@@ -3570,6 +3602,8 @@ retry:
     GST_INFO_OBJECT (parsepad, "added new parsed pad");
   }
 
+  DYN_UNLOCK (parsebin);
+
   /* Unblock internal pads. The application should have connected stuff now
    * so that streaming can continue. */
   for (tmp = endpads; tmp; tmp = tmp->next) {
@@ -3597,7 +3631,6 @@ retry:
   /* Remove old groups */
   chain_remove_old_groups (parsebin->parse_chain);
 
-  do_async_done (parsebin);
   GST_DEBUG_OBJECT (parsebin, "Exposed everything");
   return TRUE;
 }
@@ -3707,6 +3740,20 @@ build_fallback_collection (GstParseChain * chain,
 
     if (p->active_stream != NULL && p->active_collection == NULL) {
       GST_DEBUG_OBJECT (p, "Adding stream to fallback collection");
+      if (G_UNLIKELY (gst_stream_get_stream_type (p->active_stream) ==
+              GST_STREAM_TYPE_UNKNOWN)) {
+        GstCaps *caps;
+        caps = get_pad_caps (GST_PAD_CAST (p));
+
+        if (caps) {
+          GstStreamType type = guess_stream_type_from_caps (caps);
+          if (type != GST_STREAM_TYPE_UNKNOWN) {
+            gst_stream_set_stream_type (p->active_stream, type);
+            gst_stream_set_caps (p->active_stream, caps);
+          }
+          gst_caps_unref (caps);
+        }
+      }
       gst_stream_collection_add_stream (collection,
           gst_object_ref (p->active_stream));
       p->in_a_fallback_collection = TRUE;
@@ -4182,32 +4229,6 @@ gst_pending_pad_free (GstPendingPad * ppad)
  * Element add/remove
  *****/
 
-static void
-do_async_start (GstParseBin * parsebin)
-{
-  GstMessage *message;
-
-  parsebin->async_pending = TRUE;
-
-  message = gst_message_new_async_start (GST_OBJECT_CAST (parsebin));
-  parent_class->handle_message (GST_BIN_CAST (parsebin), message);
-}
-
-static void
-do_async_done (GstParseBin * parsebin)
-{
-  GstMessage *message;
-
-  if (parsebin->async_pending) {
-    message =
-        gst_message_new_async_done (GST_OBJECT_CAST (parsebin),
-        GST_CLOCK_TIME_NONE);
-    parent_class->handle_message (GST_BIN_CAST (parsebin), message);
-
-    parsebin->async_pending = FALSE;
-  }
-}
-
 /* call with dyn_lock held */
 static void
 unblock_pads (GstParseBin * parsebin)
@@ -4267,8 +4288,6 @@ gst_parse_bin_change_state (GstElement * element, GstStateChange transition)
       parsebin->shutdown = FALSE;
       DYN_UNLOCK (parsebin);
       parsebin->have_type = FALSE;
-      ret = GST_STATE_CHANGE_ASYNC;
-      do_async_start (parsebin);
 
 
       /* connect a signal to find out when the typefind element found
@@ -4291,20 +4310,12 @@ gst_parse_bin_change_state (GstElement * element, GstStateChange transition)
       break;
   }
 
-  {
-    GstStateChangeReturn bret;
+  ret = GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
+  if (G_UNLIKELY (ret == GST_STATE_CHANGE_FAILURE))
+    goto activate_failed;
 
-    bret = GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
-    if (G_UNLIKELY (bret == GST_STATE_CHANGE_FAILURE))
-      goto activate_failed;
-    else if (G_UNLIKELY (bret == GST_STATE_CHANGE_NO_PREROLL)) {
-      do_async_done (parsebin);
-      ret = bret;
-    }
-  }
   switch (transition) {
     case GST_STATE_CHANGE_PAUSED_TO_READY:
-      do_async_done (parsebin);
       EXPOSE_LOCK (parsebin);
       if (parsebin->parse_chain) {
         chain_to_free = parsebin->parse_chain;
@@ -4316,6 +4327,12 @@ gst_parse_bin_change_state (GstElement * element, GstStateChange transition)
         gst_parse_chain_free (chain_to_free);
       break;
     case GST_STATE_CHANGE_READY_TO_NULL:
+      g_mutex_lock (&parsebin->cleanup_lock);
+      if (parsebin->cleanup_thread) {
+        g_thread_join (parsebin->cleanup_thread);
+        parsebin->cleanup_thread = NULL;
+      }
+      g_mutex_unlock (&parsebin->cleanup_lock);
     default:
       break;
   }
@@ -4335,7 +4352,6 @@ activate_failed:
   {
     GST_DEBUG_OBJECT (element,
         "element failed to change states -- activation problem?");
-    do_async_done (parsebin);
     return GST_STATE_CHANGE_FAILURE;
   }
 }

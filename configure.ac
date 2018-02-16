@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/prerelease
-AC_INIT([GStreamer Base Plug-ins],[1.12.4],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
+AC_INIT([GStreamer Base Plug-ins],[1.13.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
 
 AG_GST_INIT
 
@@ -56,10 +56,10 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 1204, 0, 1204)
+AS_LIBTOOL(GST, 1301, 0, 1301)
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.12.0
+GST_REQ=1.13.1
 
 dnl *** autotools stuff ****
 
@@ -295,9 +295,12 @@ GST_PREFIX="`$PKG_CONFIG --variable=prefix gstreamer-$GST_API_VERSION`"
 AC_SUBST(GLIB_PREFIX)
 AC_SUBST(GST_PREFIX)
 
+AG_GST_GL_CHECKS
+
 dnl GTK is optional and only used in examples
 HAVE_GTK=no
 HAVE_GTK_X11=no
+HAVE_GDK_PIXBUF=no
 GTK_REQ=3.10
 if test "x$BUILD_EXAMPLES" = "xyes"; then
   PKG_CHECK_MODULES(GTK, gtk+-3.0 >= $GTK_REQ, HAVE_GTK=yes, HAVE_GTK=no)
@@ -306,10 +309,15 @@ if test "x$BUILD_EXAMPLES" = "xyes"; then
   PKG_CHECK_MODULES(GTK_QUARTZ, gtk+-quartz-3.0 >= $GTK_REQ, HAVE_GTK_QUARTZ=yes, HAVE_GTK_QUARTZ=no)
   AC_SUBST(GTK_LIBS)
   AC_SUBST(GTK_CFLAGS)
+
+  PKG_CHECK_MODULES(GDK_PIXBUF, gdk-pixbuf-2.0, HAVE_GDK_PIXBUF=yes, HAVE_GDK_PIXBUF=no)
+  AC_SUBST(GDK_PIXBUF_LIBS)
+  AC_SUBST(GDK_PIXBUF_CFLAGS)
 fi
 AM_CONDITIONAL(HAVE_GTK, test "x$HAVE_GTK" = "xyes")
 AM_CONDITIONAL(HAVE_GTK_X11, test "x$HAVE_GTK_X11" = "xyes")
 AM_CONDITIONAL(HAVE_GTK_QUARTZ, test "x$HAVE_GTK_QUARTZ" = "xyes")
+AM_CONDITIONAL(HAVE_GDK_PIXBUF, test "x$HAVE_GDK_PIXBUF" = "xyes")
 
 HAVE_QT=no
 HAVE_QT_MOC=no
@@ -352,6 +360,9 @@ if test "x$HAVE_QT" = "xyes"; then
 fi
 AM_CONDITIONAL(HAVE_QT, test "x$HAVE_QT" = "xyes")
 AM_CONDITIONAL(HAVE_QT_MOC, test "x$HAVE_QT_MOC" != "xno")
+
+dnl Check for OpenGL example dependencies (clutter, sdl, etc.)
+AG_GST_GL_EXAMPLES_CHECKS
 
 dnl chck for linux headers needed by the joystick seek example
 AC_COMPILE_IFELSE(
@@ -401,28 +412,6 @@ AG_GST_SET_PACKAGE_RELEASE_DATETIME_WITH_NANO([$PACKAGE_VERSION_NANO],
   ["${srcdir}/gst-plugins-base.doap"],
   [$PACKAGE_VERSION_MAJOR.$PACKAGE_VERSION_MINOR.$PACKAGE_VERSION_MICRO])
 
-dnl build static plugins or not
-AC_MSG_CHECKING([whether to build static plugins or not])
-AC_ARG_ENABLE(
-  static-plugins,
-  AC_HELP_STRING(
-    [--enable-static-plugins],
-    [build static plugins @<:@default=no@:>@]),
-  [AS_CASE(
-    [$enableval], [no], [], [yes], [],
-    [AC_MSG_ERROR([bad value "$enableval" for --enable-static-plugins])])],
-  [enable_static_plugins=no])
-AC_MSG_RESULT([$enable_static_plugins])
-if test "x$enable_static_plugins" = xyes; then
-  AC_DEFINE(GST_PLUGIN_BUILD_STATIC, 1,
-    [Define if static plugins should be built])
-  GST_PLUGIN_LIBTOOLFLAGS=""
-else
-  GST_PLUGIN_LIBTOOLFLAGS="--tag=disable-static"
-fi
-AC_SUBST(GST_PLUGIN_LIBTOOLFLAGS)
-AM_CONDITIONAL(GST_PLUGIN_BUILD_STATIC, test "x$enable_static_plugins" = "xyes")
-
 dnl If only building static libraries, define GST_STATIC_COMPILATION. This is
 dnl needed only on Windows, but it doesn't hurt to have it everywhere.
 if test x$enable_static = xyes -a x$enable_shared = xno; then
@@ -436,10 +425,11 @@ AG_GST_CHECK_GST_DEBUG_DISABLED([NO_WARNINGS="-Wno-unused"], [NO_WARNINGS=""])
 
 dnl define an ERROR_CFLAGS Makefile variable
 dnl -Wformat-nonliteral - see ext/pango/gstclockoverlay.c and http://gcc.gnu.org/bugzilla/show_bug.cgi?id=39438
+dnl -Waggregate-return - xcb_intern_atom() returns an aggregate value
 AG_GST_SET_ERROR_CFLAGS($FATAL_WARNINGS, [
     -Wmissing-declarations -Wmissing-prototypes -Wredundant-decls -Wundef
-    -Wwrite-strings -Wformat-nonliteral -Wformat-security
-    -Winit-self -Wmissing-include-dirs -Waddress -Waggregate-return
+    -Wwrite-strings  -Wformat-nonliteral -Wformat-security
+    -Winit-self -Wmissing-include-dirs -Waddress
     -Wno-multichar -Wnested-externs $NO_WARNINGS])
 
 dnl define an ERROR_CXXFLAGS Makefile variable
@@ -489,6 +479,7 @@ dnl these are all the gst plug-ins, compilable without additional libs
 AG_GST_CHECK_PLUGIN(adder)
 AG_GST_CHECK_PLUGIN(app)
 AG_GST_CHECK_PLUGIN(audioconvert)
+AG_GST_CHECK_PLUGIN(audiomixer)
 AG_GST_CHECK_PLUGIN(audiorate)
 AG_GST_CHECK_PLUGIN(audiotestsrc)
 AG_GST_CHECK_PLUGIN(encoding)
@@ -673,6 +664,17 @@ dnl FIXME : add second check somehow if that is necessary
 dnl AC_CHECK_LIB(cdda_paranoia, paranoia_init, : , HAVE_CDPARANOIA=no, -lcdda_interface )
 dnl AC_CHECK_HEADER(cdda_paranoia.h, :, HAVE_CDPARANOIA=no)
 
+dnl *** gl ***
+translit(dnm, m, l) AM_CONDITIONAL(USE_GL, true)
+AG_GST_CHECK_FEATURE(GL, [gl elements], gl, [
+  HAVE_GL="no"
+
+  if test x"$USE_OPENGL" = x"yes" -o x"$USE_GLES2" = x"yes"; then
+    HAVE_GL="yes"
+    AG_GST_GL_PLUGIN_CHECKS
+  fi
+])
+
 dnl *** ivorbis ***
 dnl AM_PATH_IVORBIS only takes two options
 translit(dnm, m, l) AM_CONDITIONAL(USE_IVORBIS, true)
@@ -775,6 +777,7 @@ dnl not building plugins with external dependencies,
 dnl but we still need to set the conditionals
 AM_CONDITIONAL(USE_ALSA, false)
 AM_CONDITIONAL(USE_CDPARANOIA, false)
+AM_CONDITIONAL(USE_GL, false)
 AM_CONDITIONAL(USE_IVORBIS, false)
 AM_CONDITIONAL(USE_LIBVISUAL, false)
 AM_CONDITIONAL(USE_OGG, false)
@@ -784,6 +787,10 @@ AM_CONDITIONAL(USE_THEORA, false)
 AM_CONDITIONAL(USE_VORBIS, false)
 
 fi dnl of EXT plugins
+
+AM_CONDITIONAL(HAVE_GRAPHENE, test "x$HAVE_GRAPHENE" = "xyes")
+AM_CONDITIONAL(HAVE_PNG, test "x$HAVE_PNG" = "xyes")
+AM_CONDITIONAL(HAVE_JPEG, test "x$HAVE_JPEG" = "xyes")
 
 dnl *** gio-unix-2.0 for tests/check/pipelines/tcp.c ***
 PKG_CHECK_MODULES(GIO_UNIX_2_0, gio-unix-2.0 >= 2.24,
@@ -817,6 +824,20 @@ else
 fi
 AC_SUBST(DEPRECATED_CFLAGS)
 
+VISIBILITY_CFLAGS=""
+AS_COMPILER_FLAG([-fvisibility=hidden], [VISIBILITY_CFLAGS="-fvisibility=hidden"])
+AC_SUBST(VISIBILITY_CFLAGS)
+
+VISIBILITY_CXXFLAGS=""
+if test "x$HAVE_CXX" = "xyes"; then
+  AS_CXX_COMPILER_FLAG([-fvisibility=hidden], [VISIBILITY_CXXFLAGS="-fvisibility=hidden"])
+fi
+AC_SUBST(VISIBILITY_CXXFLAGS)
+
+dnl disable strict aliasing
+AS_COMPILER_FLAG([-fno-strict-aliasing], [EXTRA_CFLAGS="-fno-strict-aliasing"])
+AC_SUBST(EXTRA_CFLAGS)
+
 dnl every flag in GST_OPTION_CFLAGS and GST_OPTION_CXXFLAGS can be overridden
 dnl at make time with e.g. make ERROR_CFLAGS=""
 GST_OPTION_CFLAGS="\$(WARNING_CFLAGS) \$(ERROR_CFLAGS) \$(DEBUG_CFLAGS) \$(PROFILE_CFLAGS) \$(GCOV_CFLAGS) \$(OPT_CFLAGS) \$(DEPRECATED_CFLAGS)"
@@ -836,8 +857,8 @@ AC_SUBST(GST_PLUGINS_BASE_CFLAGS)
 dnl FIXME: do we want to rename to GST_ALL_* ?
 dnl add GST_OPTION_CFLAGS, but overridable
 GST_CFLAGS="$GST_CFLAGS $GST_STATIC_CFLAGS"
-GST_CXXFLAGS="$GLIB_CFLAGS $GST_CFLAGS \$(GLIB_EXTRA_CFLAGS) \$(GST_OPTION_CXXFLAGS)"
-GST_CFLAGS="$GLIB_CFLAGS $GST_CFLAGS \$(GLIB_EXTRA_CFLAGS) \$(GST_OPTION_CFLAGS)"
+GST_CXXFLAGS="$GLIB_CFLAGS $GST_CFLAGS $EXTRA_CFLAGS \$(GLIB_EXTRA_CFLAGS) \$(GST_OPTION_CXXFLAGS) \$(VISIBILITY_CXXFLAGS)"
+GST_CFLAGS="$GLIB_CFLAGS $GST_CFLAGS $EXTRA_CFLAGS \$(GLIB_EXTRA_CFLAGS) \$(GST_OPTION_CFLAGS) \$(VISIBILITY_CFLAGS)"
 AC_SUBST(GST_CFLAGS)
 AC_SUBST(GST_CXXFLAGS)
 dnl add GCOV libs because libtool strips -fprofile-arcs -ftest-coverage
@@ -856,12 +877,12 @@ dnl GST_LIB_LDFLAGS
 dnl linker flags shared by all libraries
 dnl LDFLAGS modifier defining exported symbols from built libraries
 dnl (export _gst_foo but not __gst_foo)
-GST_LIB_LDFLAGS="-export-symbols-regex ^_?\(gst_\|Gst\|GST_\).*"
+GST_LIB_LDFLAGS=""
 AC_SUBST(GST_LIB_LDFLAGS)
 
 dnl this really should only contain flags, not libs - they get added before
 dnl whatevertarget_LIBS and -L flags here affect the rest of the linking
-GST_PLUGIN_LDFLAGS="-module -avoid-version -export-symbols-regex '^[_]*gst_plugin_.*' $GST_ALL_LDFLAGS"
+GST_PLUGIN_LDFLAGS="-module -avoid-version $GST_ALL_LDFLAGS"
 AC_SUBST(GST_PLUGIN_LDFLAGS)
 
 dnl *** output files ***
@@ -874,6 +895,7 @@ gst/Makefile
 gst/adder/Makefile
 gst/app/Makefile
 gst/audioconvert/Makefile
+gst/audiomixer/Makefile
 gst/audiorate/Makefile
 gst/audioresample/Makefile
 gst/audiotestsrc/Makefile
@@ -896,6 +918,7 @@ sys/xvimage/Makefile
 ext/Makefile
 ext/alsa/Makefile
 ext/cdparanoia/Makefile
+ext/gl/Makefile
 ext/libvisual/Makefile
 ext/ogg/Makefile
 ext/opus/Makefile
@@ -908,6 +931,17 @@ gst-libs/gst/allocators/Makefile
 gst-libs/gst/audio/Makefile
 gst-libs/gst/app/Makefile
 gst-libs/gst/fft/Makefile
+gst-libs/gst/gl/Makefile
+gst-libs/gst/gl/android/Makefile
+gst-libs/gst/gl/cocoa/Makefile
+gst-libs/gst/gl/dispmanx/Makefile
+gst-libs/gst/gl/glprototypes/Makefile
+gst-libs/gst/gl/eagl/Makefile
+gst-libs/gst/gl/egl/Makefile
+gst-libs/gst/gl/wayland/Makefile
+gst-libs/gst/gl/win32/Makefile
+gst-libs/gst/gl/x11/Makefile
+gst-libs/gst/gl/viv-fb/Makefile
 gst-libs/gst/riff/Makefile
 gst-libs/gst/rtp/Makefile
 gst-libs/gst/rtsp/Makefile
@@ -940,6 +974,8 @@ pkgconfig/gstreamer-tag.pc
 pkgconfig/gstreamer-tag-uninstalled.pc
 pkgconfig/gstreamer-video.pc
 pkgconfig/gstreamer-video-uninstalled.pc
+pkgconfig/gstreamer-gl.pc
+pkgconfig/gstreamer-gl-uninstalled.pc
 pkgconfig/gstreamer-plugins-base.pc
 pkgconfig/gstreamer-plugins-base-uninstalled.pc
 tests/Makefile
@@ -952,6 +988,22 @@ tests/examples/dynamic/Makefile
 tests/examples/encoding/Makefile
 tests/examples/fft/Makefile
 tests/examples/gio/Makefile
+tests/examples/gl/Makefile
+tests/examples/gl/generic/Makefile
+tests/examples/gl/generic/cube/Makefile
+tests/examples/gl/generic/doublecube/Makefile
+tests/examples/gl/generic/recordgraphic/Makefile
+tests/examples/gl/generic/cubeyuv/Makefile
+tests/examples/gl/qt/Makefile
+tests/examples/gl/gtk/Makefile
+tests/examples/gl/gtk/fxtest/Makefile
+tests/examples/gl/gtk/3dvideo/Makefile
+tests/examples/gl/gtk/switchvideooverlay/Makefile
+tests/examples/gl/gtk/filternovideooverlay/Makefile
+tests/examples/gl/gtk/filtervideooverlay/Makefile
+tests/examples/gl/cocoa/Makefile
+tests/examples/gl/sdl/Makefile
+tests/examples/gl/clutter/Makefile
 tests/examples/overlay/Makefile
 tests/examples/seek/Makefile
 tests/examples/snapshot/Makefile

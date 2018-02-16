@@ -657,6 +657,10 @@ _new_output_state (GstVideoFormat fmt, guint width, guint height,
       GST_VIDEO_INFO_MULTIVIEW_MODE (tgt) = GST_VIDEO_INFO_MULTIVIEW_MODE (ref);
       GST_VIDEO_INFO_MULTIVIEW_FLAGS (tgt) =
           GST_VIDEO_INFO_MULTIVIEW_FLAGS (ref);
+    } else {
+      /* Default to MONO, overridden as needed by sub-classes */
+      GST_VIDEO_INFO_MULTIVIEW_MODE (tgt) = GST_VIDEO_MULTIVIEW_MODE_MONO;
+      GST_VIDEO_INFO_MULTIVIEW_FLAGS (tgt) = GST_VIDEO_MULTIVIEW_FLAGS_NONE;
     }
   }
 
@@ -3048,7 +3052,8 @@ gst_video_decoder_finish_frame (GstVideoDecoder * decoder,
   gst_video_decoder_release_frame (decoder, frame);
   frame = NULL;
 
-  if (decoder->output_segment.rate < 0.0) {
+  if (decoder->output_segment.rate < 0.0
+      && !(decoder->output_segment.flags & GST_SEEK_FLAG_TRICKMODE_KEY_UNITS)) {
     GST_LOG_OBJECT (decoder, "queued frame");
     priv->output_queued = g_list_prepend (priv->output_queued, output_buffer);
   } else {
@@ -3786,6 +3791,16 @@ gst_video_decoder_negotiate_default (GstVideoDecoder * decoder)
   g_return_val_if_fail (GST_VIDEO_INFO_WIDTH (&state->info) != 0, FALSE);
   g_return_val_if_fail (GST_VIDEO_INFO_HEIGHT (&state->info) != 0, FALSE);
 
+  /* If the base class didn't set any multiview params, assume mono
+   * now */
+  if (GST_VIDEO_INFO_MULTIVIEW_MODE (&state->info) ==
+      GST_VIDEO_MULTIVIEW_MODE_NONE) {
+    GST_VIDEO_INFO_MULTIVIEW_MODE (&state->info) =
+        GST_VIDEO_MULTIVIEW_MODE_MONO;
+    GST_VIDEO_INFO_MULTIVIEW_FLAGS (&state->info) =
+        GST_VIDEO_MULTIVIEW_FLAGS_NONE;
+  }
+
   GST_DEBUG_OBJECT (decoder, "output_state par %d/%d fps %d/%d",
       state->info.par_n, state->info.par_d,
       state->info.fps_n, state->info.fps_d);
@@ -3868,7 +3883,7 @@ gst_video_decoder_negotiate_unlocked (GstVideoDecoder * decoder)
  * Unmark GST_PAD_FLAG_NEED_RECONFIGURE in any case. But mark it again if
  * negotiate fails.
  *
- * Returns: #TRUE if the negotiation succeeded, else #FALSE.
+ * Returns: %TRUE if the negotiation succeeded, else %FALSE.
  */
 gboolean
 gst_video_decoder_negotiate (GstVideoDecoder * decoder)

@@ -22,14 +22,16 @@
 #include "config.h"
 #endif
 
-/* #include <fcntl.h> */
-#include <unistd.h>
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <gst/check/gstcheck.h>
 
 #include <gst/pbutils/encoding-profile.h>
 #include <gst/pbutils/encoding-target.h>
+
+#ifdef G_OS_UNIX
+#include <unistd.h>             /* For R_OK etc. */
+#endif
 
 static inline gboolean
 gst_caps_is_equal_unref (GstCaps * caps1, GstCaps * caps2)
@@ -585,7 +587,14 @@ create_profile_file (void)
   profile_file_name =
       g_build_filename (g_get_user_data_dir (), "gstreamer-1.0",
       "encoding-profiles", "herding", "myponytarget.gep", NULL);
+
+  /* on Windows it will ignore the mode anyway */
+#ifdef G_OS_WIN32
+  g_mkdir_with_parents (profile_dir, 0700);
+#else
   g_mkdir_with_parents (profile_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+#endif
+
   if (!g_file_set_contents (profile_file_name, profile_string,
           strlen (profile_string), &error))
     GST_WARNING ("Couldn't write contents to file : %s", error->message);
@@ -679,9 +688,13 @@ profile_suite (void)
   gchar *gst_dir;
 
   /* cehck if we can create profiles */
+#ifdef G_OS_UNIX
   gst_dir = g_build_filename (g_get_user_data_dir (), "gstreamer-1.0", NULL);
   can_write = (g_access (gst_dir, R_OK | W_OK | X_OK) == 0);
   g_free (gst_dir);
+#else
+  can_write = FALSE;            /* FIXME: fix can_write test on Windows */
+#endif
 
   suite_add_tcase (s, tc_chain);
 

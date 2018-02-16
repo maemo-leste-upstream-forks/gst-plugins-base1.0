@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base 1.10.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2017-12-07 19:18+0200\n"
+"POT-Creation-Date: 2018-02-15 17:01+0000\n"
 "PO-Revision-Date: 2017-07-05 01:40+0300\n"
 "Last-Translator: Mehmet Kececi <mkececi@mehmetkececi.com>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
@@ -77,6 +77,15 @@ msgstr "CD bulunamıyor."
 msgid "Could not read CD."
 msgstr "CD okunamıyor."
 
+msgid "failed to draw pattern"
+msgstr ""
+
+msgid "A GL error occurred"
+msgstr ""
+
+msgid "format wasn't negotiated before get function"
+msgstr ""
+
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr "Kayıp öge '%s' - GStreamer kurulumunu denetleyin."
@@ -90,11 +99,9 @@ msgstr "Bu bir metin dosyasına benziyor"
 msgid "Could not create \"uridecodebin\" element."
 msgstr "\"uridecodebin\" ögesi oluşturulamıyor."
 
-msgid "Could not create \"decodebin3\" element."
-msgstr "\"decodebin3\" ögesi oluşturamıyor."
-
-msgid "Could not create \"urisourcebin\" element."
-msgstr "\"urisourcebin\" ögesi oluşturulamıyor."
+#, fuzzy
+msgid "Could not create \"uridecodebin3\" element."
+msgstr "\"uridecodebin\" ögesi oluşturulamıyor."
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
@@ -659,6 +666,12 @@ msgstr "Çalma listesi dosyası girdi ortam dosyaları içeriyor"
 msgid "Do not print any output (apart from errors)"
 msgstr "Herhangi bir çıktı yazdırma (hatalar dışında)"
 
+msgid "Use playbin3 pipeline"
+msgstr ""
+
+msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
+msgstr ""
+
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."
 msgstr "Kullanım: %s DOSYA1|URI1 [DOSYA2|URI2] [DOSYA3|URI3] ..."
@@ -668,6 +681,12 @@ msgstr "Çalmak için en azından bir dosya adı veya URI sağlamalısınız."
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr "Klavye kısayollarının bir listesini görmek için 'k'ye basın.\n"
+
+#~ msgid "Could not create \"decodebin3\" element."
+#~ msgstr "\"decodebin3\" ögesi oluşturamıyor."
+
+#~ msgid "Could not create \"urisourcebin\" element."
+#~ msgstr "\"urisourcebin\" ögesi oluşturulamıyor."
 
 #~ msgid "Internal data stream error."
 #~ msgstr "İç veri akışı hatası."

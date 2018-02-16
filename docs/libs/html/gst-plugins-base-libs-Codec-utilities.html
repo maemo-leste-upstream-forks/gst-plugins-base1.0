@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-base-utils.html" title="Base Utils Library">
 <link rel="prev" href="gst-plugins-base-libs-Version.html" title="Version">
 <link rel="next" href="gst-plugins-base-libs-Descriptions.html" title="Descriptions">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -316,10 +316,10 @@ determined using the AudioObjectType field which is in the first 5 bits of
 <tbody>
 <tr>
 <td class="parameter_name"><p>audio_config</p></td>
-<td class="parameter_description"><p>a pointer to the AudioSpecificConfig as specified in the
-Elementary Stream Descriptor (esds) in ISO/IEC 14496-1 (see
-<a class="link" href="gst-plugins-base-libs-Codec-utilities.html#gst-codec-utils-aac-get-level" title="gst_codec_utils_aac_get_level ()"><code class="function">gst_codec_utils_aac_get_level()</code></a> for a more details).</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>a pointer to the AudioSpecificConfig
+as specified in the Elementary Stream Descriptor (esds)
+in ISO/IEC 14496-1. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -367,9 +367,10 @@ fields are appropriately shifted).</p></li>
 <tbody>
 <tr>
 <td class="parameter_name"><p>audio_config</p></td>
-<td class="parameter_description"><p>a pointer to the AudioSpecificConfig as specified in the
-Elementary Stream Descriptor (esds) in ISO/IEC 14496-1.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>a pointer to the AudioSpecificConfig
+as specified in the Elementary Stream Descriptor (esds)
+in ISO/IEC 14496-1. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -401,12 +402,21 @@ gst_codec_utils_aac_get_channels (<em class="parameter"><code>const <a href="/us
 <col class="parameters_description">
 <col width="200px" class="parameters_annotations">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="parameter_name"><p>audio_config</p></td>
-<td class="parameter_description"><p>a pointer to the AudioSpecificConfig as specified in the
-Elementary Stream Descriptor (esds) in ISO/IEC 14496-1.</p></td>
+<td class="parameter_description"><p>a pointer to the AudioSpecificConfig
+as specified in the Elementary Stream Descriptor (esds)
+in ISO/IEC 14496-1. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>len</p></td>
+<td class="parameter_description"><p>Length of <em class="parameter"><code>audio_config</code></em>
+in bytes</p></td>
 <td class="parameter_annotations"> </td>
-</tr></tbody>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect3">
@@ -434,14 +444,15 @@ rate.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>audio_config</p></td>
-<td class="parameter_description"><p>a pointer to the AudioSpecificConfig as specified in the
-Elementary Stream Descriptor (esds) in ISO/IEC 14496-1.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>a pointer to the AudioSpecificConfig
+as specified in the Elementary Stream Descriptor (esds)
+in ISO/IEC 14496-1. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
 <td class="parameter_description"><p>Length of <em class="parameter"><code>audio_config</code></em>
-in bytes</p></td>
+</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -486,10 +497,10 @@ If mpegversion is 4, the "base-profile" field is also set in <em class="paramete
 </tr>
 <tr>
 <td class="parameter_name"><p>audio_config</p></td>
-<td class="parameter_description"><p>a pointer to the AudioSpecificConfig as specified in the
-Elementary Stream Descriptor (esds) in ISO/IEC 14496-1 (see
-below for a more details).</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>a pointer to the AudioSpecificConfig
+as specified in the Elementary Stream Descriptor (esds)
+in ISO/IEC 14496-1. (See below for more details). </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -537,8 +548,8 @@ byte.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>sps</p></td>
-<td class="parameter_description"><p>Pointer to the sequence parameter set for the stream.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pointer to the sequence parameter set for the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -574,8 +585,8 @@ same format as for <a class="link" href="gst-plugins-base-libs-Codec-utilities.h
 <tbody>
 <tr>
 <td class="parameter_name"><p>sps</p></td>
-<td class="parameter_description"><p>Pointer to the sequence parameter set for the stream.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pointer to the sequence parameter set for the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -620,8 +631,8 @@ for more details on the parameters.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>sps</p></td>
-<td class="parameter_description"><p>Pointer to the sequence parameter set for the stream.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pointer to the sequence parameter set for the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -698,8 +709,8 @@ with bit 0 being the most significant bit of the first byte.</p>
 <tr>
 <td class="parameter_name"><p>profile_tier_level</p></td>
 <td class="parameter_description"><p>Pointer to the profile_tier_level
-structure for the stream.</p></td>
-<td class="parameter_annotations"> </td>
+structure for the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -736,9 +747,9 @@ is expected to have the same format as for <a class="link" href="gst-plugins-bas
 <tbody>
 <tr>
 <td class="parameter_name"><p>profile_tier_level</p></td>
-<td class="parameter_description"><p>Pointer to the profile_tier_level structure
-for the stream.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pointer to the profile_tier_level
+for the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -775,9 +786,9 @@ expected to have the same format as for <a class="link" href="gst-plugins-base-l
 <tbody>
 <tr>
 <td class="parameter_name"><p>profile_tier_level</p></td>
-<td class="parameter_description"><p>Pointer to the profile_tier_level structure
-for the stream</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pointer to the profile_tier_level
+for the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -851,8 +862,9 @@ for more details on the parameters.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>profile_tier_level</p></td>
-<td class="parameter_description"><p>Pointer to the profile_tier_level struct</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pointer to the profile_tier_level
+struct. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -892,8 +904,9 @@ object sequence start code. Only the first byte
 <tbody>
 <tr>
 <td class="parameter_name"><p>vis_obj_seq</p></td>
-<td class="parameter_description"><p>Pointer to the visual object sequence for the stream.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pointer to the visual object
+sequence for the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -931,8 +944,9 @@ object sequence start code. Only the first byte
 <tbody>
 <tr>
 <td class="parameter_name"><p>vis_obj_seq</p></td>
-<td class="parameter_description"><p>Pointer to the visual object sequence for the stream.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pointer to the visual object
+sequence for the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -978,8 +992,9 @@ parameters.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>vis_obj_seq</p></td>
-<td class="parameter_description"><p>Pointer to the visual object sequence for the stream.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pointer to the visual object
+sequence for the stream. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>
@@ -1043,7 +1058,7 @@ gst_codec_utils_opus_create_caps (<em class="parameter"><code><a href="/usr/shar
 <tr>
 <td class="parameter_name"><p>channel_mapping</p></td>
 <td class="parameter_description"><p>the mapping between the streams. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1053,7 +1068,7 @@ gst_codec_utils_opus_create_caps (<em class="parameter"><code><a href="/usr/shar
 <p> The <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the parameters would lead to
 invalid Opus caps.</p>
 </div>
-<p class="since">Since: 1.8</p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1092,7 +1107,7 @@ gst_codec_utils_opus_create_caps_from_header
 <a name="gst-codec-utils-opus-create-caps-from-header.returns"></a><h4>Returns</h4>
 <p> The <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>.</p>
 </div>
-<p class="since">Since: 1.8</p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1117,38 +1132,38 @@ gst_codec_utils_opus_parse_caps (<em class="parameter"><code><a href="/usr/share
 <tbody>
 <tr>
 <td class="parameter_name"><p>caps</p></td>
-<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> to which the level and profile are to be added</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> to parse the data from</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>rate</p></td>
-<td class="parameter_description"><p>the sample rate</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the sample rate. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>channels</p></td>
-<td class="parameter_description"><p>the number of channels</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the number of channels. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>channel_mapping_family</p></td>
-<td class="parameter_description"><p>the channel mapping family</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the channel mapping family. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>stream_count</p></td>
-<td class="parameter_description"><p>the number of independent streams</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the number of independent streams. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>coupled_count</p></td>
-<td class="parameter_description"><p>the number of stereo streams</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the number of stereo streams. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>channel_mapping</p></td>
-<td class="parameter_description"><p>the mapping between the streams</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the mapping between the streams. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1157,7 +1172,7 @@ gst_codec_utils_opus_parse_caps (<em class="parameter"><code><a href="/usr/share
 <a name="gst-codec-utils-opus-parse-caps.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if parsing was successful, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 </div>
-<p class="since">Since: 1.8</p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1209,7 +1224,7 @@ gst_codec_utils_opus_create_header (<em class="parameter"><code><a href="/usr/sh
 <tr>
 <td class="parameter_name"><p>channel_mapping</p></td>
 <td class="parameter_description"><p>the mapping between the streams. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>pre_skip</p></td>
@@ -1228,7 +1243,7 @@ gst_codec_utils_opus_create_header (<em class="parameter"><code><a href="/usr/sh
 <a name="gst-codec-utils-opus-create-header.returns"></a><h4>Returns</h4>
 <p> The <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> containing the OpusHead.</p>
 </div>
-<p class="since">Since: 1.8</p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1260,43 +1275,43 @@ gst_codec_utils_opus_parse_header (<em class="parameter"><code><a href="/usr/sha
 </tr>
 <tr>
 <td class="parameter_name"><p>rate</p></td>
-<td class="parameter_description"><p>the sample rate</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the sample rate. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>channels</p></td>
-<td class="parameter_description"><p>the number of channels</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the number of channels. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>channel_mapping_family</p></td>
-<td class="parameter_description"><p>the channel mapping family</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the channel mapping family. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>stream_count</p></td>
-<td class="parameter_description"><p>the number of independent streams</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the number of independent streams. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>coupled_count</p></td>
-<td class="parameter_description"><p>the number of stereo streams</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the number of stereo streams. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>channel_mapping</p></td>
-<td class="parameter_description"><p>the mapping between the streams</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the mapping between the streams. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>pre_skip</p></td>
-<td class="parameter_description"><p>Pre-skip in 48kHz samples or 0</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Pre-skip in 48kHz samples or 0. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>output_gain</p></td>
-<td class="parameter_description"><p>Output gain or 0</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>Output gain or 0. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1305,7 +1320,7 @@ gst_codec_utils_opus_parse_header (<em class="parameter"><code><a href="/usr/sha
 <a name="gst-codec-utils-opus-parse-header.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if parsing was successful, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 </div>
-<p class="since">Since: 1.8</p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -1313,6 +1328,6 @@ gst_codec_utils_opus_parse_header (<em class="parameter"><code><a href="/usr/sha
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

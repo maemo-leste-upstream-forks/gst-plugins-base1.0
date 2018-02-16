@@ -284,7 +284,9 @@ gst_sub_parse_src_event (GstPad * pad, GstObject * parent, GstEvent * event)
         GST_DEBUG_OBJECT (self, "segment after seek: %" GST_SEGMENT_FORMAT,
             &self->segment);
 
-        self->need_segment = TRUE;
+        /* will mark need_segment when receiving segment from upstream,
+         * after FLUSH and all that has happened,
+         * rather than racing with chain */
       } else {
         GST_WARNING_OBJECT (self, "seek to 0 bytes failed");
       }
@@ -1839,9 +1841,10 @@ gst_sub_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
   GstSubParse *self = GST_SUBPARSE (parent);
   gboolean ret = FALSE;
 
-  GST_DEBUG ("Handling %s event", GST_EVENT_TYPE_NAME (event));
+  GST_LOG_OBJECT (self, "%s event", GST_EVENT_TYPE_NAME (event));
 
   switch (GST_EVENT_TYPE (event)) {
+    case GST_EVENT_STREAM_GROUP_DONE:
     case GST_EVENT_EOS:{
       /* Make sure the last subrip chunk is pushed out even
        * if the file does not have an empty line at the end */
@@ -1852,7 +1855,9 @@ gst_sub_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
         gchar term_chars[] = { '\n', '\n', '\0' };
         GstBuffer *buf = gst_buffer_new_and_alloc (2 + 1);
 
-        GST_DEBUG ("EOS. Pushing remaining text (if any)");
+        GST_DEBUG_OBJECT (self, "%s: force pushing of any remaining text",
+            GST_EVENT_TYPE_NAME (event));
+
         gst_buffer_fill (buf, 0, term_chars, 3);
         gst_buffer_set_size (buf, 2);
 
@@ -1881,6 +1886,10 @@ gst_sub_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
        * it received via its video pads instead, so all is fine then too) */
       ret = TRUE;
       gst_event_unref (event);
+      /* in either case, let's not simply discard this event;
+       * trigger sending of the saved requested seek segment
+       * or the one taken here from upstream */
+      self->need_segment = TRUE;
       break;
     }
     case GST_EVENT_FLUSH_START:

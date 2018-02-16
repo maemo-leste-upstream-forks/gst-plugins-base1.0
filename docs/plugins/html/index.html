@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Plugins Reference Manual">
 <link rel="next" href="ch01.html" title="gst-plugins-base Elements">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -15,7 +15,7 @@
 <div>
 <div><table class="navigation" id="top" width="100%" cellpadding="2" cellspacing="0"><tr><th valign="middle"><p class="title">GStreamer Base Plugins 1.0 Plugins Reference Manual</p></th></tr></table></div>
 <div><p class="releaseinfo">
-      for GStreamer Base Plugins 1.0 (1.12.4)
+      for GStreamer Base Plugins 1.0 (1.13.1)
       The latest version of this documentation can be found on-line at
       <a class="ulink" href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-plugins/html/" target="_top">http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-plugins/html/</a>.
     </p></div>
@@ -45,6 +45,12 @@
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-plugins-audioconvert.html">audioconvert</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-audiointerleave.html">audiointerleave</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-audiomixer.html">audiomixer</a></span><span class="refpurpose"></span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-plugins-audiorate.html">audiorate</a></span><span class="refpurpose"></span>
@@ -81,6 +87,129 @@
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-plugins-giostreamsrc.html">giostreamsrc</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glcolorbalance.html">glcolorbalance</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glcolorconvert.html">glcolorconvert</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glcolorscale.html">glcolorscale</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gldeinterlace.html">gldeinterlace</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gldifferencematte.html">gldifferencematte</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gldownload.html">gldownload</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-blur.html">gleffects_blur</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-bulge.html">gleffects_bulge</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-fisheye.html">gleffects_fisheye</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-glow.html">gleffects_glow</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-heat.html">gleffects_heat</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-identity.html">gleffects_identity</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-laplacian.html">gleffects_laplacian</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-lumaxpro.html">gleffects_lumaxpro</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-mirror.html">gleffects_mirror</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-sepia.html">gleffects_sepia</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-sin.html">gleffects_sin</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-sobel.html">gleffects_sobel</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-square.html">gleffects_square</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-squeeze.html">gleffects_squeeze</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-stretch.html">gleffects_stretch</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-tunnel.html">gleffects_tunnel</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-twirl.html">gleffects_twirl</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects.html">gleffects</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-xpro.html">gleffects_xpro</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gleffects-xray.html">gleffects_xray</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glfilterapp.html">glfilterapp</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glfilterbin.html">glfilterbin</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glfiltercube.html">glfiltercube</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glfilterglass.html">glfilterglass</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glimagesinkelement.html">glimagesinkelement</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glimagesink.html">glimagesink</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gloverlay.html">gloverlay</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glshader.html">glshader</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glsinkbin.html">glsinkbin</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glsrcbin.html">glsrcbin</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glstereosplit.html">glstereosplit</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gltestsrc.html">gltestsrc</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-gltransformation.html">gltransformation</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glupload.html">glupload</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-glviewconvert.html">glviewconvert</a></span><span class="refpurpose"></span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-plugins-multifdsink.html">multifdsink</a></span><span class="refpurpose"></span>
@@ -239,6 +368,9 @@
 <span class="refentrytitle"><a href="gst-plugins-base-plugins-plugin-audioconvert.html">audioconvert</a></span><span class="refpurpose"> — Convert audio to different formats</span>
 </dt>
 <dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-plugin-audiomixer.html">audiomixer</a></span><span class="refpurpose"> — Mixes multiple audio streams</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="gst-plugins-base-plugins-plugin-audiorate.html">audiorate</a></span><span class="refpurpose"> — Adjusts audio frames</span>
 </dt>
 <dt>
@@ -267,6 +399,9 @@
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-plugins-plugin-opus.html">opus</a></span><span class="refpurpose"> — OPUS plugin library</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-plugins-plugin-opengl.html">opengl</a></span><span class="refpurpose"> — OpenGL plugin</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-plugins-plugin-pango.html">pango</a></span><span class="refpurpose"> — Pango-based text rendering and overlay</span>
@@ -317,6 +452,6 @@
 </dl></div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

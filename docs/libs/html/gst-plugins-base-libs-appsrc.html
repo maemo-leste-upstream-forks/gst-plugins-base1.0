@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-app.html" title="App Library">
 <link rel="prev" href="gstreamer-app.html" title="App Library">
 <link rel="next" href="gst-plugins-base-libs-appsink.html" title="GstAppSink">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -174,6 +174,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-appsrc.html#gst-app-src-push-buffer" title="gst_app_src_push_buffer ()">gst_app_src_push_buffer</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-appsrc.html#gst-app-src-push-buffer-list" title="gst_app_src_push_buffer_list ()">gst_app_src_push_buffer_list</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -364,13 +372,13 @@ gst_app_src_get_latency (<em class="parameter"><code><a href="/usr/share/gtk-doc
 </tr>
 <tr>
 <td class="parameter_name"><p>min</p></td>
-<td class="parameter_description"><p>the min latency</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the min latency. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>max</p></td>
-<td class="parameter_description"><p>the min latency</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the max latency. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -410,7 +418,7 @@ default latency calculations for pseudo-live sources will be used.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>max</p></td>
-<td class="parameter_description"><p>the min latency</p></td>
+<td class="parameter_description"><p>the max latency</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -505,7 +513,7 @@ not known.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.10</p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -533,7 +541,7 @@ not known.</p>
 <a name="gst-app-src-get-duration.returns"></a><h4>Returns</h4>
 <p> the duration of the stream previously set with <a class="link" href="gst-plugins-base-libs-appsrc.html#gst-app-src-set-duration" title="gst_app_src_set_duration ()"><code class="function">gst_app_src_set_duration()</code></a>;</p>
 </div>
-<p class="since">Since: 1.10</p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -683,7 +691,7 @@ gst_app_src_get_current_level_bytes (<em class="parameter"><code><a href="/usr/s
 <a name="gst-app-src-get-current-level-bytes.returns"></a><h4>Returns</h4>
 <p> The number of currently queued bytes.</p>
 </div>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -835,6 +843,49 @@ is not PAUSED or PLAYING.
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-app-src-push-buffer-list"></a><h3>gst_app_src_push_buffer_list ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
+gst_app_src_push_buffer_list (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0/gst-plugins-base-plugins-appsrc.html#GstAppSrc-struct"><span class="type">GstAppSrc</span></a> *appsrc</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBufferList.html#GstBufferList-struct"><span class="type">GstBufferList</span></a> *buffer_list</code></em>);</pre>
+<p>Adds a buffer list to the queue of buffers and buffer lists that the
+appsrc element will push to its source pad.  This function takes ownership
+of <em class="parameter"><code>buffer_list</code></em>
+.</p>
+<p>When the block property is TRUE, this function can block until free
+space becomes available in the queue.</p>
+<div class="refsect3">
+<a name="gst-app-src-push-buffer-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>appsrc</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0/gst-plugins-base-plugins-appsrc.html#GstAppSrc-struct"><span class="type">GstAppSrc</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>buffer_list</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBufferList.html#GstBufferList-struct"><span class="type">GstBufferList</span></a> to push. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-app-src-push-buffer-list.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GST-FLOW-OK:CAPS"><span class="type">GST_FLOW_OK</span></a> when the buffer list was successfuly queued.
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GST-FLOW-FLUSHING:CAPS"><span class="type">GST_FLOW_FLUSHING</span></a> when <em class="parameter"><code>appsrc</code></em>
+is not PAUSED or PLAYING.
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GST-FLOW-EOS:CAPS"><span class="type">GST_FLOW_EOS</span></a> when EOS occured.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-app-src-push-sample"></a><h3>gst_app_src_push_sample ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstFlowReturn"><span class="returnvalue">GstFlowReturn</span></a>
 gst_app_src_push_sample (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0/gst-plugins-base-plugins-appsrc.html#GstAppSrc-struct"><span class="type">GstAppSrc</span></a> *appsrc</code></em>,
@@ -875,7 +926,7 @@ extracted. </p></td>
 is not PAUSED or PLAYING.
 <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GST-FLOW-EOS:CAPS"><span class="type">GST_FLOW_EOS</span></a> when EOS occured.</p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1004,6 +1055,6 @@ This callback is only called for seekable stream types.</p></td>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

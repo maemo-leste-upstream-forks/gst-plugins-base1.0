@@ -6,6 +6,7 @@ pkgconf.set('libdir', '${prefix}/@0@'.format(get_option('libdir')))
 pkgconf.set('includedir', '${prefix}/@0@'.format(get_option('includedir')))
 pkgconf.set('GST_API_VERSION', api_version)
 pkgconf.set('VERSION', gst_version)
+pkgconf.set('LIBM', libm.found() ? '-lm' : '')
 
 # needed for generating -uninstalled.pc files
 pkgconf.set('abs_top_builddir', join_paths(meson.current_build_dir(), '..'))
@@ -39,7 +40,15 @@ pkg_files = [
   'gstreamer-video',
 ]
 
-# FIXME: -uninstalled.pc files (if still needed?)
+# XXX: requires the meson.build to be parsed/executed after gst-libs/gl/meson.build
+if build_gstgl
+  pkgconf.set('gllibdir', join_paths(meson.build_root(), gstgl.outdir()))
+  pkg_files += ['gstreamer-gl']
+  pkgconf.set('GL_APIS', ' '.join(enabled_gl_apis))
+  pkgconf.set('GL_WINDOWS', ' '.join(enabled_gl_winsys))
+  pkgconf.set('GL_PLATFORMS', ' '.join(enabled_gl_platforms))
+endif
+
 foreach p : pkg_files
   infile = p + '.pc.in'
   outfile = p + '-1.0.pc'

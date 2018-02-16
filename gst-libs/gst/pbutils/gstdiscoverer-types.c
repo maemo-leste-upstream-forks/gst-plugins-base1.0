@@ -248,6 +248,7 @@ gst_discoverer_audio_info_copy_int (GstDiscovererAudioInfo * ptr)
   ret = gst_discoverer_audio_info_new ();
 
   ret->channels = ptr->channels;
+  ret->channel_mask = ptr->channel_mask;
   ret->sample_rate = ptr->sample_rate;
   ret->depth = ptr->depth;
   ret->bitrate = ptr->bitrate;
@@ -412,6 +413,7 @@ gst_discoverer_info_copy (GstDiscovererInfo * ptr)
   ret->duration = ptr->duration;
   ret->result = ptr->result;
   ret->seekable = ptr->seekable;
+  ret->live = ptr->live;
   if (ptr->misc)
     ret->misc = gst_structure_copy (ptr->misc);
 
@@ -749,6 +751,19 @@ gst_discoverer_container_info_get_streams (GstDiscovererContainerInfo * info)
 AUDIO_INFO_ACCESSOR_CODE (channels, guint, 0);
 
 /**
+ * gst_discoverer_audio_info_get_channel_mask:
+ * @info: a #GstDiscovererAudioInfo
+ *
+ * Returns: the channel-mask of the stream, refer to
+ * gst_audio_channel_positions_from_mask() for more
+ * information.
+ *
+ * Since: 1.14
+ */
+
+AUDIO_INFO_ACCESSOR_CODE (channel_mask, guint64, G_MAXUINT64);
+
+/**
  * gst_discoverer_audio_info_get_sample_rate:
  * @info: a #GstDiscovererAudioInfo
  *
@@ -899,7 +914,7 @@ VIDEO_INFO_ACCESSOR_CODE (max_bitrate, guint, 0);
  * gst_discoverer_video_info_is_image:
  * @info: a #GstDiscovererVideoInfo
  *
- * Returns: #TRUE if the video stream corresponds to an image (i.e. only contains
+ * Returns: %TRUE if the video stream corresponds to an image (i.e. only contains
  * one frame).
  */
 gboolean
@@ -1012,6 +1027,17 @@ DISCOVERER_INFO_ACCESSOR_CODE (duration, GstClockTime, GST_CLOCK_TIME_NONE);
  */
 
 DISCOVERER_INFO_ACCESSOR_CODE (seekable, gboolean, FALSE);
+
+/**
+ * gst_discoverer_info_get_live:
+ * @info: a #GstDiscovererInfo
+ *
+ * Returns: whether the URI is live.
+ *
+ * Since: 1.14
+ */
+
+DISCOVERER_INFO_ACCESSOR_CODE (live, gboolean, FALSE);
 
 /**
  * gst_discoverer_info_get_misc:

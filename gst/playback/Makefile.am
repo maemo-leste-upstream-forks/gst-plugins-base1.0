@@ -6,6 +6,7 @@ libgstplayback_la_SOURCES = \
 	gstdecodebin2.c \
 	gstdecodebin3.c \
 	gsturidecodebin.c \
+	gsturidecodebin3.c \
 	gsturisourcebin.c \
 	gstparsebin.c \
 	gstplayback.c \
@@ -28,7 +29,6 @@ libgstplayback_la_LIBADD = \
 	$(top_builddir)/gst-libs/gst/audio/libgstaudio-@GST_API_VERSION@.la \
 	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
 	$(GST_LIBS)
-libgstplayback_la_LIBTOOLFLAGS = $(GST_PLUGIN_LIBTOOLFLAGS)
 
 # FIXME: gstdecodebin3-parse.c isn't really a header,
 # but for now it's included into gstdecodebin3.c directly

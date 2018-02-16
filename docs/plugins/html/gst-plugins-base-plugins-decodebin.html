@@ -8,7 +8,7 @@
 <link rel="up" href="ch01.html" title="gst-plugins-base Elements">
 <link rel="prev" href="gst-plugins-base-plugins-clockoverlay.html" title="clockoverlay">
 <link rel="next" href="gst-plugins-base-plugins-decodebin3.html" title="decodebin3">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -198,7 +198,7 @@ use, as it creates a suitable source element as well.</p>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.14.9.4.1"></a><h3>Element Information</h3>
+<a name="id-1.2.16.9.4.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -224,7 +224,7 @@ use, as it creates a suitable source element as well.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.14.9.4.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.16.9.4.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -399,7 +399,7 @@ user_function (<a class="link" href="gst-plugins-base-plugins-decodebin.html#Gst
 <p>This signal is emitted whenever decodebin finds a new stream. It is
 emitted before looking for any elements that can handle that stream.</p>
 <div class="blockquote"><blockquote class="blockquote"><p>  Invocation of signal handlers stops after the first signal handler
-  returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><span class="type">FALSE</span></a>. Signal handlers are invoked in the order they were
+  returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>. Signal handlers are invoked in the order they were
   connected in.</p></blockquote></div>
 <div class="refsect3">
 <a name="GstDecodeBin-autoplug-continue.parameters"></a><h4>Parameters</h4>
@@ -435,9 +435,9 @@ emitted before looking for any elements that can handle that stream.</p>
 </div>
 <div class="refsect3">
 <a name="GstDecodeBin-autoplug-continue.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a> if you wish decodebin to look for elements that can
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if you wish decodebin to look for elements that can
 handle the given <em class="parameter"><code>caps</code></em>
-. If <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><span class="type">FALSE</span></a>, those caps will be considered as
+. If <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, those caps will be considered as
 final and the pad will be exposed as such (see 'pad-added' signal of
 <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstElement-struct"><span class="type">GstElement</span></a>).</p>
 </div>
@@ -451,7 +451,7 @@ user_function (<a class="link" href="gst-plugins-base-plugins-decodebin.html#Gst
                <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a>       *pad,
                <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>      *caps,
                <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
-<p>This function is emited when an array of possible factories for <em class="parameter"><code>caps</code></em>
+<p>This signal is emitted when an array of possible factories for <em class="parameter"><code>caps</code></em>
  on
 <em class="parameter"><code>pad</code></em>
  is needed. Decodebin will by default return an array with all
@@ -555,7 +555,7 @@ for example.</p>
 </div>
 <div class="refsect3">
 <a name="GstDecodeBin-autoplug-query.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a> if the query was handled, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><span class="type">FALSE</span></a> otherwise.</p>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the query was handled, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 </div>
 <p>Flags: <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
 </div>
@@ -645,14 +645,14 @@ user_function (<a class="link" href="gst-plugins-base-plugins-decodebin.html#Gst
 <p>Once decodebin has found the possible <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElementFactory.html#GstElementFactory-struct"><span class="type">GstElementFactory</span></a> objects to try
 for <em class="parameter"><code>caps</code></em>
  on <em class="parameter"><code>pad</code></em>
-, this signal is emited. The purpose of the signal is for
+, this signal is emitted. The purpose of the signal is for
 the application to perform additional sorting or filtering on the element
 factory array.</p>
 <p>The callee should copy and modify <em class="parameter"><code>factories</code></em>
- or return <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if the
+ or return <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the
 order should not change.</p>
 <div class="blockquote"><blockquote class="blockquote"><p>  Invocation of signal handlers stops after one signal handler has
-  returned something else than <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>. Signal handlers are invoked in
+  returned something else than <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. Signal handlers are invoked in
   the order they were connected in.
   Don't connect signal handlers with the <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-CONNECT-AFTER:CAPS"><span class="type">G_CONNECT_AFTER</span></a> flag to this
   signal, they will never be invoked!</p></blockquote></div>
@@ -778,6 +778,6 @@ stream type.</p></td>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

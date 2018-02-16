@@ -736,9 +736,15 @@ gst_ogg_demux_chain_peer (GstOggPad * pad, ogg_packet * packet,
           }
           if (pad->map.audio_clipping
               && pad->current_granule - duration < -pad->map.granule_offset) {
-            if (pad->current_granule >= -pad->map.granule_offset)
-              clip_start = -pad->map.granule_offset;
-            else
+            if (pad->current_granule >= -pad->map.granule_offset) {
+              guint64 already_removed =
+                  pad->current_granule >
+                  duration ? pad->current_granule - duration : 0;
+              clip_start =
+                  already_removed >
+                  -pad->map.granule_offset ? 0 : -pad->map.granule_offset -
+                  already_removed;
+            } else
               clip_start = pad->current_granule;
           }
         } else {
@@ -747,9 +753,15 @@ gst_ogg_demux_chain_peer (GstOggPad * pad, ogg_packet * packet,
 
           if (pad->map.audio_clipping
               && pad->current_granule - duration < -pad->map.granule_offset) {
-            if (pad->current_granule >= -pad->map.granule_offset)
-              clip_start = -pad->map.granule_offset;
-            else
+            if (pad->current_granule >= -pad->map.granule_offset) {
+              guint64 already_removed =
+                  pad->current_granule >
+                  duration ? pad->current_granule - duration : 0;
+              clip_start =
+                  already_removed >
+                  -pad->map.granule_offset ? 0 : -pad->map.granule_offset -
+                  already_removed;
+            } else
               clip_start = pad->current_granule;
           }
         }
@@ -766,7 +778,9 @@ gst_ogg_demux_chain_peer (GstOggPad * pad, ogg_packet * packet,
     pad->prev_granule = pad->current_granule;
   }
 
-  if (pad->map.is_ogm_text) {
+  if (G_UNLIKELY (offset + trim > packet->bytes))
+    goto invalid_packet;
+  else if (pad->map.is_ogm_text) {
     /* check for invalid buffer sizes */
     if (G_UNLIKELY (offset + trim >= packet->bytes))
       goto empty_packet;
@@ -779,8 +793,9 @@ gst_ogg_demux_chain_peer (GstOggPad * pad, ogg_packet * packet,
 
   if (pad->map.audio_clipping && (clip_start || clip_end)) {
     GST_DEBUG_OBJECT (pad,
-        "Adding audio clipping %" G_GUINT64_FORMAT " %" G_GUINT64_FORMAT,
-        clip_start, clip_end);
+        "Clipping %" G_GUINT64_FORMAT " %" G_GUINT64_FORMAT " (%"
+        G_GUINT64_FORMAT " / %" G_GUINT64_FORMAT ")", clip_start, clip_end,
+        clip_start + clip_end, duration);
     gst_buffer_add_audio_clipping_meta (buf, GST_FORMAT_DEFAULT, clip_start,
         clip_end);
   }
@@ -885,6 +900,12 @@ done:
 empty_packet:
   {
     GST_DEBUG_OBJECT (ogg, "Skipping empty packet");
+    goto done;
+  }
+
+invalid_packet:
+  {
+    GST_DEBUG_OBJECT (ogg, "Skipping invalid packet");
     goto done;
   }
 
@@ -1674,6 +1695,12 @@ gst_ogg_pad_handle_push_mode_state (GstOggPad * pad, ogg_page * page)
         ogg->push_time_length = t;
       }
 
+      /* If we're still receiving data from before the seek segment, drop it */
+      if (ogg->seek_event_drop_till != 0) {
+        GST_PUSH_UNLOCK (ogg);
+        return GST_FLOW_SKIP_PUSH;
+      }
+
       /* If we were determining the duration of the stream, we're now done,
          and can get back to sending the original event we delayed.
          We stop a bit before the end of the stream, as if we get a EOS
@@ -2294,6 +2321,10 @@ gst_ogg_demux_init (GstOggDemux * ogg)
 
   g_mutex_init (&ogg->chain_lock);
   g_mutex_init (&ogg->push_lock);
+  g_mutex_init (&ogg->seek_event_mutex);
+  g_cond_init (&ogg->seek_event_cond);
+  g_cond_init (&ogg->thread_started_cond);
+
   ogg->chains = g_array_new (FALSE, TRUE, sizeof (GstOggChain *));
 
   ogg->stats_nbisections = 0;
@@ -2318,6 +2349,10 @@ gst_ogg_demux_finalize (GObject * object)
   g_array_free (ogg->chains, TRUE);
   g_mutex_clear (&ogg->chain_lock);
   g_mutex_clear (&ogg->push_lock);
+  g_cond_clear (&ogg->seek_event_cond);
+  g_cond_clear (&ogg->thread_started_cond);
+  g_mutex_clear (&ogg->seek_event_mutex);
+
   ogg_sync_clear (&ogg->sync);
 
   if (ogg->newsegment)
@@ -2456,8 +2491,8 @@ gst_ogg_demux_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
               res);
         }
         break;
-      }
-      GST_PUSH_UNLOCK (ogg);
+      } else
+        GST_PUSH_UNLOCK (ogg);
       res = gst_ogg_demux_send_event (ogg, event);
       if (ogg->current_chain == NULL) {
         GST_WARNING_OBJECT (ogg,
@@ -4241,7 +4276,8 @@ gst_ogg_demux_read_end_chain (GstOggDemux * ogg, GstOggChain * chain)
     chain->segment_stop = GST_CLOCK_TIME_NONE;
   }
 
-  GST_INFO ("segment stop %" G_GUINT64_FORMAT, chain->segment_stop);
+  GST_INFO ("segment stop %" G_GUINT64_FORMAT ", for last granule %"
+      G_GUINT64_FORMAT, chain->segment_stop, last_granule);
 
   return GST_FLOW_OK;
 }
@@ -4550,12 +4586,13 @@ gst_ogg_demux_handle_page (GstOggDemux * ogg, ogg_page * page, gboolean discont)
         GstFlowReturn res;
 
         res = gst_ogg_demux_seek_back_after_push_duration_check_unlock (ogg);
+        /* Call to function above unlocks, relock */
+        GST_PUSH_LOCK (ogg);
         if (res != GST_FLOW_OK)
           return res;
       }
 
       /* only once we seeked back */
-      GST_PUSH_LOCK (ogg);
       ogg->push_disable_seeking = TRUE;
     } else {
       GST_PUSH_UNLOCK (ogg);
@@ -4634,6 +4671,7 @@ static gboolean
 gst_ogg_demux_send_event (GstOggDemux * ogg, GstEvent * event)
 {
   GstOggChain *chain = ogg->current_chain;
+  gboolean event_sent = FALSE;
   gboolean res = TRUE;
 
   if (!chain)
@@ -4648,11 +4686,17 @@ gst_ogg_demux_send_event (GstOggDemux * ogg, GstEvent * event)
       gst_event_ref (event);
       GST_DEBUG_OBJECT (pad, "Pushing event %" GST_PTR_FORMAT, event);
       res &= gst_pad_push_event (GST_PAD (pad), event);
+      if (pad->added)
+        event_sent = TRUE;
     }
-  } else {
-    GST_WARNING_OBJECT (ogg, "No chain to forward event to");
   }
+
   gst_event_unref (event);
+
+  if (!event_sent && GST_EVENT_TYPE (event) == GST_EVENT_EOS) {
+    GST_ELEMENT_ERROR (ogg, STREAM, DEMUX, (NULL),
+        ("EOS before finding a chain"));
+  }
 
   return res;
 }
@@ -4921,31 +4965,36 @@ pause:
 static gpointer
 gst_ogg_demux_loop_push (GstOggDemux * ogg)
 {
-  GstEvent *event;
+  GstEvent *event = NULL;
 
-  while (1) {
-    g_mutex_lock (&ogg->seek_event_mutex);
+  g_mutex_lock (&ogg->seek_event_mutex);
+  /* Inform other threads that we started */
+  ogg->seek_thread_started = TRUE;
+  g_cond_broadcast (&ogg->thread_started_cond);
+
+
+  while (!ogg->seek_event_thread_stop) {
+
+    while (!ogg->seek_event_thread_stop) {
+      GST_PUSH_LOCK (ogg);
+      event = ogg->seek_event;
+      ogg->seek_event = NULL;
+      if (event)
+        ogg->seek_event_drop_till = gst_event_get_seqnum (event);
+      GST_PUSH_UNLOCK (ogg);
+
+      if (event)
+        break;
+
+      g_cond_wait (&ogg->seek_event_cond, &ogg->seek_event_mutex);
+    }
+
     if (ogg->seek_event_thread_stop) {
-      g_mutex_unlock (&ogg->seek_event_mutex);
       break;
     }
-    g_cond_wait (&ogg->seek_event_cond, &ogg->seek_event_mutex);
-    if (ogg->seek_event_thread_stop) {
-      g_mutex_unlock (&ogg->seek_event_mutex);
-      break;
-    }
+    g_assert (event);
+
     g_mutex_unlock (&ogg->seek_event_mutex);
-
-    GST_PUSH_LOCK (ogg);
-    event = ogg->seek_event;
-    ogg->seek_event = NULL;
-    if (event) {
-      ogg->seek_event_drop_till = gst_event_get_seqnum (event);
-    }
-    GST_PUSH_UNLOCK (ogg);
-
-    if (!event)
-      continue;
 
     GST_DEBUG_OBJECT (ogg->sinkpad, "Pushing event %" GST_PTR_FORMAT, event);
     if (!gst_pad_push_event (ogg->sinkpad, event)) {
@@ -4959,7 +5008,12 @@ gst_ogg_demux_loop_push (GstOggDemux * ogg)
     } else {
       GST_DEBUG_OBJECT (ogg->sinkpad, "Pushed event ok");
     }
+
+    g_mutex_lock (&ogg->seek_event_mutex);
   }
+
+  g_mutex_unlock (&ogg->seek_event_mutex);
+
   gst_object_unref (ogg);
   return NULL;
 }
@@ -5046,18 +5100,23 @@ gst_ogg_demux_sink_activate_mode (GstPad * sinkpad, GstObject * parent,
       ogg->resync = FALSE;
       if (active) {
         ogg->seek_event_thread_stop = FALSE;
-        g_mutex_init (&ogg->seek_event_mutex);
-        g_cond_init (&ogg->seek_event_cond);
+        ogg->seek_thread_started = FALSE;
         ogg->seek_event_thread = g_thread_new ("seek_event_thread",
             (GThreadFunc) gst_ogg_demux_loop_push, gst_object_ref (ogg));
+        /* And wait for the thread to start.
+         * FIXME : This is hackish. And one wonders why we need a separate thread to
+         * seek to a certain offset */
+        g_mutex_lock (&ogg->seek_event_mutex);
+        while (!ogg->seek_thread_started) {
+          g_cond_wait (&ogg->thread_started_cond, &ogg->seek_event_mutex);
+        }
+        g_mutex_unlock (&ogg->seek_event_mutex);
       } else {
         g_mutex_lock (&ogg->seek_event_mutex);
         ogg->seek_event_thread_stop = TRUE;
         g_cond_broadcast (&ogg->seek_event_cond);
         g_mutex_unlock (&ogg->seek_event_mutex);
         g_thread_join (ogg->seek_event_thread);
-        g_cond_clear (&ogg->seek_event_cond);
-        g_mutex_clear (&ogg->seek_event_mutex);
         ogg->seek_event_thread = NULL;
       }
       res = TRUE;

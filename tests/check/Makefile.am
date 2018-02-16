@@ -30,6 +30,25 @@ STATE_IGNORE_ELEMENTS = cdio cdparanoiasrc libvisual_ alsasrc alsasink
 
 TESTS = $(check_PROGRAMS)
 
+if USE_GL
+check_gl=\
+    libs/gstglcontext \
+    libs/gstglmemory \
+    libs/gstglupload \
+    libs/gstglcolorconvert \
+    libs/gstglmatrix \
+    libs/gstglquery \
+    libs/gstglsl \
+    libs/gstglslstage \
+    libs/gstglshader \
+    libs/gstglheaders \
+    elements/glimagesink \
+    elements/glbin \
+    pipelines/gl-launch-lines
+else
+check_gl=
+endif
+
 if USE_LIBVISUAL
 check_libvisual = elements/libvisual
 else
@@ -71,6 +90,12 @@ if USE_PLUGIN_AUDIOCONVERT
 check_audioconvert = elements/audioconvert
 else
 check_audioconvert =
+endif
+
+if USE_PLUGIN_AUDIOMIXER
+check_audiomixer = elements/audiointerleave elements/audiomixer
+else
+check_audiomixer =
 endif
 
 if USE_PLUGIN_PLAYBACK
@@ -154,7 +179,7 @@ check_adder =
 endif
 
 if HAVE_ORC
-check_orc = orc/video orc/audio orc/adder orc/volume orc/videotestsrc
+check_orc = orc/video orc/audio orc/audiomixer orc/adder orc/volume orc/videotestsrc
 else
 check_orc =
 endif
@@ -234,11 +259,13 @@ check_PROGRAMS = \
 	$(check_adder) \
 	$(check_app) \
 	$(check_audioconvert) \
+	$(check_audiomixer) \
 	$(check_audiorate) \
 	$(check_audioresample) \
 	$(check_audiotestsrc) \
 	$(check_encodebin) \
 	$(check_gio) \
+	$(check_gl) \
 	$(check_ogg) \
 	$(check_opus) \
 	$(check_pango) \
@@ -291,6 +318,10 @@ LDADD = $(GST_LIBS) $(GST_CHECK_LIBS)
 VALGRIND_TESTS_DISABLE = $(VALGRIND_TO_FIX)
 
 SUPPRESSIONS = $(top_srcdir)/common/gst.supp $(srcdir)/gst-plugins-base.supp
+
+generic_rtp_LDADD = \
+        $(top_builddir)/gst-libs/gst/rtp/libgstrtp-@GST_API_VERSION@.la \
+        $(LDADD)
 
 libs_libsabi_CFLAGS = \
 	$(GST_PLUGINS_BASE_CFLAGS) \
@@ -385,6 +416,111 @@ libs_fft_LDADD = \
 	$(top_builddir)/gst-libs/gst/fft/libgstfft-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) \
 	$(LDADD)
+
+libs_gstglcontext_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglcontext_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglmemory_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglmemory_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglupload_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglupload_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglcolorconvert_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglcolorconvert_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglmatrix_CFLAGS = \
+	$(GST_PLUGINS_BAD_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS) \
+	-DGST_USE_UNSTABLE_API \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglmatrix_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglquery_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglquery_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglsl_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglsl_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglslstage_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglslstage_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglshader_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglshader_CFLAGS = \
+	$(GST_PLUGINS_BAD_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS) \
+	-DGST_USE_UNSTABLE_API \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglheaders_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglheaders_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+elements_glimagesink_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+elements_glimagesink_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+elements_glbin_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+elements_glbin_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
 
 libs_navigation_CFLAGS = \
 	$(GST_PLUGINS_BASE_CFLAGS) \
@@ -507,6 +643,21 @@ elements_audioconvert_LDADD = \
 	$(GST_BASE_LIBS) \
 	$(LDADD)
 
+elements_audiomixer_LDADD = \
+	$(top_builddir)/gst-libs/gst/audio/libgstaudio-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_CONTROLLER_LIBS) \
+	$(LDADD)
+elements_audiomixer_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CONTROLLER_CFLAGS) \
+	$(AM_CFLAGS)
+
+elements_audiointerleave_LDADD = \
+	$(top_builddir)/gst-libs/gst/audio/libgstaudio-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(LDADD)
+elements_audiointerleave_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(AM_CFLAGS)
+
 elements_audiorate_LDADD = \
 	$(top_builddir)/gst-libs/gst/audio/libgstaudio-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) \
@@ -623,6 +774,8 @@ elements_videoscale_6_SOURCES = elements/videoscale.c
 elements_videoscale_6_CFLAGS = $(elements_videoscale_CFLAGS) -DVSCALE_TEST_GROUP=6
 elements_videoscale_6_LDADD = $(elements_videoscale_LDADD)
 
+generic_states_LDADD = $(GLIB_LIBS) $(LDADD)
+
 gst_typefindfunctions_CFLAGS = $(GST_BASE_CFLAGS) $(AM_CFLAGS)
 gst_typefindfunctions_LDADD = $(GST_BASE_LIBS) $(LDADD)
 
@@ -674,11 +827,18 @@ GIO_UNIX_2_0_DEFINED=-DHAVE_GIO_UNIX_2_0=1
 endif
 
 pipelines_tcp_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_NET_CFLAGS) $(GIO_CFLAGS) $(GIO_UNIX_2_0_CFLAGS) $(GIO_UNIX_2_0_DEFINED) $(AM_CFLAGS)
-pipelines_tcp_LDADD = $(GST_PLUGINS_BASE_LIBS) $(GST_NET_LIBS) $(GIO_LIBS) $(LDADD) \
-    $(GIO_UNIX_2_0_LIBS) $(top_builddir)/gst-libs/gst/app/libgstapp-@GST_API_VERSION@.la
+pipelines_tcp_LDADD =  $(top_builddir)/gst-libs/gst/app/libgstapp-@GST_API_VERSION@.la \
+	$(GST_NET_LIBS) $(GIO_LIBS) $(GIO_UNIX_2_0_LIBS) $(LDADD)
 
 pipelines_gio_CFLAGS = $(GIO_CFLAGS) $(AM_CFLAGS)
 pipelines_gio_LDADD = $(GIO_LIBS) $(LDADD)
+
+pipelines_gl_launch_lines_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(AM_CFLAGS)
+
+pipelines_gl_launch_lines_LDADD = \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
 
 pipelines_vorbisenc_CFLAGS = \
         $(GST_PLUGINS_BASE_CFLAGS) \
@@ -713,6 +873,9 @@ nodist_orc_audio_SOURCES = orc/audio.c
 orc_adder_CFLAGS = $(ORC_CFLAGS)
 orc_adder_LDADD = $(ORC_LIBS) -lorc-test-0.4
 nodist_orc_adder_SOURCES = orc/adder.c
+orc_audiomixer_CFLAGS = $(ORC_CFLAGS)
+orc_audiomixer_LDADD = $(ORC_LIBS) -lorc-test-0.4
+nodist_orc_audiomixer_SOURCES = orc/audiomixer.c
 orc_volume_CFLAGS = $(ORC_CFLAGS)
 orc_volume_LDADD = $(ORC_LIBS) -lorc-test-0.4
 nodist_orc_volume_SOURCES = orc/volume.c
@@ -726,6 +889,10 @@ orc/video.c: $(top_srcdir)/gst-libs/gst/video/video-orc.orc
 
 orc/audio.c: $(top_srcdir)/gst-libs/gst/audio/gstaudiopack.orc
 	$(MKDIR_P) orc/
+	$(ORCC) --test -o $@ $<
+
+orc/audiomixer.c: $(top_srcdir)/gst/audiomixer/gstaudiomixerorc.orc
+	$(MKDIR_P) orc
 	$(ORCC) --test -o $@ $<
 
 orc/adder.c: $(top_srcdir)/gst/adder/gstadderorc.orc

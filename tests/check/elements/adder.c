@@ -28,8 +28,6 @@
 # include <valgrind/valgrind.h>
 #endif
 
-#include <unistd.h>
-
 #include <gst/check/gstcheck.h>
 #include <gst/check/gstconsistencychecker.h>
 #include <gst/base/gstbasesrc.h>
@@ -117,6 +115,7 @@ play_and_wait (GstElement * pipeline)
   state_res = gst_element_set_state (pipeline, GST_STATE_PLAYING);
   ck_assert_int_ne (state_res, GST_STATE_CHANGE_FAILURE);
 
+  GST_INFO ("running main loop");
   g_main_loop_run (main_loop);
 
   state_res = gst_element_set_state (pipeline, GST_STATE_NULL);
@@ -159,6 +158,16 @@ message_received (GstBus * bus, GstMessage * message, GstPipeline * bin)
   }
 }
 
+static GstBuffer *
+new_buffer (gsize num_bytes, GstClockTime ts, GstClockTime dur)
+{
+  GstBuffer *buffer = gst_buffer_new_and_alloc (num_bytes);
+
+  GST_BUFFER_TIMESTAMP (buffer) = ts;
+  GST_BUFFER_DURATION (buffer) = dur;
+  GST_DEBUG ("created buffer %p", buffer);
+  return buffer;
+}
 
 /* make sure downstream gets a CAPS event before buffers are sent */
 GST_START_TEST (test_caps)
@@ -244,7 +253,6 @@ GST_START_TEST (test_event)
   GstElement *bin, *src1, *src2, *adder, *sink;
   GstBus *bus;
   GstEvent *seek_event;
-  GstStateChangeReturn state_res;
   gboolean res;
   GstPad *srcpad, *sinkpad;
   GstStreamConsistency *chk_1, *chk_2, *chk_3;
@@ -313,14 +321,7 @@ GST_START_TEST (test_event)
   fail_unless (res == TRUE, NULL);
 
   /* run pipeline */
-  state_res = gst_element_set_state (bin, GST_STATE_PLAYING);
-  ck_assert_int_ne (state_res, GST_STATE_CHANGE_FAILURE);
-
-  GST_INFO ("running main loop");
-  g_main_loop_run (main_loop);
-
-  state_res = gst_element_set_state (bin, GST_STATE_NULL);
-  ck_assert_int_ne (state_res, GST_STATE_CHANGE_FAILURE);
+  play_and_wait (bin);
 
   ck_assert_int_eq (position, 2 * GST_SECOND);
 
@@ -550,6 +551,9 @@ GST_START_TEST (test_live_seeking)
     "pulseaudiosrc"
   };
 
+  GST_INFO ("preparing test");
+  play_seek_event = NULL;
+
   /* build pipeline */
   bin = gst_pipeline_new ("pipeline");
   bus = gst_element_get_bus (bin);
@@ -621,7 +625,8 @@ GST_START_TEST (test_live_seeking)
   /* cleanup */
   GST_INFO ("cleaning up");
   gst_consistency_checker_free (consist);
-  gst_event_unref (play_seek_event);
+  if (play_seek_event)
+    gst_event_unref (play_seek_event);
   gst_bus_remove_signal_watch (bus);
   gst_object_unref (bus);
   gst_object_unref (bin);
@@ -646,12 +651,10 @@ GST_START_TEST (test_add_pad)
   gst_bus_add_signal_watch_full (bus, G_PRIORITY_HIGH);
 
   src1 = gst_element_factory_make ("audiotestsrc", "src1");
-  g_object_set (src1, "num-buffers", 4, NULL);
-  g_object_set (src1, "wave", 4, NULL); /* silence */
+  g_object_set (src1, "num-buffers", 4, "wave", /* silence */ 4, NULL);
   src2 = gst_element_factory_make ("audiotestsrc", "src2");
   /* one buffer less, we connect with 1 buffer of delay */
-  g_object_set (src2, "num-buffers", 3, NULL);
-  g_object_set (src2, "wave", 4, NULL); /* silence */
+  g_object_set (src2, "num-buffers", 3, "wave", /* silence */ 4, NULL);
   adder = gst_element_factory_make ("adder", "adder");
   sink = gst_element_factory_make ("fakesink", "sink");
   gst_bin_add_many (GST_BIN (bin), src1, adder, sink, NULL);
@@ -714,8 +717,7 @@ GST_START_TEST (test_remove_pad)
   gst_bus_add_signal_watch_full (bus, G_PRIORITY_HIGH);
 
   src = gst_element_factory_make ("audiotestsrc", "src");
-  g_object_set (src, "num-buffers", 4, NULL);
-  g_object_set (src, "wave", 4, NULL);
+  g_object_set (src, "num-buffers", 4, "wave", 4, NULL);
   adder = gst_element_factory_make ("adder", "adder");
   sink = gst_element_factory_make ("fakesink", "sink");
   gst_bin_add_many (GST_BIN (bin), src, adder, sink, NULL);
@@ -848,39 +850,27 @@ GST_START_TEST (test_clip)
   gst_pad_send_event (sinkpad, event);
 
   /* should be clipped and ok */
-  buffer = gst_buffer_new_and_alloc (44100);
-  GST_BUFFER_TIMESTAMP (buffer) = 0;
-  GST_BUFFER_DURATION (buffer) = 250 * GST_MSECOND;
-  GST_DEBUG ("pushing buffer %p", buffer);
+  buffer = new_buffer (44100, 0, 250 * GST_MSECOND);
   ret = gst_pad_chain (sinkpad, buffer);
   ck_assert_int_eq (ret, GST_FLOW_OK);
   fail_unless (handoff_buffer == NULL);
 
   /* should be partially clipped */
-  buffer = gst_buffer_new_and_alloc (44100);
-  GST_BUFFER_TIMESTAMP (buffer) = 900 * GST_MSECOND;
-  GST_BUFFER_DURATION (buffer) = 250 * GST_MSECOND;
-  GST_DEBUG ("pushing buffer %p", buffer);
+  buffer = new_buffer (44100, 900 * GST_MSECOND, 250 * GST_MSECOND);
   ret = gst_pad_chain (sinkpad, buffer);
   ck_assert_int_eq (ret, GST_FLOW_OK);
   fail_unless (handoff_buffer != NULL);
   gst_buffer_replace (&handoff_buffer, NULL);
 
   /* should not be clipped */
-  buffer = gst_buffer_new_and_alloc (44100);
-  GST_BUFFER_TIMESTAMP (buffer) = 1 * GST_SECOND;
-  GST_BUFFER_DURATION (buffer) = 250 * GST_MSECOND;
-  GST_DEBUG ("pushing buffer %p", buffer);
+  buffer = new_buffer (44100, 1 * GST_SECOND, 250 * GST_MSECOND);
   ret = gst_pad_chain (sinkpad, buffer);
   ck_assert_int_eq (ret, GST_FLOW_OK);
   fail_unless (handoff_buffer != NULL);
   gst_buffer_replace (&handoff_buffer, NULL);
 
   /* should be clipped and ok */
-  buffer = gst_buffer_new_and_alloc (44100);
-  GST_BUFFER_TIMESTAMP (buffer) = 2 * GST_SECOND;
-  GST_BUFFER_DURATION (buffer) = 250 * GST_MSECOND;
-  GST_DEBUG ("pushing buffer %p", buffer);
+  buffer = new_buffer (44100, 2 * GST_SECOND, 250 * GST_MSECOND);
   ret = gst_pad_chain (sinkpad, buffer);
   ck_assert_int_eq (ret, GST_FLOW_OK);
   fail_unless (handoff_buffer == NULL);

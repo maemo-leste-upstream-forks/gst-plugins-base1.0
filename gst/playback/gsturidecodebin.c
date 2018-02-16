@@ -455,8 +455,6 @@ gst_uri_decode_bin_class_init (GstURIDecodeBinClass * klass)
    * When download buffering is activated and used for the current media
    * type, this property does nothing. Otherwise perform buffering on the
    * demuxed or parsed media.
-   *
-   * Since: 0.10.26
    */
   g_object_class_install_property (gobject_class, PROP_USE_BUFFERING,
       g_param_spec_boolean ("use-buffering", "Use Buffering",
@@ -472,8 +470,6 @@ gst_uri_decode_bin_class_init (GstURIDecodeBinClass * klass)
    * caps (see 'caps' property) will have a pad exposed. Streams that do not
    * match those caps but could have been decoded will not have decoder plugged
    * in internally and will not have a pad exposed.
-   *
-   * Since: 0.10.30
    */
   g_object_class_install_property (gobject_class, PROP_EXPOSE_ALL_STREAMS,
       g_param_spec_boolean ("expose-all-streams", "Expose All Streams",
@@ -486,8 +482,6 @@ gst_uri_decode_bin_class_init (GstURIDecodeBinClass * klass)
    *
    * The maximum size of the ring buffer in kilobytes. If set to 0, the ring
    * buffer is disabled. Default is 0.
-   *
-   * Since: 0.10.31
    */
   g_object_class_install_property (gobject_class, PROP_RING_BUFFER_MAX_SIZE,
       g_param_spec_uint64 ("ring-buffer-max-size",
@@ -522,11 +516,11 @@ gst_uri_decode_bin_class_init (GstURIDecodeBinClass * klass)
    * emitted before looking for any elements that can handle that stream.
    *
    * >   Invocation of signal handlers stops after the first signal handler
-   * >   returns #FALSE. Signal handlers are invoked in the order they were
+   * >   returns %FALSE. Signal handlers are invoked in the order they were
    * >   connected in.
    *
-   * Returns: #TRUE if you wish uridecodebin to look for elements that can
-   * handle the given @caps. If #FALSE, those caps will be considered as
+   * Returns: %TRUE if you wish uridecodebin to look for elements that can
+   * handle the given @caps. If %FALSE, those caps will be considered as
    * final and the pad will be exposed as such (see 'pad-added' signal of
    * #GstElement).
    */
@@ -579,18 +573,16 @@ gst_uri_decode_bin_class_init (GstURIDecodeBinClass * klass)
    * the application to perform additional sorting or filtering on the element
    * factory array.
    *
-   * The callee should copy and modify @factories or return #NULL if the
+   * The callee should copy and modify @factories or return %NULL if the
    * order should not change.
    *
    * >   Invocation of signal handlers stops after one signal handler has
-   * >   returned something else than #NULL. Signal handlers are invoked in
+   * >   returned something else than %NULL. Signal handlers are invoked in
    * >   the order they were connected in.
    * >   Don't connect signal handlers with the #G_CONNECT_AFTER flag to this
    * >   signal, they will never be invoked!
    *
    * Returns: A new sorted array of #GstElementFactory objects.
-   *
-   * Since: 0.10.33
    */
   gst_uri_decode_bin_signals[SIGNAL_AUTOPLUG_SORT] =
       g_signal_new ("autoplug-sort", G_TYPE_FROM_CLASS (klass),
@@ -652,7 +644,7 @@ gst_uri_decode_bin_class_init (GstURIDecodeBinClass * klass)
    * be used to tell the element about the downstream supported caps
    * for example.
    *
-   * Returns: #TRUE if the query was handled, #FALSE otherwise.
+   * Returns: %TRUE if the query was handled, %FALSE otherwise.
    */
   gst_uri_decode_bin_signals[SIGNAL_AUTOPLUG_QUERY] =
       g_signal_new ("autoplug-query", G_TYPE_FROM_CLASS (klass),
@@ -682,8 +674,6 @@ gst_uri_decode_bin_class_init (GstURIDecodeBinClass * klass)
    * proxy server for an http source, or set the device and read speed for
    * an audio cd source). This is functionally equivalent to connecting to
    * the notify::source signal, but more convenient.
-   *
-   * Since: 0.10.33
    */
   gst_uri_decode_bin_signals[SIGNAL_SOURCE_SETUP] =
       g_signal_new ("source-setup", G_TYPE_FROM_CLASS (klass),
@@ -1640,6 +1630,11 @@ remove_decoders (GstURIDecodeBin * bin, gboolean force)
     GstElement *decoder = GST_ELEMENT_CAST (walk->data);
 
     GST_DEBUG_OBJECT (bin, "removing old decoder element");
+
+    /* Even if we reuse this decodebin, the previous topology will
+     * be irrelevant */
+    g_object_set_data (G_OBJECT (decoder), "uridecodebin-topology", NULL);
+
     if (force) {
       gst_element_set_state (decoder, GST_STATE_NULL);
       gst_bin_remove (GST_BIN_CAST (bin), decoder);
@@ -2392,6 +2387,54 @@ handle_redirect_message (GstURIDecodeBin * dec, GstMessage * msg)
   return new_msg;
 }
 
+static GstMessage *
+make_topology_message (GstURIDecodeBin * dec)
+{
+  GSList *tmp;
+  GstStructure *aggregated_topology = NULL;
+  GValue list = G_VALUE_INIT;
+  GstCaps *caps = NULL;
+  gchar *name, *proto;
+
+  aggregated_topology = gst_structure_new_empty ("stream-topology");
+  g_value_init (&list, GST_TYPE_LIST);
+
+  for (tmp = dec->decodebins; tmp; tmp = tmp->next) {
+    GValue item = G_VALUE_INIT;
+    GstStructure *dec_topology =
+        g_object_get_data (G_OBJECT (tmp->data), "uridecodebin-topology");
+
+    g_value_init (&item, GST_TYPE_STRUCTURE);
+    gst_value_set_structure (&item, dec_topology);
+    gst_value_list_append_and_take_value (&list, &item);
+  }
+
+  gst_structure_take_value (aggregated_topology, "next", &list);
+
+  /* This is a bit wacky, but that's the best way I can find to express
+   * uridecodebin 'caps' as subsequently shown by gst-discoverer */
+  proto = gst_uri_get_protocol (dec->uri);
+  name = g_strdup_printf ("application/%s", proto);
+  g_free (proto);
+
+  caps = gst_caps_new_empty_simple (name);
+  g_free (name);
+
+  gst_structure_set (aggregated_topology, "caps", GST_TYPE_CAPS, caps, NULL);
+  gst_caps_unref (caps);
+
+  return gst_message_new_element (GST_OBJECT (dec), aggregated_topology);
+}
+
+static void
+check_topology (gpointer data, gpointer user_data)
+{
+  gboolean *has_topo = user_data;
+
+  if (g_object_get_data (data, "uridecodebin-topology") == NULL)
+    *has_topo = FALSE;
+}
+
 static void
 handle_message (GstBin * bin, GstMessage * msg)
 {
@@ -2399,7 +2442,32 @@ handle_message (GstBin * bin, GstMessage * msg)
 
   switch (GST_MESSAGE_TYPE (msg)) {
     case GST_MESSAGE_ELEMENT:{
-      if (gst_message_has_name (msg, "redirect")) {
+
+      if (gst_message_has_name (msg, "stream-topology")) {
+        GstElement *element = GST_ELEMENT (GST_MESSAGE_SRC (msg));
+        gboolean has_all_topo = TRUE;
+
+        if (dec->pending || (dec->decodebins && dec->decodebins->next != NULL)) {
+          const GstStructure *structure;
+
+          /* If there is only one, just let it through, so this case is if
+           * there is more than one.
+           */
+
+          structure = gst_message_get_structure (msg);
+
+          g_object_set_data_full (G_OBJECT (element), "uridecodebin-topology",
+              gst_structure_copy (structure),
+              (GDestroyNotify) gst_structure_free);
+
+          gst_message_unref (msg);
+          msg = NULL;
+
+          g_slist_foreach (dec->decodebins, check_topology, &has_all_topo);
+          if (has_all_topo)
+            msg = make_topology_message (dec);
+        }
+      } else if (gst_message_has_name (msg, "redirect")) {
         /* sort redirect messages based on the connection speed. This simplifies
          * the user of this element as it can in most cases just pick the first item
          * of the sorted list as a good redirection candidate. It can of course

@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-audio.html" title="Audio Library">
 <link rel="prev" href="gstreamer-audio.html" title="Audio Library">
 <link rel="next" href="gst-plugins-base-libs-GstAudioDownmixMeta.html" title="GstAudioDownmixMeta">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -455,6 +455,110 @@
 <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-resampler-update" title="gst_audio_resampler_update ()">gst_audio_resampler_update</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-new" title="gst_audio_stream_align_new ()">gst_audio_stream_align_new</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-copy" title="gst_audio_stream_align_copy ()">gst_audio_stream_align_copy</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-free" title="gst_audio_stream_align_free ()">gst_audio_stream_align_free</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-mark-discont" title="gst_audio_stream_align_mark_discont ()">gst_audio_stream_align_mark_discont</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-process" title="gst_audio_stream_align_process ()">gst_audio_stream_align_process</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-get-samples-since-discont" title="gst_audio_stream_align_get_samples_since_discont ()">gst_audio_stream_align_get_samples_since_discont</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-get-timestamp-at-discont" title="gst_audio_stream_align_get_timestamp_at_discont ()">gst_audio_stream_align_get_timestamp_at_discont</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-get-alignment-threshold" title="gst_audio_stream_align_get_alignment_threshold ()">gst_audio_stream_align_get_alignment_threshold</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-set-alignment-threshold" title="gst_audio_stream_align_set_alignment_threshold ()">gst_audio_stream_align_set_alignment_threshold</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-get-discont-wait" title="gst_audio_stream_align_get_discont_wait ()">gst_audio_stream_align_get_discont_wait</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-set-discont-wait" title="gst_audio_stream_align_set_discont_wait ()">gst_audio_stream_align_set_discont_wait</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-get-rate" title="gst_audio_stream_align_get_rate ()">gst_audio_stream_align_get_rate</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-set-rate" title="gst_audio_stream_align_set_rate ()">gst_audio_stream_align_set_rate</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -605,6 +709,10 @@
 <tr>
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GST-AUDIO-RESAMPLER-QUALITY-MIN:CAPS" title="GST_AUDIO_RESAMPLER_QUALITY_MIN">GST_AUDIO_RESAMPLER_QUALITY_MIN</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign">GstAudioStreamAlign</a></td>
 </tr>
 </tbody>
 </table></div>
@@ -1044,7 +1152,7 @@ gst_audio_info_is_equal (<em class="parameter"><code>const <a class="link" href=
 and <em class="parameter"><code>other</code></em>
 are equal, else <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1554,7 +1662,7 @@ gst_audio_resampler_free (<em class="parameter"><code><a class="link" href="gst-
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1926,6 +2034,315 @@ not be called concurrently with any other function on <em class="parameter"><cod
 <a name="gst-audio-resampler-update.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the new parameters could be set</p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-new"></a><h3>gst_audio_stream_align_new ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
+gst_audio_stream_align_new (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> rate</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> alignment_threshold</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> discont_wait</code></em>);</pre>
+<p>Allocate a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> with the given configuration. All
+processing happens according to sample rate <em class="parameter"><code>rate</code></em>
+, until
+<code class="function">gst_audio_discont_wait_set_rate()</code> is called with a new <em class="parameter"><code>rate</code></em>
+.
+A negative rate can be used for reverse playback.</p>
+<p><em class="parameter"><code>alignment_threshold</code></em>
+ gives the tolerance in nanoseconds after which a
+timestamp difference is considered a discontinuity. Once detected,
+<em class="parameter"><code>discont_wait</code></em>
+ nanoseconds have to pass without going below the threshold
+again until the output buffer is marked as a discontinuity. These can later
+be re-configured with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-set-alignment-threshold" title="gst_audio_stream_align_set_alignment_threshold ()"><code class="function">gst_audio_stream_align_set_alignment_threshold()</code></a> and
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-set-discont-wait" title="gst_audio_stream_align_set_discont_wait ()"><code class="function">gst_audio_stream_align_set_discont_wait()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-new.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>rate</p></td>
+<td class="parameter_description"><p>a sample rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>alignment_threshold</p></td>
+<td class="parameter_description"><p>a alignment threshold in nanoseconds</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>discont_wait</p></td>
+<td class="parameter_description"><p>discont wait in nanoseconds</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-stream-align-new.returns"></a><h4>Returns</h4>
+<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a>. free with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-free" title="gst_audio_stream_align_free ()"><code class="function">gst_audio_stream_align_free()</code></a>.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-copy"></a><h3>gst_audio_stream_align_copy ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
+gst_audio_stream_align_copy (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+<p>Copy a GstAudioStreamAlign structure.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-copy.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-stream-align-copy.returns"></a><h4>Returns</h4>
+<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a>. free with gst_audio_stream_align_free.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-free"></a><h3>gst_audio_stream_align_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_stream_align_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+<p>Free a GstAudioStreamAlign structure previously allocated with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-new" title="gst_audio_stream_align_new ()"><code class="function">gst_audio_stream_align_new()</code></a>
+or <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-copy" title="gst_audio_stream_align_copy ()"><code class="function">gst_audio_stream_align_copy()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-free.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-mark-discont"></a><h3>gst_audio_stream_align_mark_discont ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_stream_align_mark_discont (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+<p>Marks the next buffer as discontinuous and resets timestamp tracking.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-mark-discont.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-process"></a><h3>gst_audio_stream_align_process ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_audio_stream_align_process (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> discont</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_samples</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> *out_timestamp</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> *out_duration</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a> *out_sample_position</code></em>);</pre>
+<p>Processes data with <em class="parameter"><code>timestamp</code></em>
+ and <em class="parameter"><code>n_samples</code></em>
+, and returns the output
+timestamp, duration and sample position together with a boolean to signal
+whether a discontinuity was detected or not. All non-discontinuous data
+will have perfect timestamps and durations.</p>
+<p>A discontinuity is detected once the difference between the actual
+timestamp and the timestamp calculated from the sample count since the last
+discontinuity differs by more than the alignment threshold for a duration
+longer than discont wait.</p>
+<p>Note: In reverse playback, every buffer is considered discontinuous in the
+context of buffer flags because the last sample of the previous buffer is
+discontinuous with the first sample of the current one. However for this
+function they are only considered discontinuous in reverse playback if the
+first sample of the previous buffer is discontinuous with the last sample
+of the current one.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-process.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>discont</p></td>
+<td class="parameter_description"><p>if this data is considered to be discontinuous</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timestamp</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> of the start of the data</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>n_samples</p></td>
+<td class="parameter_description"><p>number of samples to process</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_timestamp</p></td>
+<td class="parameter_description"><p>output timestamp of the data. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_duration</p></td>
+<td class="parameter_description"><p>output duration of the data. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>out_sample_position</p></td>
+<td class="parameter_description"><p>output sample position of the start of the data. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-stream-align-process.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a discontinuity was detected, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-get-samples-since-discont"></a><h3>gst_audio_stream_align_get_samples_since_discont ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+gst_audio_stream_align_get_samples_since_discont
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+<p>Returns the number of samples that were processed since the last
+discontinuity was detected.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-samples-since-discont.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-samples-since-discont.returns"></a><h4>Returns</h4>
+<p> The number of samples processed since the last discontinuity.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-get-timestamp-at-discont"></a><h3>gst_audio_stream_align_get_timestamp_at_discont ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+gst_audio_stream_align_get_timestamp_at_discont
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+<p>Timestamp that was passed when a discontinuity was detected, i.e. the first
+timestamp after the discontinuity.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-timestamp-at-discont.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-timestamp-at-discont.returns"></a><h4>Returns</h4>
+<p> The last timestamp at when a discontinuity was detected</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-get-alignment-threshold"></a><h3>gst_audio_stream_align_get_alignment_threshold ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+gst_audio_stream_align_get_alignment_threshold
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-set-alignment-threshold"></a><h3>gst_audio_stream_align_set_alignment_threshold ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_stream_align_set_alignment_threshold
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> alignment_threshold</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-get-discont-wait"></a><h3>gst_audio_stream_align_get_discont_wait ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
+gst_audio_stream_align_get_discont_wait
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-set-discont-wait"></a><h3>gst_audio_stream_align_set_discont_wait ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_stream_align_set_discont_wait
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> discont_wait</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-get-rate"></a><h3>gst_audio_stream_align_get_rate ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+gst_audio_stream_align_get_rate (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-stream-align-set-rate"></a><h3>gst_audio_stream_align_set_rate ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_stream_align_set_rate (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
+                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> rate</code></em>);</pre>
 </div>
 </div>
 <div class="refsect1">
@@ -2580,7 +2997,7 @@ sample * <em class="parameter"><code>channels</code></em>
 <pre class="programlisting">#define GST_META_TAG_AUDIO_STR "audio"
 </pre>
 <p>This metadata is relevant for audio streams.</p>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2588,7 +3005,7 @@ sample * <em class="parameter"><code>channels</code></em>
 <pre class="programlisting">#define GST_META_TAG_AUDIO_CHANNELS_STR "channels"
 </pre>
 <p>This metadata stays relevant as long as channels are unchanged.</p>
-<p class="since">Since: 1.2</p>
+<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2596,7 +3013,7 @@ sample * <em class="parameter"><code>channels</code></em>
 <pre class="programlisting">#define GST_META_TAG_AUDIO_RATE_STR "rate"
 </pre>
 <p>This metadata stays relevant as long as sample rate is unchanged.</p>
-<p class="since">Since: 1.8</p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2889,7 +3306,7 @@ sample * <em class="parameter"><code>channels</code></em>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3006,9 +3423,14 @@ transition band for the kaiser window. 0.087 is the default.</p>
 <pre class="programlisting">#define GST_AUDIO_RESAMPLER_QUALITY_MIN 0
 </pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioStreamAlign"></a><h3>GstAudioStreamAlign</h3>
+<pre class="programlisting">typedef struct _GstAudioStreamAlign GstAudioStreamAlign;</pre>
+</div>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>
