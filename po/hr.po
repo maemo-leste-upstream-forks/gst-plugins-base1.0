@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base-1.10.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2017-12-07 19:18+0200\n"
+"POT-Creation-Date: 2018-02-15 17:01+0000\n"
 "PO-Revision-Date: 2016-11-19 10:06-0800\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
@@ -75,6 +75,15 @@ msgstr "CD nije moguće pretraživati."
 msgid "Could not read CD."
 msgstr "CD nije moguće čitati."
 
+msgid "failed to draw pattern"
+msgstr ""
+
+msgid "A GL error occurred"
+msgstr ""
+
+msgid "format wasn't negotiated before get function"
+msgstr ""
+
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr "Nedostaje element ‘%s’ - provjerite vašu GStreamer instalaciju."
@@ -88,11 +97,9 @@ msgstr "Ovo izgleda kao tekstualna datoteka"
 msgid "Could not create \"uridecodebin\" element."
 msgstr "Element „uridecodebin“ nije moguće napraviti (kreirati)."
 
-msgid "Could not create \"decodebin3\" element."
-msgstr "Element „decodebin3“ nije moguće napraviti (kreirati)."
-
-msgid "Could not create \"urisourcebin\" element."
-msgstr "Element „urisourcebin“ nije moguće napraviti (kreirati)."
+#, fuzzy
+msgid "Could not create \"uridecodebin3\" element."
+msgstr "Element „uridecodebin“ nije moguće napraviti (kreirati)."
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
@@ -665,6 +672,12 @@ msgstr ""
 msgid "Do not print any output (apart from errors)"
 msgstr "Ne ispisuj nikakve izlazne informacije (osim greški)"
 
+msgid "Use playbin3 pipeline"
+msgstr ""
+
+msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
+msgstr ""
+
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."
 msgstr "Uporaba: %s DATOTEKA1|URI1 [DATOTEKA2|URI2] [DATOTEKA3|URI3] ..."
@@ -674,6 +687,12 @@ msgstr "Morate navesti barem jednu datoteku ili URI adresu za reprodukciju."
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr "Pritisnite ‘k’ da pogledate listu tipkovničkih prečaca.\n"
+
+#~ msgid "Could not create \"decodebin3\" element."
+#~ msgstr "Element „decodebin3“ nije moguće napraviti (kreirati)."
+
+#~ msgid "Could not create \"urisourcebin\" element."
+#~ msgstr "Element „urisourcebin“ nije moguće napraviti (kreirati)."
 
 #~ msgid "Internal data stream error."
 #~ msgstr "Interna greška toka (stream) podataka."

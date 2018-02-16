@@ -75,6 +75,7 @@ typedef struct
   GstTagList *tags;
   GstToc *toc;
   gchar *stream_id;
+  gulong probe_id;
 } PrivateStream;
 
 struct _GstDiscovererPrivate
@@ -88,15 +89,14 @@ struct _GstDiscovererPrivate
   GList *pending_uris;
 
   GMutex lock;
+  /* TRUE if cleaning up discoverer */
+  gboolean cleanup;
 
   /* TRUE if processing a URI */
   gboolean processing;
 
   /* TRUE if discoverer has been started */
   gboolean running;
-
-  /* TRUE if ASYNC_DONE has been received (need to check for subtitle tags) */
-  gboolean async_done;
 
   /* current items */
   GstDiscovererInfo *current_info;
@@ -108,6 +108,12 @@ struct _GstDiscovererPrivate
 
   /* List of these sinks and their handler IDs (to remove the probe) */
   guint pending_subtitle_pads;
+
+  /* Whether we received no_more_pads */
+  gboolean no_more_pads;
+
+  GstState target_state;
+  GstState current_state;
 
   /* Global elements */
   GstBin *pipeline;
@@ -127,6 +133,7 @@ struct _GstDiscovererPrivate
   /* Handler ids for various callbacks */
   gulong pad_added_id;
   gulong pad_remove_id;
+  gulong no_more_pads_id;
   gulong source_chg_id;
   gulong element_added_id;
   gulong bus_cb_id;
@@ -182,6 +189,8 @@ static void uridecodebin_pad_added_cb (GstElement * uridecodebin, GstPad * pad,
     GstDiscoverer * dc);
 static void uridecodebin_pad_removed_cb (GstElement * uridecodebin,
     GstPad * pad, GstDiscoverer * dc);
+static void uridecodebin_no_more_pads_cb (GstElement * uridecodebin,
+    GstDiscoverer * dc);
 static void uridecodebin_source_changed_cb (GstElement * uridecodebin,
     GParamSpec * pspec, GstDiscoverer * dc);
 
@@ -307,11 +316,14 @@ gst_discoverer_init (GstDiscoverer * dc)
 
   dc->priv->timeout = DEFAULT_PROP_TIMEOUT;
   dc->priv->async = FALSE;
-  dc->priv->async_done = FALSE;
 
   g_mutex_init (&dc->priv->lock);
 
   dc->priv->pending_subtitle_pads = 0;
+
+  dc->priv->current_state = GST_STATE_NULL;
+  dc->priv->target_state = GST_STATE_NULL;
+  dc->priv->no_more_pads = FALSE;
 
   GST_LOG ("Creating pipeline");
   dc->priv->pipeline = (GstBin *) gst_pipeline_new ("Discoverer");
@@ -331,6 +343,9 @@ gst_discoverer_init (GstDiscoverer * dc)
   dc->priv->pad_remove_id =
       g_signal_connect_object (dc->priv->uridecodebin, "pad-removed",
       G_CALLBACK (uridecodebin_pad_removed_cb), dc, 0);
+  dc->priv->no_more_pads_id =
+      g_signal_connect_object (dc->priv->uridecodebin, "no-more-pads",
+      G_CALLBACK (uridecodebin_no_more_pads_cb), dc, 0);
   dc->priv->source_chg_id =
       g_signal_connect_object (dc->priv->uridecodebin, "notify::source",
       G_CALLBACK (uridecodebin_source_changed_cb), dc, 0);
@@ -392,6 +407,7 @@ gst_discoverer_dispose (GObject * obj)
     /* Workaround for bug #118536 */
     DISCONNECT_SIGNAL (dc->priv->uridecodebin, dc->priv->pad_added_id);
     DISCONNECT_SIGNAL (dc->priv->uridecodebin, dc->priv->pad_remove_id);
+    DISCONNECT_SIGNAL (dc->priv->uridecodebin, dc->priv->no_more_pads_id);
     DISCONNECT_SIGNAL (dc->priv->uridecodebin, dc->priv->source_chg_id);
     DISCONNECT_SIGNAL (dc->priv->uridecodebin, dc->priv->element_added_id);
     DISCONNECT_SIGNAL (dc->priv->bus, dc->priv->bus_cb_id);
@@ -551,6 +567,7 @@ is_subtitle_caps (const GstCaps * caps)
 static GstPadProbeReturn
 got_subtitle_data (GstPad * pad, GstPadProbeInfo * info, GstDiscoverer * dc)
 {
+  GstMessage *msg;
 
   if (!(GST_IS_BUFFER (info->data) || (GST_IS_EVENT (info->data)
               && (GST_EVENT_TYPE ((GstEvent *) info->data) == GST_EVENT_GAP
@@ -563,11 +580,10 @@ got_subtitle_data (GstPad * pad, GstPadProbeInfo * info, GstDiscoverer * dc)
 
   dc->priv->pending_subtitle_pads--;
 
-  if (dc->priv->pending_subtitle_pads == 0) {
-    GstMessage *msg = gst_message_new_application (NULL,
-        gst_structure_new_empty ("DiscovererDone"));
-    gst_element_post_message ((GstElement *) dc->priv->pipeline, msg);
-  }
+  msg = gst_message_new_application (NULL,
+      gst_structure_new_empty ("DiscovererDone"));
+  gst_element_post_message ((GstElement *) dc->priv->pipeline, msg);
+
   DISCO_UNLOCK (dc);
 
   return GST_PAD_PROBE_REMOVE;
@@ -595,15 +611,34 @@ uridecodebin_pad_added_cb (GstElement * uridecodebin, GstPad * pad,
   PrivateStream *ps;
   GstPad *sinkpad = NULL;
   GstCaps *caps;
+  gchar *padname;
+  gchar *tmpname;
 
   GST_DEBUG_OBJECT (dc, "pad %s:%s", GST_DEBUG_PAD_NAME (pad));
 
+  DISCO_LOCK (dc);
+  if (dc->priv->cleanup) {
+    GST_WARNING_OBJECT (dc, "Cleanup, not adding pad");
+    DISCO_UNLOCK (dc);
+    return;
+  }
+  if (dc->priv->current_error) {
+    GST_WARNING_OBJECT (dc, "Ongoing error, not adding more pads");
+    DISCO_UNLOCK (dc);
+    return;
+  }
   ps = g_slice_new0 (PrivateStream);
 
   ps->dc = dc;
   ps->pad = pad;
-  ps->queue = gst_element_factory_make ("queue", NULL);
-  ps->sink = gst_element_factory_make ("fakesink", NULL);
+  padname = gst_pad_get_name (pad);
+  tmpname = g_strdup_printf ("discoverer-queue-%s", padname);
+  ps->queue = gst_element_factory_make ("queue", tmpname);
+  g_free (tmpname);
+  tmpname = g_strdup_printf ("discoverer-sink-%s", padname);
+  ps->sink = gst_element_factory_make ("fakesink", tmpname);
+  g_free (tmpname);
+  g_free (padname);
 
   if (G_UNLIKELY (ps->queue == NULL || ps->sink == NULL))
     goto error;
@@ -620,12 +655,11 @@ uridecodebin_pad_added_cb (GstElement * uridecodebin, GstPad * pad,
   if (is_subtitle_caps (caps)) {
     /* Subtitle streams are sparse and may not provide any information - don't
      * wait for data to preroll */
-    gst_pad_add_probe (sinkpad, GST_PAD_PROBE_TYPE_DATA_DOWNSTREAM,
+    ps->probe_id =
+        gst_pad_add_probe (sinkpad, GST_PAD_PROBE_TYPE_DATA_DOWNSTREAM,
         (GstPadProbeCallback) got_subtitle_data, dc, NULL);
     g_object_set (ps->sink, "async", FALSE, NULL);
-    DISCO_LOCK (dc);
     dc->priv->pending_subtitle_pads++;
-    DISCO_UNLOCK (dc);
   }
 
   gst_caps_unref (caps);
@@ -649,7 +683,6 @@ uridecodebin_pad_added_cb (GstElement * uridecodebin, GstPad * pad,
   gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_EVENT_DOWNSTREAM,
       (GstPadProbeCallback) _event_probe, ps, NULL);
 
-  DISCO_LOCK (dc);
   dc->priv->streams = g_list_append (dc->priv->streams, ps);
   DISCO_UNLOCK (dc);
 
@@ -666,7 +699,20 @@ error:
   if (ps->sink)
     gst_object_unref (ps->sink);
   g_slice_free (PrivateStream, ps);
+  DISCO_UNLOCK (dc);
   return;
+}
+
+static void
+uridecodebin_no_more_pads_cb (GstElement * uridecodebin, GstDiscoverer * dc)
+{
+  GstMessage *msg = gst_message_new_application (NULL,
+      gst_structure_new_empty ("DiscovererDone"));
+
+  DISCO_LOCK (dc);
+  dc->priv->no_more_pads = TRUE;
+  gst_element_post_message ((GstElement *) dc->priv->pipeline, msg);
+  DISCO_UNLOCK (dc);
 }
 
 static void
@@ -693,8 +739,10 @@ uridecodebin_pad_removed_cb (GstElement * uridecodebin, GstPad * pad,
     return;
   }
 
+  if (ps->probe_id)
+    gst_pad_remove_probe (pad, ps->probe_id);
+
   dc->priv->streams = g_list_delete_link (dc->priv->streams, tmp);
-  DISCO_UNLOCK (dc);
 
   gst_element_set_state (ps->sink, GST_STATE_NULL);
   gst_element_set_state (ps->queue, GST_STATE_NULL);
@@ -707,6 +755,7 @@ uridecodebin_pad_removed_cb (GstElement * uridecodebin, GstPad * pad,
   /* references removed here */
   gst_bin_remove_many (dc->priv->pipeline, ps->sink, ps->queue, NULL);
 
+  DISCO_UNLOCK (dc);
   if (ps->tags) {
     gst_tag_list_unref (ps->tags);
   }
@@ -843,6 +892,7 @@ collect_information (GstDiscoverer * dc, const GstStructure * st,
   if (g_str_has_prefix (name, "audio/")) {
     GstDiscovererAudioInfo *info;
     const gchar *format_str;
+    guint64 channel_mask;
 
     info = (GstDiscovererAudioInfo *) make_info (parent,
         GST_TYPE_DISCOVERER_AUDIO_INFO, caps);
@@ -852,6 +902,13 @@ collect_information (GstDiscoverer * dc, const GstStructure * st,
 
     if (gst_structure_get_int (caps_st, "channels", &tmp))
       info->channels = (guint) tmp;
+
+    if (gst_structure_get (caps_st, "channel-mask", GST_TYPE_BITMASK,
+            &channel_mask, NULL)) {
+      info->channel_mask = channel_mask;
+    } else if (info->channels) {
+      info->channel_mask = gst_audio_channel_get_fallback_mask (info->channels);
+    }
 
     /* FIXME: we only want to extract depth if raw audio is what's in the
      * container (i.e. not if there is a decoder involved) */
@@ -1035,6 +1092,8 @@ find_stream_for_node (GstDiscoverer * dc, const GstStructure * topology)
     ps = (PrivateStream *) tmp->data;
 
     target_pad = gst_ghost_pad_get_target (GST_GHOST_PAD (ps->pad));
+    if (target_pad == NULL)
+      continue;
     gst_object_unref (target_pad);
 
     if (target_pad == pad)
@@ -1269,8 +1328,10 @@ discoverer_collect (GstDiscoverer * dc)
       if (gst_element_query_duration (pipeline, GST_FORMAT_TIME, &dur)) {
         GST_DEBUG ("Got duration %" GST_TIME_FORMAT, GST_TIME_ARGS (dur));
         dc->priv->current_info->duration = (guint64) dur;
-      } else {
+      } else if (dc->priv->current_info->result != GST_DISCOVERER_ERROR) {
         GstStateChangeReturn sret;
+        /* Note: We don't switch to PLAYING if we previously saw an ERROR since
+         * the state of various element isn't guaranteed anymore */
 
         /* Some parsers may not even return a rough estimate right away, e.g.
          * because they've only processed a single frame so far, so if we
@@ -1279,7 +1340,10 @@ discoverer_collect (GstDiscoverer * dc)
          * completely bogus values. We need some API extensions to solve this
          * better. */
         GST_INFO ("No duration yet, try a bit harder..");
+        /* Make sure we don't add/remove elements while switching to PLAYING itself */
+        DISCO_LOCK (dc);
         sret = gst_element_set_state (pipeline, GST_STATE_PLAYING);
+        DISCO_UNLOCK (dc);
         if (sret != GST_STATE_CHANGE_FAILURE) {
           int i;
 
@@ -1310,6 +1374,11 @@ discoverer_collect (GstDiscoverer * dc)
         }
       }
     }
+
+    if (dc->priv->target_state == GST_STATE_PAUSED)
+      dc->priv->current_info->live = FALSE;
+    else
+      dc->priv->current_info->live = TRUE;
 
     if (dc->priv->current_topology)
       dc->priv->current_info->stream_info = parse_stream_topology (dc,
@@ -1439,34 +1508,45 @@ handle_message (GstDiscoverer * dc, GstMessage * msg)
       break;
 
     case GST_MESSAGE_APPLICATION:{
-      const gchar *name;
-      gboolean async_done;
-      name = gst_structure_get_name (gst_message_get_structure (msg));
-      /* Maybe ASYNC_DONE is received & we're just waiting for subtitle tags */
+      const gchar *name =
+          gst_structure_get_name (gst_message_get_structure (msg));
+
+      if (g_strcmp0 (name, "DiscovererDone"))
+        break;
+
+      /* Maybe we already reached the target state, and all we're waiting for
+       * is either the subtitle tags or no_more_pads
+       */
       DISCO_LOCK (dc);
-      async_done = dc->priv->async_done;
+      if (dc->priv->pending_subtitle_pads == 0)
+        done = dc->priv->no_more_pads
+            && dc->priv->target_state == dc->priv->current_state;
       DISCO_UNLOCK (dc);
-      if (g_str_equal (name, "DiscovererDone") && async_done) {
-        done = TRUE;
-        dump_name = "gst-discoverer-async-done-subtitle";
-      }
-      break;
+
+      if (done)
+        dump_name = "gst-discoverer-application-message";
     }
+      break;
 
-    case GST_MESSAGE_ASYNC_DONE:
+    case GST_MESSAGE_STATE_CHANGED:{
+      GstState old, new, pending;
+
+      gst_message_parse_state_changed (msg, &old, &new, &pending);
       if (GST_MESSAGE_SRC (msg) == (GstObject *) dc->priv->pipeline) {
-        GST_DEBUG ("Finished changing state asynchronously");
         DISCO_LOCK (dc);
-        if (dc->priv->pending_subtitle_pads == 0) {
-          done = TRUE;
-          dump_name = "gst-discoverer-async-done";
-        } else {
-          /* Remember that ASYNC_DONE has been received, wait for subtitles */
-          dc->priv->async_done = TRUE;
-        }
-        DISCO_UNLOCK (dc);
+        dc->priv->current_state = new;
 
+        if (dc->priv->pending_subtitle_pads == 0)
+          done = dc->priv->no_more_pads
+              && dc->priv->target_state == dc->priv->current_state;
+        /* Else we should get unblocked in GST_MESSAGE_APPLICATION */
+
+        DISCO_UNLOCK (dc);
       }
+
+      if (done)
+        dump_name = "gst-discoverer-target-state";
+    }
       break;
 
     case GST_MESSAGE_ELEMENT:
@@ -1602,19 +1682,24 @@ _setup_locked (GstDiscoverer * dc)
 
   dc->priv->processing = TRUE;
 
+  dc->priv->target_state = GST_STATE_PAUSED;
+
   /* set pipeline to PAUSED */
   DISCO_UNLOCK (dc);
   GST_DEBUG ("Setting pipeline to PAUSED");
   ret =
       gst_element_set_state ((GstElement *) dc->priv->pipeline,
-      GST_STATE_PAUSED);
+      dc->priv->target_state);
+
   if (ret == GST_STATE_CHANGE_NO_PREROLL) {
     GST_DEBUG ("Source is live, switching to PLAYING");
+    dc->priv->target_state = GST_STATE_PLAYING;
     ret =
         gst_element_set_state ((GstElement *) dc->priv->pipeline,
-        GST_STATE_PLAYING);
+        dc->priv->target_state);
   }
   DISCO_LOCK (dc);
+
 
   GST_DEBUG_OBJECT (dc, "Pipeline going to PAUSED : %s",
       gst_element_state_change_return_get_name (ret));
@@ -1624,6 +1709,10 @@ static void
 discoverer_cleanup (GstDiscoverer * dc)
 {
   GST_DEBUG ("Cleaning up");
+
+  DISCO_LOCK (dc);
+  dc->priv->cleanup = TRUE;
+  DISCO_UNLOCK (dc);
 
   gst_bus_set_flushing (dc->priv->bus, TRUE);
 
@@ -1649,7 +1738,12 @@ discoverer_cleanup (GstDiscoverer * dc)
   dc->priv->current_info = NULL;
 
   dc->priv->pending_subtitle_pads = 0;
-  dc->priv->async_done = FALSE;
+
+  dc->priv->current_state = GST_STATE_NULL;
+  dc->priv->target_state = GST_STATE_NULL;
+  dc->priv->no_more_pads = FALSE;
+  dc->priv->cleanup = FALSE;
+
 
   /* Try popping the next uri */
   if (dc->priv->async) {
@@ -1781,8 +1875,8 @@ _serialize_info (GstDiscovererInfo * info, GstDiscovererSerializeFlags flags)
     tags_str = gst_tag_list_to_string (info->tags);
 
   ret =
-      g_variant_new ("(mstbms)", info->uri, info->duration, info->seekable,
-      tags_str);
+      g_variant_new ("(mstbmsb)", info->uri, info->duration, info->seekable,
+      tags_str, info->live);
 
   g_free (tags_str);
 
@@ -1792,10 +1886,11 @@ _serialize_info (GstDiscovererInfo * info, GstDiscovererSerializeFlags flags)
 static GVariant *
 _serialize_audio_stream_info (GstDiscovererAudioInfo * ainfo)
 {
-  return g_variant_new ("(uuuuums)",
+  return g_variant_new ("(uuuuumst)",
       ainfo->channels,
       ainfo->sample_rate,
-      ainfo->bitrate, ainfo->max_bitrate, ainfo->depth, ainfo->language);
+      ainfo->bitrate, ainfo->max_bitrate, ainfo->depth, ainfo->language,
+      ainfo->channel_mask);
 }
 
 static GVariant *
@@ -1908,6 +2003,8 @@ _parse_info (GstDiscovererInfo * info, GVariant * info_variant)
   str = _maybe_get_string_from_tuple (info_variant, 3);
   if (str)
     info->tags = gst_tag_list_new_from_string (str);
+
+  GET_FROM_TUPLE (info_variant, boolean, 4, &info->live);
 }
 
 static void
@@ -1949,6 +2046,8 @@ _parse_audio_stream_info (GstDiscovererAudioInfo * ainfo, GVariant * specific)
 
   if (str)
     ainfo->language = g_strdup (str);
+
+  GET_FROM_TUPLE (specific, uint64, 6, &ainfo->channel_mask);
 
   g_variant_unref (specific);
 }

@@ -5,12 +5,14 @@ libgstallocators_@GST_API_VERSION@_includedir = $(includedir)/gstreamer-@GST_API
 libgstallocators_@GST_API_VERSION@_include_HEADERS = \
 	allocators.h \
 	gstfdmemory.h \
+	gstphysmemory.h \
 	gstdmabuf.h
 
 noinst_HEADERS =
 
 libgstallocators_@GST_API_VERSION@_la_SOURCES = \
 	gstfdmemory.c \
+	gstphysmemory.c \
 	gstdmabuf.c 
 
 libgstallocators_@GST_API_VERSION@_la_LIBADD = $(GST_LIBS) $(LIBM)
@@ -26,7 +28,7 @@ gir_cincludes=$(patsubst %,--c-include='gst/allocators/%',$(libgstallocators_@GS
 
 GstAllocators-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstallocators-@GST_API_VERSION@.la
 	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
-		GST_PLUGIN_SYSTEM_PATH="" GST_PLUGIN_PATH="" GST_REGISTRY_UPDATE=no \
+		GST_PLUGIN_SYSTEM_PATH="" GST_PLUGIN_PATH="" GST_REGISTRY_DISABLE=yes \
 		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
 		$(INTROSPECTION_SCANNER) -v --namespace GstAllocators \
 		--nsversion=@GST_API_VERSION@ \

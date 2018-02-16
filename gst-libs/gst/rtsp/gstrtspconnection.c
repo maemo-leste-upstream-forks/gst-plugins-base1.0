@@ -109,6 +109,7 @@ struct _GstRTSPConnection
   /*< private > */
   /* URL for the remote connection */
   GstRTSPUrl *url;
+  GstRTSPVersion version;
 
   gboolean server;
   GSocketClient *client;
@@ -159,6 +160,10 @@ struct _GstRTSPConnection
   /* TLS */
   GTlsDatabase *tls_database;
   GTlsInteraction *tls_interaction;
+
+  GstRTSPConnectionAcceptCertificateFunc accept_certificate_func;
+  GDestroyNotify accept_certificate_destroy_notify;
+  gpointer accept_certificate_user_data;
 
   DecodeCtx ctx;
   DecodeCtx *ctxp;
@@ -243,6 +248,14 @@ tls_accept_certificate (GTlsConnection * conn, GTlsCertificate * peer_cert,
       GST_DEBUG ("Peer certificate not accepted (errors: 0x%08X)", errors);
   }
 
+  if (!accept && rtspconn->accept_certificate_func) {
+    accept =
+        rtspconn->accept_certificate_func (conn, peer_cert, errors,
+        rtspconn->accept_certificate_user_data);
+    GST_DEBUG ("Peer certificate %saccepted by accept-certificate function",
+        accept ? "" : "not ");
+  }
+
   return accept;
 
 /* ERRORS */
@@ -314,6 +327,7 @@ gst_rtsp_connection_create (const GstRTSPUrl * url, GstRTSPConnection ** conn)
   newconn->username = NULL;
   newconn->passwd = NULL;
   newconn->auth_params = NULL;
+  newconn->version = 0;
 
   *conn = newconn;
 
@@ -685,6 +699,35 @@ gst_rtsp_connection_get_tls_interaction (GstRTSPConnection * conn)
   return result;
 }
 
+/**
+ * gst_rtsp_connection_set_accept_certificate_func:
+ * @conn: a #GstRTSPConnection
+ * @func: a #GstRTSPConnectionAcceptCertificateFunc to check certificates
+ * @destroy_notify: #GDestroyNotify for @user_data
+ * @user_data: User data passed to @func
+ *
+ * Sets a custom accept-certificate function for checking certificates for
+ * validity. This will directly map to #GTlsConnection 's "accept-certificate"
+ * signal and be performed after the default checks of #GstRTSPConnection
+ * (checking against the #GTlsDatabase with the given #GTlsCertificateFlags)
+ * have failed. If no #GTlsDatabase is set on this connection, only @func will
+ * be called.
+ *
+ * Since: 1.14
+ */
+void
+gst_rtsp_connection_set_accept_certificate_func (GstRTSPConnection * conn,
+    GstRTSPConnectionAcceptCertificateFunc func,
+    gpointer user_data, GDestroyNotify destroy_notify)
+{
+  if (conn->accept_certificate_destroy_notify)
+    conn->
+        accept_certificate_destroy_notify (conn->accept_certificate_user_data);
+  conn->accept_certificate_func = func;
+  conn->accept_certificate_user_data = user_data;
+  conn->accept_certificate_destroy_notify = destroy_notify;
+}
+
 static GstRTSPResult
 setup_tunneling (GstRTSPConnection * conn, GTimeVal * timeout, gchar * uri,
     GstRTSPMessage * response)
@@ -799,6 +842,8 @@ setup_tunneling (GstRTSPConnection * conn, GTimeVal * timeout, gchar * uri,
       conn->tunnelid);
   gst_rtsp_message_add_header (msg, GST_RTSP_HDR_ACCEPT,
       "application/x-rtsp-tunnelled");
+  gst_rtsp_message_add_header (msg, GST_RTSP_HDR_CONTENT_TYPE,
+      "application/x-rtsp-tunnelled");
   gst_rtsp_message_add_header (msg, GST_RTSP_HDR_CACHE_CONTROL, "no-cache");
   gst_rtsp_message_add_header (msg, GST_RTSP_HDR_PRAGMA, "no-cache");
   gst_rtsp_message_add_header (msg, GST_RTSP_HDR_EXPIRES,
@@ -870,7 +915,7 @@ remote_address_failed:
  * @response: a #GstRTSPMessage
  *
  * Attempt to connect to the url of @conn made with
- * gst_rtsp_connection_create(). If @timeout is #NULL this function can block
+ * gst_rtsp_connection_create(). If @timeout is %NULL this function can block
  * forever. If @timeout contains a valid timeout, this function will return
  * #GST_RTSP_ETIMEOUT after the timeout expired.  If @conn is set to tunneled,
  * @response will contain a response to the tunneling request messages.
@@ -1060,7 +1105,7 @@ add_auth_header (GstRTSPConnection * conn, GstRTSPMessage * message)
  * @timeout: a #GTimeVal timeout
  *
  * Attempt to connect to the url of @conn made with
- * gst_rtsp_connection_create(). If @timeout is #NULL this function can block
+ * gst_rtsp_connection_create(). If @timeout is %NULL this function can block
  * forever. If @timeout contains a valid timeout, this function will return
  * #GST_RTSP_ETIMEOUT after the timeout expired.
  *
@@ -1409,10 +1454,10 @@ read_line (GstRTSPConnection * conn, guint8 * buffer, guint * idx, guint size,
  * @conn: a #GstRTSPConnection
  * @data: the data to write
  * @size: the size of @data
- * @timeout: a timeout value or #NULL
+ * @timeout: a timeout value or %NULL
  *
  * Attempt to write @size bytes of @data to the connected @conn, blocking up to
- * the specified @timeout. @timeout can be #NULL, in which case this function
+ * the specified @timeout. @timeout can be %NULL, in which case this function
  * might block forever.
  *
  * This function can be cancelled with gst_rtsp_connection_flush().
@@ -1454,10 +1499,12 @@ message_to_string (GstRTSPConnection * conn, GstRTSPMessage * message)
   switch (message->type) {
     case GST_RTSP_MESSAGE_REQUEST:
       /* create request string, add CSeq */
-      g_string_append_printf (str, "%s %s RTSP/1.0\r\n"
+      g_string_append_printf (str, "%s %s RTSP/%s\r\n"
           "CSeq: %d\r\n",
           gst_rtsp_method_as_text (message->type_data.request.method),
-          message->type_data.request.uri, conn->cseq++);
+          message->type_data.request.uri,
+          gst_rtsp_version_as_text (message->type_data.request.version),
+          conn->cseq++);
       /* add session id if we have one */
       if (conn->session_id[0] != '\0') {
         gst_rtsp_message_remove_header (message, GST_RTSP_HDR_SESSION, -1);
@@ -1469,7 +1516,8 @@ message_to_string (GstRTSPConnection * conn, GstRTSPMessage * message)
       break;
     case GST_RTSP_MESSAGE_RESPONSE:
       /* create response string */
-      g_string_append_printf (str, "RTSP/1.0 %d %s\r\n",
+      g_string_append_printf (str, "RTSP/%s %d %s\r\n",
+          gst_rtsp_version_as_text (message->type_data.response.version),
           message->type_data.response.code, message->type_data.response.reason);
       break;
     case GST_RTSP_MESSAGE_HTTP_REQUEST:
@@ -1549,10 +1597,10 @@ message_to_string (GstRTSPConnection * conn, GstRTSPMessage * message)
  * gst_rtsp_connection_send:
  * @conn: a #GstRTSPConnection
  * @message: the message to send
- * @timeout: a timeout value or #NULL
+ * @timeout: a timeout value or %NULL
  *
  * Attempt to send @message to the connected @conn, blocking up to
- * the specified @timeout. @timeout can be #NULL, in which case this function
+ * the specified @timeout. @timeout can be %NULL, in which case this function
  * might block forever.
  *
  * This function can be cancelled with gst_rtsp_connection_flush().
@@ -1626,6 +1674,7 @@ static GstRTSPResult
 parse_protocol_version (gchar * protocol, GstRTSPMsgType * type,
     GstRTSPVersion * version)
 {
+  GstRTSPVersion rversion;
   GstRTSPResult res = GST_RTSP_OK;
   gchar *ver;
 
@@ -1640,8 +1689,10 @@ parse_protocol_version (gchar * protocol, GstRTSPMsgType * type,
     if (sscanf (ver, "%u.%u%c", &major, &minor, &dummychar) != 2)
       res = GST_RTSP_EPARSE;
 
+    rversion = major * 0x10 + minor;
     if (g_ascii_strcasecmp (protocol, "RTSP") == 0) {
-      if (major != 1 || minor != 0) {
+
+      if (rversion != GST_RTSP_VERSION_1_0 && rversion != GST_RTSP_VERSION_2_0) {
         *version = GST_RTSP_VERSION_INVALID;
         res = GST_RTSP_ERROR;
       }
@@ -1651,16 +1702,16 @@ parse_protocol_version (gchar * protocol, GstRTSPMsgType * type,
       else if (*type == GST_RTSP_MESSAGE_RESPONSE)
         *type = GST_RTSP_MESSAGE_HTTP_RESPONSE;
 
-      if (major == 1 && minor == 1) {
-        *version = GST_RTSP_VERSION_1_1;
-      } else if (major != 1 || minor != 0) {
-        *version = GST_RTSP_VERSION_INVALID;
+      if (rversion != GST_RTSP_VERSION_1_0 &&
+          rversion != GST_RTSP_VERSION_1_1 && rversion != GST_RTSP_VERSION_2_0)
         res = GST_RTSP_ERROR;
-      }
     } else
       res = GST_RTSP_EPARSE;
   } else
     res = GST_RTSP_EPARSE;
+
+  if (res == GST_RTSP_OK)
+    *version = rversion;
 
   return res;
 }
@@ -2127,10 +2178,10 @@ invalid_body_len:
  * @conn: a #GstRTSPConnection
  * @data: the data to read
  * @size: the size of @data
- * @timeout: a timeout value or #NULL
+ * @timeout: a timeout value or %NULL
  *
  * Attempt to read @size bytes into @data from the connected @conn, blocking up to
- * the specified @timeout. @timeout can be #NULL, in which case this function
+ * the specified @timeout. @timeout can be %NULL, in which case this function
  * might block forever.
  *
  * This function can be cancelled with gst_rtsp_connection_flush().
@@ -2206,10 +2257,10 @@ no_message:
  * gst_rtsp_connection_receive:
  * @conn: a #GstRTSPConnection
  * @message: the message to read
- * @timeout: a timeout value or #NULL
+ * @timeout: a timeout value or %NULL
  *
  * Attempt to read into @message from the connected @conn, blocking up to
- * the specified @timeout. @timeout can be #NULL, in which case this function
+ * the specified @timeout. @timeout can be %NULL, in which case this function
  * might block forever.
  *
  * This function can be cancelled with gst_rtsp_connection_flush().
@@ -2372,6 +2423,9 @@ gst_rtsp_connection_free (GstRTSPConnection * conn)
     g_object_unref (conn->tls_database);
   if (conn->tls_interaction)
     g_object_unref (conn->tls_interaction);
+  if (conn->accept_certificate_destroy_notify)
+    conn->
+        accept_certificate_destroy_notify (conn->accept_certificate_user_data);
 
   g_timer_destroy (conn->timer);
   gst_rtsp_url_free (conn->url);
@@ -2393,7 +2447,7 @@ gst_rtsp_connection_free (GstRTSPConnection * conn)
  * with #GST_RTSP_OK, @revents will contain a bitmask of available operations on
  * @conn.
  *
- * @timeout can be #NULL, in which case this function might block forever.
+ * @timeout can be %NULL, in which case this function might block forever.
  *
  * This function can be cancelled with gst_rtsp_connection_flush().
  *

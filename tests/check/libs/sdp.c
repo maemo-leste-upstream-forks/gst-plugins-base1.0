@@ -1,6 +1,9 @@
 /* GStreamer unit tests for the SDP support library
  *
  * Copyright (C) 2013 Jose Antonio Santos Cadenas <santoscadenas@gmail.com>
+ * Copyright (C) 2013 Kurento
+ * Contact: Miguel París Díaz <mparisdiaz@gmail.com>
+ * Contact: José Antonio Santos Cadenas <santoscadenas@kurento.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -23,28 +26,6 @@
 #endif
 
 #include <gst/check/gstcheck.h>
-
-/*
- * test_sdp.c - gst-kurento-plugins
- *
- * Copyright (C) 2013 Kurento
- * Contact: Miguel París Díaz <mparisdiaz@gmail.com>
- * Contact: José Antonio Santos Cadenas <santoscadenas@kurento.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-#include <gst/check/gstcheck.h>
 #include <gst/sdp/gstsdpmessage.h>
 
 /* *INDENT-OFF* */
@@ -53,6 +34,7 @@ static const gchar *sdp = "v=0\r\n"
     "s=TestSessionToCopy\r\n"
     "c=IN IP4 127.0.0.1\r\n"
     "t=0 0\r\n"
+    "a=sendrecv\r\n"
     "m=video 3434 RTP/AVP 96 97 99\r\n"
     "a=rtpmap:96 MP4V-ES/90000\r\n"
     "a=rtpmap:97 H263-1998/90000\r\n"
@@ -272,6 +254,34 @@ GST_START_TEST (modify)
       "test_attr_media");
   fail_unless (result != NULL);
   fail_unless (g_strcmp0 (result, "myparam=myval") == 0);
+
+  gst_sdp_message_free (message);
+}
+
+GST_END_TEST
+GST_START_TEST (null)
+{
+  GstSDPMessage *message;
+  const GstSDPMedia *media;
+  glong length = -1;
+  const gchar *val;
+
+  gst_sdp_message_new (&message);
+  gst_sdp_message_parse_buffer ((guint8 *) sdp, length, message);
+
+  fail_unless (gst_sdp_message_add_attribute (message,
+          "test_attr_session", NULL) == GST_SDP_OK);
+
+  val = gst_sdp_message_get_attribute_val (message, "test_attr_session");
+  fail_unless (val == NULL);
+
+  media = gst_sdp_message_get_media (message, 0);
+
+  fail_unless (gst_sdp_media_add_attribute ((GstSDPMedia *) media,
+          "test_attr_media", NULL) == GST_SDP_OK);
+
+  val = gst_sdp_media_get_attribute_val (media, "test_attr_media");
+  fail_unless (val == NULL);
 
   gst_sdp_message_free (message);
 }
@@ -572,6 +582,7 @@ sdp_suite (void)
   tcase_add_test (tc_chain, copy);
   tcase_add_test (tc_chain, boxed);
   tcase_add_test (tc_chain, modify);
+  tcase_add_test (tc_chain, null);
   tcase_add_test (tc_chain, caps_from_media);
   tcase_add_test (tc_chain, caps_from_media_really_const);
   tcase_add_test (tc_chain, media_from_caps);

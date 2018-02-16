@@ -8,7 +8,7 @@
 <link rel="up" href="gstreamer-base-utils.html" title="Base Utils Library">
 <link rel="prev" href="gst-plugins-base-libs-Install-plugins.html" title="Install-plugins">
 <link rel="next" href="GstEncodingProfile.html" title="GstEncodingProfile">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -148,6 +148,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstDiscoverer.html#gst-discoverer-info-get-seekable" title="gst_discoverer_info_get_seekable ()">gst_discoverer_info_get_seekable</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstDiscoverer.html#gst-discoverer-info-get-live" title="gst_discoverer_info_get_live ()">gst_discoverer_info_get_live</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -318,6 +326,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="GstDiscoverer.html#gst-discoverer-audio-info-get-channels" title="gst_discoverer_audio_info_get_channels ()">gst_discoverer_audio_info_get_channels</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstDiscoverer.html#gst-discoverer-audio-info-get-channel-mask" title="gst_discoverer_audio_info_get_channel_mask ()">gst_discoverer_audio_info_get_channel_mask</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -1008,6 +1024,32 @@ gst_discoverer_info_get_seekable (<em class="parameter"><code>const <a class="li
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-discoverer-info-get-live"></a><h3>gst_discoverer_info_get_live ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_discoverer_info_get_live (<em class="parameter"><code>const <a class="link" href="GstDiscoverer.html#GstDiscovererInfo"><span class="type">GstDiscovererInfo</span></a> *info</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-discoverer-info-get-live.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>info</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstDiscoverer.html#GstDiscovererInfo"><span class="type">GstDiscovererInfo</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-discoverer-info-get-live.returns"></a><h4>Returns</h4>
+<p> whether the URI is live.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-discoverer-info-ref"></a><h3>gst_discoverer_info_ref()</h3>
 <pre class="programlisting">#define gst_discoverer_info_ref(info) (g_object_ref((GObject*)info))
 </pre>
@@ -1096,7 +1138,7 @@ what needs to be serialized.</p></td>
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1125,7 +1167,7 @@ back to a <a class="link" href="GstDiscoverer.html#GstDiscovererInfo"><span clas
 <p>A newly-allocated <a class="link" href="GstDiscoverer.html#GstDiscovererInfo"><span class="type">GstDiscovererInfo</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1464,7 +1506,7 @@ of <em class="parameter"><code>info</code></em>
 , you will need to copy them. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span></p>
 </div>
-<p class="since">Since: 1.4</p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1678,6 +1720,35 @@ gst_discoverer_audio_info_get_channels
 <a name="gst-discoverer-audio-info-get-channels.returns"></a><h4>Returns</h4>
 <p> the number of channels in the stream.</p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-discoverer-audio-info-get-channel-mask"></a><h3>gst_discoverer_audio_info_get_channel_mask ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
+gst_discoverer_audio_info_get_channel_mask
+                               (<em class="parameter"><code>const <a class="link" href="GstDiscoverer.html#GstDiscovererAudioInfo" title="GstDiscovererAudioInfo"><span class="type">GstDiscovererAudioInfo</span></a> *info</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-discoverer-audio-info-get-channel-mask.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>info</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstDiscoverer.html#GstDiscovererAudioInfo" title="GstDiscovererAudioInfo"><span class="type">GstDiscovererAudioInfo</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-discoverer-audio-info-get-channel-mask.returns"></a><h4>Returns</h4>
+<p> the channel-mask of the stream, refer to
+<a class="link" href="gst-plugins-base-libs-Audio-channels.html#gst-audio-channel-positions-from-mask" title="gst_audio_channel_positions_from_mask ()"><code class="function">gst_audio_channel_positions_from_mask()</code></a> for more
+information.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2012,7 +2083,7 @@ gst_discoverer_video_info_is_image (<em class="parameter"><code>const <a class="
 </div>
 <div class="refsect3">
 <a name="gst-discoverer-video-info-is-image.returns"></a><h4>Returns</h4>
-<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a> if the video stream corresponds to an image (i.e. only contains
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the video stream corresponds to an image (i.e. only contains
 one frame).</p>
 </div>
 </div>
@@ -2245,7 +2316,7 @@ caps, tags and miscellaneous information</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: 1.6</p>
+<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2463,6 +2534,6 @@ user_function (<a class="link" href="GstDiscoverer.html" title="GstDiscoverer"><
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

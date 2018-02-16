@@ -392,7 +392,7 @@ tag_list_from_vorbiscomment_packet (ogg_packet * packet,
   }
 
   if (encoder) {
-    if (encoder[0])
+    if (encoder[0] && g_utf8_validate (encoder, -1, NULL))
       gst_tag_list_add (list, GST_TAG_MERGE_REPLACE, GST_TAG_ENCODER, encoder,
           NULL);
     g_free (encoder);
@@ -1583,7 +1583,7 @@ packet_duration_ogm (GstOggStream * pad, ogg_packet * packet)
   offset = 1 + (((data[0] & 0xc0) >> 6) | ((data[0] & 0x02) << 1));
 
   if (offset > packet->bytes) {
-    GST_ERROR ("buffer too small");
+    GST_WARNING ("buffer too small");
     return -1;
   }
 
@@ -2041,19 +2041,8 @@ granulepos_to_granule_opus (GstOggStream * pad, gint64 granulepos)
   if (granulepos == -1)
     return -1;
 
-  /* We must reject some particular cases for the first granpos */
-
   if (pad->first_granpos < 0 || granulepos < pad->first_granpos)
     pad->first_granpos = granulepos;
-
-  if (pad->first_granpos == granulepos) {
-    if (granulepos < -pad->granule_offset) {
-      GST_ERROR ("Invalid Opus stream: first granulepos (%" G_GINT64_FORMAT
-          ") less than preskip (%" G_GINT64_FORMAT ")", granulepos,
-          -pad->granule_offset);
-      return -1;
-    }
-  }
 
   return granulepos;
 }

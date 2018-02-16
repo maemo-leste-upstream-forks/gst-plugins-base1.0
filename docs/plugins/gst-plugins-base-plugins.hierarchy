@@ -14,6 +14,11 @@ GObject
       GstControlSource
       GstElement
         GstAdder
+        GstAggregator
+          GstAudioAggregator
+            GstAudioInterleave
+            GstAudioMixer
+              GstLiveAdder
         GstAudioDecoder
           GstOpusDec
           GstVorbisDec
@@ -49,6 +54,7 @@ GObject
               GstTCPServerSink
           GstTCPClientSink
           GstVideoSink
+            GstGLImageSink
             GstXImageSink
             GstXvImageSink
         GstBaseSrc
@@ -64,6 +70,7 @@ GObject
                 GstAlsaSrc
             GstAudioCdSrc
               GstCdParanoiaSrc
+            GstGLTestSrc
             GstSocketSrc
             GstTCPClientSrc
             GstTCPServerSrc
@@ -77,6 +84,42 @@ GObject
           GstAudioFilter
             GstVolume
           GstAudioResample
+          GstGLBaseFilter
+            GstGLColorConvertElement
+            GstGLDownloadElement
+            GstGLFilter
+              GstGLColorBalance
+              GstGLColorscale
+              GstGLDeinterlace
+              GstGLDifferenceMatte
+              GstGLEffects
+                GstGLEffectsGeneric
+                gleffects_blur
+                gleffects_bulge
+                gleffects_fisheye
+                gleffects_glow
+                gleffects_heat
+                gleffects_identity
+                gleffects_laplacian
+                gleffects_lumaxpro
+                gleffects_mirror
+                gleffects_sepia
+                gleffects_sin
+                gleffects_sobel
+                gleffects_square
+                gleffects_squeeze
+                gleffects_stretch
+                gleffects_tunnel
+                gleffects_twirl
+                gleffects_xpro
+                gleffects_xray
+              GstGLFilterApp
+              GstGLFilterCube
+              GstGLFilterGlass
+              GstGLFilterShader
+              GstGLOverlay
+              GstGLViewConvertElement
+            GstGLUploadElement
           GstVideoFilter
             GstVideoConvert
             GstVideoScale
@@ -85,6 +128,10 @@ GObject
           GstDecodeBin
           GstDecodebin3
           GstEncodeBin
+          GstGLFilterBin
+          GstGLSinkBin
+            GstGLImageSinkBin
+          GstGLSrcBin
           GstParseBin
           GstPipeline
             GstPlayBin
@@ -92,9 +139,11 @@ GObject
           GstPlaySink
           GstSubtitleOverlay
           GstURIDecodeBin
+          GstURIDecodeBin3
           GstURISourceBin
           GstUnalignedAudioParse
           GstUnalignedVideoParse
+        GstGLStereoSplit
         GstOggAviParse
         GstOggDemux
         GstOggMux
@@ -114,7 +163,14 @@ GObject
           GstTheoraEnc
         GstVorbisParse
           GstVorbisTag
+      GstGLContext
+      GstGLShader
       GstPad
+        GstAggregatorPad
+          GstAudioAggregatorPad
+            GstAudioAggregatorConvertPad
+              GstAudioMixerPad
+            GstAudioInterleavePad
         GstProxyPad
           GstGhostPad
             GstDecodePad

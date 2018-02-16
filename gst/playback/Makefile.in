@@ -117,14 +117,15 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
 	$(top_srcdir)/common/m4/introspection.m4 \
 	$(top_srcdir)/common/m4/orc.m4 $(top_srcdir)/common/m4/pkg.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gst-alsa.m4 \
-	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
-	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/lrint.m4 $(top_srcdir)/m4/lrintf.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/gst-gl.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/lrint.m4 \
+	$(top_srcdir)/m4/lrintf.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(noinst_HEADERS) \
@@ -170,6 +171,7 @@ libgstplayback_la_DEPENDENCIES = $(top_builddir)/gst-libs/gst/pbutils/libgstpbut
 am_libgstplayback_la_OBJECTS = libgstplayback_la-gstdecodebin2.lo \
 	libgstplayback_la-gstdecodebin3.lo \
 	libgstplayback_la-gsturidecodebin.lo \
+	libgstplayback_la-gsturidecodebin3.lo \
 	libgstplayback_la-gsturisourcebin.lo \
 	libgstplayback_la-gstparsebin.lo \
 	libgstplayback_la-gstplayback.lo \
@@ -191,8 +193,8 @@ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
 libgstplayback_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
-	$(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
-	$(CCLD) $(libgstplayback_la_CFLAGS) $(CFLAGS) \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(libgstplayback_la_CFLAGS) $(CFLAGS) \
 	$(libgstplayback_la_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -279,6 +281,12 @@ CCDEPMODE = @CCDEPMODE@
 CDPARANOIA_CFLAGS = @CDPARANOIA_CFLAGS@
 CDPARANOIA_LIBS = @CDPARANOIA_LIBS@
 CFLAGS = @CFLAGS@
+CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
+CLUTTER_GLX_CFLAGS = @CLUTTER_GLX_CFLAGS@
+CLUTTER_GLX_LIBS = @CLUTTER_GLX_LIBS@
+CLUTTER_LIBS = @CLUTTER_LIBS@
+CLUTTER_X11_CFLAGS = @CLUTTER_X11_CFLAGS@
+CLUTTER_X11_LIBS = @CLUTTER_X11_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -300,15 +308,21 @@ DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
+EGL_CFLAGS = @EGL_CFLAGS@
+EGL_LIBS = @EGL_LIBS@
 EGREP = @EGREP@
 ERROR_CFLAGS = @ERROR_CFLAGS@
 ERROR_CXXFLAGS = @ERROR_CXXFLAGS@
+ERROR_OBJCFLAGS = @ERROR_OBJCFLAGS@
 EXEEXT = @EXEEXT@
+EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
 GCOV = @GCOV@
 GCOV_CFLAGS = @GCOV_CFLAGS@
 GCOV_LIBS = @GCOV_LIBS@
+GDK_PIXBUF_CFLAGS = @GDK_PIXBUF_CFLAGS@
+GDK_PIXBUF_LIBS = @GDK_PIXBUF_LIBS@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GIO_CFLAGS = @GIO_CFLAGS@
@@ -316,6 +330,8 @@ GIO_LDFLAGS = @GIO_LDFLAGS@
 GIO_LIBS = @GIO_LIBS@
 GIO_UNIX_2_0_CFLAGS = @GIO_UNIX_2_0_CFLAGS@
 GIO_UNIX_2_0_LIBS = @GIO_UNIX_2_0_LIBS@
+GLES2_CFLAGS = @GLES2_CFLAGS@
+GLES2_LIBS = @GLES2_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_EXTRA_CFLAGS = @GLIB_EXTRA_CFLAGS@
 GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
@@ -323,8 +339,18 @@ GLIB_LIBS = @GLIB_LIBS@
 GLIB_MKENUMS = @GLIB_MKENUMS@
 GLIB_PREFIX = @GLIB_PREFIX@
 GLIB_REQ = @GLIB_REQ@
+GL_APIS = @GL_APIS@
+GL_CFLAGS = @GL_CFLAGS@
+GL_LIBS = @GL_LIBS@
+GL_OBJCFLAGS = @GL_OBJCFLAGS@
+GL_PLATFORMS = @GL_PLATFORMS@
+GL_WINDOWS = @GL_WINDOWS@
+GMODULE_NO_EXPORT_CFLAGS = @GMODULE_NO_EXPORT_CFLAGS@
+GMODULE_NO_EXPORT_LIBS = @GMODULE_NO_EXPORT_LIBS@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
+GRAPHENE_CFLAGS = @GRAPHENE_CFLAGS@
+GRAPHENE_LIBS = @GRAPHENE_LIBS@
 GREP = @GREP@
 GST_AGE = @GST_AGE@
 GST_ALL_LDFLAGS = @GST_ALL_LDFLAGS@
@@ -358,7 +384,6 @@ GST_PLUGINS_DIR = @GST_PLUGINS_DIR@
 GST_PLUGINS_NONPORTED = @GST_PLUGINS_NONPORTED@
 GST_PLUGINS_SELECTED = @GST_PLUGINS_SELECTED@
 GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
-GST_PLUGIN_LIBTOOLFLAGS = @GST_PLUGIN_LIBTOOLFLAGS@
 GST_PREFIX = @GST_PREFIX@
 GST_REVISION = @GST_REVISION@
 GST_TOOLS_DIR = @GST_TOOLS_DIR@
@@ -374,6 +399,15 @@ GTK_QUARTZ_LIBS = @GTK_QUARTZ_LIBS@
 GTK_X11_CFLAGS = @GTK_X11_CFLAGS@
 GTK_X11_LIBS = @GTK_X11_LIBS@
 HAVE_CDPARANOIA = @HAVE_CDPARANOIA@
+HAVE_CLUTTER = @HAVE_CLUTTER@
+HAVE_CLUTTER_GLX = @HAVE_CLUTTER_GLX@
+HAVE_CLUTTER_X11 = @HAVE_CLUTTER_X11@
+HAVE_EGL = @HAVE_EGL@
+HAVE_GL = @HAVE_GL@
+HAVE_GLES2 = @HAVE_GLES2@
+HAVE_GRAPHENE = @HAVE_GRAPHENE@
+HAVE_JPEG = @HAVE_JPEG@
+HAVE_PNG = @HAVE_PNG@
 HAVE_XSHM = @HAVE_XSHM@
 HAVE_ZLIB = @HAVE_ZLIB@
 HTML_DIR = @HTML_DIR@
@@ -395,12 +429,15 @@ INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
 INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
 IVORBIS_CFLAGS = @IVORBIS_CFLAGS@
 IVORBIS_LIBS = @IVORBIS_LIBS@
+JPEG_LIBS = @JPEG_LIBS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBM = @LIBM@
 LIBOBJS = @LIBOBJS@
+LIBPNG_CFLAGS = @LIBPNG_CFLAGS@
+LIBPNG_LIBS = @LIBPNG_LIBS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIBVISUAL_CFLAGS = @LIBVISUAL_CFLAGS@
@@ -421,6 +458,9 @@ MSGFMT_015 = @MSGFMT_015@
 MSGMERGE = @MSGMERGE@
 NM = @NM@
 NMEDIT = @NMEDIT@
+OBJC = @OBJC@
+OBJCDEPMODE = @OBJCDEPMODE@
+OBJCFLAGS = @OBJCFLAGS@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OGG_CFLAGS = @OGG_CFLAGS@
@@ -465,6 +505,9 @@ QT_CFLAGS = @QT_CFLAGS@
 QT_LIBS = @QT_LIBS@
 QT_MOC = @QT_MOC@
 RANLIB = @RANLIB@
+SDL_CFLAGS = @SDL_CFLAGS@
+SDL_CLUTTER = @SDL_CLUTTER@
+SDL_LIBS = @SDL_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -474,16 +517,27 @@ SSE_CFLAGS = @SSE_CFLAGS@
 STRIP = @STRIP@
 THEORA_CFLAGS = @THEORA_CFLAGS@
 THEORA_LIBS = @THEORA_LIBS@
+USE_GLES2 = @USE_GLES2@
 USE_NLS = @USE_NLS@
+USE_OPENGL = @USE_OPENGL@
 VALGRIND_CFLAGS = @VALGRIND_CFLAGS@
 VALGRIND_LIBS = @VALGRIND_LIBS@
 VALGRIND_PATH = @VALGRIND_PATH@
 VERSION = @VERSION@
+VISIBILITY_CFLAGS = @VISIBILITY_CFLAGS@
+VISIBILITY_CXXFLAGS = @VISIBILITY_CXXFLAGS@
 VORBIS_CFLAGS = @VORBIS_CFLAGS@
 VORBIS_LIBS = @VORBIS_LIBS@
 WARNING_CFLAGS = @WARNING_CFLAGS@
 WARNING_CXXFLAGS = @WARNING_CXXFLAGS@
+WARNING_OBJCFLAGS = @WARNING_OBJCFLAGS@
+WAYLAND_EGL_CFLAGS = @WAYLAND_EGL_CFLAGS@
+WAYLAND_EGL_LIBS = @WAYLAND_EGL_LIBS@
 WIN32_LIBS = @WIN32_LIBS@
+X11_XCB_CFLAGS = @X11_XCB_CFLAGS@
+X11_XCB_LIBS = @X11_XCB_LIBS@
+XCOMPOSITE_CFLAGS = @XCOMPOSITE_CFLAGS@
+XCOMPOSITE_LIBS = @XCOMPOSITE_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -503,6 +557,7 @@ ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_OBJC = @ac_ct_OBJC@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -565,6 +620,7 @@ libgstplayback_la_SOURCES = \
 	gstdecodebin2.c \
 	gstdecodebin3.c \
 	gsturidecodebin.c \
+	gsturidecodebin3.c \
 	gsturisourcebin.c \
 	gstparsebin.c \
 	gstplayback.c \
@@ -588,7 +644,6 @@ libgstplayback_la_LIBADD = \
 	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
 	$(GST_LIBS)
 
-libgstplayback_la_LIBTOOLFLAGS = $(GST_PLUGIN_LIBTOOLFLAGS)
 
 # FIXME: gstdecodebin3-parse.c isn't really a header,
 # but for now it's included into gstdecodebin3.c directly
@@ -701,6 +756,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstplayback_la-gststreamsynchronizer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstplayback_la-gstsubtitleoverlay.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstplayback_la-gsturidecodebin.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstplayback_la-gsturidecodebin3.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstplayback_la-gsturisourcebin.Plo@am__quote@
 
 .c.o:
@@ -728,116 +784,123 @@ distclean-compile:
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
 libgstplayback_la-gstdecodebin2.lo: gstdecodebin2.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstdecodebin2.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstdecodebin2.Tpo -c -o libgstplayback_la-gstdecodebin2.lo `test -f 'gstdecodebin2.c' || echo '$(srcdir)/'`gstdecodebin2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstdecodebin2.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstdecodebin2.Tpo -c -o libgstplayback_la-gstdecodebin2.lo `test -f 'gstdecodebin2.c' || echo '$(srcdir)/'`gstdecodebin2.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstdecodebin2.Tpo $(DEPDIR)/libgstplayback_la-gstdecodebin2.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstdecodebin2.c' object='libgstplayback_la-gstdecodebin2.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstdecodebin2.lo `test -f 'gstdecodebin2.c' || echo '$(srcdir)/'`gstdecodebin2.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstdecodebin2.lo `test -f 'gstdecodebin2.c' || echo '$(srcdir)/'`gstdecodebin2.c
 
 libgstplayback_la-gstdecodebin3.lo: gstdecodebin3.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstdecodebin3.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstdecodebin3.Tpo -c -o libgstplayback_la-gstdecodebin3.lo `test -f 'gstdecodebin3.c' || echo '$(srcdir)/'`gstdecodebin3.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstdecodebin3.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstdecodebin3.Tpo -c -o libgstplayback_la-gstdecodebin3.lo `test -f 'gstdecodebin3.c' || echo '$(srcdir)/'`gstdecodebin3.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstdecodebin3.Tpo $(DEPDIR)/libgstplayback_la-gstdecodebin3.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstdecodebin3.c' object='libgstplayback_la-gstdecodebin3.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstdecodebin3.lo `test -f 'gstdecodebin3.c' || echo '$(srcdir)/'`gstdecodebin3.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstdecodebin3.lo `test -f 'gstdecodebin3.c' || echo '$(srcdir)/'`gstdecodebin3.c
 
 libgstplayback_la-gsturidecodebin.lo: gsturidecodebin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gsturidecodebin.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gsturidecodebin.Tpo -c -o libgstplayback_la-gsturidecodebin.lo `test -f 'gsturidecodebin.c' || echo '$(srcdir)/'`gsturidecodebin.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gsturidecodebin.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gsturidecodebin.Tpo -c -o libgstplayback_la-gsturidecodebin.lo `test -f 'gsturidecodebin.c' || echo '$(srcdir)/'`gsturidecodebin.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gsturidecodebin.Tpo $(DEPDIR)/libgstplayback_la-gsturidecodebin.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gsturidecodebin.c' object='libgstplayback_la-gsturidecodebin.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gsturidecodebin.lo `test -f 'gsturidecodebin.c' || echo '$(srcdir)/'`gsturidecodebin.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gsturidecodebin.lo `test -f 'gsturidecodebin.c' || echo '$(srcdir)/'`gsturidecodebin.c
+
+libgstplayback_la-gsturidecodebin3.lo: gsturidecodebin3.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gsturidecodebin3.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gsturidecodebin3.Tpo -c -o libgstplayback_la-gsturidecodebin3.lo `test -f 'gsturidecodebin3.c' || echo '$(srcdir)/'`gsturidecodebin3.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gsturidecodebin3.Tpo $(DEPDIR)/libgstplayback_la-gsturidecodebin3.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gsturidecodebin3.c' object='libgstplayback_la-gsturidecodebin3.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gsturidecodebin3.lo `test -f 'gsturidecodebin3.c' || echo '$(srcdir)/'`gsturidecodebin3.c
 
 libgstplayback_la-gsturisourcebin.lo: gsturisourcebin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gsturisourcebin.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gsturisourcebin.Tpo -c -o libgstplayback_la-gsturisourcebin.lo `test -f 'gsturisourcebin.c' || echo '$(srcdir)/'`gsturisourcebin.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gsturisourcebin.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gsturisourcebin.Tpo -c -o libgstplayback_la-gsturisourcebin.lo `test -f 'gsturisourcebin.c' || echo '$(srcdir)/'`gsturisourcebin.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gsturisourcebin.Tpo $(DEPDIR)/libgstplayback_la-gsturisourcebin.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gsturisourcebin.c' object='libgstplayback_la-gsturisourcebin.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gsturisourcebin.lo `test -f 'gsturisourcebin.c' || echo '$(srcdir)/'`gsturisourcebin.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gsturisourcebin.lo `test -f 'gsturisourcebin.c' || echo '$(srcdir)/'`gsturisourcebin.c
 
 libgstplayback_la-gstparsebin.lo: gstparsebin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstparsebin.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstparsebin.Tpo -c -o libgstplayback_la-gstparsebin.lo `test -f 'gstparsebin.c' || echo '$(srcdir)/'`gstparsebin.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstparsebin.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstparsebin.Tpo -c -o libgstplayback_la-gstparsebin.lo `test -f 'gstparsebin.c' || echo '$(srcdir)/'`gstparsebin.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstparsebin.Tpo $(DEPDIR)/libgstplayback_la-gstparsebin.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstparsebin.c' object='libgstplayback_la-gstparsebin.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstparsebin.lo `test -f 'gstparsebin.c' || echo '$(srcdir)/'`gstparsebin.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstparsebin.lo `test -f 'gstparsebin.c' || echo '$(srcdir)/'`gstparsebin.c
 
 libgstplayback_la-gstplayback.lo: gstplayback.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplayback.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplayback.Tpo -c -o libgstplayback_la-gstplayback.lo `test -f 'gstplayback.c' || echo '$(srcdir)/'`gstplayback.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplayback.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplayback.Tpo -c -o libgstplayback_la-gstplayback.lo `test -f 'gstplayback.c' || echo '$(srcdir)/'`gstplayback.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstplayback.Tpo $(DEPDIR)/libgstplayback_la-gstplayback.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstplayback.c' object='libgstplayback_la-gstplayback.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplayback.lo `test -f 'gstplayback.c' || echo '$(srcdir)/'`gstplayback.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplayback.lo `test -f 'gstplayback.c' || echo '$(srcdir)/'`gstplayback.c
 
 libgstplayback_la-gstplaybin2.lo: gstplaybin2.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaybin2.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaybin2.Tpo -c -o libgstplayback_la-gstplaybin2.lo `test -f 'gstplaybin2.c' || echo '$(srcdir)/'`gstplaybin2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaybin2.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaybin2.Tpo -c -o libgstplayback_la-gstplaybin2.lo `test -f 'gstplaybin2.c' || echo '$(srcdir)/'`gstplaybin2.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstplaybin2.Tpo $(DEPDIR)/libgstplayback_la-gstplaybin2.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstplaybin2.c' object='libgstplayback_la-gstplaybin2.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaybin2.lo `test -f 'gstplaybin2.c' || echo '$(srcdir)/'`gstplaybin2.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaybin2.lo `test -f 'gstplaybin2.c' || echo '$(srcdir)/'`gstplaybin2.c
 
 libgstplayback_la-gstplaybin3.lo: gstplaybin3.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaybin3.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaybin3.Tpo -c -o libgstplayback_la-gstplaybin3.lo `test -f 'gstplaybin3.c' || echo '$(srcdir)/'`gstplaybin3.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaybin3.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaybin3.Tpo -c -o libgstplayback_la-gstplaybin3.lo `test -f 'gstplaybin3.c' || echo '$(srcdir)/'`gstplaybin3.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstplaybin3.Tpo $(DEPDIR)/libgstplayback_la-gstplaybin3.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstplaybin3.c' object='libgstplayback_la-gstplaybin3.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaybin3.lo `test -f 'gstplaybin3.c' || echo '$(srcdir)/'`gstplaybin3.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaybin3.lo `test -f 'gstplaybin3.c' || echo '$(srcdir)/'`gstplaybin3.c
 
 libgstplayback_la-gstplaysink.lo: gstplaysink.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaysink.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaysink.Tpo -c -o libgstplayback_la-gstplaysink.lo `test -f 'gstplaysink.c' || echo '$(srcdir)/'`gstplaysink.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaysink.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaysink.Tpo -c -o libgstplayback_la-gstplaysink.lo `test -f 'gstplaysink.c' || echo '$(srcdir)/'`gstplaysink.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstplaysink.Tpo $(DEPDIR)/libgstplayback_la-gstplaysink.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstplaysink.c' object='libgstplayback_la-gstplaysink.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaysink.lo `test -f 'gstplaysink.c' || echo '$(srcdir)/'`gstplaysink.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaysink.lo `test -f 'gstplaysink.c' || echo '$(srcdir)/'`gstplaysink.c
 
 libgstplayback_la-gstplay-enum.lo: gstplay-enum.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplay-enum.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplay-enum.Tpo -c -o libgstplayback_la-gstplay-enum.lo `test -f 'gstplay-enum.c' || echo '$(srcdir)/'`gstplay-enum.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplay-enum.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplay-enum.Tpo -c -o libgstplayback_la-gstplay-enum.lo `test -f 'gstplay-enum.c' || echo '$(srcdir)/'`gstplay-enum.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstplay-enum.Tpo $(DEPDIR)/libgstplayback_la-gstplay-enum.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstplay-enum.c' object='libgstplayback_la-gstplay-enum.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplay-enum.lo `test -f 'gstplay-enum.c' || echo '$(srcdir)/'`gstplay-enum.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplay-enum.lo `test -f 'gstplay-enum.c' || echo '$(srcdir)/'`gstplay-enum.c
 
 libgstplayback_la-gstsubtitleoverlay.lo: gstsubtitleoverlay.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstsubtitleoverlay.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstsubtitleoverlay.Tpo -c -o libgstplayback_la-gstsubtitleoverlay.lo `test -f 'gstsubtitleoverlay.c' || echo '$(srcdir)/'`gstsubtitleoverlay.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstsubtitleoverlay.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstsubtitleoverlay.Tpo -c -o libgstplayback_la-gstsubtitleoverlay.lo `test -f 'gstsubtitleoverlay.c' || echo '$(srcdir)/'`gstsubtitleoverlay.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstsubtitleoverlay.Tpo $(DEPDIR)/libgstplayback_la-gstsubtitleoverlay.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstsubtitleoverlay.c' object='libgstplayback_la-gstsubtitleoverlay.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstsubtitleoverlay.lo `test -f 'gstsubtitleoverlay.c' || echo '$(srcdir)/'`gstsubtitleoverlay.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstsubtitleoverlay.lo `test -f 'gstsubtitleoverlay.c' || echo '$(srcdir)/'`gstsubtitleoverlay.c
 
 libgstplayback_la-gstplaysinkvideoconvert.lo: gstplaysinkvideoconvert.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaysinkvideoconvert.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaysinkvideoconvert.Tpo -c -o libgstplayback_la-gstplaysinkvideoconvert.lo `test -f 'gstplaysinkvideoconvert.c' || echo '$(srcdir)/'`gstplaysinkvideoconvert.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaysinkvideoconvert.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaysinkvideoconvert.Tpo -c -o libgstplayback_la-gstplaysinkvideoconvert.lo `test -f 'gstplaysinkvideoconvert.c' || echo '$(srcdir)/'`gstplaysinkvideoconvert.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstplaysinkvideoconvert.Tpo $(DEPDIR)/libgstplayback_la-gstplaysinkvideoconvert.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstplaysinkvideoconvert.c' object='libgstplayback_la-gstplaysinkvideoconvert.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaysinkvideoconvert.lo `test -f 'gstplaysinkvideoconvert.c' || echo '$(srcdir)/'`gstplaysinkvideoconvert.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaysinkvideoconvert.lo `test -f 'gstplaysinkvideoconvert.c' || echo '$(srcdir)/'`gstplaysinkvideoconvert.c
 
 libgstplayback_la-gstplaysinkaudioconvert.lo: gstplaysinkaudioconvert.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaysinkaudioconvert.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaysinkaudioconvert.Tpo -c -o libgstplayback_la-gstplaysinkaudioconvert.lo `test -f 'gstplaysinkaudioconvert.c' || echo '$(srcdir)/'`gstplaysinkaudioconvert.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaysinkaudioconvert.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaysinkaudioconvert.Tpo -c -o libgstplayback_la-gstplaysinkaudioconvert.lo `test -f 'gstplaysinkaudioconvert.c' || echo '$(srcdir)/'`gstplaysinkaudioconvert.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstplaysinkaudioconvert.Tpo $(DEPDIR)/libgstplayback_la-gstplaysinkaudioconvert.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstplaysinkaudioconvert.c' object='libgstplayback_la-gstplaysinkaudioconvert.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaysinkaudioconvert.lo `test -f 'gstplaysinkaudioconvert.c' || echo '$(srcdir)/'`gstplaysinkaudioconvert.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaysinkaudioconvert.lo `test -f 'gstplaysinkaudioconvert.c' || echo '$(srcdir)/'`gstplaysinkaudioconvert.c
 
 libgstplayback_la-gstplaysinkconvertbin.lo: gstplaysinkconvertbin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaysinkconvertbin.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaysinkconvertbin.Tpo -c -o libgstplayback_la-gstplaysinkconvertbin.lo `test -f 'gstplaysinkconvertbin.c' || echo '$(srcdir)/'`gstplaysinkconvertbin.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaysinkconvertbin.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaysinkconvertbin.Tpo -c -o libgstplayback_la-gstplaysinkconvertbin.lo `test -f 'gstplaysinkconvertbin.c' || echo '$(srcdir)/'`gstplaysinkconvertbin.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstplaysinkconvertbin.Tpo $(DEPDIR)/libgstplayback_la-gstplaysinkconvertbin.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstplaysinkconvertbin.c' object='libgstplayback_la-gstplaysinkconvertbin.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaysinkconvertbin.lo `test -f 'gstplaysinkconvertbin.c' || echo '$(srcdir)/'`gstplaysinkconvertbin.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaysinkconvertbin.lo `test -f 'gstplaysinkconvertbin.c' || echo '$(srcdir)/'`gstplaysinkconvertbin.c
 
 libgstplayback_la-gststreamsynchronizer.lo: gststreamsynchronizer.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gststreamsynchronizer.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gststreamsynchronizer.Tpo -c -o libgstplayback_la-gststreamsynchronizer.lo `test -f 'gststreamsynchronizer.c' || echo '$(srcdir)/'`gststreamsynchronizer.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gststreamsynchronizer.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gststreamsynchronizer.Tpo -c -o libgstplayback_la-gststreamsynchronizer.lo `test -f 'gststreamsynchronizer.c' || echo '$(srcdir)/'`gststreamsynchronizer.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gststreamsynchronizer.Tpo $(DEPDIR)/libgstplayback_la-gststreamsynchronizer.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gststreamsynchronizer.c' object='libgstplayback_la-gststreamsynchronizer.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gststreamsynchronizer.lo `test -f 'gststreamsynchronizer.c' || echo '$(srcdir)/'`gststreamsynchronizer.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gststreamsynchronizer.lo `test -f 'gststreamsynchronizer.c' || echo '$(srcdir)/'`gststreamsynchronizer.c
 
 libgstplayback_la-gstplaybackutils.lo: gstplaybackutils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaybackutils.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaybackutils.Tpo -c -o libgstplayback_la-gstplaybackutils.lo `test -f 'gstplaybackutils.c' || echo '$(srcdir)/'`gstplaybackutils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -MT libgstplayback_la-gstplaybackutils.lo -MD -MP -MF $(DEPDIR)/libgstplayback_la-gstplaybackutils.Tpo -c -o libgstplayback_la-gstplaybackutils.lo `test -f 'gstplaybackutils.c' || echo '$(srcdir)/'`gstplaybackutils.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstplayback_la-gstplaybackutils.Tpo $(DEPDIR)/libgstplayback_la-gstplaybackutils.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstplaybackutils.c' object='libgstplayback_la-gstplaybackutils.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstplayback_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaybackutils.lo `test -f 'gstplaybackutils.c' || echo '$(srcdir)/'`gstplaybackutils.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstplayback_la_CFLAGS) $(CFLAGS) -c -o libgstplayback_la-gstplaybackutils.lo `test -f 'gstplaybackutils.c' || echo '$(srcdir)/'`gstplaybackutils.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

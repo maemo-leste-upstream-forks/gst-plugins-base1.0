@@ -118,6 +118,7 @@ gst_alsasrc_finalize (GObject * object)
 
   g_free (src->device);
   g_mutex_clear (&src->alsa_lock);
+  g_mutex_clear (&src->delay_lock);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -237,8 +238,11 @@ gst_alsasrc_change_state (GstElement * element, GstStateChange transition)
     case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
     case GST_STATE_CHANGE_PAUSED_TO_READY:
     case GST_STATE_CHANGE_READY_TO_NULL:
+    case GST_STATE_CHANGE_NULL_TO_NULL:
+    case GST_STATE_CHANGE_READY_TO_READY:
+    case GST_STATE_CHANGE_PAUSED_TO_PAUSED:
+    case GST_STATE_CHANGE_PLAYING_TO_PLAYING:
       break;
-
     case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
       alsa->driver_timestamps = FALSE;
 
@@ -272,6 +276,7 @@ gst_alsasrc_init (GstAlsaSrc * alsasrc)
   alsasrc->driver_timestamps = FALSE;
 
   g_mutex_init (&alsasrc->alsa_lock);
+  g_mutex_init (&alsasrc->delay_lock);
 }
 
 #define CHECK(call, error) \
@@ -955,7 +960,11 @@ gst_alsasrc_read (GstAudioSrc * asrc, gpointer data, guint length,
 
   GST_ALSA_SRC_LOCK (asrc);
   while (cptr > 0) {
-    if ((err = snd_pcm_readi (alsa->handle, ptr, cptr)) < 0) {
+    GST_DELAY_SRC_LOCK (asrc);
+    err = snd_pcm_readi (alsa->handle, ptr, cptr);
+    GST_DELAY_SRC_UNLOCK (asrc);
+
+    if (err < 0) {
       if (err == -EAGAIN) {
         GST_DEBUG_OBJECT (asrc, "Read error: %s", snd_strerror (err));
         continue;
@@ -1002,7 +1011,9 @@ gst_alsasrc_delay (GstAudioSrc * asrc)
 
   alsa = GST_ALSA_SRC (asrc);
 
+  GST_DELAY_SRC_LOCK (asrc);
   res = snd_pcm_delay (alsa->handle, &delay);
+  GST_DELAY_SRC_UNLOCK (asrc);
   if (G_UNLIKELY (res < 0)) {
     GST_DEBUG_OBJECT (alsa, "snd_pcm_delay returned %d", res);
     delay = 0;

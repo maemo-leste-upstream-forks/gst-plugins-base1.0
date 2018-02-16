@@ -87,7 +87,7 @@ struct _GstAppSinkPrivate
   GCond cond;
   GMutex mutex;
   GQueue *queue;
-  GstBuffer *preroll;
+  GstBuffer *preroll_buffer;
   GstCaps *preroll_caps;
   GstCaps *last_caps;
   GstSegment preroll_segment;
@@ -302,12 +302,14 @@ gst_app_sink_class_init (GstAppSinkClass * klass)
    * @appsink: the appsink element to emit this signal on
    *
    * Get the last preroll sample in @appsink. This was the sample that caused the
-   * appsink to preroll in the PAUSED state. This sample can be pulled many times
-   * and remains available to the application even after EOS.
+   * appsink to preroll in the PAUSED state.
    *
    * This function is typically used when dealing with a pipeline in the PAUSED
    * state. Calling this function after doing a seek will give the sample right
    * after the seek position.
+   *
+   * Calling this function will clear the internal reference to the preroll
+   * buffer.
    *
    * Note that the preroll sample will also be returned as the first sample
    * when calling gst_app_sink_pull_sample() or the "pull-sample" action signal.
@@ -355,12 +357,14 @@ gst_app_sink_class_init (GstAppSinkClass * klass)
    * @timeout: the maximum amount of time to wait for the preroll sample
    *
    * Get the last preroll sample in @appsink. This was the sample that caused the
-   * appsink to preroll in the PAUSED state. This sample can be pulled many times
-   * and remains available to the application even after EOS.
+   * appsink to preroll in the PAUSED state.
    *
    * This function is typically used when dealing with a pipeline in the PAUSED
    * state. Calling this function after doing a seek will give the sample right
    * after the seek position.
+   *
+   * Calling this function will clear the internal reference to the preroll
+   * buffer.
    *
    * Note that the preroll sample will also be returned as the first sample
    * when calling gst_app_sink_pull_sample() or the "pull-sample" action signal.
@@ -482,7 +486,7 @@ gst_app_sink_dispose (GObject * obj)
   g_mutex_lock (&priv->mutex);
   while ((queue_obj = g_queue_pop_head (priv->queue)))
     gst_mini_object_unref (queue_obj);
-  gst_buffer_replace (&priv->preroll, NULL);
+  gst_buffer_replace (&priv->preroll_buffer, NULL);
   gst_caps_replace (&priv->preroll_caps, NULL);
   gst_caps_replace (&priv->last_caps, NULL);
   g_mutex_unlock (&priv->mutex);
@@ -615,7 +619,7 @@ gst_app_sink_flush_unlocked (GstAppSink * appsink)
 
   GST_DEBUG_OBJECT (appsink, "flush stop appsink");
   priv->is_eos = FALSE;
-  gst_buffer_replace (&priv->preroll, NULL);
+  gst_buffer_replace (&priv->preroll_buffer, NULL);
   while ((obj = g_queue_pop_head (priv->queue)))
     gst_mini_object_unref (obj);
   priv->num_buffers = 0;
@@ -650,7 +654,7 @@ gst_app_sink_stop (GstBaseSink * psink)
   priv->flushing = TRUE;
   priv->started = FALSE;
   gst_app_sink_flush_unlocked (appsink);
-  gst_buffer_replace (&priv->preroll, NULL);
+  gst_buffer_replace (&priv->preroll_buffer, NULL);
   gst_caps_replace (&priv->preroll_caps, NULL);
   gst_caps_replace (&priv->last_caps, NULL);
   gst_segment_init (&priv->preroll_segment, GST_FORMAT_UNDEFINED);
@@ -669,7 +673,7 @@ gst_app_sink_setcaps (GstBaseSink * sink, GstCaps * caps)
   g_mutex_lock (&priv->mutex);
   GST_DEBUG_OBJECT (appsink, "receiving CAPS");
   g_queue_push_tail (priv->queue, gst_event_new_caps (caps));
-  if (!priv->preroll)
+  if (!priv->preroll_buffer)
     gst_caps_replace (&priv->preroll_caps, caps);
   g_mutex_unlock (&priv->mutex);
 
@@ -687,7 +691,7 @@ gst_app_sink_event (GstBaseSink * sink, GstEvent * event)
       g_mutex_lock (&priv->mutex);
       GST_DEBUG_OBJECT (appsink, "receiving SEGMENT");
       g_queue_push_tail (priv->queue, gst_event_ref (event));
-      if (!priv->preroll)
+      if (!priv->preroll_buffer)
         gst_event_copy_segment (event, &priv->preroll_segment);
       g_mutex_unlock (&priv->mutex);
       break;
@@ -751,7 +755,7 @@ gst_app_sink_preroll (GstBaseSink * psink, GstBuffer * buffer)
     goto flushing;
 
   GST_DEBUG_OBJECT (appsink, "setting preroll buffer %p", buffer);
-  gst_buffer_replace (&priv->preroll, buffer);
+  gst_buffer_replace (&priv->preroll_buffer, buffer);
 
   g_cond_signal (&priv->cond);
   emit = priv->emit_signals;
@@ -961,9 +965,21 @@ gst_app_sink_getcaps (GstBaseSink * psink, GstCaps * filter)
 static gboolean
 gst_app_sink_query (GstBaseSink * bsink, GstQuery * query)
 {
+  GstAppSink *appsink = GST_APP_SINK_CAST (bsink);
+  GstAppSinkPrivate *priv = appsink->priv;
   gboolean ret;
 
   switch (GST_QUERY_TYPE (query)) {
+    case GST_QUERY_DRAIN:
+    {
+      g_mutex_lock (&priv->mutex);
+      GST_DEBUG_OBJECT (appsink, "waiting buffers to be consumed");
+      while (priv->num_buffers > 0 || priv->preroll_buffer)
+        g_cond_wait (&priv->cond, &priv->mutex);
+      g_mutex_unlock (&priv->mutex);
+      ret = GST_BASE_SINK_CLASS (parent_class)->query (bsink, query);
+      break;
+    }
     case GST_QUERY_SEEKING:{
       GstFormat fmt;
 
@@ -1357,12 +1373,14 @@ gst_app_sink_get_wait_on_eos (GstAppSink * appsink)
  * @appsink: a #GstAppSink
  *
  * Get the last preroll sample in @appsink. This was the sample that caused the
- * appsink to preroll in the PAUSED state. This sample can be pulled many times
- * and remains available to the application even after EOS.
+ * appsink to preroll in the PAUSED state.
  *
  * This function is typically used when dealing with a pipeline in the PAUSED
  * state. Calling this function after doing a seek will give the sample right
  * after the seek position.
+ *
+ * Calling this function will clear the internal reference to the preroll
+ * buffer.
  *
  * Note that the preroll sample will also be returned as the first sample
  * when calling gst_app_sink_pull_sample().
@@ -1413,12 +1431,14 @@ gst_app_sink_pull_sample (GstAppSink * appsink)
  * @timeout: the maximum amount of time to wait for the preroll sample
  *
  * Get the last preroll sample in @appsink. This was the sample that caused the
- * appsink to preroll in the PAUSED state. This sample can be pulled many times
- * and remains available to the application even after EOS.
+ * appsink to preroll in the PAUSED state.
  *
  * This function is typically used when dealing with a pipeline in the PAUSED
  * state. Calling this function after doing a seek will give the sample right
  * after the seek position.
+ *
+ * Calling this function will clear the internal reference to the preroll
+ * buffer.
  *
  * Note that the preroll sample will also be returned as the first sample
  * when calling gst_app_sink_pull_sample().
@@ -1460,7 +1480,7 @@ gst_app_sink_try_pull_preroll (GstAppSink * appsink, GstClockTime timeout)
     if (!priv->started)
       goto not_started;
 
-    if (priv->preroll != NULL)
+    if (priv->preroll_buffer != NULL)
       break;
 
     if (priv->is_eos)
@@ -1476,8 +1496,9 @@ gst_app_sink_try_pull_preroll (GstAppSink * appsink, GstClockTime timeout)
     }
   }
   sample =
-      gst_sample_new (priv->preroll, priv->preroll_caps, &priv->preroll_segment,
-      NULL);
+      gst_sample_new (priv->preroll_buffer, priv->preroll_caps,
+      &priv->preroll_segment, NULL);
+  gst_buffer_replace (&priv->preroll_buffer, NULL);
   GST_DEBUG_OBJECT (appsink, "we have the preroll sample %p", sample);
   g_mutex_unlock (&priv->mutex);
 
@@ -1547,6 +1568,7 @@ gst_app_sink_try_pull_sample (GstAppSink * appsink, GstClockTime timeout)
   priv = appsink->priv;
 
   g_mutex_lock (&priv->mutex);
+  gst_buffer_replace (&priv->preroll_buffer, NULL);
 
   while (TRUE) {
     GST_DEBUG_OBJECT (appsink, "trying to grab a buffer");

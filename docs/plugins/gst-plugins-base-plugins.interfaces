@@ -7,13 +7,22 @@ GstAppSink GstURIHandler
 GstAppSrc GstURIHandler
 GstAudioCdSrc GstURIHandler
 GstAudioEncoder GstPreset
+GstAudioInterleave GstChildProxy
+GstAudioMixer GstChildProxy
 GstBin GstChildProxy
 GstCdParanoiaSrc GstURIHandler
 GstDecodeBin GstChildProxy
 GstDecodebin3 GstChildProxy
 GstEncodeBin GstChildProxy
+GstGLColorBalance GstColorBalance
+GstGLFilterBin GstChildProxy
+GstGLImageSink GstVideoOverlay GstNavigation
+GstGLImageSinkBin GstChildProxy GstVideoOverlay GstNavigation GstColorBalance
+GstGLSinkBin GstChildProxy GstVideoOverlay GstNavigation GstColorBalance
+GstGLSrcBin GstChildProxy
 GstGioSink GstURIHandler
 GstGioSrc GstURIHandler
+GstLiveAdder GstChildProxy
 GstOggMux GstPreset
 GstOpusEnc GstPreset GstTagSetter
 GstParseBin GstChildProxy
@@ -24,6 +33,7 @@ GstPlaySink GstChildProxy GstStreamVolume GstVideoOverlay GstNavigation GstColor
 GstSubtitleOverlay GstChildProxy
 GstTheoraEnc GstPreset
 GstURIDecodeBin GstChildProxy
+GstURIDecodeBin3 GstChildProxy
 GstURISourceBin GstChildProxy
 GstUnalignedAudioParse GstChildProxy
 GstUnalignedVideoParse GstChildProxy

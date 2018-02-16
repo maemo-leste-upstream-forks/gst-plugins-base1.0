@@ -68,6 +68,15 @@
 /* Defined if gcov is enabled to force a rebuild due to config.h changing */
 #undef GST_GCOV_ENABLED
 
+/* EGL module name */
+#undef GST_GL_LIBEGL_MODULE_NAME
+
+/* GLES2 module name */
+#undef GST_GL_LIBGLESV2_MODULE_NAME
+
+/* OpenGL module name */
+#undef GST_GL_LIBGL_MODULE_NAME
+
 /* Defined when registry scanning through fork is unsafe */
 #undef GST_HAVE_UNSAFE_FORK
 
@@ -88,9 +97,6 @@
 
 /* GStreamer package release date/time for plugins as YYYY-MM-DD */
 #undef GST_PACKAGE_RELEASE_DATETIME
-
-/* Define if static plugins should be built */
-#undef GST_PLUGIN_BUILD_STATIC
 
 /* Define to enable ALSA (used by alsa). */
 #undef HAVE_ALSA
@@ -172,6 +178,9 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* Define to 1 if the system has the type `EGLAttrib'. */
+#undef HAVE_EGLATTRIB
+
 /* Define to 1 if you have the <emmintrin.h> header file. */
 #undef HAVE_EMMINTRIN_H
 
@@ -193,8 +202,35 @@
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
 
+/* Define to enable gl elements (used by gl). */
+#undef HAVE_GL
+
+/* Define to 1 if the system has the type `GLchar'. */
+#undef HAVE_GLCHAR
+
+/* Define to 1 if the system has the type `GLeglImageOES'. */
+#undef HAVE_GLEGLIMAGEOES
+
+/* Define to 1 if the system has the type `GLint64'. */
+#undef HAVE_GLINT64
+
+/* Define to 1 if the system has the type `GLintptr'. */
+#undef HAVE_GLINTPTR
+
+/* Define to 1 if the system has the type `GLsizeiptr'. */
+#undef HAVE_GLSIZEIPTR
+
+/* Define to 1 if the system has the type `GLsync'. */
+#undef HAVE_GLSYNC
+
+/* Define to 1 if the system has the type `GLuint64'. */
+#undef HAVE_GLUINT64
+
 /* Define to 1 if you have the `gmtime_r' function. */
 #undef HAVE_GMTIME_R
+
+/* Use graphene */
+#undef HAVE_GRAPHENE
 
 /* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
@@ -202,11 +238,17 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define if building for Apple iOS */
+#undef HAVE_IOS
+
 /* make use of iso-codes for ISO-639 */
 #undef HAVE_ISO_CODES
 
 /* Define to enable integer vorbis plug-in (used by ivorbisdec). */
 #undef HAVE_IVORBIS
+
+/* Use libjpeg */
+#undef HAVE_JPEG
 
 /* Define to 1 if you have the `asound' library (-lasound). */
 #undef HAVE_LIBASOUND
@@ -246,6 +288,9 @@
 
 /* Define to enable Pango font rendering (used by pango). */
 #undef HAVE_PANGO
+
+/* Use libpng */
+#undef HAVE_PNG
 
 /* defined if the compiler implements __PRETTY_FUNCTION__ */
 #undef HAVE_PRETTY_FUNCTION
@@ -400,6 +445,12 @@
 
 /* the target CPU */
 #undef TARGET_CPU
+
+/* Use Mali FB EGL platform */
+#undef USE_EGL_MALI_FB
+
+/* Use RPi platform */
+#undef USE_EGL_RPI
 
 /* "Define if building for android" */
 #undef USE_TREMOLO

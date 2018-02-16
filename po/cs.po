@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base-1.10.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2017-12-07 19:18+0200\n"
+"POT-Creation-Date: 2018-02-15 17:01+0000\n"
 "PO-Revision-Date: 2017-09-13 15:20+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -77,6 +77,15 @@ msgstr "Nezdařilo přeskočit na CD."
 msgid "Could not read CD."
 msgstr "Nezdařilo čtení z CD."
 
+msgid "failed to draw pattern"
+msgstr ""
+
+msgid "A GL error occurred"
+msgstr ""
+
+msgid "format wasn't negotiated before get function"
+msgstr ""
+
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr "Schází prvek „%s“ – zkontrolujte prosím instalaci systému GStreamer."
@@ -90,11 +99,9 @@ msgstr "Zdá se, že se jedná o textový soubor"
 msgid "Could not create \"uridecodebin\" element."
 msgstr "Nelze vytvořit prvek „uridecodebin“."
 
-msgid "Could not create \"decodebin3\" element."
-msgstr "Nelze vytvořit prvek „decodebin3“."
-
-msgid "Could not create \"urisourcebin\" element."
-msgstr "Nelze vytvořit prvek „urisourcebin“."
+#, fuzzy
+msgid "Could not create \"uridecodebin3\" element."
+msgstr "Nelze vytvořit prvek „uridecodebin“."
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
@@ -664,6 +671,12 @@ msgstr "Soubor se seznamem k přehrání obsahující vstupní multimediální s
 msgid "Do not print any output (apart from errors)"
 msgstr "Nevypisovat žádný výstup (mimo chyb)"
 
+msgid "Use playbin3 pipeline"
+msgstr ""
+
+msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
+msgstr ""
+
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."
 msgstr "Použítí: %s SOUBOR1|URI1 [SOUBOR2|URI2] [SOUBOR3|URI3] …"
@@ -673,3 +686,9 @@ msgstr "Musíte zadat minimálně jeden název souboru nebo adresu URI k přehr�
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr "Zmáčknutím „k“ si zobrazíte seznam klávesových zkratek.\n"
+
+#~ msgid "Could not create \"decodebin3\" element."
+#~ msgstr "Nelze vytvořit prvek „decodebin3“."
+
+#~ msgid "Could not create \"urisourcebin\" element."
+#~ msgstr "Nelze vytvořit prvek „urisourcebin“."

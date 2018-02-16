@@ -63,6 +63,7 @@ static void parsebin_pad_added_cb (GstElement * demux, GstPad * pad,
 static void parsebin_pad_removed_cb (GstElement * demux, GstPad * pad,
     DecodebinInput * input);
 
+/* WITH SELECTION_LOCK TAKEN! */
 static gboolean
 pending_pads_are_eos (DecodebinInput * input)
 {
@@ -77,6 +78,7 @@ pending_pads_are_eos (DecodebinInput * input)
   return TRUE;
 }
 
+/* WITH SELECTION_LOCK TAKEN! */
 static gboolean
 all_inputs_are_eos (GstDecodebin3 * dbin)
 {
@@ -99,6 +101,7 @@ all_inputs_are_eos (GstDecodebin3 * dbin)
   return TRUE;
 }
 
+/* WITH SELECTION_LOCK TAKEN! */
 static void
 check_all_streams_for_eos (GstDecodebin3 * dbin)
 {
@@ -205,7 +208,7 @@ parse_chain_output_probe (GstPad * pad, GstPadProbeInfo * info,
       case GST_EVENT_STREAM_START:
       {
         GstStream *stream = NULL;
-        guint group_id = G_MAXUINT32;
+        guint group_id = GST_GROUP_ID_INVALID;
 
         if (!gst_event_parse_group_id (ev, &group_id)) {
           GST_FIXME_OBJECT (pad,
@@ -231,10 +234,10 @@ parse_chain_output_probe (GstPad * pad, GstPadProbeInfo * info,
               gst_object_unref (input->active_stream);
             input->active_stream = stream;
             /* We have the beginning of a stream, get a multiqueue slot and link to it */
-            g_mutex_lock (&input->dbin->selection_lock);
+            SELECTION_LOCK (input->dbin);
             slot = get_slot_for_input (input->dbin, input);
             link_input_to_slot (input, slot);
-            g_mutex_unlock (&input->dbin->selection_lock);
+            SELECTION_UNLOCK (input->dbin);
           } else
             gst_object_unref (stream);
         }
@@ -253,7 +256,9 @@ parse_chain_output_probe (GstPad * pad, GstPadProbeInfo * info,
         input->saw_eos = TRUE;
         if (all_inputs_are_eos (input->dbin)) {
           GST_DEBUG_OBJECT (pad, "real input pad, marking as EOS");
+          SELECTION_LOCK (input->dbin);
           check_all_streams_for_eos (input->dbin);
+          SELECTION_UNLOCK (input->dbin);
         } else {
           GstPad *peer = gst_pad_get_peer (input->srcpad);
           if (peer) {
@@ -340,12 +345,15 @@ create_input_stream (GstDecodebin3 * dbin, GstStream * stream, GstPad * pad,
       (GstPadProbeCallback) parse_chain_output_probe, res, NULL);
 
   /* Add to list of current input streams */
+  SELECTION_LOCK (dbin);
   dbin->input_streams = g_list_append (dbin->input_streams, res);
+  SELECTION_UNLOCK (dbin);
   GST_DEBUG_OBJECT (pad, "Done creating input stream");
 
   return res;
 }
 
+/* WITH SELECTION_LOCK TAKEN! */
 static void
 remove_input_stream (GstDecodebin3 * dbin, DecodebinInputStream * stream)
 {
@@ -365,9 +373,7 @@ remove_input_stream (GstDecodebin3 * dbin, DecodebinInputStream * stream)
     }
   }
 
-  g_mutex_lock (&dbin->selection_lock);
   slot = get_slot_for_input (dbin, stream);
-  g_mutex_unlock (&dbin->selection_lock);
   if (slot) {
     slot->pending_stream = NULL;
     slot->input = NULL;
@@ -393,8 +399,6 @@ parsebin_buffer_probe (GstPad * pad, GstPadProbeInfo * info,
   GstDecodebin3 *dbin = input->dbin;
   GList *tmp, *unused_slot = NULL;
 
-  GST_FIXME_OBJECT (dbin, "Need a lock !");
-
   GST_DEBUG_OBJECT (pad, "Got a buffer ! UNBLOCK !");
 
   /* Any data out the demuxer means it's not creating pads
@@ -405,10 +409,16 @@ parsebin_buffer_probe (GstPad * pad, GstPadProbeInfo * info,
 
   /* 2. Remove unused streams (push EOS) */
   GST_DEBUG_OBJECT (dbin, "Removing unused streams");
+  SELECTION_LOCK (dbin);
   tmp = dbin->input_streams;
   while (tmp != NULL) {
     DecodebinInputStream *input_stream = (DecodebinInputStream *) tmp->data;
     GList *next = tmp->next;
+
+    if (input_stream->input != input) {
+      tmp = next;
+      continue;
+    }
 
     GST_DEBUG_OBJECT (dbin, "Checking input stream %p", input_stream);
     if (input_stream->input_buffer_probe_id) {
@@ -426,6 +436,7 @@ parsebin_buffer_probe (GstPad * pad, GstPadProbeInfo * info,
     } else
       tmp = next;
   }
+  SELECTION_UNLOCK (dbin);
 
   GST_DEBUG_OBJECT (dbin, "Creating new streams (if needed)");
   /* 3. Create new streams */
@@ -445,10 +456,10 @@ parsebin_buffer_probe (GstPad * pad, GstPadProbeInfo * info,
       /* See if we can link it straight away */
       input_stream->active_stream = stream;
 
-      g_mutex_lock (&dbin->selection_lock);
+      SELECTION_LOCK (dbin);
       slot = get_slot_for_input (dbin, input_stream);
       link_input_to_slot (input_stream, slot);
-      g_mutex_unlock (&dbin->selection_lock);
+      SELECTION_UNLOCK (dbin);
 
       /* Remove the buffer and event probe */
       gst_pad_remove_probe (ppad->pad, ppad->buffer_probe);
@@ -461,7 +472,7 @@ parsebin_buffer_probe (GstPad * pad, GstPadProbeInfo * info,
   input->pending_pads = NULL;
 
   /* Weed out unused multiqueue slots */
-  g_mutex_lock (&dbin->selection_lock);
+  SELECTION_LOCK (dbin);
   for (tmp = dbin->slots; tmp; tmp = tmp->next) {
     MultiQueueSlot *slot = (MultiQueueSlot *) tmp->data;
     GST_LOG_OBJECT (dbin, "Slot %d input:%p", slot->id, slot->input);
@@ -470,7 +481,7 @@ parsebin_buffer_probe (GstPad * pad, GstPadProbeInfo * info,
           g_list_append (unused_slot, gst_object_ref (slot->sink_pad));
     }
   }
-  g_mutex_unlock (&dbin->selection_lock);
+  SELECTION_UNLOCK (dbin);
 
   for (tmp = unused_slot; tmp; tmp = tmp->next) {
     GstPad *sink_pad = (GstPad *) tmp->data;
@@ -539,11 +550,11 @@ parsebin_pad_added_cb (GstElement * demux, GstPad * pad, DecodebinInput * input)
 
   input->pending_pads = g_list_append (input->pending_pads, ppad);
 
-  /* FIXME : ONLY DO FOR THIS PARSEBIN/INPUT ! */
   /* Check if all existing input streams have a buffer probe set */
   for (tmp = dbin->input_streams; tmp; tmp = tmp->next) {
     DecodebinInputStream *input_stream = (DecodebinInputStream *) tmp->data;
-    if (input_stream->input_buffer_probe_id == 0) {
+    if (input_stream->input == input &&
+        input_stream->input_buffer_probe_id == 0) {
       GST_DEBUG_OBJECT (input_stream->srcpad, "Adding blocking buffer probe");
       input_stream->input_buffer_probe_id =
           gst_pad_add_probe (input_stream->srcpad,
@@ -578,11 +589,8 @@ parsebin_pad_removed_cb (GstElement * demux, GstPad * pad, DecodebinInput * inp)
 
       SELECTION_LOCK (dbin);
       slot = get_slot_for_input (dbin, input);
-      SELECTION_UNLOCK (dbin);
 
       remove_input_stream (dbin, input);
-
-      SELECTION_LOCK (dbin);
       if (slot && g_list_find (dbin->slots, slot) && slot->is_drained) {
         /* if slot is still there and already drained, remove it in here */
         if (slot->output) {

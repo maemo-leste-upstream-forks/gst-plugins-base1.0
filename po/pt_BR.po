@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base-1.7.90\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2017-12-07 19:18+0200\n"
+"POT-Creation-Date: 2018-02-15 17:01+0000\n"
 "PO-Revision-Date: 2016-05-06 16:47-0300\n"
 "Last-Translator: Fabrício Godoy <skarllot@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <ldpbr-translation@lists.sourceforge."
@@ -79,6 +79,15 @@ msgstr "Não foi possível buscar no CD."
 msgid "Could not read CD."
 msgstr "Não foi possível ler o CD."
 
+msgid "failed to draw pattern"
+msgstr ""
+
+msgid "A GL error occurred"
+msgstr ""
+
+msgid "format wasn't negotiated before get function"
+msgstr ""
+
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr ""
@@ -94,11 +103,7 @@ msgid "Could not create \"uridecodebin\" element."
 msgstr "Não foi possível criar o elemento \"uridecodebin\"."
 
 #, fuzzy
-msgid "Could not create \"decodebin3\" element."
-msgstr "Não foi possível criar o elemento \"decodebin2\"."
-
-#, fuzzy
-msgid "Could not create \"urisourcebin\" element."
+msgid "Could not create \"uridecodebin3\" element."
 msgstr "Não foi possível criar o elemento \"uridecodebin\"."
 
 #, c-format
@@ -686,6 +691,12 @@ msgstr "Arquivo de lista de reprodução que contém arquivos de mídia de entra
 msgid "Do not print any output (apart from errors)"
 msgstr "Não exibir nenhuma saída (além dos erros)"
 
+msgid "Use playbin3 pipeline"
+msgstr ""
+
+msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
+msgstr ""
+
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."
 msgstr "Uso: %s ARQ1|URI1 [ARQ2|URI2] [ARQ3|URI3] ..."
@@ -695,6 +706,14 @@ msgstr "Você deve fornecer ao menos um nome de arquivo ou URI para reproduzir."
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr "Pressione \"k\" para ver a lista de atalhos do teclado.\n"
+
+#, fuzzy
+#~ msgid "Could not create \"decodebin3\" element."
+#~ msgstr "Não foi possível criar o elemento \"decodebin2\"."
+
+#, fuzzy
+#~ msgid "Could not create \"urisourcebin\" element."
+#~ msgstr "Não foi possível criar o elemento \"uridecodebin\"."
 
 #~ msgid "Internal data stream error."
 #~ msgstr "Erro interno no fluxo de dados."

@@ -7,8 +7,8 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gst-plugins-base Elements">
 <link rel="prev" href="gst-plugins-base-plugins-appsrc.html" title="appsrc">
-<link rel="next" href="gst-plugins-base-plugins-audiorate.html" title="audiorate">
-<meta name="generator" content="GTK-Doc V1.26 (XML mode)">
+<link rel="next" href="gst-plugins-base-plugins-audiointerleave.html" title="audiointerleave">
+<meta name="generator" content="GTK-Doc V1.27 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -22,7 +22,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gst-plugins-base-plugins-appsrc.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-plugins-audiorate.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-plugins-audiointerleave.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-plugins-audioconvert"></a><div class="titlepage"></div>
@@ -50,6 +50,11 @@
 <tr>
 <td class="property_type"><a href="../html/gst-plugins-base-libs-GstAudioQuantize.html#GstAudioNoiseShapingMethod"><span class="type">GstAudioNoiseShapingMethod</span></a></td>
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-audioconvert.html#GstAudioConvert--noise-shaping" title="The “noise-shaping” property">noise-shaping</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstControlSource.html#GstValueArray"><span class="type">GstValueArray</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-audioconvert.html#GstAudioConvert--mix-matrix" title="The “mix-matrix” property">mix-matrix</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 </tbody>
@@ -116,11 +121,114 @@ the output levels still match the one for a sine wave.</p>
 output by most other audio elements. This pipeline decodes a FLAC audio file
 (or any other audio file for which decoders are installed) and re-encodes
 it into an Ogg/Vorbis audio file.</p>
+<p>A mix matrix can be passed to audioconvert, that will govern the
+remapping of input to output channels.</p>
+</div>
+<div class="refsect3">
+<a name="id-1.2.8.7.4"></a><h4>Example matrix generation code</h4>
+<p>To generate the matrix using code:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td>
+        <td class="listing_code"><pre class="programlisting">GValue v <span class="gtkdoc opt">=</span> G_VALUE_INIT<span class="gtkdoc opt">;</span>
+GValue v2 <span class="gtkdoc opt">=</span> G_VALUE_INIT<span class="gtkdoc opt">;</span>
+GValue v3 <span class="gtkdoc opt">=</span> G_VALUE_INIT<span class="gtkdoc opt">;</span>
+
+<span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-init">g_value_init</a></span> <span class="gtkdoc opt">(&amp;</span>v2<span class="gtkdoc opt">,</span> GST_TYPE_ARRAY<span class="gtkdoc opt">);</span>
+<span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-init">g_value_init</a></span> <span class="gtkdoc opt">(&amp;</span>v3<span class="gtkdoc opt">,</span> G_TYPE_FLOAT<span class="gtkdoc opt">);</span>
+<span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Standard-Parameter-and-Value-Types.html#g-value-set-float">g_value_set_float</a></span> <span class="gtkdoc opt">(&amp;</span>v3<span class="gtkdoc opt">,</span> <span class="number">1</span><span class="gtkdoc opt">);</span>
+<span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstValue.html#gst-value-array-append-value">gst_value_array_append_value</a></span> <span class="gtkdoc opt">(&amp;</span>v2<span class="gtkdoc opt">, &amp;</span>v3<span class="gtkdoc opt">);</span>
+<span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-unset">g_value_unset</a></span> <span class="gtkdoc opt">(&amp;</span>v3<span class="gtkdoc opt">);</span>
+<span class="gtkdoc opt">[</span> Repeat <span class="keyword">for</span> as many <span class="gtkdoc kwb">float</span> as your input channels <span class="gtkdoc opt">-</span> unset <span class="keyword">and</span> reinit v3 <span class="gtkdoc opt">]</span>
+<span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-init">g_value_init</a></span> <span class="gtkdoc opt">(&amp;</span>v<span class="gtkdoc opt">,</span> GST_TYPE_ARRAY<span class="gtkdoc opt">);</span>
+<span class="function"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstValue.html#gst-value-array-append-value">gst_value_array_append_value</a></span> <span class="gtkdoc opt">(&amp;</span>v<span class="gtkdoc opt">, &amp;</span>v2<span class="gtkdoc opt">);</span>
+<span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-unset">g_value_unset</a></span> <span class="gtkdoc opt">(&amp;</span>v2<span class="gtkdoc opt">);</span>
+<span class="gtkdoc opt">[</span> Repeat <span class="keyword">for</span> as many v2<span class="string">&apos;s as your output channels - unset and reinit v2]</span>
+<span class="string">g_object_set_property (G_OBJECT (audioconvert), &quot;mix-matrix&quot;, &amp;v);</span>
+<span class="string">g_value_unset (&amp;v);</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+</div>
+<div class="refsect3">
+<a name="id-1.2.8.7.5"></a><h4>Example launch line</h4>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> audiotestsrc <span class="gtkdoc opt">!</span> audio<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span> channels<span class="gtkdoc opt">=</span><span class="number">4</span> <span class="gtkdoc opt">!</span> audioconvert mix<span class="gtkdoc opt">-</span>matrix<span class="gtkdoc opt">=</span><span class="string">&quot;&lt;&lt;(float)1.0, (float)0.0, (float)0.0, (float)0.0&gt;, &lt;(float)0.0, (float)1.0, (float)0.0, (float)0.0&gt;&gt;&quot;</span> <span class="gtkdoc opt">!</span> audio<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span>channels<span class="gtkdoc opt">=</span><span class="number">2</span> <span class="gtkdoc opt">!</span> autoaudiosink</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<div class="blockquote"><blockquote class="blockquote"><p>If an empty mix matrix is specified, a (potentially truncated)
+identity matrix will be generated.</p></blockquote></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.8.7.6"></a><h4>Example empty matrix generation code</h4>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5</pre></td>
+        <td class="listing_code"><pre class="programlisting">GValue v <span class="gtkdoc opt">=</span> G_VALUE_INIT<span class="gtkdoc opt">;</span>
+
+<span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-init">g_value_init</a></span> <span class="gtkdoc opt">(&amp;</span>v<span class="gtkdoc opt">,</span> GST_TYPE_ARRAY<span class="gtkdoc opt">);</span>
+<span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-set-property">g_object_set_property</a></span> <span class="gtkdoc opt">(</span><span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#G-OBJECT:CAPS">G_OBJECT</a></span> <span class="gtkdoc opt">(</span>audioconvert<span class="gtkdoc opt">),</span> <span class="string">&quot;mix-matrix&quot;</span><span class="gtkdoc opt">, &amp;</span>v<span class="gtkdoc opt">);</span>
+<span class="function"><a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#g-value-unset">g_value_unset</a></span> <span class="gtkdoc opt">(&amp;</span>v<span class="gtkdoc opt">);</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+</div>
+<div class="refsect3">
+<a name="id-1.2.8.7.7"></a><h4>Example empty matrix launch line</h4>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> <span class="gtkdoc opt">-</span>v audiotestsrc <span class="gtkdoc opt">!</span> audio<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span>channels<span class="gtkdoc opt">=</span><span class="number">8</span> <span class="gtkdoc opt">!</span> audioconvert mix<span class="gtkdoc opt">-</span>matrix<span class="gtkdoc opt">=</span><span class="string">&quot;&lt;&gt;&quot;</span> <span class="gtkdoc opt">!</span> audio<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span>channels<span class="gtkdoc opt">=</span><span class="number">16</span><span class="gtkdoc opt">,</span>channel<span class="gtkdoc opt">-</span>mask<span class="gtkdoc opt">=</span>\<span class="gtkdoc opt">(</span>bitmask\<span class="gtkdoc opt">)</span><span class="number">0x0000000000000000</span> <span class="gtkdoc opt">!</span> fakesink</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
 </div>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.8.7.4.1"></a><h3>Element Information</h3>
+<a name="id-1.2.8.7.8.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -146,7 +254,7 @@ it into an Ogg/Vorbis audio file.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.8.7.4.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.8.7.8.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -227,9 +335,16 @@ it into an Ogg/Vorbis audio file.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: GST_AUDIO_NOISE_SHAPING_NONE</p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioConvert--mix-matrix"></a><h3>The <code class="literal">“mix-matrix”</code> property</h3>
+<pre class="programlisting">  “mix-matrix”               <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstControlSource.html#GstValueArray"><span class="type">GstValueArray</span></a></pre>
+<p>Transformation matrix for input/output channels.</p>
+<p>Flags: Read / Write</p>
+</div>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.26</div>
+<hr>Generated by GTK-Doc V1.27</div>
 </body>
 </html>

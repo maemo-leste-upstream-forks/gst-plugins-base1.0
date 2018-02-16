@@ -19,6 +19,7 @@ glib_enum_headers= 		\
 glib_enum_define = GST_AUDIO
 glib_gen_prefix = gst_audio
 glib_gen_basename = audio
+glib_gen_decl_banner=GST_EXPORT
 
 built_sources = audio-enumtypes.c
 built_headers = audio-enumtypes.h
@@ -40,6 +41,7 @@ libgstaudio_@GST_API_VERSION@_la_SOURCES = \
 	audio-info.c \
 	audio-quantize.c \
 	audio-resampler.c \
+	gstaudioaggregator.c \
 	gstaudioringbuffer.c \
 	gstaudioclock.c \
 	gstaudiocdsrc.c \
@@ -53,7 +55,8 @@ libgstaudio_@GST_API_VERSION@_la_SOURCES = \
 	gstaudiosrc.c \
 	gstaudioutilsprivate.c \
 	streamvolume.c \
-	gstaudioiec61937.c
+	gstaudioiec61937.c \
+	gstaudiostreamalign.c
 
 nodist_libgstaudio_@GST_API_VERSION@_la_SOURCES = $(BUILT_SOURCES)
 
@@ -67,6 +70,7 @@ libgstaudio_@GST_API_VERSION@include_HEADERS = \
 	audio-info.h \
 	audio-quantize.h \
 	audio-resampler.h \
+	gstaudioaggregator.h \
 	gstaudioringbuffer.h \
 	gstaudioclock.h \
 	gstaudiofilter.h \
@@ -79,7 +83,8 @@ libgstaudio_@GST_API_VERSION@include_HEADERS = \
 	gstaudiosink.h \
 	gstaudiosrc.h \
 	streamvolume.h \
-	gstaudioiec61937.h
+	gstaudioiec61937.h \
+	gstaudiostreamalign.h
 
 nodist_libgstaudio_@GST_API_VERSION@include_HEADERS = \
 	audio-enumtypes.h
@@ -157,7 +162,7 @@ gir_sources+=$(patsubst %,$(builddir)/%, $(built_sources))
 
 GstAudio-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstaudio-@GST_API_VERSION@.la
 	$(AM_V_GEN)PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" GI_SCANNER_DISABLE_CACHE=yes\
-		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_UPDATE=no \
+		GST_PLUGIN_SYSTEM_PATH_1_0="" GST_PLUGIN_PATH_1_0="" GST_REGISTRY_DISABLE=yes \
 		CPPFLAGS="$(CPPFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" CC="$(CC)" PKG_CONFIG="$(PKG_CONFIG)" DLLTOOL="$(DLLTOOL)" \
 		$(INTROSPECTION_SCANNER) -v --namespace GstAudio \
 		--nsversion=@GST_API_VERSION@ \

@@ -71,7 +71,7 @@ gst_buffer_pool_config_set_video_alignment (GstStructure * config,
  * Get the video alignment from the bufferpool configuration @config in
  * in @align
  *
- * Returns: #TRUE if @config could be parsed correctly.
+ * Returns: %TRUE if @config could be parsed correctly.
  */
 gboolean
 gst_buffer_pool_config_get_video_alignment (GstStructure * config,
@@ -280,7 +280,7 @@ no_memory:
  * Create a new bufferpool that can allocate video frames. This bufferpool
  * supports all the video bufferpool options.
  *
- * Returns: (transfer floating): a new #GstBufferPool to allocate video frames
+ * Returns: (transfer full): a new #GstBufferPool to allocate video frames
  */
 GstBufferPool *
 gst_video_buffer_pool_new ()
@@ -288,6 +288,7 @@ gst_video_buffer_pool_new ()
   GstVideoBufferPool *pool;
 
   pool = g_object_new (GST_TYPE_VIDEO_BUFFER_POOL, NULL);
+  gst_object_ref_sink (pool);
 
   GST_LOG_OBJECT (pool, "new video buffer pool %p", pool);
 

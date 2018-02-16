@@ -575,6 +575,8 @@ gst_encoding_profile_get_presence (GstEncodingProfile * profile)
  * @profile: a #GstEncodingProfile
  *
  * Returns: Whther @profile is enabled or not
+ *
+ * Since 1.6
  */
 gboolean
 gst_encoding_profile_is_enabled (GstEncodingProfile * profile)
@@ -747,6 +749,8 @@ gst_encoding_profile_set_presence (GstEncodingProfile * profile, guint presence)
  * @enabled: %FALSE to disable #profile, %TRUE to enable it
  *
  * Set whether the profile should be used or not.
+ *
+ * Since 1.6
  */
 void
 gst_encoding_profile_set_enabled (GstEncodingProfile * profile,
@@ -1156,7 +1160,7 @@ gst_encoding_container_profile_new (const gchar * name,
 /**
  * gst_encoding_video_profile_new:
  * @format: (transfer none): the #GstCaps
- * @preset: (allow-none): the preset(s) to use on the encoder, can be #NULL
+ * @preset: (allow-none): the preset(s) to use on the encoder, can be %NULL
  * @restriction: (allow-none): the #GstCaps used to restrict the input to the encoder, can be
  * NULL. See gst_encoding_profile_get_restriction() for more details.
  * @presence: the number of time this stream must be used. 0 means any number of
@@ -1187,7 +1191,7 @@ gst_encoding_video_profile_new (GstCaps * format, const gchar * preset,
 /**
  * gst_encoding_audio_profile_new:
  * @format: (transfer none): the #GstCaps
- * @preset: (allow-none): the preset(s) to use on the encoder, can be #NULL
+ * @preset: (allow-none): the preset(s) to use on the encoder, can be %NULL
  * @restriction: (allow-none): the #GstCaps used to restrict the input to the encoder, can be
  * NULL. See gst_encoding_profile_get_restriction() for more details.
  * @presence: the number of time this stream must be used. 0 means any number of

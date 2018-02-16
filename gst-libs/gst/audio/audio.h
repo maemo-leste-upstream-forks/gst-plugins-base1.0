@@ -31,6 +31,7 @@
 #include <gst/audio/audio-quantize.h>
 #include <gst/audio/audio-converter.h>
 #include <gst/audio/audio-resampler.h>
+#include <gst/audio/gstaudiostreamalign.h>
 
 G_BEGIN_DECLS
 
@@ -88,6 +89,7 @@ G_BEGIN_DECLS
  * handling
  */
 
+GST_EXPORT
 GstBuffer *    gst_audio_buffer_clip     (GstBuffer *buffer,
                                           const GstSegment *segment,
                                           gint rate, gint bpf);

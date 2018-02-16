@@ -187,6 +187,13 @@ struct _GstDecodeBin
   GList *buffering_status;      /* element currently buffering messages */
   GMutex buffering_lock;
   GMutex buffering_post_lock;
+
+  GMutex cleanup_lock;          /* Mutex used to protect the cleanup thread */
+  GThread *cleanup_thread;      /* thread used to free chains asynchronously.
+                                 * We store it to make sure we end up joining it
+                                 * before stopping the element.
+                                 * Protected by the object lock */
+  GList *cleanup_groups;        /* List of groups to free  */
 };
 
 struct _GstDecodeBinClass
@@ -720,11 +727,11 @@ gst_decode_bin_class_init (GstDecodeBinClass * klass)
    * emitted before looking for any elements that can handle that stream.
    *
    * >   Invocation of signal handlers stops after the first signal handler
-   * >   returns #FALSE. Signal handlers are invoked in the order they were
+   * >   returns %FALSE. Signal handlers are invoked in the order they were
    * >   connected in.
    *
-   * Returns: #TRUE if you wish decodebin to look for elements that can
-   * handle the given @caps. If #FALSE, those caps will be considered as
+   * Returns: %TRUE if you wish decodebin to look for elements that can
+   * handle the given @caps. If %FALSE, those caps will be considered as
    * final and the pad will be exposed as such (see 'pad-added' signal of
    * #GstElement).
    */
@@ -740,7 +747,7 @@ gst_decode_bin_class_init (GstDecodeBinClass * klass)
    * @pad: The #GstPad.
    * @caps: The #GstCaps found.
    *
-   * This function is emited when an array of possible factories for @caps on
+   * This signal is emitted when an array of possible factories for @caps on
    * @pad is needed. Decodebin will by default return an array with all
    * compatible factories, sorted by rank.
    *
@@ -772,15 +779,15 @@ gst_decode_bin_class_init (GstDecodeBinClass * klass)
    * @factories: A #GValueArray of possible #GstElementFactory to use.
    *
    * Once decodebin has found the possible #GstElementFactory objects to try
-   * for @caps on @pad, this signal is emited. The purpose of the signal is for
+   * for @caps on @pad, this signal is emitted. The purpose of the signal is for
    * the application to perform additional sorting or filtering on the element
    * factory array.
    *
-   * The callee should copy and modify @factories or return #NULL if the
+   * The callee should copy and modify @factories or return %NULL if the
    * order should not change.
    *
    * >   Invocation of signal handlers stops after one signal handler has
-   * >   returned something else than #NULL. Signal handlers are invoked in
+   * >   returned something else than %NULL. Signal handlers are invoked in
    * >   the order they were connected in.
    * >   Don't connect signal handlers with the #G_CONNECT_AFTER flag to this
    * >   signal, they will never be invoked!
@@ -847,7 +854,7 @@ gst_decode_bin_class_init (GstDecodeBinClass * klass)
    * be used to tell the element about the downstream supported caps
    * for example.
    *
-   * Returns: #TRUE if the query was handled, #FALSE otherwise.
+   * Returns: %TRUE if the query was handled, %FALSE otherwise.
    */
   gst_decode_bin_signals[SIGNAL_AUTOPLUG_QUERY] =
       g_signal_new ("autoplug-query", G_TYPE_FROM_CLASS (klass),
@@ -1084,6 +1091,9 @@ gst_decode_bin_init (GstDecodeBin * decode_bin)
   g_mutex_init (&decode_bin->buffering_lock);
   g_mutex_init (&decode_bin->buffering_post_lock);
 
+  g_mutex_init (&decode_bin->cleanup_lock);
+  decode_bin->cleanup_thread = NULL;
+
   decode_bin->encoding = g_strdup (DEFAULT_SUBTITLE_ENCODING);
   decode_bin->caps = gst_static_caps_get (&default_raw_caps);
   decode_bin->use_buffering = DEFAULT_USE_BUFFERING;
@@ -1141,6 +1151,7 @@ gst_decode_bin_finalize (GObject * object)
   g_mutex_clear (&decode_bin->buffering_lock);
   g_mutex_clear (&decode_bin->buffering_post_lock);
   g_mutex_clear (&decode_bin->factories_lock);
+  g_mutex_clear (&decode_bin->cleanup_lock);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -3664,12 +3675,30 @@ gst_decode_chain_start_free_hidden_groups_thread (GstDecodeChain * chain)
   GThread *thread;
   GError *error = NULL;
   GList *old_groups;
+  GstDecodeBin *dbin = chain->dbin;
 
   old_groups = chain->old_groups;
   if (!old_groups)
     return;
 
+  /* If we already have a thread running, wait for it to finish */
+  g_mutex_lock (&dbin->cleanup_lock);
+  if (dbin->cleanup_thread) {
+    g_thread_join (dbin->cleanup_thread);
+    dbin->cleanup_thread = NULL;
+  }
+
   chain->old_groups = NULL;
+
+  if (dbin->shutdown) {
+    /* If we're shutting down, add the groups to be cleaned up in the
+     * state change handler (which *is* another thread). Also avoids
+     * playing racy games with the state change handler */
+    dbin->cleanup_groups = g_list_concat (dbin->cleanup_groups, old_groups);
+    g_mutex_unlock (&dbin->cleanup_lock);
+    return;
+  }
+
   thread = g_thread_try_new ("free-hidden-groups",
       (GThreadFunc) gst_decode_chain_free_hidden_groups, old_groups, &error);
   if (!thread || error) {
@@ -3677,11 +3706,14 @@ gst_decode_chain_start_free_hidden_groups_thread (GstDecodeChain * chain)
         error ? error->message : "unknown reason");
     g_clear_error (&error);
     chain->old_groups = old_groups;
+    g_mutex_unlock (&dbin->cleanup_lock);
     return;
   }
+
+  dbin->cleanup_thread = thread;
+  g_mutex_unlock (&dbin->cleanup_lock);
+
   GST_DEBUG_OBJECT (chain->dbin, "Started free-hidden-groups thread");
-  /* We do not need to wait for it or get any results from it */
-  g_thread_unref (thread);
 }
 
 static void
@@ -4588,6 +4620,14 @@ retry:
     g_list_foreach (endpads, (GFunc) gst_object_unref, NULL);
     g_list_free (endpads);
     g_string_free (missing_plugin_details, TRUE);
+    /* Failures could be due to the fact that we are currently shutting down (recheck) */
+    DYN_LOCK (dbin);
+    if (G_UNLIKELY (dbin->shutdown)) {
+      GST_WARNING_OBJECT (dbin, "Currently, shutting down, aborting exposing");
+      DYN_UNLOCK (dbin);
+      return FALSE;
+    }
+    DYN_UNLOCK (dbin);
     GST_ERROR_OBJECT (dbin, "Broken chain/group tree");
     g_return_val_if_reached (FALSE);
     return FALSE;
@@ -4668,6 +4708,14 @@ retry:
   /* re-order pads : video, then audio, then others */
   endpads = g_list_sort (endpads, (GCompareFunc) sort_end_pads);
 
+  /* Don't add pads if we are shutting down */
+  DYN_LOCK (dbin);
+  if (G_UNLIKELY (dbin->shutdown)) {
+    GST_WARNING_OBJECT (dbin, "Currently, shutting down, aborting exposing");
+    DYN_UNLOCK (dbin);
+    return FALSE;
+  }
+
   /* Expose pads */
   for (tmp = endpads; tmp; tmp = tmp->next) {
     GstDecodePad *dpad = (GstDecodePad *) tmp->data;
@@ -4698,6 +4746,7 @@ retry:
     /* 3. emit signal */
     GST_INFO_OBJECT (dpad, "added new decoded pad");
   }
+  DYN_UNLOCK (dbin);
 
   /* 4. Signal no-more-pads. This allows the application to hook stuff to the
    * exposed pads */
@@ -5182,14 +5231,14 @@ find_sink_pad (GstElement * element)
 static void
 unblock_pads (GstDecodeBin * dbin)
 {
-  GList *tmp;
-
   GST_LOG_OBJECT (dbin, "unblocking pads");
 
-  for (tmp = dbin->blocked_pads; tmp; tmp = tmp->next) {
+  while (dbin->blocked_pads) {
+    GList *tmp = dbin->blocked_pads;
     GstDecodePad *dpad = (GstDecodePad *) tmp->data;
     GstPad *opad;
 
+    dbin->blocked_pads = g_list_delete_link (dbin->blocked_pads, tmp);
     opad = gst_ghost_pad_get_target (GST_GHOST_PAD_CAST (dpad));
     if (opad) {
 
@@ -5202,15 +5251,17 @@ unblock_pads (GstDecodeBin * dbin)
     }
 
     dpad->blocked = FALSE;
+
+    /* We release the dyn lock since we want to allow the streaming threads
+     * to properly stop and not be blocked in our various probes */
+    DYN_UNLOCK (dbin);
     /* make flushing, prevent NOT_LINKED */
     gst_pad_set_active (GST_PAD_CAST (dpad), FALSE);
-    gst_object_unref (dpad);
-    GST_DEBUG_OBJECT (dpad, "unblocked");
-  }
+    DYN_LOCK (dbin);
 
-  /* clear, no more blocked pads */
-  g_list_free (dbin->blocked_pads);
-  dbin->blocked_pads = NULL;
+    GST_DEBUG_OBJECT (dpad, "unblocked");
+    gst_object_unref (dpad);
+  }
 }
 
 static void
@@ -5332,6 +5383,17 @@ gst_decode_bin_change_state (GstElement * element, GstStateChange transition)
       dbin->shutdown = TRUE;
       unblock_pads (dbin);
       DYN_UNLOCK (dbin);
+
+      /* Make sure we don't have cleanup races where
+       * we might be trying to deactivate pads (in the cleanup thread)
+       * at the same time as the default element deactivation
+       * (in PAUSED=>READY)  */
+      g_mutex_lock (&dbin->cleanup_lock);
+      if (dbin->cleanup_thread) {
+        g_thread_join (dbin->cleanup_thread);
+        dbin->cleanup_thread = NULL;
+      }
+      g_mutex_unlock (&dbin->cleanup_lock);
     default:
       break;
   }
@@ -5363,8 +5425,23 @@ gst_decode_bin_change_state (GstElement * element, GstStateChange transition)
       g_list_free_full (dbin->buffering_status,
           (GDestroyNotify) gst_message_unref);
       dbin->buffering_status = NULL;
+      /* Let's do a final check of leftover groups to free */
+      g_mutex_lock (&dbin->cleanup_lock);
+      if (dbin->cleanup_groups) {
+        gst_decode_chain_free_hidden_groups (dbin->cleanup_groups);
+        dbin->cleanup_groups = NULL;
+      }
+      g_mutex_unlock (&dbin->cleanup_lock);
       break;
     case GST_STATE_CHANGE_READY_TO_NULL:
+      /* Let's do a final check of leftover groups to free */
+      g_mutex_lock (&dbin->cleanup_lock);
+      if (dbin->cleanup_groups) {
+        gst_decode_chain_free_hidden_groups (dbin->cleanup_groups);
+        dbin->cleanup_groups = NULL;
+      }
+      g_mutex_unlock (&dbin->cleanup_lock);
+      break;
     default:
       break;
   }
