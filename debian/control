@@ -78,6 +78,7 @@ Section: libdevel
 Depends: ${misc:Depends},
          ${shlibs:Depends},
          libgstreamer-plugins-base1.0-0 (= ${binary:Version}),
+         libgstreamer-gl1.0-0 (= ${binary:Version}),
          libc6-dev | libc-dev,
          pkg-config,
          libgstreamer1.0-dev (>= 1.13.1),
