@@ -28,7 +28,7 @@ gst_abi := $(gst_major).$(gst_minor)
 gst_lib := libgstreamer$(gst_abi)-0
 gst_lib_dev := libgstreamer$(gst_abi)-dev
 # what gstreamer version is needed
-gst_lib_dev_dep := $(gst_lib_dev) (>= 1.12.0)
+gst_lib_dev_dep := $(gst_lib_dev) (>= 1.13.1)
 
 gst_pkgname := gstreamer$(gst_abi)
 gst_deb_abi := $(gst_abi)-0
@@ -39,8 +39,14 @@ gst_plugins_base_lib_dev := libgstreamer-plugins-base$(gst_abi)-dev
 # gst-plugins-base library shlibs
 gst_plugins_base_lib_dep := "$(gst_plugins_base_lib) (>= $(gst_version))"
 
+gst_gl_lib := libgstreamer-gl$(gst_deb_abi)
+gst_gl_lib_dep := "$(gst_gl_lib) (>= $(gst_version))"
+
 gst_extra_build_depends += libasound2-dev (>= 0.9.0) [linux-any]
 gst_extra_build_depends += , libgudev-1.0-dev (>= 143) [linux-any]
+gst_extra_build_depends += , libwayland-dev (>= 1.4.0) [linux-any]
+gst_extra_build_depends += , libdrm-dev (>= 2.4.55) [linux-any]
+gst_extra_build_depends += , wayland-protocols (>= 1.4) [linux-any]
 
 # debug package
 DEB_DH_STRIP_ARGS += --dbg-package=$(gst_pkgname)-plugins-base-dbg
@@ -58,7 +64,7 @@ export OIL_CPU_FLAGS
 # Link special names to a template file.
 # still need "*.install" to be done by hand
 
-PLUGINS += plugins-base x
+PLUGINS += plugins-base x gl
 ifeq ($(DEB_HOST_ARCH_OS),linux)
 PLUGINS += alsa
 endif
@@ -116,6 +122,13 @@ pre-build::
 	sed 's/@GST_ABI@/$(gst_abi)/g' \
 		debian/libgstreamer-plugins-base-dev.install \
 		>debian/libgstreamer-plugins-base$(gst_abi)-dev.install
+	rm -f debian/libgstreamer-gl$(gst_deb_abi).install
+	sed 's/@GST_ABI@/$(gst_abi)/g' \
+		debian/libgstreamer-gl.install \
+		>debian/libgstreamer-gl$(gst_deb_abi).install
+	rm -f debian/libgstreamer-gl$(gst_deb_abi).symbols
+	cp debian/libgstreamer-gl.symbols \
+		debian/libgstreamer-gl$(gst_deb_abi).symbols
 
 maint: debian/control
 
@@ -132,6 +145,7 @@ debian/control:: debian/control.in debian/build-deps debian/mk.control debian/ru
 		-e 's/@GST_LIB_DEV_DEP@/$(gst_lib_dev_dep)/g' \
 		-e 's/@GST_PLUGINS_BASE_LIB@/$(gst_plugins_base_lib)/g' \
 		-e 's/@GST_PLUGINS_BASE_LIB_DEV@/$(gst_plugins_base_lib_dev)/g' \
+		-e 's/@GST_GL_LIB@/$(gst_gl_lib)/g' \
 		-e 's/@GST_EXTRA_BUILD_DEPENDS@/$(gst_extra_build_depends)/g' \
 		>$@
 
@@ -164,21 +178,25 @@ clean::
 	rm -f debian/libgstreamer-plugins-base$(gst_deb_abi).install
 	rm -f debian/libgstreamer-plugins-base$(gst_deb_abi).symbols
 	rm -f debian/libgstreamer-plugins-base$(gst_abi)-dev.install
+	rm -f debian/libgstreamer-gl$(gst_deb_abi).install
+	rm -f debian/libgstreamer-gl$(gst_deb_abi).symbols
 	-rm -rf $(CURDIR)/fake-home
 
 binary-post-install/$(gst_pkgname)-plugins-base-apps::
 	dh_perl -d
 
 DEB_DH_MAKESHLIBS_ARGS_$(gst_plugins_base_lib) += -X "/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-$(gst_abi)" -V $(gst_plugins_base_lib_dep) -- -c4
+DEB_DH_MAKESHLIBS_ARGS_$(gst_gl_lib) += -X "/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-$(gst_abi)" -V $(gst_gl_lib_dep) -- -c4
 DEB_INSTALL_DOCS_ALL += debian/README.Debian NEWS
 DEB_SHLIBDEPS_INCLUDE += debian/libgstreamer-plugins-base$(gst_deb_abi)/usr/lib/$(DEB_HOST_MULTIARCH)
+DEB_SHLIBDEPS_INCLUDE += debian/libgstreamer-gl$(gst_deb_abi)/usr/lib/$(DEB_HOST_MULTIARCH)
 # Disable inclusion of large upstream ChangeLog
 DEB_INSTALL_CHANGELOGS_ALL :=
 
 common-binary-fixup-arch::
 	mkdir -p $(CURDIR)/fake-home
 	HOME=$(CURDIR)/fake-home \
-	LD_LIBRARY_PATH=debian/libgstreamer-plugins-base$(gst_deb_abi)/usr/lib/$(DEB_HOST_MULTIARCH):$(LD_LIBRARY_PATH) \
+	LD_LIBRARY_PATH=debian/libgstreamer-plugins-base$(gst_deb_abi)/usr/lib/$(DEB_HOST_MULTIARCH):debian/libgstreamer-gl$(gst_deb_abi)/usr/lib/$(DEB_HOST_MULTIARCH):$(LD_LIBRARY_PATH) \
 	    dh_gstscancodecs
 	rm -rf $(CURDIR)/fake-home
 

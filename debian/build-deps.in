@@ -33,3 +33,9 @@ gir1.2-freedesktop
 gir1.2-gstreamer-@GST_ABI@
 zlib1g-dev
 libopus-dev (>= 0.9.4)
+libgl1-mesa-dev
+libegl1-mesa-dev
+libgles2-mesa-dev
+libgraphene-1.0-dev
+libpng-dev
+libjpeg-dev

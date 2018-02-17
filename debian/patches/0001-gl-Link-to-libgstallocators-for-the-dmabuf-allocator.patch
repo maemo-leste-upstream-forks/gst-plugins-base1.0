@@ -1,0 +1,24 @@
+From 1cfe070de71d61ebf10921ac0878c2d082dbc6ca Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sebastian=20Dr=C3=B6ge?= <sebastian@centricular.com>
+Date: Sat, 17 Feb 2018 18:34:58 +0200
+Subject: [PATCH] gl: Link to libgstallocators for the dmabuf allocator
+
+---
+ ext/gl/Makefile.am | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ext/gl/Makefile.am b/ext/gl/Makefile.am
+index 0430a89d5..abbb49b6b 100644
+--- a/ext/gl/Makefile.am
++++ b/ext/gl/Makefile.am
+@@ -147,6 +147,7 @@ libgstopengl_la_LIBADD = \
+ 	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+ 	$(top_builddir)/gst-libs/gst/pbutils/libgstpbutils-@GST_API_VERSION@.la \
+ 	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
++	$(top_builddir)/gst-libs/gst/allocators/libgstallocators-@GST_API_VERSION@.la \
+ 	$(GST_BASE_LIBS) \
+ 	$(GST_CONTROLLER_LIBS) \
+ 	$(GST_LIBS) \
+-- 
+2.16.1
+

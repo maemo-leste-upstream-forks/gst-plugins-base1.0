@@ -1,6 +1,7 @@
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstadder.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstapp.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstaudioconvert.so
+debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstaudiomixer.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstaudiorate.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstaudioresample.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstaudiotestsrc.so
@@ -11,6 +12,7 @@ debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstgio.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstlibvisual.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstogg.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstopus.so
+debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstpbtypes.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstplayback.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstrawparse.so
 debian/tmp/usr/lib/*/gstreamer-@GST_ABI@/libgstsubparse.so

@@ -57,7 +57,8 @@ Depends: ${misc:Depends},
          ${shlibs:Depends},
          iso-codes
 Breaks: totem-gstreamer (<= 2.17.92-0ubuntu1),
-        gstreamer1.0-plugins-bad (<< 1.7.1)
+        gstreamer1.0-plugins-bad (<< 1.7.1),
+        libgstreamer-plugins-bad1.0-0 (<< 1.13.1)
 Recommends: @GST_PKGNAME@-plugins-base
 Suggests: libvisual-0.4-plugins
 Description: GStreamer libraries from the "base" set
@@ -77,11 +78,14 @@ Section: libdevel
 Depends: ${misc:Depends},
          ${shlibs:Depends},
          @GST_PLUGINS_BASE_LIB@ (= ${binary:Version}),
+         @GST_GL_LIB@ (= ${binary:Version}),
          libc6-dev | libc-dev,
          pkg-config,
          @GST_LIB_DEV_DEP@,
          libglib2.0-dev,
-         libxml2-dev,
+         libgl1-mesa-dev,
+         libegl1-mesa-dev,
+         libgles2-mesa-dev,
          gir1.2-gst-plugins-base-@GST_ABI@ (= ${binary:Version})
 Description: GStreamer development files for libraries from the "base" set
  GStreamer is a streaming media framework, based on graphs of filters
@@ -93,6 +97,25 @@ Description: GStreamer development files for libraries from the "base" set
  .
  This package contains development files for GStreamer libraries from
  the "base" set, an essential exemplary set of elements.
+
+Package: @GST_GL_LIB@
+Architecture: any
+Multi-Arch: same
+Section: libs
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Breaks: libgstreamer-plugins-bad1.0-0 (<< 1.13.1)
+Replaces: libgstreamer-plugins-bad1.0-0 (<< 1.13.1)
+Description: GStreamer GL libraries
+ GStreamer is a streaming media framework, based on graphs of filters
+ which operate on media data.  Applications using this library can do
+ anything from real-time sound processing to playing videos, and just
+ about anything else media-related.  Its plugin-based architecture means
+ that new data types or processing capabilities can be added simply by
+ installing new plug-ins.
+ .
+ This package contains the GL library.
 
 Package: @GST_PKGNAME@-alsa
 Architecture: linux-any
@@ -127,8 +150,8 @@ Section: libs
 Depends: ${misc:Depends},
          ${shlibs:Depends},
          @GST_PLUGINS_BASE_LIB@ (>= @GST_VERSION@)
-Breaks: gstreamer1.0-plugins-bad (<< 1.11.90)
-Replaces: gstreamer1.0-plugins-bad (<< 1.11.90)
+Breaks: gstreamer1.0-plugins-bad (<< 1.13.1)
+Replaces: gstreamer1.0-plugins-bad (<< 1.13.1)
 Suggests: gvfs
 XB-GStreamer-Version: ${gstreamer:Version}
 XB-GStreamer-Elements: ${gstreamer:Elements}
@@ -198,6 +221,31 @@ Description: GStreamer plugins for X11 and Pango
  This package contains the GStreamer plugins for X11 video output, both
  for standard Xlib support and for the Xv extension, as well as the
  plugin for Pango-based text rendering and overlay.
+
+Package: @GST_PKGNAME@-gl
+Architecture: any
+Multi-Arch: same
+Section: libs
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         @GST_PLUGINS_BASE_LIB@ (>= @GST_VERSION@),
+         @GST_GL_LIB@ (>= @GST_VERSION@)
+XB-GStreamer-Version: ${gstreamer:Version}
+XB-GStreamer-Elements: ${gstreamer:Elements}
+XB-GStreamer-URI-Sources: ${gstreamer:URISources}
+XB-GStreamer-URI-Sinks: ${gstreamer:URISinks}
+XB-GStreamer-Encoders: ${gstreamer:Encoders}
+XB-GStreamer-Decoders: ${gstreamer:Decoders}
+Provides: ${gstreamer:Provides}
+Description: GStreamer plugins for GL
+ GStreamer is a streaming media framework, based on graphs of filters
+ which operate on media data.  Applications using this library can do
+ anything from real-time sound processing to playing videos, and just
+ about anything else media-related.  Its plugin-based architecture means
+ that new data types or processing capabilities can be added simply by
+ installing new plug-ins.
+ .
+ This package contains the GStreamer plugins for GL.
 
 Package: gir1.2-gst-plugins-base-@GST_ABI@
 Section: introspection
