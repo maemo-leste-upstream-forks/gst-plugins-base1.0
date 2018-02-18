@@ -237,6 +237,8 @@ XB-GStreamer-URI-Sinks: ${gstreamer:URISinks}
 XB-GStreamer-Encoders: ${gstreamer:Encoders}
 XB-GStreamer-Decoders: ${gstreamer:Decoders}
 Provides: ${gstreamer:Provides}
+Breaks: gstreamer1.0-plugins-bad (<< 1.13.1)
+Replaces: gstreamer1.0-plugins-bad (<< 1.13.1)
 Description: GStreamer plugins for GL
  GStreamer is a streaming media framework, based on graphs of filters
  which operate on media data.  Applications using this library can do
