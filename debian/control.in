@@ -59,6 +59,7 @@ Depends: ${misc:Depends},
 Breaks: totem-gstreamer (<= 2.17.92-0ubuntu1),
         gstreamer1.0-plugins-bad (<< 1.7.1),
         libgstreamer-plugins-bad1.0-0 (<< 1.13.1)
+Conflicts: libgstreamer-plugins-bad1.0-0 (<< 1.13.1)
 Recommends: @GST_PKGNAME@-plugins-base
 Suggests: libvisual-0.4-plugins
 Description: GStreamer libraries from the "base" set
@@ -87,6 +88,8 @@ Depends: ${misc:Depends},
          libegl1-mesa-dev,
          libgles2-mesa-dev,
          gir1.2-gst-plugins-base-@GST_ABI@ (= ${binary:Version})
+Breaks: libgstreamer-plugins-bad1.0-dev (<< 1.13.1)
+Conflicts: libgstreamer-plugins-bad1.0-dev (<< 1.13.1)
 Description: GStreamer development files for libraries from the "base" set
  GStreamer is a streaming media framework, based on graphs of filters
  which operate on media data.  Applications using this library can do

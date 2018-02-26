@@ -1,6 +1,17 @@
 gst-plugins-base1.0 (1.13.1-1) experimental; urgency=medium
 
   * New upstream development release.
+  * debian/build-deps.in,
+    debian/control.in:
+    + Build-depend on libgl1-mesa-dev, libegl1-mesa-dev, libgles2-mesa-dev,
+      libgraphene-1.0-dev, libpng-dev, libjpeg-dev and add new binary packages
+      for the OpenGL library, its headers and the OpenGL plugin.
+  * debian/control.in,
+    debian/gstreamer-plugins-base.install:
+    + Conflict with gstreamer1.0-plugins-bad for the moved audiomixer plugin,
+      the OpenGL library and its plugin.
+  * debian/gstreamer-plugins-base.install:
+    + Ship the libgstpbutils plugin.
 
  -- Sebastian Dröge <slomo@debian.org>  Sat, 17 Feb 2018 18:16:46 +0200
 
