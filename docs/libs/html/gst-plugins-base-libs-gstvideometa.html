@@ -1211,6 +1211,8 @@ valid, it is used by the default implementation of <em class="parameter"><code>m
   guint y;
   guint w;
   guint h;
+
+  GList *params;
 } GstVideoRegionOfInterestMeta;
 </pre>
 <p>Extra buffer metadata describing an image region of interest</p>
@@ -1261,6 +1263,11 @@ valid, it is used by the default implementation of <em class="parameter"><code>m
 <tr>
 <td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GstVideoRegionOfInterestMeta.h"></a>h</code></em>;</p></td>
 <td class="struct_member_description"><p>bounding box height</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *<em class="structfield"><code><a name="GstVideoRegionOfInterestMeta.params"></a>params</code></em>;</p></td>
+<td class="struct_member_description"><p>list of <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> containing element-specific params for downstream, see <code class="function">gst_video_region_of_interest_meta_add_params()</code>. (Since: 1.14)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>

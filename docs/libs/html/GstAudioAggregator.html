@@ -140,17 +140,19 @@ with the purpose of aggregating or mixing their raw audio input buffers</p>
 </div>
 <div class="refsect1">
 <a name="GstAudioAggregator.description"></a><h2>Description</h2>
-<p><a class="link" href="GstAudioAggregator.html" title="GstAudioAggregator"><span class="type">GstAudioAggregator</span></a> will perform conversion on the data arriving
-on its sink pads, based on the format expected downstream.</p>
-<p>Subclasses can opt out of the conversion behaviour by setting
-<a class="link" href="GstAudioAggregator.html#GstAudioAggregatorClass.convert-buffer"><code class="function">GstAudioAggregatorClass.convert_buffer()</code></a> to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
-<p>Subclasses that wish to use the default conversion implementation
-should use a (subclass of) <a class="link" href="GstAudioAggregator.html#GstAudioAggregatorConvertPad"><span class="type">GstAudioAggregatorConvertPad</span></a> as their
-<span class="type">GstAggregatorClass.sinkpads_type</span>, as it will cache the created
-<a class="link" href="gst-plugins-base-libs-GstAudioConverter.html#GstAudioConverter" title="GstAudioConverter"><span class="type">GstAudioConverter</span></a> and install a property allowing to configure it,
-<span class="type">“converter-config”</span>.</p>
-<p>Subclasses that wish to perform custom conversion should override
-<a class="link" href="GstAudioAggregator.html#GstAudioAggregatorClass.convert-buffer"><code class="function">GstAudioAggregatorClass.convert_buffer()</code></a>.</p>
+<p>Subclasses must use (a subclass of) <a class="link" href="GstAudioAggregator.html#GstAudioAggregatorPad"><span class="type">GstAudioAggregatorPad</span></a> for both
+their source and sink pads,
+<code class="function">gst_element_class_add_static_pad_template_with_gtype()</code> is a convenient
+helper.</p>
+<p><a class="link" href="GstAudioAggregator.html" title="GstAudioAggregator"><span class="type">GstAudioAggregator</span></a> can perform conversion on the data arriving
+on its sink pads, based on the format expected downstream: in order
+to enable that behaviour, the GType of the sink pads must either be
+a (subclass of) <a class="link" href="GstAudioAggregator.html#GstAudioAggregatorConvertPad"><span class="type">GstAudioAggregatorConvertPad</span></a> to use the default
+<a class="link" href="gst-plugins-base-libs-GstAudioConverter.html#GstAudioConverter" title="GstAudioConverter"><span class="type">GstAudioConverter</span></a> implementation, or a subclass of <a class="link" href="GstAudioAggregator.html#GstAudioAggregatorPad"><span class="type">GstAudioAggregatorPad</span></a>
+implementing <span class="type">GstAudioAggregatorPad.convert_buffer</span>.</p>
+<p>To allow for the output caps to change, the mechanism is the same as
+above, with the GType of the source pad.</p>
+<p>See <span class="type">GstAudioMixer</span> for an example.</p>
 <p>When conversion is enabled, <a class="link" href="GstAudioAggregator.html" title="GstAudioAggregator"><span class="type">GstAudioAggregator</span></a> will accept
 any type of raw audio caps and perform conversion
 on the data arriving on its sink pads, with whatever downstream
@@ -158,9 +160,6 @@ expects as the target format.</p>
 <p>In case downstream caps are not fully fixated, it will use
 the first configured sink pad to finish fixating its source pad
 caps.</p>
-<p>Additionally, handling audio conversion directly in the element
-means that this base class supports safely reconfiguring its
-source pad.</p>
 <p>A notable exception for now is the sample rate, sink pads must
 have the same sample rate as either the downstream requirement,
 or the first configured pad, or a combination of both (when
@@ -205,11 +204,6 @@ gst_audio_aggregator_set_sink_caps (<em class="parameter"><code><a class="link" 
   gboolean (* aggregate_one_buffer) (GstAudioAggregator * aagg,
       GstAudioAggregatorPad * pad, GstBuffer * inbuf, guint in_offset,
       GstBuffer * outbuf, guint out_offset, guint num_frames);
-  GstBuffer * (* convert_buffer) (GstAudioAggregator *aagg,
-                                  GstPad * pad,
-                                  GstAudioInfo *in_info,
-                                  GstAudioInfo *out_info,
-                                  GstBuffer * buffer);
 };
 </pre>
 <div class="refsect3">
@@ -232,14 +226,6 @@ gst_audio_aggregator_set_sink_caps (<em class="parameter"><code><a class="link" 
 buffer.  The in_offset and out_offset are in "frames", which is
 the size of a sample times the number of channels. Returns TRUE if
 any non-silence was added to the buffer</p></td>
-<td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><em class="structfield"><code><a name="GstAudioAggregatorClass.convert-buffer"></a>convert_buffer</code></em> ()</p></td>
-<td class="struct_member_description"><p>Convert a buffer from one format to another. The pad
-is either a sinkpad, when converting an input buffer, or the source pad,
-when converting the output buffer after a downstream format change is
-requested.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -268,8 +254,38 @@ requested.</p></td>
 <a name="GstAudioAggregatorPadClass"></a><h3>struct GstAudioAggregatorPadClass</h3>
 <pre class="programlisting">struct GstAudioAggregatorPadClass {
   GstAggregatorPadClass   parent_class;
+
+  GstBuffer * (* convert_buffer) (GstAudioAggregatorPad * pad,
+                                  GstAudioInfo *in_info,
+                                  GstAudioInfo *out_info,
+                                  GstBuffer * buffer);
+
+  void        (* update_conversion_info) (GstAudioAggregatorPad *pad);
 };
 </pre>
+<div class="refsect3">
+<a name="GstAudioAggregatorPadClass.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstAudioAggregatorPadClass.convert-buffer"></a>convert_buffer</code></em> ()</p></td>
+<td class="struct_member_description"><p>Convert a buffer from one format to another.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstAudioAggregatorPadClass.update-conversion-info"></a>update_conversion_info</code></em> ()</p></td>
+<td class="struct_member_description"><p>Called when either the input or output
+formats have changed.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 <hr>
 <div class="refsect2">
@@ -336,7 +352,7 @@ requested.</p></td>
 </div>
 <div class="refsect1">
 <a name="GstAudioAggregator.see-also"></a><h2>See Also</h2>
-<p><span class="type">GstAggregator</span></p>
+<p><span class="type">GstAggregator</span>, <span class="type">GstAudioMixer</span></p>
 </div>
 </div>
 <div class="footer">

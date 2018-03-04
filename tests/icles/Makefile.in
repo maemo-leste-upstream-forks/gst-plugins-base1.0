@@ -95,7 +95,8 @@ noinst_PROGRAMS = $(am__EXEEXT_2) $(am__EXEEXT_3) \
 	position-formats$(EXEEXT) stress-playbin$(EXEEXT) \
 	test-scale$(EXEEXT) test-box$(EXEEXT) \
 	test-effect-switch$(EXEEXT) test-overlay-blending$(EXEEXT) \
-	test-reverseplay$(EXEEXT) test-resample$(EXEEXT)
+	test-reverseplay$(EXEEXT) test-resample$(EXEEXT) \
+	benchmark-appsink$(EXEEXT) benchmark-appsrc$(EXEEXT)
 subdir = tests/icles
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -159,6 +160,24 @@ am__v_lt_1 =
 audio_trickplay_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(audio_trickplay_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
+am_benchmark_appsink_OBJECTS =  \
+	benchmark_appsink-benchmark-appsink.$(OBJEXT)
+benchmark_appsink_OBJECTS = $(am_benchmark_appsink_OBJECTS)
+benchmark_appsink_DEPENDENCIES = $(top_builddir)/gst-libs/gst/app/libgstapp-$(GST_API_VERSION).la \
+	$(am__DEPENDENCIES_1)
+benchmark_appsink_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(benchmark_appsink_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
+am_benchmark_appsrc_OBJECTS =  \
+	benchmark_appsrc-benchmark-appsrc.$(OBJEXT)
+benchmark_appsrc_OBJECTS = $(am_benchmark_appsrc_OBJECTS)
+benchmark_appsrc_DEPENDENCIES = $(top_builddir)/gst-libs/gst/app/libgstapp-$(GST_API_VERSION).la \
+	$(am__DEPENDENCIES_1)
+benchmark_appsrc_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(benchmark_appsrc_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 am__input_selector_test_SOURCES_DIST = input-selector-test.c
 @USE_X_TRUE@am_input_selector_test_OBJECTS =  \
@@ -325,7 +344,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(audio_trickplay_SOURCES) $(input_selector_test_SOURCES) \
+SOURCES = $(audio_trickplay_SOURCES) $(benchmark_appsink_SOURCES) \
+	$(benchmark_appsrc_SOURCES) $(input_selector_test_SOURCES) \
 	$(output_selector_test_SOURCES) $(playbin_text_SOURCES) \
 	$(position_formats_SOURCES) $(stress_playbin_SOURCES) \
 	$(stress_videooverlay_SOURCES) $(test_box_SOURCES) \
@@ -333,7 +353,8 @@ SOURCES = $(audio_trickplay_SOURCES) $(input_selector_test_SOURCES) \
 	$(test_overlay_blending_SOURCES) $(test_resample_SOURCES) \
 	$(test_reverseplay_SOURCES) $(test_scale_SOURCES) \
 	$(test_textoverlay_SOURCES) $(test_videooverlay_SOURCES)
-DIST_SOURCES = $(audio_trickplay_SOURCES) \
+DIST_SOURCES = $(audio_trickplay_SOURCES) $(benchmark_appsink_SOURCES) \
+	$(benchmark_appsrc_SOURCES) \
 	$(am__input_selector_test_SOURCES_DIST) \
 	$(am__output_selector_test_SOURCES_DIST) \
 	$(playbin_text_SOURCES) $(position_formats_SOURCES) \
@@ -454,6 +475,8 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
+DRM_CFLAGS = @DRM_CFLAGS@
+DRM_LIBS = @DRM_LIBS@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -469,6 +492,8 @@ EXEEXT = @EXEEXT@
 EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
+GBM_CFLAGS = @GBM_CFLAGS@
+GBM_LIBS = @GBM_LIBS@
 GCOV = @GCOV@
 GCOV_CFLAGS = @GCOV_CFLAGS@
 GCOV_LIBS = @GCOV_LIBS@
@@ -549,6 +574,8 @@ GTK_QUARTZ_CFLAGS = @GTK_QUARTZ_CFLAGS@
 GTK_QUARTZ_LIBS = @GTK_QUARTZ_LIBS@
 GTK_X11_CFLAGS = @GTK_X11_CFLAGS@
 GTK_X11_LIBS = @GTK_X11_LIBS@
+G_UDEV_CFLAGS = @G_UDEV_CFLAGS@
+G_UDEV_LIBS = @G_UDEV_LIBS@
 HAVE_CDPARANOIA = @HAVE_CDPARANOIA@
 HAVE_CLUTTER = @HAVE_CLUTTER@
 HAVE_CLUTTER_GLX = @HAVE_CLUTTER_GLX@
@@ -767,6 +794,24 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = playback
 DIST_SUBDIRS = playback
+benchmark_appsink_SOURCES = benchmark-appsink.c
+benchmark_appsink_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_CFLAGS)
+
+benchmark_appsink_LDADD = \
+	$(top_builddir)/gst-libs/gst/app/libgstapp-$(GST_API_VERSION).la \
+	$(GST_LIBS)
+
+benchmark_appsrc_SOURCES = benchmark-appsrc.c
+benchmark_appsrc_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_CFLAGS)
+
+benchmark_appsrc_LDADD = \
+	$(top_builddir)/gst-libs/gst/app/libgstapp-$(GST_API_VERSION).la \
+	$(GST_LIBS)
+
 @USE_X_FALSE@X_TESTS = 
 @USE_X_TRUE@X_TESTS = stress-videooverlay $(am__append_1) \
 @USE_X_TRUE@	output-selector-test input-selector-test
@@ -890,6 +935,14 @@ audio-trickplay$(EXEEXT): $(audio_trickplay_OBJECTS) $(audio_trickplay_DEPENDENC
 	@rm -f audio-trickplay$(EXEEXT)
 	$(AM_V_CCLD)$(audio_trickplay_LINK) $(audio_trickplay_OBJECTS) $(audio_trickplay_LDADD) $(LIBS)
 
+benchmark-appsink$(EXEEXT): $(benchmark_appsink_OBJECTS) $(benchmark_appsink_DEPENDENCIES) $(EXTRA_benchmark_appsink_DEPENDENCIES) 
+	@rm -f benchmark-appsink$(EXEEXT)
+	$(AM_V_CCLD)$(benchmark_appsink_LINK) $(benchmark_appsink_OBJECTS) $(benchmark_appsink_LDADD) $(LIBS)
+
+benchmark-appsrc$(EXEEXT): $(benchmark_appsrc_OBJECTS) $(benchmark_appsrc_DEPENDENCIES) $(EXTRA_benchmark_appsrc_DEPENDENCIES) 
+	@rm -f benchmark-appsrc$(EXEEXT)
+	$(AM_V_CCLD)$(benchmark_appsrc_LINK) $(benchmark_appsrc_OBJECTS) $(benchmark_appsrc_LDADD) $(LIBS)
+
 input-selector-test$(EXEEXT): $(input_selector_test_OBJECTS) $(input_selector_test_DEPENDENCIES) $(EXTRA_input_selector_test_DEPENDENCIES) 
 	@rm -f input-selector-test$(EXEEXT)
 	$(AM_V_CCLD)$(input_selector_test_LINK) $(input_selector_test_OBJECTS) $(input_selector_test_LDADD) $(LIBS)
@@ -957,6 +1010,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audio_trickplay-audio-trickplay.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/benchmark_appsink-benchmark-appsink.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/input_selector_test-input-selector-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/output_selector_test-output-selector-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/playbin_text-playbin-text.Po@am__quote@
@@ -1010,6 +1065,34 @@ audio_trickplay-audio-trickplay.obj: audio-trickplay.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='audio-trickplay.c' object='audio_trickplay-audio-trickplay.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(audio_trickplay_CFLAGS) $(CFLAGS) -c -o audio_trickplay-audio-trickplay.obj `if test -f 'audio-trickplay.c'; then $(CYGPATH_W) 'audio-trickplay.c'; else $(CYGPATH_W) '$(srcdir)/audio-trickplay.c'; fi`
+
+benchmark_appsink-benchmark-appsink.o: benchmark-appsink.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_appsink_CFLAGS) $(CFLAGS) -MT benchmark_appsink-benchmark-appsink.o -MD -MP -MF $(DEPDIR)/benchmark_appsink-benchmark-appsink.Tpo -c -o benchmark_appsink-benchmark-appsink.o `test -f 'benchmark-appsink.c' || echo '$(srcdir)/'`benchmark-appsink.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/benchmark_appsink-benchmark-appsink.Tpo $(DEPDIR)/benchmark_appsink-benchmark-appsink.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='benchmark-appsink.c' object='benchmark_appsink-benchmark-appsink.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_appsink_CFLAGS) $(CFLAGS) -c -o benchmark_appsink-benchmark-appsink.o `test -f 'benchmark-appsink.c' || echo '$(srcdir)/'`benchmark-appsink.c
+
+benchmark_appsink-benchmark-appsink.obj: benchmark-appsink.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_appsink_CFLAGS) $(CFLAGS) -MT benchmark_appsink-benchmark-appsink.obj -MD -MP -MF $(DEPDIR)/benchmark_appsink-benchmark-appsink.Tpo -c -o benchmark_appsink-benchmark-appsink.obj `if test -f 'benchmark-appsink.c'; then $(CYGPATH_W) 'benchmark-appsink.c'; else $(CYGPATH_W) '$(srcdir)/benchmark-appsink.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/benchmark_appsink-benchmark-appsink.Tpo $(DEPDIR)/benchmark_appsink-benchmark-appsink.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='benchmark-appsink.c' object='benchmark_appsink-benchmark-appsink.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_appsink_CFLAGS) $(CFLAGS) -c -o benchmark_appsink-benchmark-appsink.obj `if test -f 'benchmark-appsink.c'; then $(CYGPATH_W) 'benchmark-appsink.c'; else $(CYGPATH_W) '$(srcdir)/benchmark-appsink.c'; fi`
+
+benchmark_appsrc-benchmark-appsrc.o: benchmark-appsrc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_appsrc_CFLAGS) $(CFLAGS) -MT benchmark_appsrc-benchmark-appsrc.o -MD -MP -MF $(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Tpo -c -o benchmark_appsrc-benchmark-appsrc.o `test -f 'benchmark-appsrc.c' || echo '$(srcdir)/'`benchmark-appsrc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Tpo $(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='benchmark-appsrc.c' object='benchmark_appsrc-benchmark-appsrc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_appsrc_CFLAGS) $(CFLAGS) -c -o benchmark_appsrc-benchmark-appsrc.o `test -f 'benchmark-appsrc.c' || echo '$(srcdir)/'`benchmark-appsrc.c
+
+benchmark_appsrc-benchmark-appsrc.obj: benchmark-appsrc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_appsrc_CFLAGS) $(CFLAGS) -MT benchmark_appsrc-benchmark-appsrc.obj -MD -MP -MF $(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Tpo -c -o benchmark_appsrc-benchmark-appsrc.obj `if test -f 'benchmark-appsrc.c'; then $(CYGPATH_W) 'benchmark-appsrc.c'; else $(CYGPATH_W) '$(srcdir)/benchmark-appsrc.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Tpo $(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='benchmark-appsrc.c' object='benchmark_appsrc-benchmark-appsrc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_appsrc_CFLAGS) $(CFLAGS) -c -o benchmark_appsrc-benchmark-appsrc.obj `if test -f 'benchmark-appsrc.c'; then $(CYGPATH_W) 'benchmark-appsrc.c'; else $(CYGPATH_W) '$(srcdir)/benchmark-appsrc.c'; fi`
 
 input_selector_test-input-selector-test.o: input-selector-test.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(input_selector_test_CFLAGS) $(CFLAGS) -MT input_selector_test-input-selector-test.o -MD -MP -MF $(DEPDIR)/input_selector_test-input-selector-test.Tpo -c -o input_selector_test-input-selector-test.o `test -f 'input-selector-test.c' || echo '$(srcdir)/'`input-selector-test.c

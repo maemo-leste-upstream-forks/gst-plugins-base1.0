@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.13.1\n"
+"Project-Id-Version: gst-plugins-base 1.13.90\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2018-02-15 17:01+0000\n"
+"POT-Creation-Date: 2018-03-03 22:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -306,127 +306,127 @@ msgstr ""
 msgid "WebVTT subtitle format"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:450
-#: gst-libs/gst/pbutils/descriptions.c:453
-#: gst-libs/gst/pbutils/descriptions.c:503
+#: gst-libs/gst/pbutils/descriptions.c:452
+#: gst-libs/gst/pbutils/descriptions.c:455
+#: gst-libs/gst/pbutils/descriptions.c:505
 msgid "Uncompressed video"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:458
+#: gst-libs/gst/pbutils/descriptions.c:460
 msgid "Uncompressed gray"
-msgstr ""
-
-#: gst-libs/gst/pbutils/descriptions.c:481
-#, c-format
-msgid "Uncompressed packed YUV %s"
 msgstr ""
 
 #: gst-libs/gst/pbutils/descriptions.c:483
 #, c-format
-msgid "Uncompressed semi-planar YUV %s"
+msgid "Uncompressed packed YUV %s"
 msgstr ""
 
 #: gst-libs/gst/pbutils/descriptions.c:485
 #, c-format
+msgid "Uncompressed semi-planar YUV %s"
+msgstr ""
+
+#: gst-libs/gst/pbutils/descriptions.c:487
+#, c-format
 msgid "Uncompressed planar YUV %s"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:496
+#: gst-libs/gst/pbutils/descriptions.c:498
 #, c-format
 msgid "Uncompressed palettized %d-bit %s"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:499
+#: gst-libs/gst/pbutils/descriptions.c:501
 #, c-format
 msgid "Uncompressed %d-bit %s"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:581
+#: gst-libs/gst/pbutils/descriptions.c:583
 #, c-format
 msgid "DivX MPEG-4 Version %d"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:828
+#: gst-libs/gst/pbutils/descriptions.c:830
 msgid "Uncompressed audio"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:834
+#: gst-libs/gst/pbutils/descriptions.c:836
 #, c-format
 msgid "Raw %d-bit %s audio"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:934
+#: gst-libs/gst/pbutils/descriptions.c:938
 msgid "Audio CD source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:937
+#: gst-libs/gst/pbutils/descriptions.c:941
 msgid "DVD source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:940
+#: gst-libs/gst/pbutils/descriptions.c:944
 msgid "Real Time Streaming Protocol (RTSP) source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:944
+#: gst-libs/gst/pbutils/descriptions.c:948
 msgid "Microsoft Media Server (MMS) protocol source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:952
+#: gst-libs/gst/pbutils/descriptions.c:956
 #, c-format
 msgid "%s protocol source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1024
+#: gst-libs/gst/pbutils/descriptions.c:1030
 #, c-format
 msgid "%s video RTP depayloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1026
+#: gst-libs/gst/pbutils/descriptions.c:1032
 #, c-format
 msgid "%s audio RTP depayloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1028
+#: gst-libs/gst/pbutils/descriptions.c:1034
 #, c-format
 msgid "%s RTP depayloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1035
+#: gst-libs/gst/pbutils/descriptions.c:1041
 #, c-format
 msgid "%s demuxer"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1037
+#: gst-libs/gst/pbutils/descriptions.c:1043
 #, c-format
 msgid "%s decoder"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1075
+#: gst-libs/gst/pbutils/descriptions.c:1082
 #, c-format
 msgid "%s video RTP payloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1077
+#: gst-libs/gst/pbutils/descriptions.c:1084
 #, c-format
 msgid "%s audio RTP payloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1079
+#: gst-libs/gst/pbutils/descriptions.c:1086
 #, c-format
 msgid "%s RTP payloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1086
+#: gst-libs/gst/pbutils/descriptions.c:1093
 #, c-format
 msgid "%s muxer"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1088
+#: gst-libs/gst/pbutils/descriptions.c:1095
 #, c-format
 msgid "%s encoder"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1120
+#: gst-libs/gst/pbutils/descriptions.c:1129
 #, c-format
 msgid "GStreamer element %s"
 msgstr ""
