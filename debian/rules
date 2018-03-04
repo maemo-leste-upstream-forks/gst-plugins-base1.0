@@ -28,7 +28,7 @@ gst_abi := $(gst_major).$(gst_minor)
 gst_lib := libgstreamer$(gst_abi)-0
 gst_lib_dev := libgstreamer$(gst_abi)-dev
 # what gstreamer version is needed
-gst_lib_dev_dep := $(gst_lib_dev) (>= 1.13.1)
+gst_lib_dev_dep := $(gst_lib_dev) (>= 1.13.90)
 
 gst_pkgname := gstreamer$(gst_abi)
 gst_deb_abi := $(gst_abi)-0
@@ -46,6 +46,7 @@ gst_extra_build_depends += libasound2-dev (>= 0.9.0) [linux-any]
 gst_extra_build_depends += , libgudev-1.0-dev (>= 143) [linux-any]
 gst_extra_build_depends += , libwayland-dev (>= 1.4.0) [linux-any]
 gst_extra_build_depends += , libdrm-dev (>= 2.4.55) [linux-any]
+gst_extra_build_depends += , libgbm-dev [linux-any]
 gst_extra_build_depends += , wayland-protocols (>= 1.4) [linux-any]
 
 # debug package
