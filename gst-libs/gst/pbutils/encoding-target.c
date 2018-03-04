@@ -26,6 +26,7 @@
 #include <errno.h>
 #include <string.h>
 #include "encoding-target.h"
+#include "pbutils-private.h"
 
 /* Documented in encoding-profile.c */
 
@@ -368,6 +369,8 @@ get_locale (void)
   const char *loc = NULL;
   gchar *ret;
 
+  gst_pb_utils_init_locale_text_domain ();
+
 #ifdef ENABLE_NLS
 #if defined(LC_MESSAGES)
   loc = setlocale (LC_MESSAGES, NULL);
@@ -696,7 +699,7 @@ empty_name:
 
 /**
  * gst_encoding_target_load_from_file:
- * @filepath: The file location to load the #GstEncodingTarget from
+ * @filepath: (type filename): The file location to load the #GstEncodingTarget from
  * @error: If an error occured, this field will be filled in.
  *
  * Opens the provided file and returns the contained #GstEncodingTarget.
@@ -913,7 +916,7 @@ invalid_category:
 /**
  * gst_encoding_target_save_to_file:
  * @target: a #GstEncodingTarget
- * @filepath: the location to store the @target at.
+ * @filepath: (type filename): the location to store the @target at.
  * @error: If an error occured, this field will be filled in.
  *
  * Saves the @target to the provided file location.

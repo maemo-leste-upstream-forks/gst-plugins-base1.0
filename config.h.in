@@ -232,6 +232,9 @@
 /* Use graphene */
 #undef HAVE_GRAPHENE
 
+/* Define if gudev is installed */
+#undef HAVE_GUDEV
+
 /* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
 

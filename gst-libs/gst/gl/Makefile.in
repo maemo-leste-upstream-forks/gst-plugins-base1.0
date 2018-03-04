@@ -111,10 +111,12 @@ target_triplet = @target@
 @HAVE_WINDOW_EAGL_TRUE@am__append_18 = eagl/libgstgl-eagl.la
 @HAVE_WINDOW_VIV_FB_TRUE@am__append_19 = viv-fb
 @HAVE_WINDOW_VIV_FB_TRUE@am__append_20 = viv-fb/libgstgl-viv-fb.la
-@USE_EGL_TRUE@am__append_21 = egl
-@USE_EGL_TRUE@am__append_22 = egl/libgstgl-egl.la
-@USE_EGL_TRUE@am__append_23 = egl/gstgldisplay_egl.h
-@USE_EGL_TRUE@am__append_24 = egl/gstgldisplay_egl.c
+@HAVE_WINDOW_GBM_TRUE@am__append_21 = gbm
+@HAVE_WINDOW_GBM_TRUE@am__append_22 = gbm/libgstgl-gbm.la
+@USE_EGL_TRUE@am__append_23 = egl
+@USE_EGL_TRUE@am__append_24 = egl/libgstgl-egl.la
+@USE_EGL_TRUE@am__append_25 = egl/gstgldisplay_egl.h
+@USE_EGL_TRUE@am__append_26 = egl/gstgldisplay_egl.c
 subdir = gst-libs/gst/gl
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -199,7 +201,7 @@ libgstgl_@GST_API_VERSION@_la_DEPENDENCIES = $(top_builddir)/gst-libs/gst/video/
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) $(am__append_2) \
 	$(am__append_4) $(am__append_6) $(am__append_10) \
 	$(am__append_14) $(am__append_16) $(am__append_18) \
-	$(am__append_20) $(am__append_22)
+	$(am__append_20) $(am__append_22) $(am__append_24)
 am_libgstgl_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstgl_@GST_API_VERSION@_la-gstgldisplay.lo \
 	libgstgl_@GST_API_VERSION@_la-gstglcontext.lo \
@@ -387,6 +389,8 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
 DLLTOOL = @DLLTOOL@
+DRM_CFLAGS = @DRM_CFLAGS@
+DRM_LIBS = @DRM_LIBS@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -402,6 +406,8 @@ EXEEXT = @EXEEXT@
 EXTRA_CFLAGS = @EXTRA_CFLAGS@
 FFLAGS = @FFLAGS@
 FGREP = @FGREP@
+GBM_CFLAGS = @GBM_CFLAGS@
+GBM_LIBS = @GBM_LIBS@
 GCOV = @GCOV@
 GCOV_CFLAGS = @GCOV_CFLAGS@
 GCOV_LIBS = @GCOV_LIBS@
@@ -482,6 +488,8 @@ GTK_QUARTZ_CFLAGS = @GTK_QUARTZ_CFLAGS@
 GTK_QUARTZ_LIBS = @GTK_QUARTZ_LIBS@
 GTK_X11_CFLAGS = @GTK_X11_CFLAGS@
 GTK_X11_LIBS = @GTK_X11_LIBS@
+G_UDEV_CFLAGS = @G_UDEV_CFLAGS@
+G_UDEV_LIBS = @G_UDEV_LIBS@
 HAVE_CDPARANOIA = @HAVE_CDPARANOIA@
 HAVE_CLUTTER = @HAVE_CLUTTER@
 HAVE_CLUTTER_GLX = @HAVE_CLUTTER_GLX@
@@ -701,8 +709,9 @@ top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libgstgl-@GST_API_VERSION@.la
 SUBDIRS = glprototypes $(am__append_1) $(am__append_3) $(am__append_5) \
 	$(am__append_9) $(am__append_13) $(am__append_15) \
-	$(am__append_17) $(am__append_19) $(am__append_21)
-DIST_SUBDIRS = glprototypes android x11 win32 cocoa wayland dispmanx egl eagl viv-fb
+	$(am__append_17) $(am__append_19) $(am__append_21) \
+	$(am__append_23)
+DIST_SUBDIRS = glprototypes android x11 win32 cocoa wayland dispmanx egl eagl viv-fb gbm
 built_sys_header_configure = gstglconfig.h
 libgstgl_@GST_API_VERSION@_la_SOURCES = \
 	gstgldisplay.c \
@@ -781,11 +790,12 @@ libgstgl_@GST_API_VERSION@_la_LIBADD = $(top_builddir)/gst-libs/gst/video/libgst
 	$(GMODULE_NO_EXPORT_LIBS) $(GST_BASE_LIBS) $(GST_LIBS) \
 	$(GL_LIBS) $(am__append_2) $(am__append_4) $(am__append_6) \
 	$(am__append_10) $(am__append_14) $(am__append_16) \
-	$(am__append_18) $(am__append_20) $(am__append_22)
+	$(am__append_18) $(am__append_20) $(am__append_22) \
+	$(am__append_24)
 gstgl_gir_headers = $(libgstgl_@GST_API_VERSION@include_HEADERS) \
-	$(am__append_7) $(am__append_11) $(am__append_23)
+	$(am__append_7) $(am__append_11) $(am__append_25)
 gstgl_gir_sources = $(libgstgl_@GST_API_VERSION@_la_SOURCES) \
-	$(am__append_8) $(am__append_12) $(am__append_24)
+	$(am__append_8) $(am__append_12) $(am__append_26)
 configexecincludedir = $(libdir)/gstreamer-@GST_API_VERSION@/include/gst/gl
 nodist_configexecinclude_HEADERS = $(built_sys_header_configure)
 libgstgl_@GST_API_VERSION@_la_CFLAGS = \

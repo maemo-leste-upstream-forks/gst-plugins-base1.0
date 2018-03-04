@@ -518,6 +518,7 @@
     <keyword type="function" name="gst_audio_converter_new ()" link="gst-plugins-base-libs-GstAudioConverter.html#gst-audio-converter-new"/>
     <keyword type="function" name="gst_audio_converter_free ()" link="gst-plugins-base-libs-GstAudioConverter.html#gst-audio-converter-free"/>
     <keyword type="function" name="gst_audio_converter_samples ()" link="gst-plugins-base-libs-GstAudioConverter.html#gst-audio-converter-samples"/>
+    <keyword type="function" name="gst_audio_converter_convert ()" link="gst-plugins-base-libs-GstAudioConverter.html#gst-audio-converter-convert" since="1.14"/>
     <keyword type="function" name="gst_audio_converter_get_in_frames ()" link="gst-plugins-base-libs-GstAudioConverter.html#gst-audio-converter-get-in-frames"/>
     <keyword type="function" name="gst_audio_converter_get_max_latency ()" link="gst-plugins-base-libs-GstAudioConverter.html#gst-audio-converter-get-max-latency"/>
     <keyword type="function" name="gst_audio_converter_get_out_frames ()" link="gst-plugins-base-libs-GstAudioConverter.html#gst-audio-converter-get-out-frames"/>
@@ -2586,6 +2587,7 @@
     <keyword type="constant" name="GST_FFT_WINDOW_BARTLETT" link="gst-plugins-base-libs-GstFFT.html#GST-FFT-WINDOW-BARTLETT:CAPS"/>
     <keyword type="constant" name="GST_FFT_WINDOW_BLACKMAN" link="gst-plugins-base-libs-GstFFT.html#GST-FFT-WINDOW-BLACKMAN:CAPS"/>
     <keyword type="constant" name="GST_RTP_BUFFER_FLAG_RETRANSMISSION" link="gst-plugins-base-libs-GstRTPBuffer.html#GST-RTP-BUFFER-FLAG-RETRANSMISSION:CAPS"/>
+    <keyword type="constant" name="GST_RTP_BUFFER_FLAG_REDUNDANT" link="gst-plugins-base-libs-GstRTPBuffer.html#GST-RTP-BUFFER-FLAG-REDUNDANT:CAPS"/>
     <keyword type="constant" name="GST_RTP_BUFFER_FLAG_LAST" link="gst-plugins-base-libs-GstRTPBuffer.html#GST-RTP-BUFFER-FLAG-LAST:CAPS"/>
     <keyword type="constant" name="GST_RTP_BUFFER_MAP_FLAG_SKIP_PADDING" link="gst-plugins-base-libs-GstRTPBuffer.html#GST-RTP-BUFFER-MAP-FLAG-SKIP-PADDING:CAPS"/>
     <keyword type="constant" name="GST_RTP_BUFFER_MAP_FLAG_LAST" link="gst-plugins-base-libs-GstRTPBuffer.html#GST-RTP-BUFFER-MAP-FLAG-LAST:CAPS"/>
@@ -3298,6 +3300,7 @@
     <keyword type="constant" name="GST_GL_DISPLAY_TYPE_DISPMANX" link="GstGLDisplay.html#GST-GL-DISPLAY-TYPE-DISPMANX:CAPS"/>
     <keyword type="constant" name="GST_GL_DISPLAY_TYPE_EGL" link="GstGLDisplay.html#GST-GL-DISPLAY-TYPE-EGL:CAPS"/>
     <keyword type="constant" name="GST_GL_DISPLAY_TYPE_VIV_FB" link="GstGLDisplay.html#GST-GL-DISPLAY-TYPE-VIV-FB:CAPS"/>
+    <keyword type="constant" name="GST_GL_DISPLAY_TYPE_GBM" link="GstGLDisplay.html#GST-GL-DISPLAY-TYPE-GBM:CAPS"/>
     <keyword type="constant" name="GST_GL_DISPLAY_TYPE_ANY" link="GstGLDisplay.html#GST-GL-DISPLAY-TYPE-ANY:CAPS"/>
     <keyword type="constant" name="GST_GL_QUERY_NONE" link="gst-plugins-base-libs-GstGLQuery.html#GST-GL-QUERY-NONE:CAPS"/>
     <keyword type="constant" name="GST_GL_QUERY_TIME_ELAPSED" link="gst-plugins-base-libs-GstGLQuery.html#GST-GL-QUERY-TIME-ELAPSED:CAPS"/>
@@ -3391,7 +3394,8 @@
     <keyword type="member" name="GstAudioClippingMeta.end" link="gst-plugins-base-libs-GstAudioDownmixMeta.html#GstAudioClippingMeta.end"/>
     <keyword type="member" name="GstAudioAggregatorClass.create-output-buffer" link="GstAudioAggregator.html#GstAudioAggregatorClass.create-output-buffer"/>
     <keyword type="member" name="GstAudioAggregatorClass.aggregate-one-buffer" link="GstAudioAggregator.html#GstAudioAggregatorClass.aggregate-one-buffer"/>
-    <keyword type="member" name="GstAudioAggregatorClass.convert-buffer" link="GstAudioAggregator.html#GstAudioAggregatorClass.convert-buffer"/>
+    <keyword type="member" name="GstAudioAggregatorPadClass.convert-buffer" link="GstAudioAggregator.html#GstAudioAggregatorPadClass.convert-buffer"/>
+    <keyword type="member" name="GstAudioAggregatorPadClass.update-conversion-info" link="GstAudioAggregator.html#GstAudioAggregatorPadClass.update-conversion-info"/>
     <keyword type="member" name="GstAudioCdSrcClass.pushsrc-class" link="GstAudioCdSrc.html#GstAudioCdSrcClass.pushsrc-class"/>
     <keyword type="member" name="GstAudioCdSrcClass.open" link="GstAudioCdSrc.html#GstAudioCdSrcClass.open"/>
     <keyword type="member" name="GstAudioCdSrcClass.close" link="GstAudioCdSrc.html#GstAudioCdSrcClass.close"/>
@@ -3752,6 +3756,7 @@
     <keyword type="member" name="GstVideoRegionOfInterestMeta.y" link="gst-plugins-base-libs-gstvideometa.html#GstVideoRegionOfInterestMeta.y"/>
     <keyword type="member" name="GstVideoRegionOfInterestMeta.w" link="gst-plugins-base-libs-gstvideometa.html#GstVideoRegionOfInterestMeta.w"/>
     <keyword type="member" name="GstVideoRegionOfInterestMeta.h" link="gst-plugins-base-libs-gstvideometa.html#GstVideoRegionOfInterestMeta.h"/>
+    <keyword type="member" name="GstVideoRegionOfInterestMeta.params" link="gst-plugins-base-libs-gstvideometa.html#GstVideoRegionOfInterestMeta.params"/>
     <keyword type="member" name="GstVideoGLTextureUploadMeta.meta" link="gst-plugins-base-libs-gstvideometa.html#GstVideoGLTextureUploadMeta.meta"/>
     <keyword type="member" name="GstVideoGLTextureUploadMeta.texture-orientation" link="gst-plugins-base-libs-gstvideometa.html#GstVideoGLTextureUploadMeta.texture-orientation"/>
     <keyword type="member" name="GstVideoGLTextureUploadMeta.n-textures" link="gst-plugins-base-libs-gstvideometa.html#GstVideoGLTextureUploadMeta.n-textures"/>

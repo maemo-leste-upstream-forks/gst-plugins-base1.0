@@ -1423,8 +1423,8 @@ internally.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>name</p></td>
-<td class="parameter_description"><p>the name to set on the profile</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the name to set on the profile. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1457,8 +1457,8 @@ gst_encoding_profile_set_description (<em class="parameter"><code><a class="link
 </tr>
 <tr>
 <td class="parameter_name"><p>description</p></td>
-<td class="parameter_description"><p>the description to set on the profile</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the description to set on the profile. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1581,8 +1581,8 @@ gst_encoding_profile_set_preset_name (<em class="parameter"><code><a class="link
 <tr>
 <td class="parameter_name"><p>preset_name</p></td>
 <td class="parameter_description"><p>The name of the preset to use in this <em class="parameter"><code>profile</code></em>
-.</p></td>
-<td class="parameter_annotations"> </td>
+. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1614,7 +1614,7 @@ for more about restrictions. Does not apply to <a class="link" href="GstEncoding
 <tr>
 <td class="parameter_name"><p>restriction</p></td>
 <td class="parameter_description"><p>the restriction to apply. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -2564,8 +2564,8 @@ gst_encoding_target_save_to_file (<em class="parameter"><code><a class="link" hr
 <tr>
 <td class="parameter_name"><p>filepath</p></td>
 <td class="parameter_description"><p>the location to store the <em class="parameter"><code>target</code></em>
-at.</p></td>
-<td class="parameter_annotations"> </td>
+at. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> filename]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
@@ -2645,8 +2645,8 @@ gst_encoding_target_load_from_file (<em class="parameter"><code>const <a href="/
 <tbody>
 <tr>
 <td class="parameter_name"><p>filepath</p></td>
-<td class="parameter_description"><p>The file location to load the <a class="link" href="GstEncodingProfile.html#GstEncodingTarget"><span class="type">GstEncodingTarget</span></a> from</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>The file location to load the <a class="link" href="GstEncodingProfile.html#GstEncodingTarget"><span class="type">GstEncodingTarget</span></a> from. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> filename]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
