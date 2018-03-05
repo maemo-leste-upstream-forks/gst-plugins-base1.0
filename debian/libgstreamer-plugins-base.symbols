@@ -1,4 +1,5 @@
 libgstallocators-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  gst_dmabuf_allocator_alloc@Base 1.2.0
  gst_dmabuf_allocator_get_type@Base 1.12.0
  gst_dmabuf_allocator_new@Base 1.2.0
@@ -13,6 +14,7 @@ libgstallocators-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_phys_memory_allocator_get_type@Base 1.13.90
  gst_phys_memory_get_phys_addr@Base 1.13.90
 libgstapp-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  gst_app_sink_get_buffer_list_support@Base 1.12.0
  gst_app_sink_get_caps@Base 1.0.0
  gst_app_sink_get_drop@Base 1.0.0
@@ -55,6 +57,7 @@ libgstapp-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_app_src_set_stream_type@Base 1.0.0
  gst_app_stream_type_get_type@Base 1.0.0
 libgstaudio-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  _gst_audio_decoder_error@Base 1.0.0
  gst_audio_aggregator_convert_pad_get_type@Base 1.13.90
  gst_audio_aggregator_get_type@Base 1.13.90
@@ -295,6 +298,7 @@ libgstaudio-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_stream_volume_set_mute@Base 1.0.0
  gst_stream_volume_set_volume@Base 1.0.0
 libgstfft-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  gst_fft_f32_fft@Base 1.0.0
  gst_fft_f32_free@Base 1.0.0
  gst_fft_f32_inverse_fft@Base 1.0.0
@@ -317,6 +321,7 @@ libgstfft-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_fft_s32_new@Base 1.0.0
  gst_fft_s32_window@Base 1.0.0
 libgstpbutils-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  gst_audio_visualizer_get_type@Base 1.8.0
  gst_audio_visualizer_shader_get_type@Base 1.8.0
  gst_codec_utils_aac_caps_set_level_and_profile@Base 1.0.0
@@ -496,6 +501,7 @@ libgstpbutils-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_plugins_base_version@Base 1.0.0
  gst_plugins_base_version_string@Base 1.0.0
 libgstriff-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  gst_riff_create_audio_caps@Base 1.0.0
  gst_riff_create_audio_template_caps@Base 1.0.0
  gst_riff_create_iavs_caps@Base 1.0.0
@@ -512,6 +518,7 @@ libgstriff-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_riff_parse_strh@Base 1.0.0
  gst_riff_read_chunk@Base 1.0.0
 libgstrtp-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  gst_rtcp_buffer_add_packet@Base 1.0.0
  gst_rtcp_buffer_get_first_packet@Base 1.0.0
  gst_rtcp_buffer_get_packet_count@Base 1.0.0
@@ -661,6 +668,7 @@ libgstrtp-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_rtp_payload_info_for_pt@Base 1.0.0
  gst_rtp_profile_get_type@Base 1.6.0
 libgstrtsp-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  gst_rtsp_auth_credential_get_type@Base 1.12.0
  gst_rtsp_auth_credentials_free@Base 1.12.0
  gst_rtsp_auth_method_get_type@Base 1.0.0
@@ -806,6 +814,7 @@ libgstrtsp-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_rtsp_watch_wait_backlog@Base 1.4.0
  gst_rtsp_watch_write_data@Base 1.0.0
 libgstsdp-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  gst_mikey_message_add_cs_srtp@Base 1.4.0
  gst_mikey_message_add_payload@Base 1.4.0
  gst_mikey_message_add_pke@Base 1.4.0
@@ -980,6 +989,7 @@ libgstsdp-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_sdp_zone_clear@Base 1.2.0
  gst_sdp_zone_set@Base 1.2.0
 libgsttag-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  gst_tag_check_language_code@Base 1.0.0
  gst_tag_demux_get_type@Base 1.0.0
  gst_tag_demux_result_get_type@Base 1.0.0
@@ -1033,6 +1043,7 @@ libgsttag-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
  gst_tag_xmp_writer_tag_list_to_xmp_buffer@Base 1.0.0
  gst_vorbis_tag_add@Base 1.0.0
 libgstvideo-1.0.so.0 libgstreamer-plugins-base1.0-0 #MINVER#
+* Build-Depends-Package: libgstreamer-plugins-base1.0-dev
  _gst_video_decoder_error@Base 1.0.0
  gst_buffer_add_video_affine_transformation_meta@Base 1.8.0
  gst_buffer_add_video_gl_texture_upload_meta@Base 1.2.0
