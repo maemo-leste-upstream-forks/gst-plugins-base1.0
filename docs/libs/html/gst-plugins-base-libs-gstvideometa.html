@@ -138,6 +138,22 @@
 </tr>
 <tr>
 <td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideometa.html#gst-video-region-of-interest-meta-add-param" title="gst_video_region_of_interest_meta_add_param ()">gst_video_region_of_interest_meta_add_param</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="returnvalue">GstStructure</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-gstvideometa.html#gst-video-region-of-interest-meta-get-param" title="gst_video_region_of_interest_meta_get_param ()">gst_video_region_of_interest_meta_get_param</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
@@ -754,6 +770,81 @@ no such metadata on <em class="parameter"><code>buffer</code></em>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-video-region-of-interest-meta-add-param"></a><h3>gst_video_region_of_interest_meta_add_param ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_video_region_of_interest_meta_add_param
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoRegionOfInterestMeta" title="GstVideoRegionOfInterestMeta"><span class="type">GstVideoRegionOfInterestMeta</span></a> *meta</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *s</code></em>);</pre>
+<p>Attach element-specific parameters to <em class="parameter"><code>meta</code></em>
+ meant to be used by downstream
+elements which may handle this ROI.
+The name of <em class="parameter"><code>s</code></em>
+ is used to identify the element these parameters are meant for.</p>
+<p>This is typically used to tell encoders how they should encode this specific region.
+For example, a structure named "roi/x264enc" could be used to give the
+QP offsets this encoder should use when encoding the region described in <em class="parameter"><code>meta</code></em>
+.
+Multiple parameters can be defined for the same meta so different encoders
+can be supported by cross platform applications).</p>
+<div class="refsect3">
+<a name="gst-video-region-of-interest-meta-add-param.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>meta</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoRegionOfInterestMeta" title="GstVideoRegionOfInterestMeta"><span class="type">GstVideoRegionOfInterestMeta</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>s</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-region-of-interest-meta-get-param"></a><h3>gst_video_region_of_interest_meta_get_param ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="returnvalue">GstStructure</span></a> *
+gst_video_region_of_interest_meta_get_param
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoRegionOfInterestMeta" title="GstVideoRegionOfInterestMeta"><span class="type">GstVideoRegionOfInterestMeta</span></a> *meta</code></em>,
+                                <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>Retrieve the parameter for <em class="parameter"><code>meta</code></em>
+ having <em class="parameter"><code>name</code></em>
+ as structure name,
+or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if there is none.</p>
+<div class="refsect3">
+<a name="gst-video-region-of-interest-meta-get-param.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>meta</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoRegionOfInterestMeta" title="GstVideoRegionOfInterestMeta"><span class="type">GstVideoRegionOfInterestMeta</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-region-of-interest-meta-get-param.returns"></a><h4>Returns</h4>
+<p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a>. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstVideoGLTextureUpload"></a><h3>GstVideoGLTextureUpload ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 <span class="c_punctuation">(</span>*GstVideoGLTextureUpload<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoGLTextureUploadMeta" title="struct GstVideoGLTextureUploadMeta"><span class="type">GstVideoGLTextureUploadMeta</span></a> *meta</code></em>,
@@ -1267,7 +1358,7 @@ valid, it is used by the default implementation of <em class="parameter"><code>m
 </tr>
 <tr>
 <td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> *<em class="structfield"><code><a name="GstVideoRegionOfInterestMeta.params"></a>params</code></em>;</p></td>
-<td class="struct_member_description"><p>list of <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> containing element-specific params for downstream, see <code class="function">gst_video_region_of_interest_meta_add_params()</code>. (Since: 1.14)</p></td>
+<td class="struct_member_description"><p>list of <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> containing element-specific params for downstream, see <a href="gst-plugins-base-libs-gstvideometa.html#gst-video-region-of-interest-meta-add-param"><code class="function">gst_video_region_of_interest_meta_add_params()</code></a>. (Since: 1.14)</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>

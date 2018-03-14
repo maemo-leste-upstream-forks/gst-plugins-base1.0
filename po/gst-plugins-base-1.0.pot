@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.13.90\n"
+"Project-Id-Version: gst-plugins-base 1.13.91\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2018-03-03 22:07+0000\n"
+"POT-Creation-Date: 2018-03-13 19:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,30 +43,30 @@ msgstr ""
 msgid "Error outputting to audio device. The device has been disconnected."
 msgstr ""
 
-#: ext/alsa/gstalsasrc.c:446
+#: ext/alsa/gstalsasrc.c:444
 msgid "Could not open device for recording in mono mode."
 msgstr ""
 
-#: ext/alsa/gstalsasrc.c:448
+#: ext/alsa/gstalsasrc.c:446
 msgid "Could not open device for recording in stereo mode."
 msgstr ""
 
-#: ext/alsa/gstalsasrc.c:452
+#: ext/alsa/gstalsasrc.c:450
 #, c-format
 msgid "Could not open device for recording in %d-channel mode"
 msgstr ""
 
-#: ext/alsa/gstalsasrc.c:743
+#: ext/alsa/gstalsasrc.c:741
 msgid ""
 "Could not open audio device for recording. Device is being used by another "
 "application."
 msgstr ""
 
-#: ext/alsa/gstalsasrc.c:748
+#: ext/alsa/gstalsasrc.c:746
 msgid "Could not open audio device for recording."
 msgstr ""
 
-#: ext/alsa/gstalsasrc.c:998
+#: ext/alsa/gstalsasrc.c:992
 msgid "Error recording from audio device. The device has been disconnected."
 msgstr ""
 

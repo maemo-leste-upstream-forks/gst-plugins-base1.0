@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/prerelease
-AC_INIT([GStreamer Base Plug-ins],[1.13.90],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
+AC_INIT([GStreamer Base Plug-ins],[1.13.91],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
 
 AG_GST_INIT
 
@@ -56,10 +56,10 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 1390, 0, 1390)
+AS_LIBTOOL(GST, 1391, 0, 1391)
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.13.90
+GST_REQ=1.13.91
 
 dnl *** autotools stuff ****
 
@@ -295,13 +295,13 @@ GST_PREFIX="`$PKG_CONFIG --variable=prefix gstreamer-$GST_API_VERSION`"
 AC_SUBST(GLIB_PREFIX)
 AC_SUBST(GST_PREFIX)
 
-AG_GST_GL_CHECKS
-
 dnl check for gudev
 PKG_CHECK_MODULES(G_UDEV, gudev-1.0 , [
         AC_DEFINE([HAVE_GUDEV], 1, [Define if gudev is installed])
         HAVE_GUDEV="yes" ],
         [HAVE_GUDEV="no"])
+
+AG_GST_GL_CHECKS
 
 dnl GTK is optional and only used in examples
 HAVE_GTK=no

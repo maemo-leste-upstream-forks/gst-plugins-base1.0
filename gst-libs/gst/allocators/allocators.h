@@ -22,6 +22,8 @@
 #ifndef __GST_ALLOCATORS_H__
 #define __GST_ALLOCATORS_H__
 
+#include <gst/allocators/allocators-prelude.h>
+
 #include <gst/allocators/gstdmabuf.h>
 #include <gst/allocators/gstfdmemory.h>
 #include <gst/allocators/gstphysmemory.h>
