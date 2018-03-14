@@ -209,6 +209,14 @@
 <a class="link" href="gst-plugins-base-libs-GstVideoEncoder.html#gst-video-encoder-merge-tags" title="gst_video_encoder_merge_tags ()">gst_video_encoder_merge_tags</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTimeDiff"><span class="returnvalue">GstClockTimeDiff</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstVideoEncoder.html#gst-video-encoder-get-max-encode-time" title="gst_video_encoder_get_max_encode_time ()">gst_video_encoder_get_max_encode_time</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -319,7 +327,7 @@ also be able to provide fixed src pad caps in <em class="parameter"><code>getcap
 <p>The <span class="type">“qos”</span> property will enable the Quality-of-Service
 features of the encoder which gather statistics about the real-time
 performance of the downstream elements. If enabled, subclasses can
-use <code class="function">gst_video_encoder_get_max_encode_time()</code> to check if input frames
+use <a class="link" href="gst-plugins-base-libs-GstVideoEncoder.html#gst-video-encoder-get-max-encode-time" title="gst_video_encoder_get_max_encode_time ()"><code class="function">gst_video_encoder_get_max_encode_time()</code></a> to check if input frames
 are already late and drop them right away to give a chance to the
 pipeline to catch up.</p>
 </div>
@@ -1063,6 +1071,47 @@ previously-set tags. </p></td>
 </tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-video-encoder-get-max-encode-time"></a><h3>gst_video_encoder_get_max_encode_time ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTimeDiff"><span class="returnvalue">GstClockTimeDiff</span></a>
+gst_video_encoder_get_max_encode_time (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoEncoder.html#GstVideoEncoder" title="struct GstVideoEncoder"><span class="type">GstVideoEncoder</span></a> *encoder</code></em>,
+                                       <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-gstvideoutils.html#GstVideoCodecFrame" title="struct GstVideoCodecFrame"><span class="type">GstVideoCodecFrame</span></a> *frame</code></em>);</pre>
+<p>Determines maximum possible encoding time for <em class="parameter"><code>frame</code></em>
+ that will
+allow it to encode and arrive in time (as determined by QoS events).
+In particular, a negative result means encoding in time is no longer possible
+and should therefore occur as soon/skippy as possible.</p>
+<p>If no QoS events have been received from downstream, or if
+<span class="type">“qos”</span> is disabled this function returns <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#G-MAXINT64:CAPS"><span class="type">G_MAXINT64</span></a>.</p>
+<div class="refsect3">
+<a name="gst-video-encoder-get-max-encode-time.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>encoder</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoEncoder.html#GstVideoEncoder" title="struct GstVideoEncoder"><span class="type">GstVideoEncoder</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>frame</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-gstvideoutils.html#GstVideoCodecFrame" title="struct GstVideoCodecFrame"><span class="type">GstVideoCodecFrame</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-video-encoder-get-max-encode-time.returns"></a><h4>Returns</h4>
+<p> max decoding time.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
 </div>
 </div>
 <div class="refsect1">

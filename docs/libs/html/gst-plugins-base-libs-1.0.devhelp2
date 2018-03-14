@@ -6,6 +6,7 @@
       <sub name="Allocators Library" link="gstreamer-allocators.html">
         <sub name="GstDmaBufAllocator" link="gst-plugins-base-libs-dmabuf.html"/>
         <sub name="GstFdAllocator" link="gst-plugins-base-libs-fdmemory.html"/>
+        <sub name="GstPhysMemoryAllocator" link="gst-plugins-base-libs-GstPhysMemoryAllocator.html"/>
       </sub>
       <sub name="App Library" link="gstreamer-app.html">
         <sub name="GstAppSrc" link="gst-plugins-base-libs-appsrc.html"/>
@@ -171,6 +172,10 @@
     <keyword type="function" name="gst_fd_memory_get_fd ()" link="gst-plugins-base-libs-fdmemory.html#gst-fd-memory-get-fd" since="1.6"/>
     <keyword type="function" name="gst_is_fd_memory ()" link="gst-plugins-base-libs-fdmemory.html#gst-is-fd-memory" since="1.6"/>
     <keyword type="enum" name="enum GstFdMemoryFlags" link="gst-plugins-base-libs-fdmemory.html#GstFdMemoryFlags" since="1.6"/>
+    <keyword type="function" name="gst_is_phys_memory ()" link="gst-plugins-base-libs-GstPhysMemoryAllocator.html#gst-is-phys-memory" since="1.14"/>
+    <keyword type="function" name="gst_phys_memory_get_phys_addr ()" link="gst-plugins-base-libs-GstPhysMemoryAllocator.html#gst-phys-memory-get-phys-addr" since="1.14"/>
+    <keyword type="struct" name="GstPhysMemoryAllocator" link="gst-plugins-base-libs-GstPhysMemoryAllocator.html#GstPhysMemoryAllocator"/>
+    <keyword type="struct" name="struct GstPhysMemoryAllocatorInterface" link="gst-plugins-base-libs-GstPhysMemoryAllocator.html#GstPhysMemoryAllocatorInterface" since="1.14"/>
     <keyword type="function" name="gst_app_src_set_caps ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-set-caps"/>
     <keyword type="function" name="gst_app_src_get_caps ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-get-caps"/>
     <keyword type="function" name="gst_app_src_get_latency ()" link="gst-plugins-base-libs-appsrc.html#gst-app-src-get-latency"/>
@@ -1730,6 +1735,8 @@
     <keyword type="function" name="gst_buffer_add_video_region_of_interest_meta_id ()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-add-video-region-of-interest-meta-id"/>
     <keyword type="macro" name="gst_buffer_get_video_region_of_interest_meta()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-get-video-region-of-interest-meta"/>
     <keyword type="function" name="gst_buffer_get_video_region_of_interest_meta_id ()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-get-video-region-of-interest-meta-id"/>
+    <keyword type="function" name="gst_video_region_of_interest_meta_add_param ()" link="gst-plugins-base-libs-gstvideometa.html#gst-video-region-of-interest-meta-add-param" since="1.14"/>
+    <keyword type="function" name="gst_video_region_of_interest_meta_get_param ()" link="gst-plugins-base-libs-gstvideometa.html#gst-video-region-of-interest-meta-get-param" since="1.14"/>
     <keyword type="function" name="GstVideoGLTextureUpload ()" link="gst-plugins-base-libs-gstvideometa.html#GstVideoGLTextureUpload"/>
     <keyword type="function" name="gst_buffer_add_video_gl_texture_upload_meta ()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-add-video-gl-texture-upload-meta"/>
     <keyword type="macro" name="gst_buffer_get_video_gl_texture_upload_meta()" link="gst-plugins-base-libs-gstvideometa.html#gst-buffer-get-video-gl-texture-upload-meta"/>
@@ -1936,6 +1943,7 @@
     <keyword type="function" name="gst_video_encoder_set_min_pts ()" link="gst-plugins-base-libs-GstVideoEncoder.html#gst-video-encoder-set-min-pts"/>
     <keyword type="function" name="gst_video_encoder_proxy_getcaps ()" link="gst-plugins-base-libs-GstVideoEncoder.html#gst-video-encoder-proxy-getcaps"/>
     <keyword type="function" name="gst_video_encoder_merge_tags ()" link="gst-plugins-base-libs-GstVideoEncoder.html#gst-video-encoder-merge-tags"/>
+    <keyword type="function" name="gst_video_encoder_get_max_encode_time ()" link="gst-plugins-base-libs-GstVideoEncoder.html#gst-video-encoder-get-max-encode-time" since="1.14"/>
     <keyword type="macro" name="GST_VIDEO_ENCODER_FLOW_DROPPED" link="gst-plugins-base-libs-GstVideoEncoder.html#GST-VIDEO-ENCODER-FLOW-DROPPED:CAPS" deprecated=""/>
     <keyword type="macro" name="GST_VIDEO_ENCODER_FLOW_NEED_DATA" link="gst-plugins-base-libs-GstVideoEncoder.html#GST-VIDEO-ENCODER-FLOW-NEED-DATA:CAPS"/>
     <keyword type="macro" name="GST_VIDEO_ENCODER_SINK_NAME" link="gst-plugins-base-libs-GstVideoEncoder.html#GST-VIDEO-ENCODER-SINK-NAME:CAPS"/>
