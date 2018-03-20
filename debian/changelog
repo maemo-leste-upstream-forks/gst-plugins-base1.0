@@ -1,3 +1,9 @@
+gst-plugins-base1.0 (1.14.0-1) unstable; urgency=medium
+
+  * New upstream stable release.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 20 Mar 2018 09:51:09 +0200
+
 gst-plugins-base1.0 (1.13.91-1) experimental; urgency=medium
 
   * debian/control.in:
