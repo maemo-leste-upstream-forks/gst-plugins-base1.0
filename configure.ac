@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/prerelease
-AC_INIT([GStreamer Base Plug-ins],[1.13.91],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
+AC_INIT([GStreamer Base Plug-ins],[1.14.0],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
 
 AG_GST_INIT
 
@@ -56,10 +56,10 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 1391, 0, 1391)
+AS_LIBTOOL(GST, 1400, 0, 1400)
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.13.91
+GST_REQ=1.14.0
 
 dnl *** autotools stuff ****
 
@@ -279,6 +279,13 @@ GLIB_REQ=2.40.0
 AG_GST_GLIB_CHECK([$GLIB_REQ])
 
 ORC_CHECK([0.4.24])
+
+dnl For Requires.private in pkg-config files
+ORC_PC=
+if test x"$HAVE_ORC" = "xyes"; then
+    ORC_PC="orc-0.4"
+fi
+AC_SUBST(ORC_PC)
 
 dnl checks for gstreamer
 dnl uninstalled is selected preferentially -- see pkg-config(1)

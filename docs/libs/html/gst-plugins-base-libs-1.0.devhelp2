@@ -326,7 +326,7 @@
     <keyword type="macro" name="GST_AUDIO_RESAMPLER_QUALITY_DEFAULT" link="gst-plugins-base-libs-GstAudio.html#GST-AUDIO-RESAMPLER-QUALITY-DEFAULT:CAPS"/>
     <keyword type="macro" name="GST_AUDIO_RESAMPLER_QUALITY_MAX" link="gst-plugins-base-libs-GstAudio.html#GST-AUDIO-RESAMPLER-QUALITY-MAX:CAPS"/>
     <keyword type="macro" name="GST_AUDIO_RESAMPLER_QUALITY_MIN" link="gst-plugins-base-libs-GstAudio.html#GST-AUDIO-RESAMPLER-QUALITY-MIN:CAPS"/>
-    <keyword type="struct" name="GstAudioStreamAlign" link="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"/>
+    <keyword type="struct" name="GstAudioStreamAlign" link="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" since="1.14"/>
     <keyword type="function" name="gst_buffer_add_audio_downmix_meta ()" link="gst-plugins-base-libs-GstAudioDownmixMeta.html#gst-buffer-add-audio-downmix-meta"/>
     <keyword type="macro" name="gst_buffer_get_audio_downmix_meta()" link="gst-plugins-base-libs-GstAudioDownmixMeta.html#gst-buffer-get-audio-downmix-meta"/>
     <keyword type="function" name="gst_buffer_get_audio_downmix_meta_for_channels ()" link="gst-plugins-base-libs-GstAudioDownmixMeta.html#gst-buffer-get-audio-downmix-meta-for-channels"/>
