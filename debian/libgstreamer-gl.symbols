@@ -7,8 +7,8 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_context_get_gl_display@Base 1.14.0
  gst_context_set_gl_display@Base 1.14.0
  gst_egl_get_error_string@Base 1.14.0
- gst_egl_image_export_dmabuf@Base 1.14.0
- gst_egl_image_from_dmabuf@Base 1.14.0
+ (arch=linux-any)gst_egl_image_export_dmabuf@Base 1.14.0
+ (arch=linux-any)gst_egl_image_from_dmabuf@Base 1.14.0
  gst_egl_image_from_texture@Base 1.14.0
  gst_egl_image_get_image@Base 1.14.0
  gst_egl_image_get_type@Base 1.14.0
@@ -105,9 +105,9 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_display_get_type@Base 1.14.0
  gst_gl_display_new@Base 1.14.0
  gst_gl_display_remove_window@Base 1.14.0
- gst_gl_display_wayland_get_type@Base 1.14.0
- gst_gl_display_wayland_new@Base 1.14.0
- gst_gl_display_wayland_new_with_display@Base 1.14.0
+ (arch=linux-any)gst_gl_display_wayland_get_type@Base 1.14.0
+ (arch=linux-any)gst_gl_display_wayland_new@Base 1.14.0
+ (arch=linux-any)gst_gl_display_wayland_new_with_display@Base 1.14.0
  gst_gl_display_x11_get_type@Base 1.14.0
  gst_gl_display_x11_new@Base 1.14.0
  gst_gl_display_x11_new_with_display@Base 1.14.0

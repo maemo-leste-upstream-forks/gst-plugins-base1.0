@@ -1,3 +1,10 @@
+gst-plugins-base1.0 (1.14.0-2) unstable; urgency=medium
+
+  * debian/libgstreamer-gl.symbols:
+    + Mark EGLImage/dmabuf and Wayland symbols as linux-only.
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 26 Mar 2018 10:53:03 +0300
+
 gst-plugins-base1.0 (1.14.0-1) unstable; urgency=medium
 
   * New upstream stable release.
