@@ -1421,6 +1421,7 @@ gst_play_bin3_finalize (GObject * object)
   if (playbin->velements)
     g_sequence_free (playbin->velements);
 
+  g_rec_mutex_clear (&playbin->activation_lock);
   g_rec_mutex_clear (&playbin->lock);
   g_mutex_clear (&playbin->dyn_lock);
   g_mutex_clear (&playbin->elements_lock);
@@ -2359,7 +2360,7 @@ do_stream_selection (GstPlayBin3 * playbin, GstSourceGroup * group)
           playbin->audio_stream_combiner != NULL);
       nb_audio++;
     } else if (stream_type & GST_STREAM_TYPE_VIDEO) {
-      pb_stream_type = PLAYBIN_STREAM_AUDIO;
+      pb_stream_type = PLAYBIN_STREAM_VIDEO;
       select_this =
           (nb_video == playbin->current_video ||
           (playbin->current_video == -1 && nb_video == 0) ||

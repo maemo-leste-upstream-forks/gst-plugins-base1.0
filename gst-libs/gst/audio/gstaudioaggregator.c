@@ -650,6 +650,18 @@ gst_audio_aggregator_sink_getcaps (GstPad * pad, GstAggregator * agg,
   sink_template_caps = gst_caps_make_writable (sink_template_caps);
   s = gst_caps_get_structure (sink_template_caps, 0);
 
+  /* We will then use the rate in the first structure as the expected
+   * rate, we want to make sure only the compatible structures remain
+   * in downstream_caps
+   */
+  if (downstream_caps && filter) {
+    GstCaps *tmp = gst_caps_intersect_full (downstream_caps, filter,
+        GST_CAPS_INTERSECT_FIRST);
+
+    gst_caps_unref (downstream_caps);
+    downstream_caps = tmp;
+  }
+
   if (downstream_caps && !gst_caps_is_empty (downstream_caps))
     s2 = gst_caps_get_structure (downstream_caps, 0);
   else
@@ -699,7 +711,10 @@ gst_audio_aggregator_sink_setcaps (GstAudioAggregatorPad * aaggpad,
     goto done;
   }
 
-  gst_audio_info_from_caps (&info, caps);
+  if (!gst_audio_info_from_caps (&info, caps)) {
+    GST_WARNING_OBJECT (agg, "Rejecting invalid caps: %" GST_PTR_FORMAT, caps);
+    return FALSE;
+  }
   s = gst_caps_get_structure (downstream_caps, 0);
 
   /* TODO: handle different rates on sinkpads, a bit complex
@@ -715,7 +730,7 @@ gst_audio_aggregator_sink_setcaps (GstAudioAggregatorPad * aaggpad,
     GstAudioAggregatorPadClass *klass =
         GST_AUDIO_AGGREGATOR_PAD_GET_CLASS (aaggpad);
     GST_OBJECT_LOCK (aaggpad);
-    gst_audio_info_from_caps (&aaggpad->info, caps);
+    aaggpad->info = info;
     if (klass->update_conversion_info)
       klass->update_conversion_info (aaggpad);
     GST_OBJECT_UNLOCK (aaggpad);
@@ -836,6 +851,7 @@ gst_audio_aggregator_update_converters (GstAudioAggregator * aagg,
           gst_audio_aggregator_convert_buffer (aagg, GST_PAD (aaggpad),
           &aaggpad->info, new_info, aaggpad->priv->input_buffer);
       gst_buffer_replace (&aaggpad->priv->buffer, new_converted_buffer);
+      gst_buffer_unref (new_converted_buffer);
     }
   }
 }

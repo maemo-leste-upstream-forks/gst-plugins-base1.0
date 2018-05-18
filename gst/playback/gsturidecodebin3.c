@@ -565,6 +565,9 @@ db_pad_removed_cb (GstElement * element, GstPad * pad, GstURIDecodeBin3 * dec)
   GList *tmp;
   OutputPad *output = NULL;
 
+  if (!GST_PAD_IS_SRC (pad))
+    return;
+
   GST_DEBUG_OBJECT (dec, "pad %s:%s", GST_DEBUG_PAD_NAME (pad));
   /* FIXME: LOCK for list access */
 
@@ -573,7 +576,7 @@ db_pad_removed_cb (GstElement * element, GstPad * pad, GstURIDecodeBin3 * dec)
 
     if (cand->target_pad == pad) {
       output = cand;
-      dec->output_pads = g_list_remove_link (dec->output_pads, tmp);
+      dec->output_pads = g_list_delete_link (dec->output_pads, tmp);
       break;
     }
   }
@@ -649,6 +652,8 @@ gst_uri_decode_bin3_finalize (GObject * obj)
   GstURIDecodeBin3 *dec = GST_URI_DECODE_BIN3 (obj);
 
   g_mutex_clear (&dec->lock);
+  g_free (dec->uri);
+  g_free (dec->suburi);
 
   G_OBJECT_CLASS (parent_class)->finalize (obj);
 }
@@ -1064,6 +1069,8 @@ gst_uri_decode_bin3_change_state (GstElement * element,
   /* ERRORS */
 failure:
   {
+    if (transition == GST_STATE_CHANGE_READY_TO_PAUSED)
+      free_play_items (uridecodebin);
     return ret;
   }
 }

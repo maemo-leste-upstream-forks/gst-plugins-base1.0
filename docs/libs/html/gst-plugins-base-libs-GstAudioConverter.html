@@ -580,22 +580,23 @@ gst_audio_converter_get_config (<em class="parameter"><code><a class="link" href
 </tr>
 <tr>
 <td class="parameter_name"><p>in_rate</p></td>
-<td class="parameter_description"><p>result input rate</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result input rate. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>out_rate</p></td>
-<td class="parameter_description"><p>result output rate</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result output rate. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="gst-audio-converter-get-config.returns"></a><h4>Returns</h4>
-<p> a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> that remains valid for as long as <em class="parameter"><code>convert</code></em>
+<p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> that remains valid for as long as <em class="parameter"><code>convert</code></em>
 is valid
-or until <a class="link" href="gst-plugins-base-libs-GstAudioConverter.html#gst-audio-converter-update-config" title="gst_audio_converter_update_config ()"><code class="function">gst_audio_converter_update_config()</code></a> is called.</p>
+or until <a class="link" href="gst-plugins-base-libs-GstAudioConverter.html#gst-audio-converter-update-config" title="gst_audio_converter_update_config ()"><code class="function">gst_audio_converter_update_config()</code></a> is called. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
