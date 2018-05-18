@@ -273,8 +273,8 @@ WINDOWS-1252/ISO-8859-1 is assumed (which will almost always succeed).</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>data</p></td>
-<td class="parameter_description"><p>string data</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>string data. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> gchar]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>size</p></td>
@@ -283,8 +283,8 @@ WINDOWS-1252/ISO-8859-1 is assumed (which will almost always succeed).</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>env_vars</p></td>
-<td class="parameter_description"><p>a NULL-terminated string array of environment variable names,
-or NULL</p></td>
+<td class="parameter_description"><p>(array zero-terminated=1)
+a NULL-terminated string array of environment variable names, or NULL</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -331,18 +331,18 @@ code in the extended comment string.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>key</p></td>
-<td class="parameter_description"><p>return location for the comment description key, or NULL</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>return location for the comment description key, or NULL. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>lang</p></td>
-<td class="parameter_description"><p>return location for the comment ISO-639 language code, or NULL</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>return location for the comment ISO-639 language code, or NULL. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>value</p></td>
-<td class="parameter_description"><p>return location for the actual comment string, or NULL</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>return location for the actual comment string, or NULL. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>fail_if_no_key</p></td>
@@ -394,8 +394,8 @@ data (we can't trust the declared mime type).</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>image_data</p></td>
-<td class="parameter_description"><p>the (encoded) image</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>the (encoded) image. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=image_data_len]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>image_data_len</p></td>

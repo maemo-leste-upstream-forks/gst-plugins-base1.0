@@ -144,7 +144,8 @@ sdlshare_OBJECTS = $(am_sdlshare_OBJECTS)
 am__DEPENDENCIES_1 =
 @HAVE_SDL_TRUE@sdlshare_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 @HAVE_SDL_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-@HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/gl/libgstgl-$(GST_API_VERSION).la
+@HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/gl/libgstgl-$(GST_API_VERSION).la \
+@HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/video/libgstvideo-$(GST_API_VERSION).la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -157,7 +158,8 @@ am__sdlshare2_SOURCES_DIST = sdlshare2.c
 sdlshare2_OBJECTS = $(am_sdlshare2_OBJECTS)
 @HAVE_SDL_TRUE@sdlshare2_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 @HAVE_SDL_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-@HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/gl/libgstgl-$(GST_API_VERSION).la
+@HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/gl/libgstgl-$(GST_API_VERSION).la \
+@HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/video/libgstvideo-$(GST_API_VERSION).la
 sdlshare2_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(sdlshare2_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -596,7 +598,7 @@ top_srcdir = @top_srcdir@
 
 @HAVE_SDL_TRUE@sdlshare_LDADD = $(GST_LIBS) $(GL_LIBS) $(SDL_LIBS) \
 @HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/gl/libgstgl-$(GST_API_VERSION).la \
-@HAVE_SDL_TRUE@	-lgstvideo-$(GST_API_VERSION)
+@HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/video/libgstvideo-$(GST_API_VERSION).la
 
 @HAVE_SDL_TRUE@sdlshare2_SOURCES = sdlshare2.c
 @HAVE_SDL_TRUE@sdlshare2_CFLAGS = \
@@ -609,7 +611,7 @@ top_srcdir = @top_srcdir@
 
 @HAVE_SDL_TRUE@sdlshare2_LDADD = $(GST_LIBS) $(GL_LIBS) $(SDL_LIBS) \
 @HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/gl/libgstgl-$(GST_API_VERSION).la \
-@HAVE_SDL_TRUE@	-lgstvideo-$(GST_API_VERSION)
+@HAVE_SDL_TRUE@	$(top_builddir)/gst-libs/gst/video/libgstvideo-$(GST_API_VERSION).la
 
 all: all-am
 

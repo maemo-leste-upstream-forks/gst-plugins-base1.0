@@ -213,14 +213,14 @@ libgstopengl_la_DEPENDENCIES = $(top_builddir)/gst-libs/gst/video/libgstvideo-@G
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 am__libgstopengl_la_SOURCES_DIST = gstopengl.c gstgluploadelement.c \
 	gstgldownloadelement.c gstglcolorconvertelement.c \
-	gstglfilterbin.c gstglmixerbin.c gstglsinkbin.c gstglsrcbin.c \
-	gstglimagesink.c gstglfiltercube.c gstgleffects.c \
-	effects/gstgleffectscurves.c effects/gstgleffectssources.c \
-	effects/gstgleffectidentity.c effects/gstgleffectmirror.c \
-	effects/gstgleffectsqueeze.c effects/gstgleffectstretch.c \
-	effects/gstgleffectfisheye.c effects/gstgleffecttwirl.c \
-	effects/gstgleffectbulge.c effects/gstgleffecttunnel.c \
-	effects/gstgleffectsquare.c effects/gstgleffectlumatocurve.c \
+	gstglfilterbin.c gstglsinkbin.c gstglsrcbin.c gstglimagesink.c \
+	gstglfiltercube.c gstgleffects.c effects/gstgleffectscurves.c \
+	effects/gstgleffectssources.c effects/gstgleffectidentity.c \
+	effects/gstgleffectmirror.c effects/gstgleffectsqueeze.c \
+	effects/gstgleffectstretch.c effects/gstgleffectfisheye.c \
+	effects/gstgleffecttwirl.c effects/gstgleffectbulge.c \
+	effects/gstgleffecttunnel.c effects/gstgleffectsquare.c \
+	effects/gstgleffectlumatocurve.c \
 	effects/gstgleffectrgbtocurve.c effects/gstgleffectsin.c \
 	effects/gstgleffectxray.c effects/gstgleffectglow.c \
 	effects/gstgleffectblur.c effects/gstgleffectsobel.c \
@@ -244,7 +244,6 @@ am_libgstopengl_la_OBJECTS = libgstopengl_la-gstopengl.lo \
 	libgstopengl_la-gstgldownloadelement.lo \
 	libgstopengl_la-gstglcolorconvertelement.lo \
 	libgstopengl_la-gstglfilterbin.lo \
-	libgstopengl_la-gstglmixerbin.lo \
 	libgstopengl_la-gstglsinkbin.lo libgstopengl_la-gstglsrcbin.lo \
 	libgstopengl_la-gstglimagesink.lo \
 	libgstopengl_la-gstglfiltercube.lo \
@@ -348,16 +347,15 @@ am__can_run_installinfo = \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
 am__noinst_HEADERS_DIST = gstgluploadelement.h gstgldownloadelement.h \
-	gstglcolorconvertelement.h gstglfilterbin.h gstglmixerbin.h \
-	gstglsinkbin.h gstglsrcbin.h gstglimagesink.h \
-	gstglfiltercube.h gstgleffects.h effects/gstgleffectssources.h \
-	gstglcolorscale.h gstglcolorbalance.h gstglfiltershader.h \
-	gstglfilterapp.h gstglstereosplit.h gstgldeinterlace.h \
-	gstglviewconvert.h gltestsrc.h gstgltestsrc.h gstglutils.h \
-	gstglfilterglass.h effects/gstgleffectscurves.h \
-	effects/gstgleffectlumatocurve.h gstgldifferencematte.h \
-	gstgltransformation.h gstglvideoflip.h gstgloverlay.h \
-	caopengllayersink.h
+	gstglcolorconvertelement.h gstglfilterbin.h gstglsinkbin.h \
+	gstglsrcbin.h gstglimagesink.h gstglfiltercube.h \
+	gstgleffects.h effects/gstgleffectssources.h gstglcolorscale.h \
+	gstglcolorbalance.h gstglfiltershader.h gstglfilterapp.h \
+	gstglstereosplit.h gstgldeinterlace.h gstglviewconvert.h \
+	gltestsrc.h gstgltestsrc.h gstglutils.h gstglfilterglass.h \
+	effects/gstgleffectscurves.h effects/gstgleffectlumatocurve.h \
+	gstgldifferencematte.h gstgltransformation.h gstglvideoflip.h \
+	gstgloverlay.h caopengllayersink.h
 HEADERS = $(noinst_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
@@ -748,20 +746,22 @@ plugin_LTLIBRARIES = libgstopengl.la
 #	gstglbasemixer.h
 #	gstglmixer.c
 #	gstglmixer.h
+#	gstglmixerbin.h
+#	gstglmixerbin.c
 #	gstglstereomix.c
 #	gstglstereomix.h
 #	gstglvideomixer.c
 #	gstglvideomixer.h
 libgstopengl_la_SOURCES = gstopengl.c gstgluploadelement.c \
 	gstgldownloadelement.c gstglcolorconvertelement.c \
-	gstglfilterbin.c gstglmixerbin.c gstglsinkbin.c gstglsrcbin.c \
-	gstglimagesink.c gstglfiltercube.c gstgleffects.c \
-	effects/gstgleffectscurves.c effects/gstgleffectssources.c \
-	effects/gstgleffectidentity.c effects/gstgleffectmirror.c \
-	effects/gstgleffectsqueeze.c effects/gstgleffectstretch.c \
-	effects/gstgleffectfisheye.c effects/gstgleffecttwirl.c \
-	effects/gstgleffectbulge.c effects/gstgleffecttunnel.c \
-	effects/gstgleffectsquare.c effects/gstgleffectlumatocurve.c \
+	gstglfilterbin.c gstglsinkbin.c gstglsrcbin.c gstglimagesink.c \
+	gstglfiltercube.c gstgleffects.c effects/gstgleffectscurves.c \
+	effects/gstgleffectssources.c effects/gstgleffectidentity.c \
+	effects/gstgleffectmirror.c effects/gstgleffectsqueeze.c \
+	effects/gstgleffectstretch.c effects/gstgleffectfisheye.c \
+	effects/gstgleffecttwirl.c effects/gstgleffectbulge.c \
+	effects/gstgleffecttunnel.c effects/gstgleffectsquare.c \
+	effects/gstgleffectlumatocurve.c \
 	effects/gstgleffectrgbtocurve.c effects/gstgleffectsin.c \
 	effects/gstgleffectxray.c effects/gstgleffectglow.c \
 	effects/gstgleffectblur.c effects/gstgleffectsobel.c \
@@ -772,14 +772,14 @@ libgstopengl_la_SOURCES = gstopengl.c gstgluploadelement.c \
 	$(am__append_3) $(am__append_5) $(am__append_7) \
 	$(am__append_9)
 noinst_HEADERS = gstgluploadelement.h gstgldownloadelement.h \
-	gstglcolorconvertelement.h gstglfilterbin.h gstglmixerbin.h \
-	gstglsinkbin.h gstglsrcbin.h gstglimagesink.h \
-	gstglfiltercube.h gstgleffects.h effects/gstgleffectssources.h \
-	gstglcolorscale.h gstglcolorbalance.h gstglfiltershader.h \
-	gstglfilterapp.h gstglstereosplit.h gstgldeinterlace.h \
-	gstglviewconvert.h gltestsrc.h gstgltestsrc.h gstglutils.h \
-	$(am__append_2) $(am__append_4) $(am__append_6) \
-	$(am__append_8) $(am__append_10)
+	gstglcolorconvertelement.h gstglfilterbin.h gstglsinkbin.h \
+	gstglsrcbin.h gstglimagesink.h gstglfiltercube.h \
+	gstgleffects.h effects/gstgleffectssources.h gstglcolorscale.h \
+	gstglcolorbalance.h gstglfiltershader.h gstglfilterapp.h \
+	gstglstereosplit.h gstgldeinterlace.h gstglviewconvert.h \
+	gltestsrc.h gstgltestsrc.h gstglutils.h $(am__append_2) \
+	$(am__append_4) $(am__append_6) $(am__append_8) \
+	$(am__append_10)
 libgstopengl_la_OBJCFLAGS = \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	-fobjc-arc \
@@ -955,7 +955,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstopengl_la-gstglfilterglass.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstopengl_la-gstglfiltershader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstopengl_la-gstglimagesink.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstopengl_la-gstglmixerbin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstopengl_la-gstgloverlay.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstopengl_la-gstglsinkbin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstopengl_la-gstglsrcbin.Plo@am__quote@
@@ -1045,13 +1044,6 @@ libgstopengl_la-gstglfilterbin.lo: gstglfilterbin.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstglfilterbin.c' object='libgstopengl_la-gstglfilterbin.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstopengl_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstopengl_la_CFLAGS) $(CFLAGS) -c -o libgstopengl_la-gstglfilterbin.lo `test -f 'gstglfilterbin.c' || echo '$(srcdir)/'`gstglfilterbin.c
-
-libgstopengl_la-gstglmixerbin.lo: gstglmixerbin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstopengl_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstopengl_la_CFLAGS) $(CFLAGS) -MT libgstopengl_la-gstglmixerbin.lo -MD -MP -MF $(DEPDIR)/libgstopengl_la-gstglmixerbin.Tpo -c -o libgstopengl_la-gstglmixerbin.lo `test -f 'gstglmixerbin.c' || echo '$(srcdir)/'`gstglmixerbin.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstopengl_la-gstglmixerbin.Tpo $(DEPDIR)/libgstopengl_la-gstglmixerbin.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstglmixerbin.c' object='libgstopengl_la-gstglmixerbin.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstopengl_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstopengl_la_CFLAGS) $(CFLAGS) -c -o libgstopengl_la-gstglmixerbin.lo `test -f 'gstglmixerbin.c' || echo '$(srcdir)/'`gstglmixerbin.c
 
 libgstopengl_la-gstglsinkbin.lo: gstglsinkbin.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(libgstopengl_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstopengl_la_CFLAGS) $(CFLAGS) -MT libgstopengl_la-gstglsinkbin.lo -MD -MP -MF $(DEPDIR)/libgstopengl_la-gstglsinkbin.Tpo -c -o libgstopengl_la-gstglsinkbin.lo `test -f 'gstglsinkbin.c' || echo '$(srcdir)/'`gstglsinkbin.c

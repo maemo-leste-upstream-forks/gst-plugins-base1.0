@@ -1296,28 +1296,28 @@ gst_rtcp_packet_sr_get_sender_info (<em class="parameter"><code><a class="link" 
 </tr>
 <tr>
 <td class="parameter_name"><p>ssrc</p></td>
-<td class="parameter_description"><p>result SSRC</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result SSRC. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>ntptime</p></td>
-<td class="parameter_description"><p>result NTP time</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result NTP time. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>rtptime</p></td>
-<td class="parameter_description"><p>result RTP time</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result RTP time. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>packet_count</p></td>
-<td class="parameter_description"><p>result packet count</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result packet count. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>octet_count</p></td>
-<td class="parameter_description"><p>result octet count</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result octet count. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1503,38 +1503,38 @@ the values.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>ssrc</p></td>
-<td class="parameter_description"><p>result for data source being reported</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result for data source being reported. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>fractionlost</p></td>
-<td class="parameter_description"><p>result for fraction lost since last SR/RR</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result for fraction lost since last SR/RR. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>packetslost</p></td>
-<td class="parameter_description"><p>result for the cumululative number of packets lost</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result for the cumululative number of packets lost. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>exthighestseq</p></td>
-<td class="parameter_description"><p>result for the extended last sequence number received</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result for the extended last sequence number received. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>jitter</p></td>
-<td class="parameter_description"><p>result for the interarrival jitter</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result for the interarrival jitter. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>lsr</p></td>
-<td class="parameter_description"><p>result for the last SR packet from this source</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result for the last SR packet from this source. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>dlsr</p></td>
-<td class="parameter_description"><p>result for the delay since last SR packet</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>result for the delay since last SR packet. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -2167,8 +2167,8 @@ gst_rtcp_packet_bye_add_ssrcs (<em class="parameter"><code><a class="link" href=
 </tr>
 <tr>
 <td class="parameter_name"><p>ssrc</p></td>
-<td class="parameter_description"><p>an array of SSRCs to add</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p>an array of SSRCs to add. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=len][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>len</p></td>

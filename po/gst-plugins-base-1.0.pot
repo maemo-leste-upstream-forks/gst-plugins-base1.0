@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.14.0\n"
+"Project-Id-Version: gst-plugins-base 1.14.1\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2018-03-19 20:15+0000\n"
+"POT-Creation-Date: 2018-05-17 13:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr ""
 msgid "format wasn't negotiated before get function"
 msgstr ""
 
-#: gst/encoding/gstencodebin.c:1622 gst/playback/gstplaybin2.c:3377
+#: gst/encoding/gstencodebin.c:1636 gst/playback/gstplaybin2.c:3377
 #: gst/playback/gstplaysink.c:1506 gst/playback/gstplaysink.c:1519
 #: gst/playback/gstplaysink.c:1856 gst/playback/gstplaysink.c:1888
 #: gst/playback/gstplaysink.c:2468 gst/playback/gstplaysink.c:2517
@@ -105,7 +105,7 @@ msgstr ""
 #: gst/playback/gstplaysink.c:3173 gst/playback/gstplaysink.c:3576
 #: gst/playback/gstplaysink.c:4450 gst/playback/gstplaysinkconvertbin.c:97
 #: gst/playback/gstplaysinkconvertbin.c:117 gst/playback/gsturidecodebin.c:1472
-#: gst/playback/gsturisourcebin.c:1375
+#: gst/playback/gsturisourcebin.c:1390
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
 msgstr ""
@@ -122,7 +122,7 @@ msgstr ""
 msgid "Could not create \"uridecodebin\" element."
 msgstr ""
 
-#: gst/playback/gstplaybin3.c:4536
+#: gst/playback/gstplaybin3.c:4537
 msgid "Could not create \"uridecodebin3\" element."
 msgstr ""
 
@@ -189,25 +189,25 @@ msgstr ""
 msgid "No decoder available for type '%s'."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:1378 gst/playback/gsturisourcebin.c:1269
+#: gst/playback/gsturidecodebin.c:1378 gst/playback/gsturisourcebin.c:1284
 msgid "No URI specified to play from."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:1384 gst/playback/gsturisourcebin.c:1275
+#: gst/playback/gsturidecodebin.c:1384 gst/playback/gsturisourcebin.c:1290
 #, c-format
 msgid "Invalid URI \"%s\"."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:1391 gst/playback/gsturisourcebin.c:1282
+#: gst/playback/gsturidecodebin.c:1391 gst/playback/gsturisourcebin.c:1297
 msgid "This stream type cannot be played yet."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:1409 gst/playback/gsturisourcebin.c:1300
+#: gst/playback/gsturidecodebin.c:1409 gst/playback/gsturisourcebin.c:1315
 #, c-format
 msgid "No URI handler implemented for \"%s\"."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:2280 gst/playback/gsturisourcebin.c:1999
+#: gst/playback/gsturidecodebin.c:2280 gst/playback/gsturisourcebin.c:2017
 msgid "Source element is invalid."
 msgstr ""
 
@@ -346,87 +346,87 @@ msgstr ""
 msgid "DivX MPEG-4 Version %d"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:830
+#: gst-libs/gst/pbutils/descriptions.c:831
 msgid "Uncompressed audio"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:836
+#: gst-libs/gst/pbutils/descriptions.c:837
 #, c-format
 msgid "Raw %d-bit %s audio"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:938
+#: gst-libs/gst/pbutils/descriptions.c:939
 msgid "Audio CD source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:941
+#: gst-libs/gst/pbutils/descriptions.c:942
 msgid "DVD source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:944
+#: gst-libs/gst/pbutils/descriptions.c:945
 msgid "Real Time Streaming Protocol (RTSP) source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:948
+#: gst-libs/gst/pbutils/descriptions.c:949
 msgid "Microsoft Media Server (MMS) protocol source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:956
+#: gst-libs/gst/pbutils/descriptions.c:957
 #, c-format
 msgid "%s protocol source"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1030
+#: gst-libs/gst/pbutils/descriptions.c:1031
 #, c-format
 msgid "%s video RTP depayloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1032
+#: gst-libs/gst/pbutils/descriptions.c:1033
 #, c-format
 msgid "%s audio RTP depayloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1034
+#: gst-libs/gst/pbutils/descriptions.c:1035
 #, c-format
 msgid "%s RTP depayloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1041
+#: gst-libs/gst/pbutils/descriptions.c:1042
 #, c-format
 msgid "%s demuxer"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1043
+#: gst-libs/gst/pbutils/descriptions.c:1044
 #, c-format
 msgid "%s decoder"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1082
+#: gst-libs/gst/pbutils/descriptions.c:1083
 #, c-format
 msgid "%s video RTP payloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1084
+#: gst-libs/gst/pbutils/descriptions.c:1085
 #, c-format
 msgid "%s audio RTP payloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1086
+#: gst-libs/gst/pbutils/descriptions.c:1087
 #, c-format
 msgid "%s RTP payloader"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1093
+#: gst-libs/gst/pbutils/descriptions.c:1094
 #, c-format
 msgid "%s muxer"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1095
+#: gst-libs/gst/pbutils/descriptions.c:1096
 #, c-format
 msgid "%s encoder"
 msgstr ""
 
-#: gst-libs/gst/pbutils/descriptions.c:1129
+#: gst-libs/gst/pbutils/descriptions.c:1130
 #, c-format
 msgid "GStreamer element %s"
 msgstr ""
