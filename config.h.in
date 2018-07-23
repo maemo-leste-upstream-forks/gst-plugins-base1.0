@@ -181,6 +181,9 @@
 /* Define to 1 if the system has the type `EGLAttrib'. */
 #undef HAVE_EGLATTRIB
 
+/* Define to 1 if the system has the type `EGLuint64KHR'. */
+#undef HAVE_EGLUINT64KHR
+
 /* Define to 1 if you have the <emmintrin.h> header file. */
 #undef HAVE_EMMINTRIN_H
 
