@@ -126,7 +126,7 @@
 </tr>
 <tr>
 <td class="signal_type">
-<a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="returnvalue">GValueArray</span></a>*</td>
+<a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="returnvalue">GValueArray</span></a>*</td>
 <td class="signal_name"><a class="link" href="gst-plugins-base-plugins-decodebin.html#GstDecodeBin-autoplug-factories" title="The “autoplug-factories” signal">autoplug-factories</a></td>
 <td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
@@ -142,7 +142,7 @@
 </tr>
 <tr>
 <td class="signal_type">
-<a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="returnvalue">GValueArray</span></a>*</td>
+<a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="returnvalue">GValueArray</span></a>*</td>
 <td class="signal_name"><a class="link" href="gst-plugins-base-plugins-decodebin.html#GstDecodeBin-autoplug-sort" title="The “autoplug-sort” signal">autoplug-sort</a></td>
 <td class="signal_flags"><a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
 </tr>
@@ -446,7 +446,7 @@ final and the pad will be exposed as such (see 'pad-added' signal of
 <hr>
 <div class="refsect2">
 <a name="GstDecodeBin-autoplug-factories"></a><h3>The <code class="literal">“autoplug-factories”</code> signal</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="returnvalue">GValueArray</span></a>*
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="returnvalue">GValueArray</span></a>*
 user_function (<a class="link" href="gst-plugins-base-plugins-decodebin.html#GstDecodeBin"><span class="type">GstDecodeBin</span></a> *bin,
                <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a>       *pad,
                <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>      *caps,
@@ -497,7 +497,7 @@ having an unhandled type media type.</p>
 </div>
 <div class="refsect3">
 <a name="GstDecodeBin-autoplug-factories.returns"></a><h4>Returns</h4>
-<p> a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a>* with a list of factories to try. The factories are
+<p> a <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a>* with a list of factories to try. The factories are
 by default tried in the returned order or based on the index returned by
 "autoplug-select".</p>
 </div>
@@ -636,11 +636,11 @@ operation. the default handler will always return
 <hr>
 <div class="refsect2">
 <a name="GstDecodeBin-autoplug-sort"></a><h3>The <code class="literal">“autoplug-sort”</code> signal</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="returnvalue">GValueArray</span></a>*
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="returnvalue">GValueArray</span></a>*
 user_function (<a class="link" href="gst-plugins-base-plugins-decodebin.html#GstDecodeBin"><span class="type">GstDecodeBin</span></a> *bin,
                <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstPad-struct"><span class="type">GstPad</span></a>       *pad,
                <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>      *caps,
-               <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a>  *factories,
+               <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a>  *factories,
                <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>Once decodebin has found the possible <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElementFactory.html#GstElementFactory-struct"><span class="type">GstElementFactory</span></a> objects to try
 for <em class="parameter"><code>caps</code></em>
@@ -682,7 +682,7 @@ order should not change.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>factories</p></td>
-<td class="parameter_description"><p>A <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray"><span class="type">GValueArray</span></a> of possible <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElementFactory.html#GstElementFactory-struct"><span class="type">GstElementFactory</span></a> to use.</p></td>
+<td class="parameter_description"><p>A <a href="/usr/share/gtk-doc/html/gobject/gobject-Value-arrays.html#GValueArray-struct"><span class="type">GValueArray</span></a> of possible <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElementFactory.html#GstElementFactory-struct"><span class="type">GstElementFactory</span></a> to use.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
