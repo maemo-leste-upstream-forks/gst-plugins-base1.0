@@ -28,7 +28,7 @@ gst_abi := $(gst_major).$(gst_minor)
 gst_lib := libgstreamer$(gst_abi)-0
 gst_lib_dev := libgstreamer$(gst_abi)-dev
 # what gstreamer version is needed
-gst_lib_dev_dep := $(gst_lib_dev) (>= 1.14.4)
+gst_lib_dev_dep := $(gst_lib_dev) (>= 1.15.1)
 
 gst_pkgname := gstreamer$(gst_abi)
 gst_deb_abi := $(gst_abi)-0
@@ -48,6 +48,8 @@ gst_extra_build_depends += , libwayland-dev (>= 1.4.0) [linux-any]
 gst_extra_build_depends += , libdrm-dev (>= 2.4.55) [linux-any]
 gst_extra_build_depends += , libgbm-dev [linux-any]
 gst_extra_build_depends += , wayland-protocols (>= 1.4) [linux-any]
+
+binaries := $(shell dh_listpackages)
 
 # debug package
 DEB_DH_STRIP_ARGS += --dbg-package=$(gst_pkgname)-plugins-base-dbg
@@ -161,8 +163,8 @@ DEB_CONFIGURE_EXTRA_FLAGS += \
 	--with-package-origin=$(GST_PACKAGE_ORIGIN) \
 	--with-install-plugins-helper="/usr/bin/gstreamer-codec-install"
 
-# only build the docs if gtk-doc-tools is installed, i.e. binary-indep is called
-ifeq ($(shell test "`dpkg -l gtk-doc-tools | grep ^ii`" && echo binary-indep),binary-indep)
+# Only build documentation if we are building the -doc package
+ifneq ($(filter $(gst_pkgname)-doc,$(binaries)),)
 DEB_CONFIGURE_EXTRA_FLAGS += --enable-gtk-doc
 endif
 

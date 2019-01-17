@@ -2,9 +2,7 @@ Source: gst-plugins-base@GST_ABI@
 Section: libs
 Priority: optional
 Maintainer: Maintainers of GStreamer packages <gst-plugins-base1.0@packages.debian.org>
-Uploaders: Loïc Minier <lool@debian.org>,
-           Sebastien Bacher <seb128@debian.org>,
-           Sebastian Dröge <slomo@debian.org>,
+Uploaders: Sebastian Dröge <slomo@debian.org>,
            Sjoerd Simons <sjoerd@debian.org>
 Build-Depends: BUILDDEPS
 Standards-Version: 3.9.3
@@ -57,9 +55,9 @@ Depends: ${misc:Depends},
          ${shlibs:Depends},
          iso-codes
 Breaks: totem-gstreamer (<= 2.17.92-0ubuntu1),
-        gstreamer1.0-plugins-bad (<< 1.7.1),
-        libgstreamer-plugins-bad1.0-0 (<< 1.13.1)
-Conflicts: libgstreamer-plugins-bad1.0-0 (<< 1.13.1)
+        gstreamer1.0-plugins-bad (<< 1.15.1),
+        libgstreamer-plugins-bad1.0-0 (<< 1.15.1)
+Conflicts: libgstreamer-plugins-bad1.0-0 (<< 1.15.1)
 Recommends: @GST_PKGNAME@-plugins-base
 Suggests: libvisual-0.4-plugins
 Description: GStreamer libraries from the "base" set
@@ -90,8 +88,8 @@ Depends: ${misc:Depends},
          libegl1-mesa-dev,
          libgles2-mesa-dev,
          gir1.2-gst-plugins-base-@GST_ABI@ (= ${binary:Version})
-Breaks: libgstreamer-plugins-bad1.0-dev (<< 1.13.1)
-Conflicts: libgstreamer-plugins-bad1.0-dev (<< 1.13.1)
+Breaks: libgstreamer-plugins-bad1.0-dev (<< 1.15.1)
+Conflicts: libgstreamer-plugins-bad1.0-dev (<< 1.15.1)
 Description: GStreamer development files for libraries from the "base" set
  GStreamer is a streaming media framework, based on graphs of filters
  which operate on media data.  Applications using this library can do
@@ -156,8 +154,8 @@ Section: libs
 Depends: ${misc:Depends},
          ${shlibs:Depends},
          @GST_PLUGINS_BASE_LIB@ (>= @GST_VERSION@)
-Breaks: gstreamer1.0-plugins-bad (<< 1.13.1)
-Replaces: gstreamer1.0-plugins-bad (<< 1.13.1)
+Breaks: gstreamer1.0-plugins-bad (<< 1.15.1)
+Replaces: gstreamer1.0-plugins-bad (<< 1.15.1)
 Suggests: gvfs
 XB-GStreamer-Version: ${gstreamer:Version}
 XB-GStreamer-Elements: ${gstreamer:Elements}
@@ -187,8 +185,8 @@ Depends: @GST_PKGNAME@-alsa (= ${binary:Version}) [linux-any],
          @GST_PKGNAME@-x (= ${binary:Version}),
          @GST_PLUGINS_BASE_LIB@ (= ${binary:Version}),
          ${misc:Depends}
-Breaks: gstreamer1.0-plugins-bad-dbg (<< 1.11.90)
-Replaces: gstreamer1.0-plugins-bad-dbg (<< 1.11.90)
+Breaks: gstreamer1.0-plugins-bad-dbg (<< 1.15.1)
+Replaces: gstreamer1.0-plugins-bad-dbg (<< 1.15.1)
 Description: GStreamer plugins from the "base" set
  GStreamer is a streaming media framework, based on graphs of filters
  which operate on media data.  Applications using this library can do
@@ -243,8 +241,8 @@ XB-GStreamer-URI-Sinks: ${gstreamer:URISinks}
 XB-GStreamer-Encoders: ${gstreamer:Encoders}
 XB-GStreamer-Decoders: ${gstreamer:Decoders}
 Provides: ${gstreamer:Provides}
-Breaks: gstreamer1.0-plugins-bad (<< 1.13.1)
-Replaces: gstreamer1.0-plugins-bad (<< 1.13.1)
+Breaks: gstreamer1.0-plugins-bad (<< 1.15.1)
+Replaces: gstreamer1.0-plugins-bad (<< 1.15.1)
 Description: GStreamer plugins for GL
  GStreamer is a streaming media framework, based on graphs of filters
  which operate on media data.  Applications using this library can do
