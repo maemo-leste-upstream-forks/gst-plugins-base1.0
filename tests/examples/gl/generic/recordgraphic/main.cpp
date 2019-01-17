@@ -17,11 +17,11 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
-
-#include <GL/gl.h>
-#if defined(__WIN32__) || defined(_WIN32)
-# include <GL/glext.h>
+#if defined(_MSC_VER)
+# include <windows.h>
 #endif
+
+#include <gst/gl/gstglfuncs.h>
 #include <gst/gst.h>
 #include <gst/video/video.h>
 

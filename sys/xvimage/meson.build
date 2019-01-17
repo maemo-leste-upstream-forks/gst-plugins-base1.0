@@ -6,7 +6,7 @@ xvimage_sources = [
   'xvimagesink.c',
 ]
 
-xvideo_dep = dependency('xv', required : false)
+xvideo_dep = dependency('xv', required : get_option('xvideo'))
 core_conf.set('HAVE_XVIDEO', x11_dep.found() and xvideo_dep.found())
 
 if xvideo_dep.found()
@@ -18,4 +18,5 @@ if xvideo_dep.found()
     install : true,
     install_dir : plugins_install_dir,
   )
+  pkgconfig.generate(gstxvimage, install_dir : plugins_pkgconfig_install_dir)
 endif

@@ -8,7 +8,6 @@ libgstgl_wayland_la_SOURCES = \
 	wayland_event_source.c
 
 noinst_HEADERS = \
-	gstgldisplay_wayland.h \
 	gstglwindow_wayland_egl.h \
 	wayland_event_source.h
 
@@ -19,6 +18,7 @@ libgstgl_waylandinclude_HEADERS = \
 libgstgl_wayland_la_CFLAGS = \
 	-I$(top_srcdir)/gst-libs \
 	-I$(top_builddir)/gst-libs \
+	-DBUILDING_GST_GL \
 	$(GL_CFLAGS) \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_BASE_CFLAGS) \

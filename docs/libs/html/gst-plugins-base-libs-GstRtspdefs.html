@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-rtsp.html" title="RTSP Library">
 <link rel="prev" href="gst-plugins-base-libs-GstRTSPConnection.html" title="GstRTSPConnection">
-<link rel="next" href="gst-plugins-base-libs-GstRTSPExtension.html" title="GstRTSPExtension">
+<link rel="next" href="GstRTSPExtension.html" title="GstRTSPExtension">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -15,12 +15,13 @@
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
-                  <a href="#gst-plugins-base-libs-GstRtspdefs.description" class="shortcut">Description</a></span>
+                  <a href="#gst-plugins-base-libs-GstRtspdefs.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-libs-GstRtspdefs.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-rtsp.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gst-plugins-base-libs-GstRTSPConnection.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-libs-GstRTSPExtension.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstRTSPExtension.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-libs-GstRtspdefs"></a><div class="titlepage"></div>
@@ -129,6 +130,14 @@
 <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#gst-rtsp-generate-digest-auth-response" title="gst_rtsp_generate_digest_auth_response ()">gst_rtsp_generate_digest_auth_response</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#gst-rtsp-generate-digest-auth-response-from-md5" title="gst_rtsp_generate_digest_auth_response_from_md5 ()">gst_rtsp_generate_digest_auth_response_from_md5</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -184,8 +193,23 @@
 </table></div>
 </div>
 <div class="refsect1">
+<a name="gst-plugins-base-libs-GstRtspdefs.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
+    <span class="lineart">├──</span> GstRTSPAuthMethod
+    <span class="lineart">├──</span> GstRTSPFamily
+    <span class="lineart">├──</span> GstRTSPHeaderField
+    <span class="lineart">├──</span> GstRTSPResult
+    <span class="lineart">├──</span> GstRTSPState
+    <span class="lineart">├──</span> GstRTSPStatusCode
+    <span class="lineart">╰──</span> GstRTSPVersion
+    <a href="/usr/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GFlags</a>
+    <span class="lineart">├──</span> GstRTSPEvent
+    <span class="lineart">╰──</span> GstRTSPMethod
+</pre>
+</div>
+<div class="refsect1">
 <a name="gst-plugins-base-libs-GstRtspdefs.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/rtsp/gstrtspdefs.h&gt;
+<pre class="synopsis">#include &lt;gst/rtsp/rtsp.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -445,7 +469,7 @@ of methods. This functions is the reverse of <a class="link" href="gst-plugins-b
 <a name="gst-rtsp-options-from-text.returns"></a><h4>Returns</h4>
 <p> a <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPMethod" title="enum GstRTSPMethod"><span class="type">GstRTSPMethod</span></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix14.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -571,7 +595,65 @@ the username and password. See RFC2069 for details.</p>
 <a name="gst-rtsp-generate-digest-auth-response.returns"></a><h4>Returns</h4>
 <p> Authentication response or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if unsupported</p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.12">1.12</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-rtsp-generate-digest-auth-response-from-md5"></a><h3>gst_rtsp_generate_digest_auth_response_from_md5 ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_rtsp_generate_digest_auth_response_from_md5
+                               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *algorithm</code></em>,
+                                <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *method</code></em>,
+                                <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *md5</code></em>,
+                                <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *nonce</code></em>);</pre>
+<p>Calculates the digest auth response from the values given by the server and
+the md5sum. See RFC2069 for details.</p>
+<p>This function is useful when the passwords are not stored in clear text,
+but instead in the same format as the .htdigest file.</p>
+<p>Currently only supported algorithm "md5".</p>
+<div class="refsect3">
+<a name="gst-rtsp-generate-digest-auth-response-from-md5.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>algorithm</p></td>
+<td class="parameter_description"><p>Hash algorithm to use, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for MD5. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>method</p></td>
+<td class="parameter_description"><p>Request method, e.g. PLAY</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>md5</p></td>
+<td class="parameter_description"><p>The md5 sum of username:realm:password</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>uri</p></td>
+<td class="parameter_description"><p>Original request URI</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>nonce</p></td>
+<td class="parameter_description"><p>Nonce</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-rtsp-generate-digest-auth-response-from-md5.returns"></a><h4>Returns</h4>
+<p> Authentication response or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if unsupported</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
 </div>
 </div>
 <div class="refsect1">

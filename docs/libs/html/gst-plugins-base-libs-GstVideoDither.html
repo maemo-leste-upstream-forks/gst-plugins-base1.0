@@ -91,7 +91,7 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoDither.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/video/video-dither.h&gt;
+<pre class="synopsis">#include &lt;gst/video/video.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -184,7 +184,7 @@ gst_video_dither_line (<em class="parameter"><code><a class="link" href="gst-plu
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GstVideoDither" title="GstVideoDither"><span class="returnvalue">GstVideoDither</span></a> *
 gst_video_dither_new (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GstVideoDitherMethod" title="enum GstVideoDitherMethod"><span class="type">GstVideoDitherMethod</span></a> method</code></em>,
                       <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoDither.html#GstVideoDitherFlags" title="enum GstVideoDitherFlags"><span class="type">GstVideoDitherFlags</span></a> flags</code></em>,
-                      <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
+                      <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> quantizer[GST_VIDEO_MAX_COMPONENTS]</code></em>,
                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> width</code></em>);</pre>
 <p>Make a new dither object for dithering lines of <em class="parameter"><code>format</code></em>
@@ -219,7 +219,7 @@ performance is achived when <em class="parameter"><code>quantizer</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>format</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>

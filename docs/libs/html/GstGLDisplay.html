@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gl.html" title="OpenGL Integration Library">
 <link rel="prev" href="GstGLContext.html" title="GstGLContext">
-<link rel="next" href="gst-plugins-base-libs-GstGLDisplayWayland.html" title="GstGLDisplayWayland">
+<link rel="next" href="gst-plugins-base-libs-GstGLDisplayCocoa.html" title="GstGLDisplayCocoa">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -22,7 +22,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gl.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="GstGLContext.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-libs-GstGLDisplayWayland.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-libs-GstGLDisplayCocoa.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GstGLDisplay"></a><div class="titlepage"></div>
@@ -193,6 +193,7 @@
     <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
             <span class="lineart">╰──</span> GstGLDisplay
+                <span class="lineart">╰──</span> <a class="link" href="GstGLDisplayWayland.html" title="GstGLDisplayWayland">GstGLDisplayWayland</a>
 </pre>
 </div>
 <div class="refsect1">
@@ -234,7 +235,7 @@ gst_gl_display_new (<em class="parameter"><code><span class="type">void</span></
 <p>a new <a class="link" href="GstGLDisplay.html" title="GstGLDisplay"><span class="type">GstGLDisplay</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -261,7 +262,7 @@ gst_gl_display_get_handle_type (<em class="parameter"><code><a class="link" href
 <p> the <a class="link" href="GstGLDisplay.html#GstGLDisplayType" title="enum GstGLDisplayType"><span class="type">GstGLDisplayType</span></a> of <em class="parameter"><code>display</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -360,7 +361,7 @@ if there already exists another context for <em class="parameter"><code>context<
 's active thread.</p>
 <p>Must be called with the object lock held.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -398,7 +399,7 @@ or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><c
 <p>Must be called with the object lock held. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -424,7 +425,7 @@ gst_gl_display_get_handle (<em class="parameter"><code><a class="link" href="Gst
 <a name="gst-gl-display-get-handle.returns"></a><h4>Returns</h4>
 <p> the native handle for the display</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -471,7 +472,7 @@ gst_gl_display_create_context (<em class="parameter"><code><a class="link" href=
 <a name="gst-gl-display-create-context.returns"></a><h4>Returns</h4>
 <p> whether a new context could be created.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -550,7 +551,7 @@ from <em class="parameter"><code>compare_func</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -586,7 +587,7 @@ gst_gl_display_remove_window (<em class="parameter"><code><a class="link" href="
 could be removed from <em class="parameter"><code>display</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -622,7 +623,7 @@ gst_context_get_gl_display (<em class="parameter"><code><a href="/usr/share/gtk-
 was in <em class="parameter"><code>context</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -655,7 +656,7 @@ gst_context_set_gl_display (<em class="parameter"><code><a href="/usr/share/gtk-
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 </div>
 <div class="refsect1">

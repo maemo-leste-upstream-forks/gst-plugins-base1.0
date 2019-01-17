@@ -1,19 +1,8 @@
 plugin_LTLIBRARIES = libgstopengl.la
 
-# These have to stay in -bad until we can move GstVideoAggregator to -base
-#	gstglbasemixer.c
-#	gstglbasemixer.h
-#	gstglmixer.c
-#	gstglmixer.h
-#	gstglmixerbin.h
-#	gstglmixerbin.c
-#	gstglstereomix.c
-#	gstglstereomix.h
-#	gstglvideomixer.c
-#	gstglvideomixer.h
-
 libgstopengl_la_SOURCES = \
 	gstopengl.c \
+	gstglalpha.c \
 	gstgluploadelement.c \
 	gstgldownloadelement.c \
 	gstglcolorconvertelement.c \
@@ -42,18 +31,25 @@ libgstopengl_la_SOURCES = \
 	effects/gstgleffectblur.c \
 	effects/gstgleffectsobel.c \
 	effects/gstgleffectlaplacian.c \
+	gstglbasemixer.c \
 	gstglcolorscale.c \
 	gstglcolorbalance.c \
+	gstgldeinterlace.c \
 	gstglfiltershader.c \
 	gstglfilterapp.c \
-	gstglviewconvert.c \
+	gstglmixer.c \
+	gstglmixerbin.c \
+	gstglstereomix.c \
 	gstglstereosplit.c \
-	gstgldeinterlace.c \
+	gstglvideomixer.c \
+	gstglviewconvert.c \
 	gltestsrc.c \
 	gstgltestsrc.c \
+	gstgloverlaycompositorelement.c \
 	gstglutils.c
 
 noinst_HEADERS = \
+	gstglalpha.h \
 	gstgluploadelement.h \
 	gstgldownloadelement.h \
 	gstglcolorconvertelement.h \
@@ -64,26 +60,32 @@ noinst_HEADERS = \
 	gstglfiltercube.h \
 	gstgleffects.h \
 	effects/gstgleffectssources.h \
+	gstglbasemixer.h \
 	gstglcolorscale.h \
 	gstglcolorbalance.h \
+	gstgldeinterlace.h \
 	gstglfiltershader.h \
 	gstglfilterapp.h \
+	gstglmixer.h \
+	gstglmixerbin.h \
+	gstglstereomix.h \
 	gstglstereosplit.h \
-	gstgldeinterlace.h \
+	gstglvideomixer.h \
 	gstglviewconvert.h \
 	gltestsrc.h \
 	gstgltestsrc.h \
+	gstgloverlaycompositorelement.h \
 	gstglutils.h
 
 # full opengl required
 if USE_OPENGL
-#	gstglmosaic.c
 libgstopengl_la_SOURCES += \
+	gstglmosaic.c \
 	gstglfilterglass.c
 
-#	gstglmosaic.h
 noinst_HEADERS += \
 	gstglfilterglass.h \
+	gstglmosaic.h \
 	effects/gstgleffectscurves.h \
 	effects/gstgleffectlumatocurve.h
 

@@ -439,6 +439,7 @@ gst_audio_rate_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
   GstFlowReturn ret = GST_FLOW_OK;
   GstClockTimeDiff diff;
   gint rate, bpf;
+  GstAudioMeta *meta;
 
   audiorate = GST_AUDIO_RATE (parent);
 
@@ -492,13 +493,26 @@ gst_audio_rate_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
     in_time = audiorate->next_ts;
   }
 
+  meta = gst_buffer_get_audio_meta (buf);
   in_size = gst_buffer_get_size (buf);
-  in_samples = in_size / bpf;
+  in_samples = meta ? meta->samples : in_size / bpf;
   audiorate->in += in_samples;
 
   /* calculate the buffer offset */
-  in_offset = gst_util_uint64_scale_int_round (in_time, rate, GST_SECOND);
+  if (in_time < audiorate->prev_in_time) {
+    in_offset = audiorate->prev_in_offset -
+        gst_util_uint64_scale_int_round (audiorate->prev_in_time - in_time,
+        rate, GST_SECOND);
+  } else {
+    in_offset =
+        audiorate->prev_in_offset +
+        gst_util_uint64_scale_int_round (in_time - audiorate->prev_in_time,
+        rate, GST_SECOND);
+  }
   in_offset_end = in_offset + in_samples;
+
+  audiorate->prev_in_offset = in_offset;
+  audiorate->prev_in_time = in_time;
 
   GST_LOG_OBJECT (audiorate,
       "in_time:%" GST_TIME_FORMAT ", in_duration:%" GST_TIME_FORMAT
@@ -549,6 +563,10 @@ gst_audio_rate_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
           fillmap.size);
       gst_buffer_unmap (fill, &fillmap);
 
+      if (audiorate->info.layout == GST_AUDIO_LAYOUT_NON_INTERLEAVED) {
+        gst_buffer_add_audio_meta (fill, &audiorate->info, cursamples, NULL);
+      }
+
       GST_DEBUG_OBJECT (audiorate, "inserting %" G_GUINT64_FORMAT " samples",
           cursamples);
 
@@ -560,9 +578,8 @@ gst_audio_rate_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
        * offset to get duration. Necessary complexity to get 'perfect' 
        * streams */
       GST_BUFFER_TIMESTAMP (fill) = audiorate->next_ts;
-      audiorate->next_ts =
-          gst_util_uint64_scale_int_round (audiorate->next_offset, GST_SECOND,
-          rate);
+      audiorate->next_ts +=
+          gst_util_uint64_scale_int_round (cursamples, GST_SECOND, rate);
       GST_BUFFER_DURATION (fill) =
           audiorate->next_ts - GST_BUFFER_TIMESTAMP (fill);
 
@@ -591,7 +608,7 @@ gst_audio_rate_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
   } else if (in_offset < audiorate->next_offset) {
     /* need to remove samples */
     if (in_offset_end <= audiorate->next_offset) {
-      guint64 drop = in_size / bpf;
+      guint64 drop = in_samples;
 
       audiorate->drop += drop;
 
@@ -607,24 +624,16 @@ gst_audio_rate_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
 
       goto beach;
     } else {
-      guint64 truncsamples;
-      guint truncsize, leftsize;
-      GstBuffer *trunc;
+      guint64 truncsamples, leftsamples;
 
       /* truncate buffer */
       truncsamples = audiorate->next_offset - in_offset;
-      truncsize = truncsamples * bpf;
-      leftsize = in_size - truncsize;
+      leftsamples = in_samples - truncsamples;
 
-      trunc =
-          gst_buffer_copy_region (buf, GST_BUFFER_COPY_ALL, truncsize,
-          leftsize);
-
-      gst_buffer_unref (buf);
-      buf = trunc;
+      buf = gst_audio_buffer_truncate (buf, bpf, truncsamples, leftsamples);
 
       audiorate->drop += truncsamples;
-      audiorate->out += (leftsize / bpf);
+      audiorate->out += leftsamples;
       GST_DEBUG_OBJECT (audiorate, "truncating %" G_GUINT64_FORMAT " samples",
           truncsamples);
 
@@ -643,7 +652,8 @@ send:
   GST_BUFFER_OFFSET_END (buf) = in_offset_end;
 
   GST_BUFFER_TIMESTAMP (buf) = audiorate->next_ts;
-  audiorate->next_ts = gst_util_uint64_scale_int_round (in_offset_end,
+  audiorate->next_ts +=
+      gst_util_uint64_scale_int_round (in_offset_end - audiorate->next_offset,
       GST_SECOND, rate);
   GST_BUFFER_DURATION (buf) = audiorate->next_ts - GST_BUFFER_TIMESTAMP (buf);
 

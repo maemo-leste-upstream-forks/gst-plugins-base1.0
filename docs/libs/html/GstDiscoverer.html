@@ -569,7 +569,9 @@
 </div>
 <div class="refsect1">
 <a name="GstDiscoverer.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GFlags</a>
+    <span class="lineart">╰──</span> GstDiscovererSerializeFlags
+    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">├──</span> GstDiscoverer
     <span class="lineart">╰──</span> GstDiscovererInfo
 </pre>
@@ -1046,7 +1048,7 @@ gst_discoverer_info_get_live (<em class="parameter"><code>const <a class="link" 
 <a name="gst-discoverer-info-get-live.returns"></a><h4>Returns</h4>
 <p> whether the URI is live.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1138,7 +1140,7 @@ what needs to be serialized.</p></td>
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1167,7 +1169,7 @@ back to a <a class="link" href="GstDiscoverer.html#GstDiscovererInfo"><span clas
 <p>A newly-allocated <a class="link" href="GstDiscoverer.html#GstDiscovererInfo"><span class="type">GstDiscovererInfo</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1506,7 +1508,7 @@ of <em class="parameter"><code>info</code></em>
 , you will need to copy them. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> zero-terminated=1]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1748,7 +1750,7 @@ gst_discoverer_audio_info_get_channel_mask
 <a class="link" href="gst-plugins-base-libs-Audio-channels.html#gst-audio-channel-positions-from-mask" title="gst_audio_channel_positions_from_mask ()"><code class="function">gst_audio_channel_positions_from_mask()</code></a> for more
 information.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2316,7 +2318,7 @@ caps, tags and miscellaneous information</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">

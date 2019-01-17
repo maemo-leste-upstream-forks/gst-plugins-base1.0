@@ -781,7 +781,7 @@ gst_video_scale_fixate_caps (GstBaseTransform * base, GstPadDirection direction,
           goto done;
         }
 
-        w = (guint) gst_util_uint64_scale_int (h, num, den);
+        w = (guint) gst_util_uint64_scale_int_round (h, num, den);
         gst_structure_fixate_field_nearest_int (outs, "width", w);
 
         goto done;
@@ -833,7 +833,7 @@ gst_video_scale_fixate_caps (GstBaseTransform * base, GstPadDirection direction,
         goto done;
       }
 
-      w = (guint) gst_util_uint64_scale_int (h, num, den);
+      w = (guint) gst_util_uint64_scale_int_round (h, num, den);
       gst_structure_fixate_field_nearest_int (outs, "width", w);
       if (gst_structure_has_field (outs, "pixel-aspect-ratio") ||
           set_par_n != set_par_d)
@@ -863,7 +863,7 @@ gst_video_scale_fixate_caps (GstBaseTransform * base, GstPadDirection direction,
           goto done;
         }
 
-        h = (guint) gst_util_uint64_scale_int (w, den, num);
+        h = (guint) gst_util_uint64_scale_int_round (w, den, num);
         gst_structure_fixate_field_nearest_int (outs, "height", h);
 
         goto done;
@@ -914,7 +914,7 @@ gst_video_scale_fixate_caps (GstBaseTransform * base, GstPadDirection direction,
         goto done;
       }
 
-      h = (guint) gst_util_uint64_scale_int (w, den, num);
+      h = (guint) gst_util_uint64_scale_int_round (w, den, num);
       gst_structure_fixate_field_nearest_int (outs, "height", h);
       if (gst_structure_has_field (outs, "pixel-aspect-ratio") ||
           set_par_n != set_par_d)
@@ -944,7 +944,7 @@ gst_video_scale_fixate_caps (GstBaseTransform * base, GstPadDirection direction,
 
       /* This might have failed but try to scale the width
        * to keep the DAR nonetheless */
-      w = (guint) gst_util_uint64_scale_int (set_h, num, den);
+      w = (guint) gst_util_uint64_scale_int_round (set_h, num, den);
       gst_structure_fixate_field_nearest_int (tmp, "width", w);
       gst_structure_get_int (tmp, "width", &set_w);
       gst_structure_free (tmp);
@@ -966,7 +966,7 @@ gst_video_scale_fixate_caps (GstBaseTransform * base, GstPadDirection direction,
 
       /* This might have failed but try to scale the width
        * to keep the DAR nonetheless */
-      h = (guint) gst_util_uint64_scale_int (set_w, den, num);
+      h = (guint) gst_util_uint64_scale_int_round (set_w, den, num);
       gst_structure_fixate_field_nearest_int (tmp, "height", h);
       gst_structure_get_int (tmp, "height", &set_h);
       gst_structure_free (tmp);
@@ -978,10 +978,14 @@ gst_video_scale_fixate_caps (GstBaseTransform * base, GstPadDirection direction,
         goto done;
       }
 
-      /* If all this failed, keep the height that was nearest to the orignal
-       * height and the nearest possible width. This changes the DAR but
-       * there's not much else to do here.
+      /* If all this failed, keep the dimensions with the DAR that was closest
+       * to the correct DAR. This changes the DAR but there's not much else to
+       * do here.
        */
+      if (set_w * ABS (set_h - h) < ABS (f_w - w) * f_h) {
+        f_h = set_h;
+        f_w = set_w;
+      }
       gst_structure_set (outs, "width", G_TYPE_INT, f_w, "height", G_TYPE_INT,
           f_h, NULL);
       goto done;
@@ -1035,7 +1039,7 @@ gst_video_scale_fixate_caps (GstBaseTransform * base, GstPadDirection direction,
         goto done;
       }
 
-      w = (guint) gst_util_uint64_scale_int (set_h, num, den);
+      w = (guint) gst_util_uint64_scale_int_round (set_h, num, den);
       tmp = gst_structure_copy (outs);
       gst_structure_fixate_field_nearest_int (tmp, "width", w);
       gst_structure_get_int (tmp, "width", &tmp2);
@@ -1052,7 +1056,7 @@ gst_video_scale_fixate_caps (GstBaseTransform * base, GstPadDirection direction,
       }
 
       /* ... or try the same with the height */
-      h = (guint) gst_util_uint64_scale_int (set_w, den, num);
+      h = (guint) gst_util_uint64_scale_int_round (set_w, den, num);
       tmp = gst_structure_copy (outs);
       gst_structure_fixate_field_nearest_int (tmp, "height", h);
       gst_structure_get_int (tmp, "height", &tmp2);

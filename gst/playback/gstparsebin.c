@@ -229,9 +229,6 @@ enum
 };
 
 #define DEFAULT_SUBTITLE_ENCODING NULL
-#define DEFAULT_USE_BUFFERING     FALSE
-#define DEFAULT_LOW_PERCENT       10
-#define DEFAULT_HIGH_PERCENT      99
 /* by default we use the automatic values above */
 #define DEFAULT_EXPOSE_ALL_STREAMS  TRUE
 #define DEFAULT_CONNECTION_SPEED    0
@@ -674,7 +671,7 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
    * @pad: The #GstPad.
    * @caps: The #GstCaps found.
    *
-   * This function is emited when an array of possible factories for @caps on
+   * This function is emitted when an array of possible factories for @caps on
    * @pad is needed. ParseBin will by default return an array with all
    * compatible factories, sorted by rank.
    *
@@ -706,7 +703,7 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
    * @factories: A #GValueArray of possible #GstElementFactory to use.
    *
    * Once ParseBin has found the possible #GstElementFactory objects to try
-   * for @caps on @pad, this signal is emited. The purpose of the signal is for
+   * for @caps on @pad, this signal is emitted. The purpose of the signal is for
    * the application to perform additional sorting or filtering on the element
    * factory array.
    *
@@ -3472,14 +3469,16 @@ retry:
 
   /* Get the pads that we're going to expose and mark things as exposed */
   uncollected_streams = FALSE;
+  CHAIN_MUTEX_LOCK (parsebin->parse_chain);
   if (!gst_parse_chain_expose (parsebin->parse_chain, &endpads, &missing_plugin,
           missing_plugin_details, &last_group, &uncollected_streams)) {
     g_list_free_full (endpads, (GDestroyNotify) gst_object_unref);
     g_string_free (missing_plugin_details, TRUE);
     GST_ERROR_OBJECT (parsebin, "Broken chain/group tree");
-    g_return_val_if_reached (FALSE);
+    CHAIN_MUTEX_UNLOCK (parsebin->parse_chain);
     return FALSE;
   }
+  CHAIN_MUTEX_UNLOCK (parsebin->parse_chain);
   if (endpads == NULL) {
     if (missing_plugin) {
       if (missing_plugin_details->len > 0) {
@@ -3729,8 +3728,10 @@ gst_parse_chain_expose (GstParseChain * chain, GList ** endpads,
   for (l = group->children; l; l = l->next) {
     GstParseChain *childchain = l->data;
 
+    CHAIN_MUTEX_LOCK (childchain);
     ret |= gst_parse_chain_expose (childchain, endpads, missing_plugin,
         missing_plugin_details, last_group, uncollected_streams);
+    CHAIN_MUTEX_UNLOCK (childchain);
   }
 
   return ret;
@@ -3915,7 +3916,8 @@ guess_stream_type_from_caps (GstCaps * caps)
   if (g_str_has_prefix (name, "audio/"))
     return GST_STREAM_TYPE_AUDIO;
   if (g_str_has_prefix (name, "text/") ||
-      g_str_has_prefix (name, "subpicture/"))
+      g_str_has_prefix (name, "subpicture/") ||
+      g_str_has_prefix (name, "closedcaption/"))
     return GST_STREAM_TYPE_TEXT;
 
   return GST_STREAM_TYPE_UNKNOWN;
@@ -4055,6 +4057,9 @@ gst_parse_pad_event (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
       GstStreamCollection *collection = NULL;
       gst_event_parse_stream_collection (event, &collection);
       gst_parse_pad_update_stream_collection (parsepad, collection);
+      gst_element_post_message (GST_ELEMENT (parsepad->parsebin),
+          gst_message_new_stream_collection (GST_OBJECT (parsepad->parsebin),
+              collection));
       break;
     }
     case GST_EVENT_EOS:{

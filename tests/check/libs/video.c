@@ -437,7 +437,7 @@ GST_START_TEST (test_video_formats_pack_unpack)
     fail_unless (unpackinfo != NULL);
 
     gst_video_info_init (&vinfo);
-    gst_video_info_set_format (&vinfo, fmt, WIDTH, HEIGHT);
+    fail_unless (gst_video_info_set_format (&vinfo, fmt, WIDTH, HEIGHT));
     vsize = GST_VIDEO_INFO_SIZE (&vinfo);
     vdata = g_malloc (vsize);
     memset (vdata, 0x99, vsize);
@@ -533,7 +533,7 @@ GST_START_TEST (test_video_formats)
         GST_LOG ("%s, %dx%d", fourcc_list[i].fourcc, w, h);
 
         gst_video_info_init (&vinfo);
-        gst_video_info_set_format (&vinfo, fmt, w, h);
+        fail_unless (gst_video_info_set_format (&vinfo, fmt, w, h));
 
         paintinfo.width = w;
         paintinfo.height = h;
@@ -659,7 +659,8 @@ GST_START_TEST (test_video_formats_rgb)
   GstStructure *structure;
 
   gst_video_info_init (&vinfo);
-  gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_RGB, 800, 600);
+  fail_unless (gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_RGB, 800,
+          600));
   vinfo.par_n = 1;
   vinfo.par_d = 1;
   vinfo.fps_n = 0;
@@ -695,7 +696,8 @@ GST_START_TEST (test_video_formats_rgba_large_dimension)
   GstStructure *structure;
 
   gst_video_info_init (&vinfo);
-  gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_RGBA, 29700, 21000);
+  fail_unless (gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_RGBA, 29700,
+          21000));
   vinfo.par_n = 1;
   vinfo.par_d = 1;
   vinfo.fps_n = 0;
@@ -899,7 +901,8 @@ GST_START_TEST (test_parse_caps_multiview)
       GstCaps *caps;
 
       gst_video_info_init (&vinfo);
-      gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_I420, 320, 240);
+      fail_unless (gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_I420,
+              320, 240));
 
       GST_VIDEO_INFO_MULTIVIEW_MODE (&vinfo) = modes[i];
       GST_VIDEO_INFO_MULTIVIEW_FLAGS (&vinfo) = flags[j];
@@ -1035,7 +1038,8 @@ GST_START_TEST (test_convert_frame)
   gst_buffer_unmap (from_buffer, &map);
 
   gst_video_info_init (&vinfo);
-  gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_xRGB, 640, 480);
+  fail_unless (gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_xRGB, 640,
+          480));
   vinfo.fps_n = 25;
   vinfo.fps_d = 1;
   vinfo.par_n = 1;
@@ -1057,7 +1061,8 @@ GST_START_TEST (test_convert_frame)
   error = NULL;
 
   gst_caps_unref (to_caps);
-  gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_I420, 240, 320);
+  fail_unless (gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_I420, 240,
+          320));
   vinfo.fps_n = 25;
   vinfo.fps_d = 1;
   vinfo.par_n = 1;
@@ -1120,8 +1125,73 @@ GST_START_TEST (test_convert_frame_async)
   }
   gst_buffer_unmap (from_buffer, &map);
 
+  loop = cf_data.loop = g_main_loop_new (NULL, FALSE);
+
   gst_video_info_init (&vinfo);
-  gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_xRGB, 640, 470);
+  fail_unless (gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_xRGB, 640,
+          470));
+  vinfo.par_n = 1;
+  vinfo.par_d = 1;
+  vinfo.fps_n = 25;
+  vinfo.fps_d = 1;
+  from_caps = gst_video_info_to_caps (&vinfo);
+
+  from_sample = gst_sample_new (from_buffer, from_caps, NULL, NULL);
+  gst_buffer_unref (from_buffer);
+  gst_caps_unref (from_caps);
+
+  gst_video_info_init (&vinfo);
+  fail_unless (gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_I420, 240,
+          320));
+  vinfo.par_n = 1;
+  vinfo.par_d = 2;
+  vinfo.fps_n = 25;
+  vinfo.fps_d = 1;
+  to_caps = gst_video_info_to_caps (&vinfo);
+  gst_video_convert_sample_async (from_sample, to_caps,
+      GST_CLOCK_TIME_NONE,
+      (GstVideoConvertSampleCallback) convert_sample_async_callback, &cf_data,
+      NULL);
+  g_main_loop_run (loop);
+  fail_unless (cf_data.sample != NULL);
+  fail_unless (cf_data.error == NULL);
+
+  gst_sample_unref (cf_data.sample);
+  gst_caps_unref (to_caps);
+  gst_sample_unref (from_sample);
+
+  g_main_loop_unref (loop);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_convert_frame_async_error)
+{
+  GstVideoInfo vinfo;
+  GstCaps *from_caps, *to_caps;
+  GstBuffer *from_buffer;
+  GstSample *from_sample;
+  gint i;
+  GstMapInfo map;
+  GMainLoop *loop;
+  ConvertFrameContext cf_data = { NULL, NULL, NULL };
+
+  gst_debug_set_threshold_for_name ("default", GST_LEVEL_NONE);
+
+  from_buffer = gst_buffer_new_and_alloc (640 * 480 * 4);
+
+  gst_buffer_map (from_buffer, &map, GST_MAP_WRITE);
+  for (i = 0; i < 640 * 480; i++) {
+    map.data[4 * i + 0] = 0;    /* x */
+    map.data[4 * i + 1] = 255;  /* R */
+    map.data[4 * i + 2] = 0;    /* G */
+    map.data[4 * i + 3] = 0;    /* B */
+  }
+  gst_buffer_unmap (from_buffer, &map);
+
+  gst_video_info_init (&vinfo);
+  fail_unless (gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_xRGB, 640,
+          470));
   vinfo.par_n = 1;
   vinfo.par_d = 1;
   vinfo.fps_n = 25;
@@ -1151,23 +1221,6 @@ GST_START_TEST (test_convert_frame_async)
   cf_data.error = NULL;
 
   gst_caps_unref (to_caps);
-  gst_video_info_init (&vinfo);
-  gst_video_info_set_format (&vinfo, GST_VIDEO_FORMAT_I420, 240, 320);
-  vinfo.par_n = 1;
-  vinfo.par_d = 2;
-  vinfo.fps_n = 25;
-  vinfo.fps_d = 1;
-  to_caps = gst_video_info_to_caps (&vinfo);
-  gst_video_convert_sample_async (from_sample, to_caps,
-      GST_CLOCK_TIME_NONE,
-      (GstVideoConvertSampleCallback) convert_sample_async_callback, &cf_data,
-      NULL);
-  g_main_loop_run (loop);
-  fail_unless (cf_data.sample != NULL);
-  fail_unless (cf_data.error == NULL);
-
-  gst_sample_unref (cf_data.sample);
-  gst_caps_unref (to_caps);
   gst_sample_unref (from_sample);
 
   g_main_loop_unref (loop);
@@ -1188,6 +1241,65 @@ GST_START_TEST (test_video_size_from_caps)
   gst_video_info_init (&vinfo);
   fail_unless (gst_video_info_from_caps (&vinfo, caps));
   fail_unless (GST_VIDEO_INFO_SIZE (&vinfo) == (640 * 480 * 12 / 8));
+
+  gst_caps_unref (caps);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_interlace_mode)
+{
+  GstVideoInfo vinfo;
+  GstCaps *caps;
+  GstStructure *structure;
+  GstCapsFeatures *features;
+  const char *mode_str;
+  int mode;
+
+  gst_video_info_init (&vinfo);
+
+  /* Progressive */
+  fail_unless (gst_video_info_set_interlaced_format (&vinfo,
+          GST_VIDEO_FORMAT_YV12, GST_VIDEO_INTERLACE_MODE_PROGRESSIVE, 320,
+          240));
+  fail_unless (GST_VIDEO_INFO_SIZE (&vinfo) == 115200);
+
+  caps = gst_video_info_to_caps (&vinfo);
+  fail_unless (caps != NULL);
+  structure = gst_caps_get_structure (caps, 0);
+  fail_unless (structure != NULL);
+  mode_str = gst_structure_get_string (structure, "interlace-mode");
+  mode = gst_video_interlace_mode_from_string (mode_str);
+  fail_unless (mode == GST_VIDEO_INTERLACE_MODE_PROGRESSIVE);
+
+  /* Converting back to video info */
+  fail_unless (gst_video_info_from_caps (&vinfo, caps));
+  fail_unless (GST_VIDEO_INFO_INTERLACE_MODE (&vinfo) ==
+      GST_VIDEO_INTERLACE_MODE_PROGRESSIVE);
+
+  gst_caps_unref (caps);
+
+  /* Interlaced with alternate frame on buffers */
+  fail_unless (gst_video_info_set_interlaced_format (&vinfo,
+          GST_VIDEO_FORMAT_YV12, GST_VIDEO_INTERLACE_MODE_ALTERNATE, 320, 240));
+  fail_unless (GST_VIDEO_INFO_SIZE (&vinfo) == 57600);
+
+  caps = gst_video_info_to_caps (&vinfo);
+  fail_unless (caps != NULL);
+  structure = gst_caps_get_structure (caps, 0);
+  fail_unless (structure != NULL);
+  mode_str = gst_structure_get_string (structure, "interlace-mode");
+  mode = gst_video_interlace_mode_from_string (mode_str);
+  fail_unless (mode == GST_VIDEO_INTERLACE_MODE_ALTERNATE);
+  /* 'alternate' mode must always be accompanied by interlaced caps feature. */
+  features = gst_caps_get_features (caps, 0);
+  fail_unless (gst_caps_features_contains (features,
+          GST_CAPS_FEATURE_FORMAT_INTERLACED));
+
+  /* Converting back to video info */
+  fail_unless (gst_video_info_from_caps (&vinfo, caps));
+  fail_unless (GST_VIDEO_INFO_INTERLACE_MODE (&vinfo) ==
+      GST_VIDEO_INTERLACE_MODE_ALTERNATE);
 
   gst_caps_unref (caps);
 }
@@ -2073,7 +2185,7 @@ GST_START_TEST (test_video_pack_unpack2)
     pixels = make_pixels (depth, WIDTH, HEIGHT);
     stride = WIDTH * (depth >> 1);
 
-    gst_video_info_set_format (&info, format, WIDTH, HEIGHT);
+    fail_unless (gst_video_info_set_format (&info, format, WIDTH, HEIGHT));
     buffer = gst_buffer_new_and_alloc (info.size);
     gst_video_frame_map (&frame, &info, buffer, GST_MAP_READWRITE);
 
@@ -2297,7 +2409,7 @@ GST_START_TEST (test_video_color_convert)
     GstVideoFrame inframe;
     GstBuffer *inbuffer;
 
-    gst_video_info_set_format (&ininfo, infmt, WIDTH, HEIGHT);
+    fail_unless (gst_video_info_set_format (&ininfo, infmt, WIDTH, HEIGHT));
     inbuffer = gst_buffer_new_and_alloc (ininfo.size);
     gst_buffer_memset (inbuffer, 0, 0, -1);
     gst_video_frame_map (&inframe, &ininfo, inbuffer, GST_MAP_READ);
@@ -2311,7 +2423,7 @@ GST_START_TEST (test_video_color_convert)
       gint count;
       ConvertResult res;
 
-      gst_video_info_set_format (&outinfo, outfmt, WIDTH, HEIGHT);
+      fail_unless (gst_video_info_set_format (&outinfo, outfmt, WIDTH, HEIGHT));
       outbuffer = gst_buffer_new_and_alloc (outinfo.size);
       gst_video_frame_map (&outframe, &outinfo, outbuffer, GST_MAP_WRITE);
 
@@ -2396,13 +2508,15 @@ GST_START_TEST (test_video_size_convert)
     gint count, method;
     ConvertResult res;
 
-    gst_video_info_set_format (&ininfo, infmt, WIDTH_IN, HEIGHT_IN);
+    fail_unless (gst_video_info_set_format (&ininfo, infmt, WIDTH_IN,
+            HEIGHT_IN));
     inbuffer = gst_buffer_new_and_alloc (ininfo.size);
     gst_buffer_memset (inbuffer, 0, 0, -1);
     gst_video_frame_map (&inframe, &ininfo, inbuffer, GST_MAP_READ);
 
     outfmt = infmt;
-    gst_video_info_set_format (&outinfo, outfmt, WIDTH_OUT, HEIGHT_OUT);
+    fail_unless (gst_video_info_set_format (&outinfo, outfmt, WIDTH_OUT,
+            HEIGHT_OUT));
     outbuffer = gst_buffer_new_and_alloc (outinfo.size);
     gst_video_frame_map (&outframe, &outinfo, outbuffer, GST_MAP_WRITE);
 
@@ -2471,12 +2585,14 @@ GST_START_TEST (test_video_convert)
   GstBuffer *inbuffer, *outbuffer;
   GstVideoConverter *convert;
 
-  gst_video_info_set_format (&ininfo, GST_VIDEO_FORMAT_ARGB, 320, 240);
+  fail_unless (gst_video_info_set_format (&ininfo, GST_VIDEO_FORMAT_ARGB, 320,
+          240));
   inbuffer = gst_buffer_new_and_alloc (ininfo.size);
   gst_buffer_memset (inbuffer, 0, 0, -1);
   gst_video_frame_map (&inframe, &ininfo, inbuffer, GST_MAP_READ);
 
-  gst_video_info_set_format (&outinfo, GST_VIDEO_FORMAT_BGRx, 400, 300);
+  fail_unless (gst_video_info_set_format (&outinfo, GST_VIDEO_FORMAT_BGRx, 400,
+          300));
   outbuffer = gst_buffer_new_and_alloc (outinfo.size);
   gst_video_frame_map (&outframe, &outinfo, outbuffer, GST_MAP_WRITE);
 
@@ -2690,8 +2806,8 @@ test_overlay_blend_rect (gint x, gint y, gint width, gint height,
       gst_buffer_new_and_alloc (VIDEO_WIDTH * VIDEO_HEIGHT * sizeof (guint32));
   gst_buffer_memset (pix, 0, 0, gst_buffer_get_size (pix));
   gst_video_info_init (&vinfo);
-  gst_video_info_set_format (&vinfo, GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_RGB,
-      VIDEO_WIDTH, VIDEO_HEIGHT);
+  fail_unless (gst_video_info_set_format (&vinfo,
+          GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_RGB, VIDEO_WIDTH, VIDEO_HEIGHT));
   gst_video_frame_map (video_frame, &vinfo, pix, GST_MAP_READWRITE);
   gst_buffer_unref (pix);
   pix = NULL;
@@ -2789,8 +2905,8 @@ GST_START_TEST (test_overlay_composition_over_transparency)
   pix1 = gst_buffer_new_and_alloc (fwidth * sizeof (guint32) * height);
   gst_buffer_memset (pix1, 0, 0x00, gst_buffer_get_size (pix1));
   gst_video_info_init (&vinfo);
-  gst_video_info_set_format (&vinfo, GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_RGB,
-      fwidth, height);
+  fail_unless (gst_video_info_set_format (&vinfo,
+          GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_RGB, fwidth, height));
   gst_video_frame_map (&video_frame, &vinfo, pix1, GST_MAP_READWRITE);
   gst_buffer_unref (pix1);
 
@@ -2850,7 +2966,9 @@ video_suite (void)
   tcase_add_test (tc_chain, test_events);
   tcase_add_test (tc_chain, test_convert_frame);
   tcase_add_test (tc_chain, test_convert_frame_async);
+  tcase_add_test (tc_chain, test_convert_frame_async_error);
   tcase_add_test (tc_chain, test_video_size_from_caps);
+  tcase_add_test (tc_chain, test_interlace_mode);
   tcase_add_test (tc_chain, test_overlay_composition);
   tcase_add_test (tc_chain, test_overlay_composition_premultiplied_alpha);
   tcase_add_test (tc_chain, test_overlay_composition_global_alpha);

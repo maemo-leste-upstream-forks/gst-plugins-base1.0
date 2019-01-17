@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gl.html" title="OpenGL Integration Library">
-<link rel="prev" href="gst-plugins-base-libs-GstGLOverlayCompositor.html" title="GstGLOverlayCompositor">
+<link rel="prev" href="GstGLOverlayCompositor.html" title="GstGLOverlayCompositor">
 <link rel="next" href="gst-plugins-base-libs-GstGLRenderbuffer.html" title="GstGLRenderBuffer">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -19,7 +19,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gl.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gst-plugins-base-libs-GstGLOverlayCompositor.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GstGLOverlayCompositor.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="gst-plugins-base-libs-GstGLRenderbuffer.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -85,7 +85,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">GstGLQuery</span> *
+<a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="returnvalue">GstGLQuery</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#gst-gl-query-new" title="gst_gl_query_new ()">gst_gl_query_new</a> <span class="c_punctuation">()</span>
@@ -137,10 +137,16 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery">GstGLQuery</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQueryType" title="enum GstGLQueryType">GstGLQueryType</a></td>
-</tr></tbody>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
@@ -150,7 +156,7 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstGLQuery.description"></a><h2>Description</h2>
-<p>A <span class="type">GstGLQuery</span> represents and holds an OpenGL query object.  Various types of
+<p>A <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a> represents and holds an OpenGL query object.  Various types of
 queries can be run or counters retrieved.</p>
 </div>
 <div class="refsect1">
@@ -158,7 +164,7 @@ queries can be run or counters retrieved.</p>
 <div class="refsect2">
 <a name="gst-gl-query-counter"></a><h3>gst_gl_query_counter ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_gl_query_counter (<em class="parameter"><code><span class="type">GstGLQuery</span> *query</code></em>);</pre>
+gst_gl_query_counter (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a> *query</code></em>);</pre>
 <p>Record the result of a counter</p>
 <div class="refsect3">
 <a name="gst-gl-query-counter.parameters"></a><h4>Parameters</h4>
@@ -170,12 +176,12 @@ gst_gl_query_counter (<em class="parameter"><code><span class="type">GstGLQuery<
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>query</p></td>
-<td class="parameter_description"><p>a <span class="type">GstGLQuery</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -191,7 +197,7 @@ gst_gl_query_counter (<em class="parameter"><code><span class="type">GstGLQuery<
 <div class="refsect2">
 <a name="gst-gl-query-end"></a><h3>gst_gl_query_end ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_gl_query_end (<em class="parameter"><code><span class="type">GstGLQuery</span> *query</code></em>);</pre>
+gst_gl_query_end (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a> *query</code></em>);</pre>
 <p>End counting the query</p>
 <div class="refsect3">
 <a name="gst-gl-query-end.parameters"></a><h4>Parameters</h4>
@@ -203,19 +209,19 @@ gst_gl_query_end (<em class="parameter"><code><span class="type">GstGLQuery</spa
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>query</p></td>
-<td class="parameter_description"><p>a <span class="type">GstGLQuery</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-gl-query-free"></a><h3>gst_gl_query_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_gl_query_free (<em class="parameter"><code><span class="type">GstGLQuery</span> *query</code></em>);</pre>
-<p>Frees a <span class="type">GstGLQuery</span></p>
+gst_gl_query_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a> *query</code></em>);</pre>
+<p>Frees a <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a></p>
 <div class="refsect3">
 <a name="gst-gl-query-free.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -226,18 +232,18 @@ gst_gl_query_free (<em class="parameter"><code><span class="type">GstGLQuery</sp
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>query</p></td>
-<td class="parameter_description"><p>a <span class="type">GstGLQuery</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-gl-query-init"></a><h3>gst_gl_query_init ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_gl_query_init (<em class="parameter"><code><span class="type">GstGLQuery</span> *query</code></em>,
+gst_gl_query_init (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a> *query</code></em>,
                    <em class="parameter"><code><a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a> *context</code></em>,
                    <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQueryType" title="enum GstGLQueryType"><span class="type">GstGLQueryType</span></a> query_type</code></em>);</pre>
 <div class="refsect3">
@@ -251,7 +257,7 @@ gst_gl_query_init (<em class="parameter"><code><span class="type">GstGLQuery</sp
 <tbody>
 <tr>
 <td class="parameter_name"><p>query</p></td>
-<td class="parameter_description"><p>a <span class="type">GstGLQuery</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -267,12 +273,12 @@ gst_gl_query_init (<em class="parameter"><code><span class="type">GstGLQuery</sp
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-gl-query-new"></a><h3>gst_gl_query_new ()</h3>
-<pre class="programlisting"><span class="returnvalue">GstGLQuery</span> *
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="returnvalue">GstGLQuery</span></a> *
 gst_gl_query_new (<em class="parameter"><code><a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a> *context</code></em>,
                   <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQueryType" title="enum GstGLQueryType"><span class="type">GstGLQueryType</span></a> query_type</code></em>);</pre>
 <p>Free with <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#gst-gl-query-free" title="gst_gl_query_free ()"><code class="function">gst_gl_query_free()</code></a></p>
@@ -301,15 +307,15 @@ gst_gl_query_new (<em class="parameter"><code><a class="link" href="GstGLContext
 </div>
 <div class="refsect3">
 <a name="gst-gl-query-new.returns"></a><h4>Returns</h4>
-<p> a new <span class="type">GstGLQuery</span></p>
+<p> a new <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-gl-query-result"></a><h3>gst_gl_query_result ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
-gst_gl_query_result (<em class="parameter"><code><span class="type">GstGLQuery</span> *query</code></em>);</pre>
+gst_gl_query_result (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a> *query</code></em>);</pre>
 <div class="refsect3">
 <a name="gst-gl-query-result.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -320,7 +326,7 @@ gst_gl_query_result (<em class="parameter"><code><span class="type">GstGLQuery</
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>query</p></td>
-<td class="parameter_description"><p>a <span class="type">GstGLQuery</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -329,13 +335,13 @@ gst_gl_query_result (<em class="parameter"><code><span class="type">GstGLQuery</
 <a name="gst-gl-query-result.returns"></a><h4>Returns</h4>
 <p> the result of the query</p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-gl-query-start"></a><h3>gst_gl_query_start ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_gl_query_start (<em class="parameter"><code><span class="type">GstGLQuery</span> *query</code></em>);</pre>
+gst_gl_query_start (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a> *query</code></em>);</pre>
 <p>Start counting the query</p>
 <div class="refsect3">
 <a name="gst-gl-query-start.parameters"></a><h4>Parameters</h4>
@@ -347,12 +353,12 @@ gst_gl_query_start (<em class="parameter"><code><span class="type">GstGLQuery</s
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>query</p></td>
-<td class="parameter_description"><p>a <span class="type">GstGLQuery</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -368,7 +374,7 @@ gst_gl_query_start (<em class="parameter"><code><span class="type">GstGLQuery</s
 <div class="refsect2">
 <a name="gst-gl-query-unset"></a><h3>gst_gl_query_unset ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_gl_query_unset (<em class="parameter"><code><span class="type">GstGLQuery</span> *query</code></em>);</pre>
+gst_gl_query_unset (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a> *query</code></em>);</pre>
 <p>Free any dynamically allocated resources</p>
 <div class="refsect3">
 <a name="gst-gl-query-unset.parameters"></a><h4>Parameters</h4>
@@ -380,16 +386,24 @@ gst_gl_query_unset (<em class="parameter"><code><span class="type">GstGLQuery</s
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>query</p></td>
-<td class="parameter_description"><p>a <span class="type">GstGLQuery</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstGLQuery.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="GstGLQuery"></a><h3>GstGLQuery</h3>
+<pre class="programlisting">typedef struct {
+} GstGLQuery;
+</pre>
+<p>Opaque <a class="link" href="gst-plugins-base-libs-GstGLQuery.html#GstGLQuery" title="GstGLQuery"><span class="type">GstGLQuery</span></a> struct</p>
+</div>
+<hr>
 <div class="refsect2">
 <a name="GstGLQueryType"></a><h3>enum GstGLQueryType</h3>
 <div class="refsect3">

@@ -91,6 +91,8 @@ struct _GstGLCompositionOverlay
   GLuint texture_id;
   GstGLMemory *gl_memory;
   GstVideoOverlayRectangle *rectangle;
+
+  gboolean yinvert;
 };
 
 struct _GstGLCompositionOverlayClass
@@ -247,6 +249,7 @@ gst_gl_composition_overlay_add_transformation (GstGLCompositionOverlay *
   guint comp_width, comp_height;
   GstVideoMeta *meta;
   guint width, height;
+  gfloat yswap;
 
   float rel_x, rel_y, rel_w, rel_h;
 
@@ -268,24 +271,27 @@ gst_gl_composition_overlay_add_transformation (GstGLCompositionOverlay *
   /* transform from [0,1] to [-1,1], invert y axis */
   rel_x = rel_x * 2.0 - 1.0;
   rel_y = (1.0 - rel_y) * 2.0 - 1.0;
+
   rel_w = rel_w * 2.0;
   rel_h = rel_h * 2.0;
 
+  yswap = overlay->yinvert ? -1. : 1.;
+
   /* initialize position array */
   overlay->positions[0] = rel_x + rel_w;
-  overlay->positions[1] = rel_y;
+  overlay->positions[1] = rel_y * yswap;
   overlay->positions[2] = 0.0;
   overlay->positions[3] = 1.0;
   overlay->positions[4] = rel_x;
-  overlay->positions[5] = rel_y;
+  overlay->positions[5] = rel_y * yswap;
   overlay->positions[6] = 0.0;
   overlay->positions[7] = 1.0;
   overlay->positions[8] = rel_x;
-  overlay->positions[9] = rel_y - rel_h;
+  overlay->positions[9] = (rel_y - rel_h) * yswap;
   overlay->positions[10] = 0.0;
   overlay->positions[11] = 1.0;
   overlay->positions[12] = rel_x + rel_w;
-  overlay->positions[13] = rel_y - rel_h;
+  overlay->positions[13] = (rel_y - rel_h) * yswap;
   overlay->positions[14] = 0.0;
   overlay->positions[15] = 1.0;
 
@@ -343,10 +349,25 @@ gst_gl_composition_overlay_upload (GstGLCompositionOverlay * overlay,
   GstVideoMeta *vmeta;
   GstVideoFrame *comp_frame;
   GstVideoFrame gl_frame;
+  GstVideoOverlayFormatFlags flags;
+  GstVideoOverlayFormatFlags alpha_flags;
+
+  flags = gst_video_overlay_rectangle_get_flags (overlay->rectangle);
+
+  if (flags & GST_VIDEO_OVERLAY_FORMAT_FLAG_PREMULTIPLIED_ALPHA) {
+    alpha_flags = GST_VIDEO_OVERLAY_FORMAT_FLAG_PREMULTIPLIED_ALPHA;
+  } else if (!overlay->context->gl_vtable->BlendFuncSeparate) {
+    GST_FIXME_OBJECT (overlay, "No separate blend mode function, "
+        "cannot perform correct blending of unmultipled alpha in OpenGL. "
+        "Software converting");
+    alpha_flags = GST_VIDEO_OVERLAY_FORMAT_FLAG_PREMULTIPLIED_ALPHA;
+  } else {
+    alpha_flags = 0;
+  }
 
   comp_buffer =
       gst_video_overlay_rectangle_get_pixels_unscaled_argb (overlay->rectangle,
-      GST_VIDEO_OVERLAY_FORMAT_FLAG_PREMULTIPLIED_ALPHA);
+      alpha_flags);
 
   comp_frame = g_slice_new (GstVideoFrame);
 
@@ -417,6 +438,16 @@ gst_gl_composition_overlay_draw (GstGLCompositionOverlay * overlay,
   gl->DrawElements (GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 }
 
+typedef struct
+{
+  gboolean yinvert;
+} GstGLOverlayCompositorPrivate;
+
+enum
+{
+  PROP_0,
+  PROP_YINVERT,
+};
 
 /********************************************************************
  * GstGLOverlayCompositor object, the public helper object to render
@@ -427,10 +458,19 @@ gst_gl_composition_overlay_draw (GstGLCompositionOverlay * overlay,
   GST_DEBUG_CATEGORY_INIT (gst_gl_overlay_compositor_debug, \
       "gloverlaycompositor", 0, "overlaycompositor");
 
+/* this matches what glimagesink does as this was publicized before being used
+ * in other elements that draw in different orientations */
+#define DEFAULT_YINVERT                 FALSE
+
 G_DEFINE_TYPE_WITH_CODE (GstGLOverlayCompositor, gst_gl_overlay_compositor,
-    GST_TYPE_OBJECT, DEBUG_INIT);
+    GST_TYPE_OBJECT, G_ADD_PRIVATE (GstGLOverlayCompositor); DEBUG_INIT);
 
 static void gst_gl_overlay_compositor_finalize (GObject * object);
+static void gst_gl_overlay_compositor_set_property (GObject * object,
+    guint prop_id, const GValue * value, GParamSpec * pspec);
+static void gst_gl_overlay_compositor_get_property (GObject * object,
+    guint prop_id, GValue * value, GParamSpec * pspec);
+
 static gboolean _is_rectangle_in_overlays (GList * overlays,
     GstVideoOverlayRectangle * rectangle);
 static gboolean _is_overlay_in_rectangles (GstVideoOverlayComposition *
@@ -439,12 +479,63 @@ static gboolean _is_overlay_in_rectangles (GstVideoOverlayComposition *
 static void
 gst_gl_overlay_compositor_class_init (GstGLOverlayCompositorClass * klass)
 {
-  G_OBJECT_CLASS (klass)->finalize = gst_gl_overlay_compositor_finalize;
+  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+
+  gobject_class->finalize = gst_gl_overlay_compositor_finalize;
+  gobject_class->set_property = gst_gl_overlay_compositor_set_property;
+  gobject_class->get_property = gst_gl_overlay_compositor_get_property;
+
+  g_object_class_install_property (gobject_class, PROP_YINVERT,
+      g_param_spec_boolean ("yinvert",
+          "Y-Invert",
+          "Whether to invert the output across a horizintal axis",
+          DEFAULT_YINVERT, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
 static void
 gst_gl_overlay_compositor_init (GstGLOverlayCompositor * compositor)
 {
+  GstGLOverlayCompositorPrivate *priv =
+      gst_gl_overlay_compositor_get_instance_private (compositor);
+
+  priv->yinvert = DEFAULT_YINVERT;
+}
+
+static void
+gst_gl_overlay_compositor_set_property (GObject * object, guint prop_id,
+    const GValue * value, GParamSpec * pspec)
+{
+  GstGLOverlayCompositor *self = GST_GL_OVERLAY_COMPOSITOR (object);
+  GstGLOverlayCompositorPrivate *priv =
+      gst_gl_overlay_compositor_get_instance_private (self);
+
+  switch (prop_id) {
+    case PROP_YINVERT:
+      /* XXX: invalidiate all current rectangles on a change */
+      priv->yinvert = g_value_get_boolean (value);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+  }
+}
+
+static void
+gst_gl_overlay_compositor_get_property (GObject * object, guint prop_id,
+    GValue * value, GParamSpec * pspec)
+{
+  GstGLOverlayCompositor *self = GST_GL_OVERLAY_COMPOSITOR (object);
+  GstGLOverlayCompositorPrivate *priv =
+      gst_gl_overlay_compositor_get_instance_private (self);
+
+  switch (prop_id) {
+    case PROP_YINVERT:
+      g_value_set_boolean (value, priv->yinvert);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+  }
 }
 
 static void
@@ -540,7 +631,6 @@ _is_overlay_in_rectangles (GstVideoOverlayComposition * composition,
   return FALSE;
 }
 
-
 void
 gst_gl_overlay_compositor_free_overlays (GstGLOverlayCompositor * compositor)
 {
@@ -561,6 +651,8 @@ gst_gl_overlay_compositor_upload_overlays (GstGLOverlayCompositor * compositor,
     GstBuffer * buf)
 {
   GstVideoOverlayCompositionMeta *composition_meta;
+  GstGLOverlayCompositorPrivate *priv =
+      gst_gl_overlay_compositor_get_instance_private (compositor);
 
   composition_meta = gst_buffer_get_video_overlay_composition_meta (buf);
   if (composition_meta) {
@@ -583,6 +675,7 @@ gst_gl_overlay_compositor_upload_overlays (GstGLOverlayCompositor * compositor,
             gst_gl_composition_overlay_new (compositor->context, rectangle,
             compositor->position_attrib, compositor->texcoord_attrib);
         gst_object_ref_sink (overlay);
+        overlay->yinvert = priv->yinvert;
 
         gst_gl_composition_overlay_upload (overlay, buf);
 
@@ -613,7 +706,6 @@ gst_gl_overlay_compositor_draw_overlays (GstGLOverlayCompositor * compositor)
     GList *l;
 
     gl->Enable (GL_BLEND);
-    gl->BlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     gst_gl_shader_use (compositor->shader);
     gl->ActiveTexture (GL_TEXTURE0);
@@ -621,6 +713,17 @@ gst_gl_overlay_compositor_draw_overlays (GstGLOverlayCompositor * compositor)
 
     for (l = compositor->overlays; l != NULL; l = l->next) {
       GstGLCompositionOverlay *overlay = (GstGLCompositionOverlay *) l->data;
+      GstVideoOverlayFormatFlags flags;
+
+      flags = gst_video_overlay_rectangle_get_flags (overlay->rectangle);
+
+      if (flags & GST_VIDEO_OVERLAY_FORMAT_FLAG_PREMULTIPLIED_ALPHA
+          || !gl->BlendFuncSeparate) {
+        gl->BlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+      } else {
+        gl->BlendFuncSeparate (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+            GL_ONE_MINUS_SRC_ALPHA);
+      }
       gst_gl_composition_overlay_draw (overlay, compositor->shader);
     }
 
@@ -639,8 +742,9 @@ gst_gl_overlay_compositor_add_caps (GstCaps * caps)
 
   for (i = 0; i < gst_caps_get_size (composition_caps); i++) {
     GstCapsFeatures *f = gst_caps_get_features (composition_caps, i);
-    gst_caps_features_add (f,
-        GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION);
+    if (!gst_caps_features_is_any (f))
+      gst_caps_features_add (f,
+          GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION);
   }
 
   caps = gst_caps_merge (composition_caps, caps);

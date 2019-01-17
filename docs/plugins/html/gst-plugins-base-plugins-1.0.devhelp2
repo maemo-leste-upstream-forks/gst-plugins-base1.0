@@ -16,6 +16,7 @@
       <sub name="audiotestsrc" link="gst-plugins-base-plugins-audiotestsrc.html"/>
       <sub name="cdparanoiasrc" link="gst-plugins-base-plugins-cdparanoiasrc.html"/>
       <sub name="clockoverlay" link="gst-plugins-base-plugins-clockoverlay.html"/>
+      <sub name="compositor" link="gst-plugins-base-plugins-compositor.html"/>
       <sub name="decodebin" link="gst-plugins-base-plugins-decodebin.html"/>
       <sub name="decodebin3" link="gst-plugins-base-plugins-decodebin3.html"/>
       <sub name="encodebin" link="gst-plugins-base-plugins-encodebin.html"/>
@@ -55,14 +56,19 @@
       <sub name="glfilterglass" link="gst-plugins-base-plugins-glfilterglass.html"/>
       <sub name="glimagesinkelement" link="gst-plugins-base-plugins-glimagesinkelement.html"/>
       <sub name="glimagesink" link="gst-plugins-base-plugins-glimagesink.html"/>
+      <sub name="glmixerbin" link="gst-plugins-base-plugins-glmixerbin.html"/>
+      <sub name="glmosaic" link="gst-plugins-base-plugins-glmosaic.html"/>
       <sub name="gloverlay" link="gst-plugins-base-plugins-gloverlay.html"/>
       <sub name="glshader" link="gst-plugins-base-plugins-glshader.html"/>
       <sub name="glsinkbin" link="gst-plugins-base-plugins-glsinkbin.html"/>
       <sub name="glsrcbin" link="gst-plugins-base-plugins-glsrcbin.html"/>
+      <sub name="glstereomix" link="gst-plugins-base-plugins-glstereomix.html"/>
       <sub name="glstereosplit" link="gst-plugins-base-plugins-glstereosplit.html"/>
       <sub name="gltestsrc" link="gst-plugins-base-plugins-gltestsrc.html"/>
       <sub name="gltransformation" link="gst-plugins-base-plugins-gltransformation.html"/>
       <sub name="glupload" link="gst-plugins-base-plugins-glupload.html"/>
+      <sub name="glvideomixerelement" link="gst-plugins-base-plugins-glvideomixerelement.html"/>
+      <sub name="glvideomixer" link="gst-plugins-base-plugins-glvideomixer.html"/>
       <sub name="glviewconvert" link="gst-plugins-base-plugins-glviewconvert.html"/>
       <sub name="multifdsink" link="gst-plugins-base-plugins-multifdsink.html"/>
       <sub name="multisocketsink" link="gst-plugins-base-plugins-multisocketsink.html"/>
@@ -75,6 +81,7 @@
       <sub name="ogmvideoparse" link="gst-plugins-base-plugins-ogmvideoparse.html"/>
       <sub name="opusdec" link="gst-plugins-base-plugins-opusdec.html"/>
       <sub name="opusenc" link="gst-plugins-base-plugins-opusenc.html"/>
+      <sub name="overlaycomposition" link="gst-plugins-base-plugins-overlaycomposition.html"/>
       <sub name="parsebin" link="gst-plugins-base-plugins-parsebin.html"/>
       <sub name="playbin" link="gst-plugins-base-plugins-playbin.html"/>
       <sub name="playbin3" link="gst-plugins-base-plugins-playbin3.html"/>
@@ -122,6 +129,7 @@
       <sub name="audioresample" link="gst-plugins-base-plugins-plugin-audioresample.html"/>
       <sub name="audiotestsrc" link="gst-plugins-base-plugins-plugin-audiotestsrc.html"/>
       <sub name="cdparanoia" link="gst-plugins-base-plugins-plugin-cdparanoia.html"/>
+      <sub name="compositor" link="gst-plugins-base-plugins-plugin-compositor.html"/>
       <sub name="encoding" link="gst-plugins-base-plugins-plugin-encoding.html"/>
       <sub name="gio" link="gst-plugins-base-plugins-plugin-gio.html"/>
       <sub name="ivorbisdec" link="gst-plugins-base-plugins-plugin-ivorbisdec.html"/>
@@ -129,6 +137,7 @@
       <sub name="ogg" link="gst-plugins-base-plugins-plugin-ogg.html"/>
       <sub name="opus" link="gst-plugins-base-plugins-plugin-opus.html"/>
       <sub name="opengl" link="gst-plugins-base-plugins-plugin-opengl.html"/>
+      <sub name="overlaycomposition" link="gst-plugins-base-plugins-plugin-overlaycomposition.html"/>
       <sub name="pango" link="gst-plugins-base-plugins-plugin-pango.html"/>
       <sub name="playback" link="gst-plugins-base-plugins-plugin-playback.html"/>
       <sub name="rawparse" link="gst-plugins-base-plugins-plugin-rawparse.html"/>
@@ -237,6 +246,8 @@
     <keyword type="signal" name="The “uncorrected-error” signal" link="gst-plugins-base-plugins-cdparanoiasrc.html#GstCdParanoiaSrc-uncorrected-error"/>
     <keyword type="struct" name="struct GstClockOverlay" link="gst-plugins-base-plugins-clockoverlay.html#GstClockOverlay-struct"/>
     <keyword type="property" name="The “time-format” property" link="gst-plugins-base-plugins-clockoverlay.html#GstClockOverlay--time-format"/>
+    <keyword type="struct" name="struct GstCompositor" link="gst-plugins-base-plugins-compositor.html#GstCompositor-struct"/>
+    <keyword type="enum" name="enum GstCompositorBackground" link="gst-plugins-base-plugins-compositor.html#GstCompositorBackground"/>
     <keyword type="struct" name="struct GstDecodeBin" link="gst-plugins-base-plugins-decodebin.html#GstDecodeBin-struct"/>
     <keyword type="property" name="The “caps” property" link="gst-plugins-base-plugins-decodebin.html#GstDecodeBin--caps"/>
     <keyword type="property" name="The “connection-speed” property" link="gst-plugins-base-plugins-decodebin.html#GstDecodeBin--connection-speed"/>
@@ -316,6 +327,8 @@
     <keyword type="property" name="The “render-rectangle” property" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink--render-rectangle"/>
     <keyword type="signal" name="The “client-draw” signal" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink-client-draw"/>
     <keyword type="signal" name="The “client-reshape” signal" link="gst-plugins-base-plugins-glimagesinkelement.html#GstGLImageSink-client-reshape"/>
+    <keyword type="struct" name="struct GstGLMixerBin" link="gst-plugins-base-plugins-glmixerbin.html#GstGLMixerBin"/>
+    <keyword type="struct" name="struct GstGLMosaic" link="gst-plugins-base-plugins-glmosaic.html#GstGLMosaic"/>
     <keyword type="struct" name="struct GstGLOverlay" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay-struct"/>
     <keyword type="property" name="The “alpha” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--alpha"/>
     <keyword type="property" name="The “location” property" link="gst-plugins-base-plugins-gloverlay.html#GstGLOverlay--location"/>
@@ -354,6 +367,7 @@
     <keyword type="struct" name="struct GstGLSrcBin" link="gst-plugins-base-plugins-glsrcbin.html#GstGLSrcBin-struct"/>
     <keyword type="property" name="The “src” property" link="gst-plugins-base-plugins-glsrcbin.html#GstGLSrcBin--src"/>
     <keyword type="signal" name="The “create-element” signal" link="gst-plugins-base-plugins-glsrcbin.html#GstGLSrcBin-create-element"/>
+    <keyword type="struct" name="struct GstGLStereoMix" link="gst-plugins-base-plugins-glstereomix.html#GstGLStereoMix"/>
     <keyword type="struct" name="struct GstGLStereoSplit" link="gst-plugins-base-plugins-glstereosplit.html#GstGLStereoSplit-struct"/>
     <keyword type="struct" name="GstGLTestSrc" link="gst-plugins-base-plugins-gltestsrc.html#GstGLTestSrc-struct"/>
     <keyword type="enum" name="enum GstGLTestSrcPattern" link="gst-plugins-base-plugins-gltestsrc.html#GstGLTestSrcPattern"/>
@@ -362,6 +376,8 @@
     <keyword type="property" name="The “timestamp-offset” property" link="gst-plugins-base-plugins-gltestsrc.html#GstGLTestSrc--timestamp-offset"/>
     <keyword type="struct" name="struct GstGLTransformation" link="gst-plugins-base-plugins-gltransformation.html#GstGLTransformation"/>
     <keyword type="struct" name="struct GstGLUploadElement" link="gst-plugins-base-plugins-glupload.html#GstGLUploadElement-struct"/>
+    <keyword type="struct" name="struct GstGLVideoMixer" link="gst-plugins-base-plugins-glvideomixerelement.html#GstGLVideoMixer"/>
+    <keyword type="enum" name="enum GstGLVideoMixerBackground" link="gst-plugins-base-plugins-glvideomixerelement.html#GstGLVideoMixerBackground"/>
     <keyword type="struct" name="struct GstGLViewConvertElement" link="gst-plugins-base-plugins-glviewconvert.html#GstGLViewConvertElement-struct"/>
     <keyword type="property" name="The “downmix-mode” property" link="gst-plugins-base-plugins-glviewconvert.html#GstGLViewConvertElement--downmix-mode"/>
     <keyword type="property" name="The “input-flags-override” property" link="gst-plugins-base-plugins-glviewconvert.html#GstGLViewConvertElement--input-flags-override"/>
@@ -413,6 +429,7 @@
     <keyword type="property" name="The “inband-fec” property" link="gst-plugins-base-plugins-opusenc.html#GstOpusEnc--inband-fec"/>
     <keyword type="property" name="The “max-payload-size” property" link="gst-plugins-base-plugins-opusenc.html#GstOpusEnc--max-payload-size"/>
     <keyword type="property" name="The “packet-loss-percentage” property" link="gst-plugins-base-plugins-opusenc.html#GstOpusEnc--packet-loss-percentage"/>
+    <keyword type="struct" name="struct GstOverlayComposition" link="gst-plugins-base-plugins-overlaycomposition.html#GstOverlayComposition"/>
     <keyword type="struct" name="struct GstPlayBin" link="gst-plugins-base-plugins-playbin.html#GstPlayBin-struct"/>
     <keyword type="property" name="The “audio-sink” property" link="gst-plugins-base-plugins-playbin.html#GstPlayBin--audio-sink"/>
     <keyword type="property" name="The “audio-stream-combiner” property" link="gst-plugins-base-plugins-playbin.html#GstPlayBin--audio-stream-combiner"/>
@@ -705,6 +722,10 @@
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_RED_NOISE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-RED-NOISE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_BLUE_NOISE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-BLUE-NOISE:CAPS"/>
     <keyword type="constant" name="GST_AUDIO_TEST_SRC_WAVE_VIOLET_NOISE" link="gst-plugins-base-plugins-audiotestsrc.html#GST-AUDIO-TEST-SRC-WAVE-VIOLET-NOISE:CAPS"/>
+    <keyword type="constant" name="COMPOSITOR_BACKGROUND_CHECKER" link="gst-plugins-base-plugins-compositor.html#COMPOSITOR-BACKGROUND-CHECKER:CAPS"/>
+    <keyword type="constant" name="COMPOSITOR_BACKGROUND_BLACK" link="gst-plugins-base-plugins-compositor.html#COMPOSITOR-BACKGROUND-BLACK:CAPS"/>
+    <keyword type="constant" name="COMPOSITOR_BACKGROUND_WHITE" link="gst-plugins-base-plugins-compositor.html#COMPOSITOR-BACKGROUND-WHITE:CAPS"/>
+    <keyword type="constant" name="COMPOSITOR_BACKGROUND_TRANSPARENT" link="gst-plugins-base-plugins-compositor.html#COMPOSITOR-BACKGROUND-TRANSPARENT:CAPS"/>
     <keyword type="constant" name="GST_GL_TEST_SRC_SMPTE" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-SMPTE:CAPS"/>
     <keyword type="constant" name="GST_GL_TEST_SRC_SNOW" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-SNOW:CAPS"/>
     <keyword type="constant" name="GST_GL_TEST_SRC_BLACK" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-BLACK:CAPS"/>
@@ -719,6 +740,10 @@
     <keyword type="constant" name="GST_GL_TEST_SRC_CIRCULAR" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-CIRCULAR:CAPS"/>
     <keyword type="constant" name="GST_GL_TEST_SRC_BLINK" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-BLINK:CAPS"/>
     <keyword type="constant" name="GST_GL_TEST_SRC_MANDELBROT" link="gst-plugins-base-plugins-gltestsrc.html#GST-GL-TEST-SRC-MANDELBROT:CAPS"/>
+    <keyword type="constant" name="GST_GL_VIDEO_MIXER_BACKGROUND_CHECKER" link="gst-plugins-base-plugins-glvideomixerelement.html#GST-GL-VIDEO-MIXER-BACKGROUND-CHECKER:CAPS"/>
+    <keyword type="constant" name="GST_GL_VIDEO_MIXER_BACKGROUND_BLACK" link="gst-plugins-base-plugins-glvideomixerelement.html#GST-GL-VIDEO-MIXER-BACKGROUND-BLACK:CAPS"/>
+    <keyword type="constant" name="GST_GL_VIDEO_MIXER_BACKGROUND_WHITE" link="gst-plugins-base-plugins-glvideomixerelement.html#GST-GL-VIDEO-MIXER-BACKGROUND-WHITE:CAPS"/>
+    <keyword type="constant" name="GST_GL_VIDEO_MIXER_BACKGROUND_TRANSPARENT" link="gst-plugins-base-plugins-glvideomixerelement.html#GST-GL-VIDEO-MIXER-BACKGROUND-TRANSPARENT:CAPS"/>
     <keyword type="constant" name="BITRATE_TYPE_CBR" link="gst-plugins-base-plugins-opusenc.html#BITRATE-TYPE-CBR:CAPS"/>
     <keyword type="constant" name="BITRATE_TYPE_VBR" link="gst-plugins-base-plugins-opusenc.html#BITRATE-TYPE-VBR:CAPS"/>
     <keyword type="constant" name="BITRATE_TYPE_CONSTRAINED_VBR" link="gst-plugins-base-plugins-opusenc.html#BITRATE-TYPE-CONSTRAINED-VBR:CAPS"/>

@@ -16,10 +16,20 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "gstvideometa.h"
 
 #include <string.h>
+
+/**
+ * SECTION:gstvideometa
+ * @title: GstMeta for video
+ * @short_description: Video related GstMeta
+ *
+ */
 
 #ifndef GST_DISABLE_GST_DEBUG
 #define GST_CAT_DEFAULT ensure_debug_category()
@@ -227,12 +237,12 @@ default_map (GstVideoMeta * meta, guint plane, GstMapInfo * info,
   /* ERRORS */
 no_memory:
   {
-    GST_DEBUG ("plane %u, no memory at offset %" G_GSIZE_FORMAT, plane, offset);
+    GST_ERROR ("plane %u, no memory at offset %" G_GSIZE_FORMAT, plane, offset);
     return FALSE;
   }
 cannot_map:
   {
-    GST_DEBUG ("cannot map memory range %u-%u", idx, length);
+    GST_ERROR ("cannot map memory range %u-%u", idx, length);
     return FALSE;
   }
 }
@@ -288,8 +298,8 @@ gst_buffer_add_video_meta (GstBuffer * buffer,
  * @width: the width
  * @height: the height
  * @n_planes: number of planes
- * @offset: offset of each plane
- * @stride: stride of each plane
+ * @offset: (array fixed-size=4): offset of each plane
+ * @stride: (array fixed-size=4): stride of each plane
  *
  * Attaches GstVideoMeta metadata to @buffer with the given parameters.
  *
@@ -885,6 +895,7 @@ gst_video_region_of_interest_meta_add_param (GstVideoRegionOfInterestMeta *
 /**
  * gst_video_region_of_interest_meta_get_param:
  * @meta: a #GstVideoRegionOfInterestMeta
+ * @name: a name.
  *
  * Retrieve the parameter for @meta having @name as structure name,
  * or %NULL if there is none.

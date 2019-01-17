@@ -55,7 +55,7 @@ typedef struct
 {
   guint64 offset;
   const guint8 *data;
-  gint size;
+  guint size;
 } DataScanCtx;
 
 static inline void
@@ -72,7 +72,7 @@ data_scan_ctx_advance (GstTypeFind * tf, DataScanCtx * c, guint bytes_to_skip)
 }
 
 static inline gboolean
-data_scan_ctx_ensure_data (GstTypeFind * tf, DataScanCtx * c, gint min_len)
+data_scan_ctx_ensure_data (GstTypeFind * tf, DataScanCtx * c, guint min_len)
 {
   const guint8 *data;
   guint64 len;
@@ -112,6 +112,9 @@ static inline gboolean
 data_scan_ctx_memcmp (GstTypeFind * tf, DataScanCtx * c, guint offset,
     const gchar * data, guint len)
 {
+  if (G_UNLIKELY (offset + len >= G_MAXUINT32))
+    return FALSE;
+
   if (!data_scan_ctx_ensure_data (tf, c, offset + len))
     return FALSE;
 
@@ -279,8 +282,8 @@ static void
 unicode_type_find (GstTypeFind * tf, const GstUnicodeTester * tester,
     guint n_tester, const char *media_type, gboolean require_bom)
 {
-  size_t n;
-  gint len = 4;
+  gsize n;
+  gsize len = 4;
   const guint8 *data = gst_type_find_peek (tf, 0, len);
   int prob = -1;
   const gint max_scan_size = 256 * 1024;
@@ -1096,7 +1099,7 @@ aac_type_find (GstTypeFind * tf, gpointer unused)
   DataScanCtx c = { 0, NULL, 0 };
   GstTypeFindProbability best_probability = GST_TYPE_FIND_NONE;
   GstCaps *best_caps = NULL;
-  guint best_count = 0;
+  gint best_count = 0;
 
   while (c.offset < AAC_AMOUNT) {
     guint snc, len, offset, i;
@@ -2470,7 +2473,7 @@ mpeg_ts_type_find (GstTypeFind * tf, gpointer unused)
 
     /* Have at least MPEGTS_HDR_SIZE bytes at this point */
     if (IS_MPEGTS_HEADER (data)) {
-      gint p;
+      gsize p;
 
       GST_LOG ("possible mpeg-ts sync at offset %" G_GUINT64_FORMAT, skipped);
 
@@ -2923,7 +2926,7 @@ mpeg_video_stream_type_find (GstTypeFind * tf, gpointer unused)
   gboolean seen_seq = FALSE;
   gboolean seen_gop = FALSE;
   guint64 last_pic_offset = 0;
-  guint num_pic_headers = 0;
+  gint num_pic_headers = 0;
   gint found = 0;
 
   while (c.offset < GST_MPEGVID_TYPEFIND_TRY_SYNC) {
@@ -3122,7 +3125,7 @@ q3gp_type_find (GstTypeFind * tf, gpointer unused)
 {
   const gchar *profile;
   guint32 ftyp_size = 0;
-  gint offset = 0;
+  guint32 offset = 0;
   const guint8 *data = NULL;
 
   if ((data = gst_type_find_peek (tf, 0, 12)) == NULL) {
@@ -4361,7 +4364,7 @@ ebml_parse_chunk (GstTypeFind * tf, DataScanCtx * ctx, guint32 chunk_id,
 {                               /* FIXME: make sure input size is clipped to 32 bit */
   static const gchar SPACES[] = "                ";
   DataScanCtx c = *ctx;
-  guint64 element_size;
+  guint64 element_size = 0;
   guint32 id, hdr_len;
 
   if (depth >= 8)               /* keep SPACES large enough for depth */
@@ -4384,6 +4387,11 @@ ebml_parse_chunk (GstTypeFind * tf, DataScanCtx * ctx, guint32 chunk_id,
     GST_DEBUG ("%s %08x, size %" G_GUINT64_FORMAT " / %" G_GUINT64_FORMAT,
         SPACES + sizeof (SPACES) - 1 - (2 * depth), id, element_size,
         hdr_len + element_size);
+
+    if (element_size >= G_MAXUINT32) {
+      GST_DEBUG ("Chunk too big for typefinding");
+      return FALSE;
+    }
 
     if (!data_scan_ctx_ensure_data (tf, &c, element_size)) {
       GST_DEBUG ("not enough data");
@@ -5238,6 +5246,28 @@ dirac_type_find (GstTypeFind * tf, gpointer unused)
   }
 }
 
+/*** audio/x-tap-tap ***/
+
+/* NOTE: we cannot replace this function with TYPE_FIND_REGISTER_START_WITH,
+ * as it is only possible to register one typefind factory per 'name'
+ * (which is in this case the caps), and the first one would be replaced by
+ * the second one. */
+static GstStaticCaps tap_caps = GST_STATIC_CAPS ("audio/x-tap-tap");
+
+#define TAP_CAPS (gst_static_caps_get(&tap_caps))
+static void
+tap_type_find (GstTypeFind * tf, gpointer unused)
+{
+  const guint8 *data = gst_type_find_peek (tf, 0, 16);
+
+  if (data) {
+    if (memcmp (data, "C64-TAPE-RAW", 12) == 0
+        || memcmp (data, "C16-TAPE-RAW", 12) == 0) {
+      gst_type_find_suggest (tf, GST_TYPE_FIND_MAXIMUM, TAP_CAPS);
+    }
+  }
+}
+
 /*** video/vivo ***/
 
 static GstStaticCaps vivo_caps = GST_STATIC_CAPS ("video/vivo");
@@ -5615,6 +5645,32 @@ ssa_type_find (GstTypeFind * tf, gpointer private)
   g_free (str);
 }
 
+/*** application/x-mcc ***/
+static GstStaticCaps mcc_caps = GST_STATIC_CAPS ("application/x-mcc");
+
+#define MCC_CAPS gst_static_caps_get(&mcc_caps)
+
+static void
+mcc_type_find (GstTypeFind * tf, gpointer private)
+{
+  const guint8 *data;
+
+  data = gst_type_find_peek (tf, 0, 31);
+
+  if (data == NULL)
+    return;
+
+  /* MCC files always start with this followed by the version */
+  if (memcmp (data, "File Format=MacCaption_MCC V", 28) != 0 ||
+      !g_ascii_isdigit (data[28]) || data[29] != '.' ||
+      !g_ascii_isdigit (data[30])) {
+    return;
+  }
+
+  gst_type_find_suggest_simple (tf, GST_TYPE_FIND_MAXIMUM,
+      "application/x-mcc", "version", G_TYPE_INT, data[28] - '0', NULL);
+}
+
 /*** video/x-pva ***/
 
 static GstStaticCaps pva_caps = GST_STATIC_CAPS ("video/x-pva");
@@ -5779,6 +5835,11 @@ plugin_init (GstPlugin * plugin)
       GST_TYPE_FIND_MAXIMUM);
   TYPE_FIND_REGISTER_START_WITH (plugin, "audio/x-imelody", GST_RANK_PRIMARY,
       "imy,ime,imelody", "BEGIN:IMELODY", 13, GST_TYPE_FIND_MAXIMUM);
+  TYPE_FIND_REGISTER_START_WITH (plugin, "application/x-scc", GST_RANK_PRIMARY,
+      "scc", "Scenarist_SCC V1.0", 18, GST_TYPE_FIND_MAXIMUM);
+  TYPE_FIND_REGISTER (plugin, "application/x-mcc", GST_RANK_PRIMARY,
+      mcc_type_find, "mcc", MCC_CAPS, NULL, NULL);
+
 #if 0
   TYPE_FIND_REGISTER_START_WITH (plugin, "video/x-smoke", GST_RANK_PRIMARY,
       NULL, "\x80smoke\x00\x01\x00", 6, GST_TYPE_FIND_MAXIMUM);
@@ -6072,6 +6133,11 @@ plugin_init (GstPlugin * plugin)
 
   TYPE_FIND_REGISTER (plugin, "audio/audible", GST_RANK_MARGINAL,
       aa_type_find, "aa,aax", AA_CAPS, NULL, NULL);
+
+  TYPE_FIND_REGISTER (plugin, "audio/x-tap-tap", GST_RANK_PRIMARY,
+      tap_type_find, "tap", TAP_CAPS, NULL, NULL);
+  TYPE_FIND_REGISTER_START_WITH (plugin, "audio/x-tap-dmp",
+      GST_RANK_SECONDARY, "dmp", "DC2N-TAP-RAW", 12, GST_TYPE_FIND_LIKELY);
 
   return TRUE;
 }

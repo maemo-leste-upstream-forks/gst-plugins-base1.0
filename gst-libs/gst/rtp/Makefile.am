@@ -10,7 +10,8 @@ libgstrtpinclude_HEADERS = \
 			   gstrtphdrext.h \
 			gstrtpbaseaudiopayload.h \
 			gstrtpbasepayload.h \
-			gstrtpbasedepayload.h
+			gstrtpbasedepayload.h \
+			gstrtpmeta.h
 
 lib_LTLIBRARIES = libgstrtp-@GST_API_VERSION@.la
 
@@ -20,12 +21,13 @@ libgstrtp_@GST_API_VERSION@_la_SOURCES = gstrtpbuffer.c \
 			   	gstrtphdrext.c \
 			        gstrtpbaseaudiopayload.c \
 				gstrtpbasepayload.c \
-				gstrtpbasedepayload.c
+				gstrtpbasedepayload.c \
+				gstrtpmeta.c
 
 built_sources = gstrtp-enumtypes.c
 built_headers = gstrtp-enumtypes.h
 
-libgstrtp_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS)
+libgstrtp_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS) -DBUILDING_GST_RTP
 libgstrtp_@GST_API_VERSION@_la_LIBADD = $(GST_BASE_LIBS) $(GST_LIBS)
 libgstrtp_@GST_API_VERSION@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
 
@@ -69,7 +71,7 @@ GstRtp-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstrtp-@GST_API_VERSIO
 		--library=libgstrtp-@GST_API_VERSION@.la \
 		--include=Gst-@GST_API_VERSION@ \
 		--include=GstBase-@GST_API_VERSION@ \
-		--libtool="$(top_builddir)/libtool" \
+		--libtool="${LIBTOOL}" \
 		--pkg gstreamer-@GST_API_VERSION@ \
 		--pkg gstreamer-base-@GST_API_VERSION@ \
 		--pkg-export gstreamer-rtp-@GST_API_VERSION@ \

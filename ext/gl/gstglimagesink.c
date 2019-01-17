@@ -283,7 +283,7 @@ gst_gl_image_sink_bin_class_init (GstGLImageSinkBinClass * klass)
       g_param_spec_enum ("output-multiview-downmix-mode",
           "Mode for mono downmixed output",
           "Output anaglyph type to generate when downmixing to mono",
-          GST_TYPE_GL_STEREO_DOWNMIX_MODE_TYPE, DEFAULT_MULTIVIEW_DOWNMIX,
+          GST_TYPE_GL_STEREO_DOWNMIX, DEFAULT_MULTIVIEW_DOWNMIX,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   gst_video_overlay_install_properties (gobject_class, PROP_BIN_LAST);
@@ -694,7 +694,7 @@ gst_glimage_sink_class_init (GstGLImageSinkClass * klass)
       g_param_spec_enum ("output-multiview-downmix-mode",
           "Mode for mono downmixed output",
           "Output anaglyph type to generate when downmixing to mono",
-          GST_TYPE_GL_STEREO_DOWNMIX_MODE_TYPE, DEFAULT_MULTIVIEW_DOWNMIX,
+          GST_TYPE_GL_STEREO_DOWNMIX, DEFAULT_MULTIVIEW_DOWNMIX,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   gst_video_overlay_install_properties (gobject_class, PROP_LAST);
@@ -1378,6 +1378,19 @@ configure_display_from_info (GstGLImageSink * glimage_sink,
   return TRUE;
 }
 
+static gboolean
+_mview_modes_are_equal (GstVideoMultiviewMode a, GstVideoMultiviewMode b)
+{
+  if (a == b)
+    return TRUE;
+  if (a == GST_VIDEO_MULTIVIEW_MODE_NONE && b == GST_VIDEO_MULTIVIEW_MODE_MONO)
+    return TRUE;
+  if (a == GST_VIDEO_MULTIVIEW_MODE_MONO && b == GST_VIDEO_MULTIVIEW_MODE_NONE)
+    return TRUE;
+
+  return FALSE;
+}
+
 /* Called with GST_GLIMAGE_SINK lock held, to
  * copy in_info to out_info and update out_caps */
 static gboolean
@@ -1397,7 +1410,7 @@ update_output_format (GstGLImageSink * glimage_sink)
 
   mv_mode = GST_VIDEO_INFO_MULTIVIEW_MODE (&glimage_sink->in_info);
 
-  if (glimage_sink->mview_output_mode != mv_mode) {
+  if (!_mview_modes_are_equal (glimage_sink->mview_output_mode, mv_mode)) {
     /* Input is multiview, and output wants a conversion - configure 3d converter now,
      * otherwise defer it until either the caps or the 3D output mode changes */
     gst_video_multiview_video_info_change_mode (out_info,
@@ -1426,27 +1439,29 @@ update_output_format (GstGLImageSink * glimage_sink)
      * view parity properly for line-by-line modes, because that
      * depends on the window being placed correctly.
      * FIXME: Should this rescaling be configurable? */
-    new_w = MAX (1, glimage_sink->display_rect.w);
-    new_h = MAX (1, glimage_sink->display_rect.h);
-    if (new_w != out_info->width || new_h != out_info->height) {
-      /* Recalculate PAR if rescaling */
-      gint from_dar_n, from_dar_d;
-      if (!gst_util_fraction_multiply (out_info->width, out_info->height,
-              out_info->par_n, out_info->par_d, &from_dar_n,
-              &from_dar_d) ||
-          !gst_util_fraction_multiply (from_dar_n, from_dar_d, new_h, new_w,
-              &par_n, &par_d)) {
-        par_n = glimage_sink->par_n;
-        par_d = glimage_sink->par_d;
+    if (glimage_sink->display_rect.w > 0 && glimage_sink->display_rect.h > 0) {
+      new_w = glimage_sink->display_rect.w;
+      new_h = glimage_sink->display_rect.h;
+      if (new_w != out_info->width || new_h != out_info->height) {
+        /* Recalculate PAR if rescaling */
+        gint from_dar_n, from_dar_d;
+        if (!gst_util_fraction_multiply (out_info->width, out_info->height,
+                out_info->par_n, out_info->par_d, &from_dar_n,
+                &from_dar_d) ||
+            !gst_util_fraction_multiply (from_dar_n, from_dar_d, new_h, new_w,
+                &par_n, &par_d)) {
+          par_n = glimage_sink->par_n;
+          par_d = glimage_sink->par_d;
+        }
+        out_info->par_n = par_n;
+        out_info->par_d = par_d;
+        out_info->width = new_w;
+        out_info->height = new_h;
       }
-      out_info->par_n = par_n;
-      out_info->par_d = par_d;
-      out_info->width = new_w;
-      out_info->height = new_h;
-    }
 
-    GST_LOG_OBJECT (glimage_sink, "Set 3D output scale to %d,%d PAR %d/%d",
-        out_info->width, out_info->height, out_info->par_n, out_info->par_d);
+      GST_LOG_OBJECT (glimage_sink, "Set 3D output scale to %dx%d PAR %d/%d",
+          out_info->width, out_info->height, out_info->par_n, out_info->par_d);
+    }
   }
 
   s = gst_caps_get_structure (glimage_sink->in_caps, 0);
@@ -2235,7 +2250,14 @@ gst_glimage_sink_on_draw (GstGLImageSink * gl_sink)
 
     if (gl_sink->ignore_alpha) {
       gl->BlendColor (0.0, 0.0, 0.0, alpha);
-      gl->BlendFunc (GL_SRC_ALPHA, GL_CONSTANT_COLOR);
+      if (gl->BlendFuncSeparate) {
+        gl->BlendFuncSeparate (GL_SRC_ALPHA, GL_CONSTANT_COLOR, GL_ONE,
+            GL_ONE_MINUS_SRC_ALPHA);
+      } else {
+        /* we don't have separate blend modes, perform something close to
+         * correct instead */
+        gl->BlendFunc (GL_SRC_ALPHA, GL_CONSTANT_COLOR);
+      }
       gl->BlendEquation (GL_FUNC_ADD);
       gl->Enable (GL_BLEND);
     }
@@ -2277,7 +2299,8 @@ gst_glimage_sink_on_draw (GstGLImageSink * gl_sink)
 
     if (gl->GenVertexArrays)
       gl->BindVertexArray (0);
-    _unbind_buffer (gl_sink);
+    else
+      _unbind_buffer (gl_sink);
 
     if (gl_sink->ignore_alpha)
       gl->Disable (GL_BLEND);

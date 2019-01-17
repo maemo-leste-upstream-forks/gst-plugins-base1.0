@@ -458,6 +458,14 @@
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMessage" title="struct GstMIKEYMessage">GstMIKEYMessage</a></td>
 </tr>
 <tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYDecryptInfo" title="GstMIKEYDecryptInfo">GstMIKEYDecryptInfo</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYEncryptInfo" title="GstMIKEYEncryptInfo">GstMIKEYEncryptInfo</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYPRFFunc" title="enum GstMIKEYPRFFunc">GstMIKEYPRFFunc</a></td>
 </tr>
@@ -468,6 +476,18 @@
 <tr>
 <td class="datatype_keyword"> </td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMapSRTP" title="GstMIKEYMapSRTP">GstMIKEYMapSRTP</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYKVType" title="enum GstMIKEYKVType">GstMIKEYKVType</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYKeyDataType" title="enum GstMIKEYKeyDataType">GstMIKEYKeyDataType</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYPayloadKeyData" title="GstMIKEYPayloadKeyData">GstMIKEYPayloadKeyData</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword">enum</td>
@@ -530,7 +550,7 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstMIKEYMessage.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/sdp/gstmikey.h&gt;
+<pre class="synopsis">#include &lt;gst/sdp/sdp.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -549,14 +569,14 @@ gst_mikey_message_new (<em class="parameter"><code><span class="type">void</span
 <a name="gst-mikey-message-new.returns"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMessage" title="struct GstMIKEYMessage"><span class="type">GstMIKEYMessage</span></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-mikey-message-new-from-bytes"></a><h3>gst_mikey_message_new_from_bytes ()</h3>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMessage" title="struct GstMIKEYMessage"><span class="returnvalue">GstMIKEYMessage</span></a> *
 gst_mikey_message_new_from_bytes (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Byte-Arrays.html#GBytes"><span class="type">GBytes</span></a> *bytes</code></em>,
-                                  <em class="parameter"><code><span class="type">GstMIKEYDecryptInfo</span> *info</code></em>,
+                                  <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYDecryptInfo" title="GstMIKEYDecryptInfo"><span class="type">GstMIKEYDecryptInfo</span></a> *info</code></em>,
                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Make a new <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMessage" title="struct GstMIKEYMessage"><span class="type">GstMIKEYMessage</span></a> from <em class="parameter"><code>bytes</code></em>
 .</p>
@@ -576,7 +596,7 @@ gst_mikey_message_new_from_bytes (<em class="parameter"><code><a href="/usr/shar
 </tr>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <span class="type">GstMIKEYDecryptInfo</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYDecryptInfo" title="GstMIKEYDecryptInfo"><span class="type">GstMIKEYDecryptInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -591,7 +611,7 @@ gst_mikey_message_new_from_bytes (<em class="parameter"><code><a href="/usr/shar
 <a name="gst-mikey-message-new-from-bytes.returns"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMessage" title="struct GstMIKEYMessage"><span class="type">GstMIKEYMessage</span></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -625,7 +645,7 @@ gst_mikey_message_new_from_caps (<em class="parameter"><code><a href="/usr/share
 or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if there is no srtp information in the caps. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -633,7 +653,7 @@ or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><c
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMessage" title="struct GstMIKEYMessage"><span class="returnvalue">GstMIKEYMessage</span></a> *
 gst_mikey_message_new_from_data (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gconstpointer"><span class="type">gconstpointer</span></a> data</code></em>,
                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>,
-                                 <em class="parameter"><code><span class="type">GstMIKEYDecryptInfo</span> *info</code></em>,
+                                 <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYDecryptInfo" title="GstMIKEYDecryptInfo"><span class="type">GstMIKEYDecryptInfo</span></a> *info</code></em>,
                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Parse <em class="parameter"><code>size</code></em>
  bytes from <em class="parameter"><code>data</code></em>
@@ -662,7 +682,7 @@ parameters to decrypt and verify the data.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p><span class="type">GstMIKEYDecryptInfo</span></p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYDecryptInfo" title="GstMIKEYDecryptInfo"><span class="type">GstMIKEYDecryptInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -679,14 +699,14 @@ parameters to decrypt and verify the data.</p>
 <em class="parameter"><code>error</code></em>
 will be set.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-mikey-message-to-bytes"></a><h3>gst_mikey_message_to_bytes ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Byte-Arrays.html#GBytes"><span class="returnvalue">GBytes</span></a> *
 gst_mikey_message_to_bytes (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMessage" title="struct GstMIKEYMessage"><span class="type">GstMIKEYMessage</span></a> *msg</code></em>,
-                            <em class="parameter"><code><span class="type">GstMIKEYEncryptInfo</span> *info</code></em>,
+                            <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYEncryptInfo" title="GstMIKEYEncryptInfo"><span class="type">GstMIKEYEncryptInfo</span></a> *info</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Convert <em class="parameter"><code>msg</code></em>
  to a <a href="/usr/share/gtk-doc/html/glib/glib-Byte-Arrays.html#GBytes"><span class="type">GBytes</span></a>.</p>
@@ -706,7 +726,7 @@ gst_mikey_message_to_bytes (<em class="parameter"><code><a class="link" href="gs
 </tr>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <span class="type">GstMIKEYEncryptInfo</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYEncryptInfo" title="GstMIKEYEncryptInfo"><span class="type">GstMIKEYEncryptInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -722,7 +742,7 @@ gst_mikey_message_to_bytes (<em class="parameter"><code><a class="link" href="gs
 <p> a new <a href="/usr/share/gtk-doc/html/glib/glib-Byte-Arrays.html#GBytes"><span class="type">GBytes</span></a> for <em class="parameter"><code>msg</code></em>
 .</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -756,7 +776,7 @@ gst_mikey_message_to_caps (<em class="parameter"><code>const <a class="link" hre
 <a name="gst-mikey-message-to-caps.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix06.html#api-index-1.8.1">1.8.1</a></p>
+<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8.1">1.8.1</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -783,7 +803,7 @@ gst_mikey_message_base64_encode (<em class="parameter"><code><a class="link" hre
 <p>a <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>, base64-encoded data. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -812,7 +832,7 @@ gst_mikey_message_copy (<em class="parameter"><code>const <a class="link" href="
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -841,7 +861,7 @@ gst_mikey_message_ref (<em class="parameter"><code><a class="link" href="gst-plu
 (for convenience when doing assignments). </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -864,7 +884,7 @@ gst_mikey_message_unref (<em class="parameter"><code><a class="link" href="gst-p
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -920,7 +940,7 @@ gst_mikey_message_set_info (<em class="parameter"><code><a class="link" href="gs
 </tr>
 <tr>
 <td class="parameter_name"><p>map_type</p></td>
-<td class="parameter_description"><p>the <span class="type">GstMIKEYCSIDMapType</span></p></td>
+<td class="parameter_description"><p>the <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMapType" title="enum GstMIKEYMapType"><span class="type">GstMIKEYMapType</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -930,7 +950,7 @@ gst_mikey_message_set_info (<em class="parameter"><code><a class="link" href="gs
 <a name="gst-mikey-message-set-info.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -958,7 +978,7 @@ gst_mikey_message_get_n_cs (<em class="parameter"><code>const <a class="link" hr
 <a name="gst-mikey-message-get-n-cs.returns"></a><h4>Returns</h4>
 <p> the number of crypto sessions</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -995,7 +1015,7 @@ gst_mikey_message_get_cs_srtp (<em class="parameter"><code>const <a class="link"
 <a name="gst-mikey-message-get-cs-srtp.returns"></a><h4>Returns</h4>
 <p> a <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYMapSRTP" title="GstMIKEYMapSRTP"><span class="type">GstMIKEYMapSRTP</span></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1040,7 +1060,7 @@ gst_mikey_message_insert_cs_srtp (<em class="parameter"><code><a class="link" hr
 <a name="gst-mikey-message-insert-cs-srtp.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1076,7 +1096,7 @@ gst_mikey_message_remove_cs_srtp (<em class="parameter"><code><a class="link" hr
 <a name="gst-mikey-message-remove-cs-srtp.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1120,7 +1140,7 @@ gst_mikey_message_replace_cs_srtp (<em class="parameter"><code><a class="link" h
 <a name="gst-mikey-message-replace-cs-srtp.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1169,7 +1189,7 @@ gst_mikey_message_add_cs_srtp (<em class="parameter"><code><a class="link" href=
 <a name="gst-mikey-message-add-cs-srtp.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1198,7 +1218,7 @@ gst_mikey_message_get_n_payloads (<em class="parameter"><code>const <a class="li
 <p> the number of payloads in <em class="parameter"><code>msg</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1239,7 +1259,7 @@ remains valid for as long as it is part of <em class="parameter"><code>msg</code
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1285,7 +1305,7 @@ gst_mikey_message_find_payload (<em class="parameter"><code>const <a class="link
 <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYPayload" title="struct GstMIKEYPayload"><span class="type">GstMIKEYPayload</span></a> of <em class="parameter"><code>type</code></em>
 .</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1332,7 +1352,7 @@ will be appended to <em class="parameter"><code>msg</code></em>
 <a name="gst-mikey-message-insert-payload.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1369,7 +1389,7 @@ gst_mikey_message_remove_payload (<em class="parameter"><code><a class="link" hr
 <a name="gst-mikey-message-remove-payload.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1413,7 +1433,7 @@ gst_mikey_message_replace_payload (<em class="parameter"><code><a class="link" h
 <a name="gst-mikey-message-replace-payload.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1449,7 +1469,7 @@ gst_mikey_message_add_payload (<em class="parameter"><code><a class="link" href=
 <a name="gst-mikey-message-add-payload.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1478,7 +1498,7 @@ gst_mikey_payload_new (<em class="parameter"><code><a class="link" href="gst-plu
 <p>a new <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYPayload" title="struct GstMIKEYPayload"><span class="type">GstMIKEYPayload</span></a> or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1507,7 +1527,7 @@ gst_mikey_payload_copy (<em class="parameter"><code>const <a class="link" href="
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1564,14 +1584,14 @@ gst_mikey_payload_key_data_set_interval
 <a name="gst-mikey-payload-key-data-set-interval.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-mikey-payload-key-data-set-key"></a><h3>gst_mikey_payload_key_data_set_key ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_mikey_payload_key_data_set_key (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYPayload" title="struct GstMIKEYPayload"><span class="type">GstMIKEYPayload</span></a> *payload</code></em>,
-                                    <em class="parameter"><code><span class="type">GstMIKEYKeyDataType</span> key_type</code></em>,
+                                    <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYKeyDataType" title="enum GstMIKEYKeyDataType"><span class="type">GstMIKEYKeyDataType</span></a> key_type</code></em>,
                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> key_len</code></em>,
                                     <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> *key_data</code></em>);</pre>
 <p>Set <em class="parameter"><code>key_len</code></em>
@@ -1596,7 +1616,7 @@ gst_mikey_payload_key_data_set_key (<em class="parameter"><code><a class="link" 
 </tr>
 <tr>
 <td class="parameter_name"><p>key_type</p></td>
-<td class="parameter_description"><p>a <span class="type">GstMIKEYKeyDataType</span></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYKeyDataType" title="enum GstMIKEYKeyDataType"><span class="type">GstMIKEYKeyDataType</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1618,7 +1638,7 @@ gst_mikey_payload_key_data_set_key (<em class="parameter"><code><a class="link" 
 <a name="gst-mikey-payload-key-data-set-key.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1663,7 +1683,7 @@ salt data will be removed.</p>
 <a name="gst-mikey-payload-key-data-set-salt.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1706,7 +1726,7 @@ gst_mikey_payload_key_data_set_spi (<em class="parameter"><code><a class="link" 
 <a name="gst-mikey-payload-key-data-set-spi.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1735,7 +1755,7 @@ gst_mikey_payload_ref (<em class="parameter"><code><a class="link" href="gst-plu
 (for convenience when doing assignments). </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1758,7 +1778,7 @@ gst_mikey_payload_unref (<em class="parameter"><code><a class="link" href="gst-p
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1801,7 +1821,7 @@ payload.</p>
 <a name="gst-mikey-payload-kemac-set.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1837,7 +1857,7 @@ gst_mikey_payload_kemac_add_sub (<em class="parameter"><code><a class="link" hre
 <a name="gst-mikey-payload-kemac-add-sub.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1868,7 +1888,7 @@ gst_mikey_payload_kemac_get_n_sub (<em class="parameter"><code>const <a class="l
 <p> the number of sub payloads in <em class="parameter"><code>payload</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1909,7 +1929,7 @@ gst_mikey_payload_kemac_get_sub (<em class="parameter"><code>const <a class="lin
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1946,7 +1966,7 @@ gst_mikey_payload_kemac_remove_sub (<em class="parameter"><code><a class="link" 
 <a name="gst-mikey-payload-kemac-remove-sub.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1997,7 +2017,7 @@ gst_mikey_payload_pke_set (<em class="parameter"><code><a class="link" href="gst
 <a name="gst-mikey-payload-pke-set.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2046,7 +2066,7 @@ gst_mikey_message_add_pke (<em class="parameter"><code><a class="link" href="gst
 <a name="gst-mikey-message-add-pke.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2088,7 +2108,7 @@ gst_mikey_payload_t_set (<em class="parameter"><code><a class="link" href="gst-p
 <a name="gst-mikey-payload-t-set.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2131,7 +2151,7 @@ gst_mikey_message_add_t (<em class="parameter"><code><a class="link" href="gst-p
 <a name="gst-mikey-message-add-t.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2160,7 +2180,7 @@ in NTP-UTC format.</p>
 <a name="gst-mikey-message-add-t-now-ntp-utc.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2203,7 +2223,7 @@ gst_mikey_payload_rand_set (<em class="parameter"><code><a class="link" href="gs
 <a name="gst-mikey-payload-rand-set.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2246,7 +2266,7 @@ gst_mikey_message_add_rand (<em class="parameter"><code><a class="link" href="gs
 <a name="gst-mikey-message-add-rand.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2283,7 +2303,7 @@ gst_mikey_message_add_rand_len (<em class="parameter"><code><a class="link" href
 <a name="gst-mikey-message-add-rand-len.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2325,7 +2345,7 @@ gst_mikey_payload_sp_set (<em class="parameter"><code><a class="link" href="gst-
 <a name="gst-mikey-payload-sp-set.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2355,7 +2375,7 @@ gst_mikey_payload_sp_get_n_params (<em class="parameter"><code>const <a class="l
 <p> the number of parameters in <em class="parameter"><code>payload</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2395,7 +2415,7 @@ at <em class="parameter"><code>idx</code></em>
 in <em class="parameter"><code>payload</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2448,7 +2468,7 @@ bytes of data. </p></td>
 <a name="gst-mikey-payload-sp-add-param.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2486,7 +2506,7 @@ gst_mikey_payload_sp_remove_param (<em class="parameter"><code><a class="link" h
 <a name="gst-mikey-payload-sp-remove-param.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -2641,6 +2661,16 @@ gst_mikey_payload_sp_remove_param (<em class="parameter"><code><a class="link" h
 </div>
 <hr>
 <div class="refsect2">
+<a name="GstMIKEYDecryptInfo"></a><h3>GstMIKEYDecryptInfo</h3>
+<pre class="programlisting">typedef struct _GstMIKEYDecryptInfo GstMIKEYDecryptInfo;</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMIKEYEncryptInfo"></a><h3>GstMIKEYEncryptInfo</h3>
+<pre class="programlisting">typedef struct _GstMIKEYEncryptInfo GstMIKEYEncryptInfo;</pre>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstMIKEYPRFFunc"></a><h3>enum GstMIKEYPRFFunc</h3>
 <p>The PRF function that has been/will be used for key derivation</p>
 <div class="refsect3">
@@ -2676,8 +2706,10 @@ protocol sessions.</p>
 </colgroup>
 <tbody><tr>
 <td class="enum_member_name"><p><a name="GST-MIKEY-MAP-TYPE-SRTP:CAPS"></a>GST_MIKEY_MAP_TYPE_SRTP</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>SRTP</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
@@ -2715,6 +2747,155 @@ protocol sessions.</p>
 <tr>
 <td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GstMIKEYMapSRTP.roc"></a>roc</code></em>;</p></td>
 <td class="struct_member_description"><p>current rollover counter</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMIKEYKVType"></a><h3>enum GstMIKEYKVType</h3>
+<p>The key validity type</p>
+<div class="refsect3">
+<a name="GstMIKEYKVType.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-MIKEY-KV-NULL:CAPS"></a>GST_MIKEY_KV_NULL</p></td>
+<td class="enum_member_description">
+<p>No specific usage rule</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-MIKEY-KV-SPI:CAPS"></a>GST_MIKEY_KV_SPI</p></td>
+<td class="enum_member_description">
+<p>The key is associated with the SPI/MKI</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-MIKEY-KV-INTERVAL:CAPS"></a>GST_MIKEY_KV_INTERVAL</p></td>
+<td class="enum_member_description">
+<p>The key has a start and expiration time</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMIKEYKeyDataType"></a><h3>enum GstMIKEYKeyDataType</h3>
+<p>The type of key.</p>
+<div class="refsect3">
+<a name="GstMIKEYKeyDataType.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-MIKEY-KD-TGK:CAPS"></a>GST_MIKEY_KD_TGK</p></td>
+<td class="enum_member_description">
+<p>a TEK Generation Key</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-MIKEY-KD-TEK:CAPS"></a>GST_MIKEY_KD_TEK</p></td>
+<td class="enum_member_description">
+<p>Traffic-Encrypting Key</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMIKEYPayloadKeyData"></a><h3>GstMIKEYPayloadKeyData</h3>
+<pre class="programlisting">typedef struct {
+  GstMIKEYPayload pt;
+
+  GstMIKEYKeyDataType key_type;
+  guint16  key_len;
+  guint8  *key_data;
+  guint16  salt_len;
+  guint8  *salt_data;
+  GstMIKEYKVType kv_type;
+  guint8   kv_len[2];
+  guint8  *kv_data[2];
+} GstMIKEYPayloadKeyData;
+</pre>
+<p>The Key data payload contains key material. It should be added as sub
+payload to the KEMAC.</p>
+<div class="refsect3">
+<a name="GstMIKEYPayloadKeyData.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYPayload" title="struct GstMIKEYPayload"><span class="type">GstMIKEYPayload</span></a> <em class="structfield"><code><a name="GstMIKEYPayloadKeyData.pt"></a>pt</code></em>;</p></td>
+<td class="struct_member_description"><p>the payload header</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYKeyDataType" title="enum GstMIKEYKeyDataType"><span class="type">GstMIKEYKeyDataType</span></a> <em class="structfield"><code><a name="GstMIKEYPayloadKeyData.key-type"></a>key_type</code></em>;</p></td>
+<td class="struct_member_description"><p>the <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYKeyDataType" title="enum GstMIKEYKeyDataType"><span class="type">GstMIKEYKeyDataType</span></a> of <em class="parameter"><code>key_data</code></em>
+</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GstMIKEYPayloadKeyData.key-len"></a>key_len</code></em>;</p></td>
+<td class="struct_member_description"><p>length of <em class="parameter"><code>key_data</code></em>
+</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> *<em class="structfield"><code><a name="GstMIKEYPayloadKeyData.key-data"></a>key_data</code></em>;</p></td>
+<td class="struct_member_description"><p>the key data</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GstMIKEYPayloadKeyData.salt-len"></a>salt_len</code></em>;</p></td>
+<td class="struct_member_description"><p>the length of <em class="parameter"><code>salt_data</code></em>
+, can be 0</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> *<em class="structfield"><code><a name="GstMIKEYPayloadKeyData.salt-data"></a>salt_data</code></em>;</p></td>
+<td class="struct_member_description"><p>salt data</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYKVType" title="enum GstMIKEYKVType"><span class="type">GstMIKEYKVType</span></a> <em class="structfield"><code><a name="GstMIKEYPayloadKeyData.kv-type"></a>kv_type</code></em>;</p></td>
+<td class="struct_member_description"><p>the Key Validity type</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> <em class="structfield"><code><a name="GstMIKEYPayloadKeyData.kv-len"></a>kv_len</code></em>[2];</p></td>
+<td class="struct_member_description"><p>length of <em class="parameter"><code>kv_data</code></em>
+</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> *<em class="structfield"><code><a name="GstMIKEYPayloadKeyData.kv-data"></a>kv_data</code></em>[2];</p></td>
+<td class="struct_member_description"><p>key validity data</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -3208,8 +3389,10 @@ the certificate/public key used.</p>
 </colgroup>
 <tbody><tr>
 <td class="enum_member_name"><p><a name="GST-MIKEY-SEC-PROTO-SRTP:CAPS"></a>GST_MIKEY_SEC_PROTO_SRTP</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>SRTP</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
@@ -3361,7 +3544,7 @@ specific security protocol</p>
 </tr>
 <tr>
 <td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Arrays.html#GArray"><span class="type">GArray</span></a> *<em class="structfield"><code><a name="GstMIKEYPayloadSP.params"></a>params</code></em>;</p></td>
-<td class="struct_member_description"><p>array of <span class="type">GstMIKEYPayloadPSParam</span></p></td>
+<td class="struct_member_description"><p>array of <a class="link" href="gst-plugins-base-libs-GstMIKEYMessage.html#GstMIKEYPayloadSPParam" title="GstMIKEYPayloadSPParam"><span class="type">GstMIKEYPayloadSPParam</span></a></p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>

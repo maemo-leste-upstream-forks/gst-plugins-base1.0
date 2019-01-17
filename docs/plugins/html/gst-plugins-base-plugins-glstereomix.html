@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>glstereomix: GStreamer Base Plugins 1.0 Plugins Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
+<link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Plugins Reference Manual">
+<link rel="up" href="ch01.html" title="gst-plugins-base Elements">
+<link rel="prev" href="gst-plugins-base-plugins-glsrcbin.html" title="glsrcbin">
+<link rel="next" href="gst-plugins-base-plugins-glstereosplit.html" title="glstereosplit">
+<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-plugins-glstereomix.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="gst-plugins-base-plugins-glsrcbin.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-plugins-glstereosplit.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="gst-plugins-base-plugins-glstereomix"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="gst-plugins-base-plugins-glstereomix.top_of_page"></a>glstereomix</span></h2>
+<p>glstereomix</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-glstereomix.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody><tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-plugins-glstereomix.html#GstGLStereoMix" title="struct GstGLStereoMix">GstGLStereoMix</a></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-glstereomix.description"></a><h2>Description</h2>
+<p>Combine 2 input streams to produce a stereoscopic output
+stream. Input views are taken from the left pad and right pad
+respectively, and mixed according to their timelines.</p>
+<p>If either input stream is stereoscopic, the approproriate view
+(left or right) is taken from each stream and placed into the output.</p>
+<p>The multiview representation on the output is chosen according to
+the downstream caps.</p>
+<div class="refsect3">
+<a name="id-1.2.62.4.5"></a><h4>Examples</h4>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> <span class="gtkdoc opt">-</span>v videotestsrc pattern<span class="gtkdoc opt">=</span>ball name<span class="gtkdoc opt">=</span>left \
+    videotestsrc name<span class="gtkdoc opt">=</span>right glstereomix name<span class="gtkdoc opt">=</span>mix \
+    left<span class="gtkdoc opt">. !</span> vid<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span>width<span class="gtkdoc opt">=</span><span class="number">640</span><span class="gtkdoc opt">,</span>height<span class="gtkdoc opt">=</span><span class="number">480</span><span class="gtkdoc opt">!</span> glupload <span class="gtkdoc opt">!</span> mix<span class="gtkdoc opt">.</span>  \
+    right<span class="gtkdoc opt">. !</span> video<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span>width<span class="gtkdoc opt">=</span><span class="number">640</span><span class="gtkdoc opt">,</span>height<span class="gtkdoc opt">=</span><span class="number">480</span><span class="gtkdoc opt">!</span> glupload <span class="gtkdoc opt">!</span> mix<span class="gtkdoc opt">.</span>  \
+    mix<span class="gtkdoc opt">. !</span> video<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="string">&apos;(memory:GLMemory)&apos;</span><span class="gtkdoc opt">,</span>multiview<span class="gtkdoc opt">-</span>mode<span class="gtkdoc opt">=</span>side<span class="gtkdoc opt">-</span>by<span class="gtkdoc opt">-</span>side <span class="gtkdoc opt">!</span> \
+    queue <span class="gtkdoc opt">!</span> glimagesink output<span class="gtkdoc opt">-</span>multiview<span class="gtkdoc opt">-</span>mode<span class="gtkdoc opt">=</span>side<span class="gtkdoc opt">-</span>by<span class="gtkdoc opt">-</span>side</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p> Mix 2 different videotestsrc patterns into a side-by-side stereo image and display it.</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> <span class="gtkdoc opt">-</span>ev v4l2src name<span class="gtkdoc opt">=</span>left \
+    videotestsrc name<span class="gtkdoc opt">=</span>right \
+    glstereomix name<span class="gtkdoc opt">=</span>mix \
+    left<span class="gtkdoc opt">. !</span> video<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span>width<span class="gtkdoc opt">=</span><span class="number">640</span><span class="gtkdoc opt">,</span>height<span class="gtkdoc opt">=</span><span class="number">480</span> <span class="gtkdoc opt">!</span> glupload <span class="gtkdoc opt">!</span> glcolorconvert <span class="gtkdoc opt">!</span> mix<span class="gtkdoc opt">.</span>  \
+    right<span class="gtkdoc opt">. !</span> video<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="gtkdoc opt">,</span>width<span class="gtkdoc opt">=</span><span class="number">640</span><span class="gtkdoc opt">,</span>height<span class="gtkdoc opt">=</span><span class="number">480</span> <span class="gtkdoc opt">!</span> glupload <span class="gtkdoc opt">!</span> mix<span class="gtkdoc opt">.</span>  \
+    mix<span class="gtkdoc opt">. !</span> video<span class="gtkdoc opt">/</span>x<span class="gtkdoc opt">-</span>raw<span class="string">&apos;(memory:GLMemory)&apos;</span><span class="gtkdoc opt">,</span>multiview<span class="gtkdoc opt">-</span>mode<span class="gtkdoc opt">=</span>top<span class="gtkdoc opt">-</span>bottom <span class="gtkdoc opt">!</span> \
+    glcolorconvert <span class="gtkdoc opt">!</span> gldownload <span class="gtkdoc opt">!</span> queue <span class="gtkdoc opt">!</span> x264enc <span class="gtkdoc opt">!</span> h264parse <span class="gtkdoc opt">!</span> \
+    mp4mux <span class="gtkdoc opt">!</span> progressreport <span class="gtkdoc opt">!</span> filesink location<span class="gtkdoc opt">=</span>output<span class="gtkdoc opt">.</span>mp4</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p> Mix the input from a camera to the left view, and videotestsrc to the right view,
+   and encode as a top-bottom frame packed H.264 video.</p>
+</div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-glstereomix.functions_details"></a><h2>Functions</h2>
+<p></p>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-glstereomix.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="GstGLStereoMix"></a><h3>struct GstGLStereoMix</h3>
+<pre class="programlisting">struct GstGLStereoMix {
+  GstGLMixer mixer;
+
+  GLuint out_tex_id;
+
+  GstGLViewConvert *viewconvert;
+  GstGLStereoDownmix downmix_mode;
+
+  GstVideoInfo mix_info;
+
+  GPtrArray *input_frames;
+  GstBuffer *primary_out;
+  GstBuffer *auxilliary_out;
+};
+</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>Generated by GTK-Doc V1.28</div>
+</body>
+</html>

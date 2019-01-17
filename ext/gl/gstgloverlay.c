@@ -45,7 +45,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || (defined (__MINGW64_VERSION_MAJOR) && __MINGW64_VERSION_MAJOR >= 6)
 #define HAVE_BOOLEAN
 #endif
 #include <jpeglib.h>
@@ -530,7 +530,11 @@ gst_gl_overlay_callback (GstGLFilter * filter, GstGLMemory * in_tex,
   gst_gl_shader_set_uniform_1f (overlay->shader, "alpha", overlay->alpha);
 
   gl->Enable (GL_BLEND);
-  gl->BlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  if (gl->BlendFuncSeparate)
+    gl->BlendFuncSeparate (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+        GL_ONE_MINUS_SRC_ALPHA);
+  else
+    gl->BlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   gl->BlendEquation (GL_FUNC_ADD);
 
   gl->DrawElements (GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
@@ -541,7 +545,8 @@ gst_gl_overlay_callback (GstGLFilter * filter, GstGLMemory * in_tex,
 out:
   if (gl->GenVertexArrays)
     gl->BindVertexArray (0);
-  _unbind_buffer (overlay);
+  else
+    _unbind_buffer (overlay);
 
   gst_gl_context_clear_shader (GST_GL_BASE_FILTER (filter)->context);
 

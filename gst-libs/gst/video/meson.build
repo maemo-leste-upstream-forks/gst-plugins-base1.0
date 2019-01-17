@@ -3,6 +3,7 @@ video_sources = [
   'colorbalancechannel.c',
   'convertframe.c',
   'gstvideoaffinetransformationmeta.c',
+  'gstvideoaggregator.c',
   'gstvideodecoder.c',
   'gstvideoencoder.c',
   'gstvideofilter.c',
@@ -14,6 +15,7 @@ video_sources = [
   'gstvideoutilsprivate.c',
   'navigation.c',
   'video.c',
+  'video-anc.c',
   'video-blend.c',
   'video-chroma.c',
   'video-color.c',
@@ -37,6 +39,7 @@ video_headers = [
   'colorbalance.h',
   'colorbalancechannel.h',
   'gstvideoaffinetransformationmeta.h',
+  'gstvideoaggregator.h',
   'gstvideodecoder.h',
   'gstvideoencoder.h',
   'gstvideofilter.h',
@@ -47,6 +50,7 @@ video_headers = [
   'gstvideoutils.h',
   'navigation.h',
   'video.h',
+  'video-anc.h',
   'video-event.h',
   'video-format.h',
   'video-chroma.h',
@@ -70,6 +74,7 @@ install_headers(video_headers, subdir : 'gstreamer-1.0/gst/video/')
 
 video_mkenum_headers = [
   'video.h',
+  'video-anc.h',
   'video-format.h',
   'video-frame.h',
   'video-chroma.h',
@@ -77,6 +82,7 @@ video_mkenum_headers = [
   'video-converter.h',
   'video-dither.h',
   'video-info.h',
+  'video-overlay-composition.h',
   'video-resampler.h',
   'video-scaler.h',
   'video-tile.h',
@@ -84,19 +90,15 @@ video_mkenum_headers = [
   'navigation.h',
 ]
 
-mkenums = find_program('video_mkenum.py')
-gstvideo_h = custom_target('gstvideoenum_h',
-  output : 'video-enumtypes.h',
-  input : video_mkenum_headers,
-  install : true,
-  install_dir : 'include/gstreamer-1.0/gst/video/',
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
-
-gstvideo_c = custom_target('gstvideoenum_c',
-  output : 'video-enumtypes.c',
-  input : video_mkenum_headers,
-  depends : [gstvideo_h],
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
+video_enums = gnome.mkenums_simple('video-enumtypes',
+  sources : video_mkenum_headers,
+  body_prefix : '#ifdef HAVE_CONFIG_H\n#include "config.h"\n#endif',
+  header_prefix : '#include <gst/video/video-prelude.h>',
+  decorator : 'GST_VIDEO_API',
+  install_header: true,
+  install_dir : join_paths(get_option('includedir'), 'gstreamer-1.0/gst/video'))
+gstvideo_c = video_enums[0]
+gstvideo_h = video_enums[1]
 video_gen_sources = [gstvideo_h]
 
 orcsrc = 'video-orc'
@@ -114,18 +116,19 @@ if have_orcc
 else
   orc_h = configure_file(input : orcsrc + '-dist.h',
     output : orcsrc + '.h',
-    configuration : configuration_data())
+    copy : true)
   orc_c = configure_file(input : orcsrc + '-dist.c',
     output : orcsrc + '.c',
-    configuration : configuration_data())
+    copy : true)
 endif
 
 gstvideo = library('gstvideo-@0@'.format(api_version),
   video_sources, gstvideo_h, gstvideo_c, orc_c, orc_h,
-  c_args : gst_plugins_base_args,
+  c_args : gst_plugins_base_args + ['-DBUILDING_GST_VIDEO'],
   include_directories: [configinc, libsinc],
   version : libversion,
   soversion : soversion,
+  darwin_versions : osxversion,
   install : true,
   dependencies : gstvideo_deps,
 )

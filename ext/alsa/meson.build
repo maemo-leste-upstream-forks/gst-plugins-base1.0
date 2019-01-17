@@ -7,7 +7,7 @@ alsa_sources = [
   'gstalsasrc.c',
 ]
 
-alsa_dep = dependency('alsa', version : '>=0.9.1', required : false)
+alsa_dep = dependency('alsa', version : '>=0.9.1', required : get_option('alsa'))
 
 if alsa_dep.found()
   gstalsa = library('gstalsa',
@@ -18,4 +18,5 @@ if alsa_dep.found()
     install : true,
     install_dir : plugins_install_dir,
   )
+  pkgconfig.generate(gstalsa, install_dir : plugins_pkgconfig_install_dir)
 endif

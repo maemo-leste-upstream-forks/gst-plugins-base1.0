@@ -288,6 +288,26 @@
 <td class="function_name"><a class="link" href="GstGLContext.html#GST-GL-CONTEXT-ERROR:CAPS" title="GST_GL_CONTEXT_ERROR">GST_GL_CONTEXT_ERROR</a></td>
 </tr>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="GstGLContext.html#GST-GL-CONTEXT-TYPE-CGL:CAPS" title="GST_GL_CONTEXT_TYPE_CGL">GST_GL_CONTEXT_TYPE_CGL</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="GstGLContext.html#GST-GL-CONTEXT-TYPE-EAGL:CAPS" title="GST_GL_CONTEXT_TYPE_EAGL">GST_GL_CONTEXT_TYPE_EAGL</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="GstGLContext.html#GST-GL-CONTEXT-TYPE-EGL:CAPS" title="GST_GL_CONTEXT_TYPE_EGL">GST_GL_CONTEXT_TYPE_EGL</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="GstGLContext.html#GST-GL-CONTEXT-TYPE-GLX:CAPS" title="GST_GL_CONTEXT_TYPE_GLX">GST_GL_CONTEXT_TYPE_GLX</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="GstGLContext.html#GST-GL-CONTEXT-TYPE-WGL:CAPS" title="GST_GL_CONTEXT_TYPE_WGL">GST_GL_CONTEXT_TYPE_WGL</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="GstGLContext.html#GstGLContextError" title="enum GstGLContextError">GstGLContextError</a></td>
 </tr>
@@ -376,7 +396,7 @@ gst_gl_context_new (<em class="parameter"><code><a class="link" href="GstGLDispl
 <a name="gst-gl-context-new.returns"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -431,7 +451,7 @@ active.</p>
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -479,7 +499,7 @@ of the error and <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html
 <a name="gst-gl-context-create.returns"></a><h4>Returns</h4>
 <p> whether the context could successfully be created</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -504,7 +524,7 @@ called for this context.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -542,7 +562,7 @@ currently set window.  See <a class="link" href="GstGLContext.html#gst-gl-contex
 <a name="gst-gl-context-activate.returns"></a><h4>Returns</h4>
 <p> Whether the activation succeeded</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -606,7 +626,7 @@ for <em class="parameter"><code>name</code></em>
 <p> an address pointing to <em class="parameter"><code>name</code></em>
 or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -667,7 +687,7 @@ e.g.</p>
 <a name="gst-gl-context-get-proc-address.returns"></a><h4>Returns</h4>
 <p> a function pointer or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -714,7 +734,7 @@ to retreive <em class="parameter"><code>name</code></em>
 <p> a function pointer for <em class="parameter"><code>name</code></em>
 , or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -741,7 +761,7 @@ gst_gl_context_get_window (<em class="parameter"><code><a class="link" href="Gst
 <p>the currently set window. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -781,7 +801,7 @@ already running.</p>
 <a name="gst-gl-context-set-window.returns"></a><h4>Returns</h4>
 <p> Whether the window was successfully updated</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -823,7 +843,7 @@ with. </p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -851,7 +871,7 @@ gst_gl_context_get_display (<em class="parameter"><code><a class="link" href="Gs
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -880,7 +900,7 @@ the <a class="link" href="GstGLWindow.html" title="GstGLWindow"><span class="typ
 <a name="gst-gl-context-get-gl-api.returns"></a><h4>Returns</h4>
 <p> the available OpenGL api</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -908,7 +928,7 @@ gst_gl_context_get_gl_context (<em class="parameter"><code><a class="link" href=
 <a name="gst-gl-context-get-gl-context.returns"></a><h4>Returns</h4>
 <p> The platform specific backing OpenGL context</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -936,7 +956,7 @@ gst_gl_context_get_gl_platform (<em class="parameter"><code><a class="link" href
 <a name="gst-gl-context-get-gl-platform.returns"></a><h4>Returns</h4>
 <p> The platform specific backing OpenGL context</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -947,7 +967,7 @@ gst_gl_context_get_gl_platform_version
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *major</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *minor</code></em>);</pre>
 <p>Get the version of the OpenGL platform (GLX, EGL, etc) used.  Only valid
-after a call to <code class="function">gst_gl_context_create_context()</code>.</p>
+after a call to <a class="link" href="GstGLContext.html#gst-gl-context-create" title="gst_gl_context_create ()"><code class="function">gst_gl_context_create()</code></a>.</p>
 <div class="refsect3">
 <a name="gst-gl-context-get-gl-platform-version.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1000,7 +1020,7 @@ gst_gl_context_get_current_gl_context (<em class="parameter"><code><a class="lin
 <a name="gst-gl-context-get-current-gl-context.returns"></a><h4>Returns</h4>
 <p> The OpenGL context handle current in the calling thread or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1045,7 +1065,7 @@ returned.</p>
 <p> The version supported by the OpenGL context current in the calling
 thread or <a class="link" href="gst-plugins-base-libs-GstGLAPI.html#GST-GL-API-NONE:CAPS"><code class="literal">GST_GL_API_NONE</code></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1073,7 +1093,7 @@ gst_gl_context_get_thread (<em class="parameter"><code><a class="link" href="Gst
 is current in or NULL. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1111,7 +1131,7 @@ and <em class="parameter"><code>other_context</code></em>
 are able to share OpenGL
 resources.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1137,7 +1157,7 @@ gst_gl_context_is_shared (<em class="parameter"><code><a class="link" href="GstG
 <a name="gst-gl-context-is-shared.returns"></a><h4>Returns</h4>
 <p> Whether the <a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a> has been shared with another <a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1170,7 +1190,7 @@ gst_gl_context_set_shared_with (<em class="parameter"><code><a class="link" href
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1211,7 +1231,7 @@ case.</p>
 is supported by <em class="parameter"><code>context</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1258,7 +1278,7 @@ gst_gl_context_check_gl_version (<em class="parameter"><code><a class="link" hre
 <p> whether OpenGL context implements the required api and specified
 version.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1299,7 +1319,7 @@ gst_gl_context_get_gl_version (<em class="parameter"><code><a class="link" href=
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1333,7 +1353,7 @@ allow wrapped contexts to be used as regular <a class="link" href="GstGLContext.
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1346,7 +1366,7 @@ gst_gl_context_get_current (<em class="parameter"><code><span class="type">void<
 <p>the <a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a> active in the current thread or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -1357,6 +1377,36 @@ gst_gl_context_get_current (<em class="parameter"><code><span class="type">void<
 </pre>
 <p>Error domain for GStreamer's GL context module. Errors in this domain will
 be from the <a class="link" href="GstGLContext.html#GstGLContextError" title="enum GstGLContextError"><span class="type">GstGLContextError</span></a> enumeration</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-GL-CONTEXT-TYPE-CGL:CAPS"></a><h3>GST_GL_CONTEXT_TYPE_CGL</h3>
+<pre class="programlisting">#define GST_GL_CONTEXT_TYPE_CGL "gst.gl.context.CGL"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-GL-CONTEXT-TYPE-EAGL:CAPS"></a><h3>GST_GL_CONTEXT_TYPE_EAGL</h3>
+<pre class="programlisting">#define GST_GL_CONTEXT_TYPE_EAGL "gst.gl.context.EAGL"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-GL-CONTEXT-TYPE-EGL:CAPS"></a><h3>GST_GL_CONTEXT_TYPE_EGL</h3>
+<pre class="programlisting">#define GST_GL_CONTEXT_TYPE_EGL "gst.gl.context.EGL"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-GL-CONTEXT-TYPE-GLX:CAPS"></a><h3>GST_GL_CONTEXT_TYPE_GLX</h3>
+<pre class="programlisting">#define GST_GL_CONTEXT_TYPE_GLX "gst.gl.context.GLX"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-GL-CONTEXT-TYPE-WGL:CAPS"></a><h3>GST_GL_CONTEXT_TYPE_WGL</h3>
+<pre class="programlisting">#define GST_GL_CONTEXT_TYPE_WGL "gst.gl.context.WGL"
+</pre>
 </div>
 <hr>
 <div class="refsect2">

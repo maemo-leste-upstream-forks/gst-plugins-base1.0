@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/prerelease
-AC_INIT([GStreamer Base Plug-ins],[1.14.4],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
+AC_INIT([GStreamer Base Plug-ins],[1.15.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
 
 AG_GST_INIT
 
@@ -56,10 +56,10 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 1404, 0, 1404)
+AS_LIBTOOL(GST, 1501, 0, 1501)
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.14.4
+GST_REQ=1.15.1
 
 dnl *** autotools stuff ****
 
@@ -486,6 +486,9 @@ esac
 dnl Check for mmap (needed by allocators library)
 AC_CHECK_FUNC([mmap], [AC_DEFINE(HAVE_MMAP, 1, [Defined if mmap is supported])])
 
+dnl Check for DMABuf synchronization ioctl (needed for DMABuf CPU access)
+AC_CHECK_HEADERS([linux/dma-buf.h], [])
+
 dnl *** plug-ins to include ***
 
 dnl these are all the gst plug-ins, compilable without additional libs
@@ -495,9 +498,11 @@ AG_GST_CHECK_PLUGIN(audioconvert)
 AG_GST_CHECK_PLUGIN(audiomixer)
 AG_GST_CHECK_PLUGIN(audiorate)
 AG_GST_CHECK_PLUGIN(audiotestsrc)
+AG_GST_CHECK_PLUGIN(compositor)
 AG_GST_CHECK_PLUGIN(encoding)
 AG_GST_CHECK_PLUGIN(videoconvert)
 AG_GST_CHECK_PLUGIN(gio)
+AG_GST_CHECK_PLUGIN(overlaycomposition)
 AG_GST_CHECK_PLUGIN(playback)
 AG_GST_CHECK_PLUGIN(audioresample)
 AG_GST_CHECK_PLUGIN(rawparse)
@@ -838,7 +843,13 @@ fi
 AC_SUBST(DEPRECATED_CFLAGS)
 
 VISIBILITY_CFLAGS=""
-AS_COMPILER_FLAG([-fvisibility=hidden], [VISIBILITY_CFLAGS="-fvisibility=hidden"])
+AS_COMPILER_FLAG([-fvisibility=hidden], [
+  VISIBILITY_CFLAGS="-fvisibility=hidden"
+  AC_DEFINE(GST_API_EXPORT, [extern __attribute__ ((visibility ("default")))], [public symbol export define])
+], [
+  VISIBILITY_CFLAGS=""
+  AC_DEFINE(GST_API_EXPORT, [extern], [public symbol export define])
+])
 AC_SUBST(VISIBILITY_CFLAGS)
 
 VISIBILITY_CXXFLAGS=""
@@ -912,9 +923,11 @@ gst/audiomixer/Makefile
 gst/audiorate/Makefile
 gst/audioresample/Makefile
 gst/audiotestsrc/Makefile
+gst/compositor/Makefile
 gst/encoding/Makefile
 gst/videoconvert/Makefile
 gst/gio/Makefile
+gst/overlaycomposition/Makefile
 gst/pbtypes/Makefile
 gst/playback/Makefile
 gst/rawparse/Makefile
@@ -997,6 +1010,7 @@ tests/check/Makefile
 tests/examples/Makefile
 tests/examples/app/Makefile
 tests/examples/audio/Makefile
+tests/examples/compositor/Makefile
 tests/examples/decodebin_next/Makefile
 tests/examples/dynamic/Makefile
 tests/examples/encoding/Makefile
@@ -1017,8 +1031,8 @@ tests/examples/gl/gtk/filternovideooverlay/Makefile
 tests/examples/gl/gtk/filtervideooverlay/Makefile
 tests/examples/gl/cocoa/Makefile
 tests/examples/gl/sdl/Makefile
-tests/examples/gl/clutter/Makefile
 tests/examples/overlay/Makefile
+tests/examples/overlaycomposition/Makefile
 tests/examples/seek/Makefile
 tests/examples/snapshot/Makefile
 tests/examples/playback/Makefile

@@ -559,3 +559,66 @@
    fun:call_init.part.0
    fun:_dl_init
 }
+{
+   <a one time alloc>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:XextCreateExtension
+   ...
+   fun:glXChooseFBConfig
+   fun:gst_gl_context_glx_choose_format
+}
+{
+   <a one time alloc>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   ...
+   fun:call_xinitthreads
+   fun:states_suite
+}
+{
+   <gst_install_plugins_* can instantiate bash, which leaks>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:xmalloc
+   fun:set_default_locale
+   fun:main
+}
+{
+   <getaddrinfo can leak when resolving addresses, see https://lists.debian.org/debian-glibc/2016/03/msg00243.html>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:__libc_alloc_buffer_allocate
+   ...
+   fun:__res_vinit
+   ...
+   fun:context_get.part.1
+   fun:gaih_inet.constprop.7
+   fun:getaddrinfo
+   ...
+}
+{
+   <unitialized values in nvidia driver>
+   Memcheck:Cond
+   obj:*libnvidia-glcore.so.*
+}
+{
+   <Intentional leak in GL test>
+   Memcheck:Leak
+   fun:calloc
+   obj:*/libGLX_nvidia.so*
+   ...
+   fun:_test_query_start_free_gl
+}
+
+# FIXME: how does this even happen ? reproduce with make elements/textoverlay.valgrind
+{
+   <We do not care about leaks where pango is the first object in the stacktrace>
+   Memcheck:Leak
+   ...
+   obj:*/libpango*.so*
+}

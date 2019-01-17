@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-audio.html" title="Audio Library">
 <link rel="prev" href="gstreamer-audio.html" title="Audio Library">
-<link rel="next" href="gst-plugins-base-libs-GstAudioDownmixMeta.html" title="GstAudioDownmixMeta">
+<link rel="next" href="gst-plugins-base-libs-GstAudio-meta.html" title="GstAudio meta">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -15,12 +15,13 @@
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
-                  <a href="#gst-plugins-base-libs-GstAudio.description" class="shortcut">Description</a></span>
+                  <a href="#gst-plugins-base-libs-GstAudio.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-libs-GstAudio.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-audio.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gstreamer-audio.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-libs-GstAudioDownmixMeta.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-libs-GstAudio-meta.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-libs-GstAudio"></a><div class="titlepage"></div>
@@ -88,7 +89,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="returnvalue">GstAudioFormatInfo</span></a> *
+<td class="function_type">const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="returnvalue">GstAudioFormatInfo</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-format-get-info" title="gst_audio_format_get_info ()">gst_audio_format_get_info</a> <span class="c_punctuation">()</span>
@@ -96,7 +97,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="returnvalue">GstAudioInfo</span></a> *
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="returnvalue">GstAudioInfo</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-info-copy" title="gst_audio_info_copy ()">gst_audio_info_copy</a> <span class="c_punctuation">()</span>
@@ -112,7 +113,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="returnvalue">GstAudioInfo</span></a> *
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="returnvalue">GstAudioInfo</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-info-new" title="gst_audio_info_new ()">gst_audio_info_new</a> <span class="c_punctuation">()</span>
@@ -385,6 +386,30 @@
 </tr>
 <tr>
 <td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-buffer-map" title="gst_audio_buffer_map ()">gst_audio_buffer_map</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="returnvalue">GstBuffer</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-buffer-truncate" title="gst_audio_buffer_truncate ()">gst_audio_buffer_truncate</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-buffer-unmap" title="gst_audio_buffer_unmap ()">gst_audio_buffer_unmap</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <span class="returnvalue">void</span>
 </td>
 <td class="function_name">
@@ -457,7 +482,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-new" title="gst_audio_stream_align_new ()">gst_audio_stream_align_new</a> <span class="c_punctuation">()</span>
@@ -465,7 +490,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-copy" title="gst_audio_stream_align_copy ()">gst_audio_stream_align_copy</a> <span class="c_punctuation">()</span>
@@ -562,7 +587,7 @@
 </tbody>
 </table></div>
 </div>
-<div class="refsect1">
+<a name="GstAudioFormatInfo"></a><a name="GstAudioInfo"></a><a name="GstAudioStreamAlign"></a><div class="refsect1">
 <a name="gst-plugins-base-libs-GstAudio.other"></a><h2>Types and Values</h2>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
@@ -584,11 +609,11 @@
 </tr>
 <tr>
 <td class="datatype_keyword">struct</td>
-<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo">GstAudioFormatInfo</a></td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo-struct" title="struct GstAudioFormatInfo">GstAudioFormatInfo</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword">struct</td>
-<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo">GstAudioInfo</a></td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo-struct" title="struct GstAudioInfo">GstAudioInfo</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword">enum</td>
@@ -633,6 +658,10 @@
 <tr>
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GST-AUDIO-DEF-FORMAT:CAPS" title="GST_AUDIO_DEF_FORMAT">GST_AUDIO_DEF_FORMAT</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword"> </td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioBuffer" title="GstAudioBuffer">GstAudioBuffer</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword"> </td>
@@ -712,10 +741,30 @@
 </tr>
 <tr>
 <td class="datatype_keyword"> </td>
-<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign">GstAudioStreamAlign</a></td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign-struct" title="GstAudioStreamAlign">GstAudioStreamAlign</a></td>
 </tr>
 </tbody>
 </table></div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-libs-GstAudio.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-Boxed-Types.html">GBoxed</a>
+    <span class="lineart">├──</span> GstAudioInfo
+    <span class="lineart">╰──</span> GstAudioStreamAlign
+    <a href="/usr/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
+    <span class="lineart">├──</span> GstAudioFormat
+    <span class="lineart">├──</span> GstAudioLayout
+    <span class="lineart">├──</span> GstAudioResamplerFilterInterpolation
+    <span class="lineart">├──</span> GstAudioResamplerFilterMode
+    <span class="lineart">╰──</span> GstAudioResamplerMethod
+    <a href="/usr/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GFlags</a>
+    <span class="lineart">├──</span> GstAudioFlags
+    <span class="lineart">├──</span> GstAudioFormatFlags
+    <span class="lineart">├──</span> GstAudioPackFlags
+    <span class="lineart">╰──</span> GstAudioResamplerFlags
+    <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer">gpointer</a>
+    <span class="lineart">╰──</span> GstAudioFormatInfo
+</pre>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstAudio.includes"></a><h2>Includes</h2>
@@ -731,9 +780,9 @@
 <div class="refsect2">
 <a name="GstAudioFormatPack"></a><h3>GstAudioFormatPack ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-<span class="c_punctuation">(</span>*GstAudioFormatPack<span class="c_punctuation">)</span> (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> *info</code></em>,
+<span class="c_punctuation">(</span>*GstAudioFormatPack<span class="c_punctuation">)</span> (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> *info</code></em>,
                        <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioPackFlags" title="enum GstAudioPackFlags"><span class="type">GstAudioPackFlags</span></a> flags</code></em>,
-                       <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src</code></em>,
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gconstpointer"><span class="type">gconstpointer</span></a> src</code></em>,
                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> length</code></em>);</pre>
 <p>Packs <em class="parameter"><code>length</code></em>
@@ -754,7 +803,12 @@ and will be packed into <em class="parameter"><code>data</code></em>
 <tbody>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioPackFlags" title="enum GstAudioPackFlags"><span class="type">GstAudioPackFlags</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -781,10 +835,10 @@ data. </p></td>
 <div class="refsect2">
 <a name="GstAudioFormatUnpack"></a><h3>GstAudioFormatUnpack ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-<span class="c_punctuation">(</span>*GstAudioFormatUnpack<span class="c_punctuation">)</span> (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> *info</code></em>,
+<span class="c_punctuation">(</span>*GstAudioFormatUnpack<span class="c_punctuation">)</span> (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> *info</code></em>,
                          <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioPackFlags" title="enum GstAudioPackFlags"><span class="type">GstAudioPackFlags</span></a> flags</code></em>,
                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
-                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gconstpointer"><span class="type">gconstpointer</span></a> data</code></em>,
                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> length</code></em>);</pre>
 <p>Unpacks <em class="parameter"><code>length</code></em>
  samples from the given data of format <em class="parameter"><code>info</code></em>
@@ -806,7 +860,12 @@ channels * size(unpack_format) bytes.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioPackFlags" title="enum GstAudioPackFlags"><span class="type">GstAudioPackFlags</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -832,7 +891,7 @@ channels * size(unpack_format) bytes.</p>
 <div class="refsect2">
 <a name="gst-audio-info-init"></a><h3>gst_audio_info_init ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_audio_info_init (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>);</pre>
+gst_audio_info_init (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>);</pre>
 <p>Initialize <em class="parameter"><code>info</code></em>
  with default values.</p>
 <div class="refsect3">
@@ -845,7 +904,7 @@ gst_audio_info_init (<em class="parameter"><code><a class="link" href="gst-plugi
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -855,7 +914,7 @@ gst_audio_info_init (<em class="parameter"><code><a class="link" href="gst-plugi
 <div class="refsect2">
 <a name="gst-audio-info-from-caps"></a><h3>gst_audio_info_from_caps ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_audio_info_from_caps (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>,
+gst_audio_info_from_caps (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>,
                           <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Parse <em class="parameter"><code>caps</code></em>
  and update <em class="parameter"><code>info</code></em>
@@ -871,7 +930,7 @@ gst_audio_info_from_caps (<em class="parameter"><code><a class="link" href="gst-
 <tbody>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -892,7 +951,7 @@ could be parsed</p>
 <div class="refsect2">
 <a name="gst-audio-info-to-caps"></a><h3>gst_audio_info_to_caps ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="returnvalue">GstCaps</span></a> *
-gst_audio_info_to_caps (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>);</pre>
+gst_audio_info_to_caps (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>);</pre>
 <p>Convert the values of <em class="parameter"><code>info</code></em>
  into a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>.</p>
 <div class="refsect3">
@@ -905,7 +964,7 @@ gst_audio_info_to_caps (<em class="parameter"><code>const <a class="link" href="
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -922,7 +981,7 @@ info of <em class="parameter"><code>info</code></em>
 <div class="refsect2">
 <a name="gst-audio-info-convert"></a><h3>gst_audio_info_convert ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_audio_info_convert (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>,
+gst_audio_info_convert (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>,
                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a> src_fmt</code></em>,
                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> src_val</code></em>,
                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstFormat.html#GstFormat"><span class="type">GstFormat</span></a> dest_fmt</code></em>,
@@ -942,7 +1001,7 @@ function can be used to handle pad queries of the type GST_QUERY_CONVERT.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -978,9 +1037,9 @@ function can be used to handle pad queries of the type GST_QUERY_CONVERT.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-format-get-info"></a><h3>gst_audio_format_get_info ()</h3>
-<pre class="programlisting">const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="returnvalue">GstAudioFormatInfo</span></a> *
+<pre class="programlisting">const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="returnvalue">GstAudioFormatInfo</span></a> *
 gst_audio_format_get_info (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormat" title="enum GstAudioFormat"><span class="type">GstAudioFormat</span></a> format</code></em>);</pre>
-<p>Get the <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> for <em class="parameter"><code>format</code></em>
+<p>Get the <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> for <em class="parameter"><code>format</code></em>
 </p>
 <div class="refsect3">
 <a name="gst-audio-format-get-info.parameters"></a><h4>Parameters</h4>
@@ -999,15 +1058,15 @@ gst_audio_format_get_info (<em class="parameter"><code><a class="link" href="gst
 </div>
 <div class="refsect3">
 <a name="gst-audio-format-get-info.returns"></a><h4>Returns</h4>
-<p> The <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> for <em class="parameter"><code>format</code></em>
+<p> The <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> for <em class="parameter"><code>format</code></em>
 .</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-info-copy"></a><h3>gst_audio_info_copy ()</h3>
-<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="returnvalue">GstAudioInfo</span></a> *
-gst_audio_info_copy (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="returnvalue">GstAudioInfo</span></a> *
+gst_audio_info_copy (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>);</pre>
 <p>Copy a GstAudioInfo structure.</p>
 <div class="refsect3">
 <a name="gst-audio-info-copy.parameters"></a><h4>Parameters</h4>
@@ -1019,21 +1078,21 @@ gst_audio_info_copy (<em class="parameter"><code>const <a class="link" href="gst
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="gst-audio-info-copy.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a>. free with gst_audio_info_free.</p>
+<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a>. free with gst_audio_info_free.</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-info-free"></a><h3>gst_audio_info_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_audio_info_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>);</pre>
+gst_audio_info_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>);</pre>
 <p>Free a GstAudioInfo structure previously allocated with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-info-new" title="gst_audio_info_new ()"><code class="function">gst_audio_info_new()</code></a>
 or <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-info-copy" title="gst_audio_info_copy ()"><code class="function">gst_audio_info_copy()</code></a>.</p>
 <div class="refsect3">
@@ -1046,7 +1105,7 @@ or <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-info-copy
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -1055,20 +1114,20 @@ or <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-info-copy
 <hr>
 <div class="refsect2">
 <a name="gst-audio-info-new"></a><h3>gst_audio_info_new ()</h3>
-<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="returnvalue">GstAudioInfo</span></a> *
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="returnvalue">GstAudioInfo</span></a> *
 gst_audio_info_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
-<p>Allocate a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> that is also initialized with
+<p>Allocate a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> that is also initialized with
 <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-info-init" title="gst_audio_info_init ()"><code class="function">gst_audio_info_init()</code></a>.</p>
 <div class="refsect3">
 <a name="gst-audio-info-new.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a>. free with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-info-free" title="gst_audio_info_free ()"><code class="function">gst_audio_info_free()</code></a>.</p>
+<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a>. free with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-info-free" title="gst_audio_info_free ()"><code class="function">gst_audio_info_free()</code></a>.</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-info-set-format"></a><h3>gst_audio_info_set_format ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_audio_info_set_format (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>,
+gst_audio_info_set_format (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>,
                            <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormat" title="enum GstAudioFormat"><span class="type">GstAudioFormat</span></a> format</code></em>,
                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> rate</code></em>,
                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> channels</code></em>,
@@ -1090,7 +1149,7 @@ gst_audio_info_set_format (<em class="parameter"><code><a class="link" href="gst
 <tbody>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1121,9 +1180,9 @@ gst_audio_info_set_format (<em class="parameter"><code><a class="link" href="gst
 <div class="refsect2">
 <a name="gst-audio-info-is-equal"></a><h3>gst_audio_info_is_equal ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_audio_info_is_equal (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>,
-                         <em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> *other</code></em>);</pre>
-<p>Compares two <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> and returns whether they are equal or not</p>
+gst_audio_info_is_equal (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>,
+                         <em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *other</code></em>);</pre>
+<p>Compares two <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> and returns whether they are equal or not</p>
 <div class="refsect3">
 <a name="gst-audio-info-is-equal.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1135,12 +1194,12 @@ gst_audio_info_is_equal (<em class="parameter"><code>const <a class="link" href=
 <tbody>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>other</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1152,7 +1211,7 @@ gst_audio_info_is_equal (<em class="parameter"><code>const <a class="link" href=
 and <em class="parameter"><code>other</code></em>
 are equal, else <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix14.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1206,7 +1265,7 @@ exists with the given parameters.</p>
 <div class="refsect2">
 <a name="gst-audio-format-fill-silence"></a><h3>gst_audio_format_fill_silence ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_audio_format_fill_silence (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> *info</code></em>,
+gst_audio_format_fill_silence (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> *info</code></em>,
                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> length</code></em>);</pre>
 <p>Fill <em class="parameter"><code>length</code></em>
@@ -1224,7 +1283,7 @@ gst_audio_format_fill_silence (<em class="parameter"><code>const <a class="link"
 <tbody>
 <tr>
 <td class="parameter_name"><p>info</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1642,6 +1701,161 @@ is not clipped. </p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-audio-buffer-map"></a><h3>gst_audio_buffer_map ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_audio_buffer_map (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioBuffer" title="GstAudioBuffer"><span class="type">GstAudioBuffer</span></a> *buffer</code></em>,
+                      <em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> *info</code></em>,
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *gstbuffer</code></em>,
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMemory.html#GstMapFlags"><span class="type">GstMapFlags</span></a> flags</code></em>);</pre>
+<p>Maps an audio <em class="parameter"><code>gstbuffer</code></em>
+ so that it can be read or written and stores the
+result of the map operation in <em class="parameter"><code>buffer</code></em>
+.</p>
+<p>This is especially useful when the <em class="parameter"><code>gstbuffer</code></em>
+ is in non-interleaved (planar)
+layout, in which case this function will use the information in the
+<em class="parameter"><code>gstbuffer</code></em>
+'s attached <a class="link" href="gst-plugins-base-libs-GstAudio-meta.html#GstAudioMeta" title="struct GstAudioMeta"><span class="type">GstAudioMeta</span></a> in order to map each channel in a
+separate "plane" in <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioBuffer" title="GstAudioBuffer"><span class="type">GstAudioBuffer</span></a>. If a <a class="link" href="gst-plugins-base-libs-GstAudio-meta.html#GstAudioMeta" title="struct GstAudioMeta"><span class="type">GstAudioMeta</span></a> is not attached
+on the <em class="parameter"><code>gstbuffer</code></em>
+, then it must be in interleaved layout.</p>
+<p>If a <a class="link" href="gst-plugins-base-libs-GstAudio-meta.html#GstAudioMeta" title="struct GstAudioMeta"><span class="type">GstAudioMeta</span></a> is attached, then the <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> on the meta is checked
+against <em class="parameter"><code>info</code></em>
+. Normally, they should be equal, but in case they are not,
+a g_critical will be printed and the <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> from the meta will be
+used.</p>
+<p>In non-interleaved buffers, it is possible to have each channel on a separate
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMemory.html#GstMemory-struct"><span class="type">GstMemory</span></a>. In this case, each memory will be mapped separately to avoid
+copying their contents in a larger memory area. Do note though that it is
+not supported to have a single channel spanning over two or more different
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstMemory.html#GstMemory-struct"><span class="type">GstMemory</span></a> objects. Although the map operation will likely succeed in this
+case, it will be highly sub-optimal and it is recommended to merge all the
+memories in the buffer before calling this function.</p>
+<p>Note: The actual <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> is not ref'ed, but it is required to stay valid
+as long as it's mapped.</p>
+<div class="refsect3">
+<a name="gst-audio-buffer-map.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>pointer to a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioBuffer" title="GstAudioBuffer"><span class="type">GstAudioBuffer</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>info</p></td>
+<td class="parameter_description"><p>the audio properties of the buffer</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>gstbuffer</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> to be mapped. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>the access mode for the memory</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-buffer-map.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the map operation succeeded or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> on failure</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-buffer-truncate"></a><h3>gst_audio_buffer_truncate ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="returnvalue">GstBuffer</span></a> *
+gst_audio_buffer_truncate (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *buffer</code></em>,
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> bpf</code></em>,
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> trim</code></em>,
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> samples</code></em>);</pre>
+<p>Truncate the buffer to finally have <em class="parameter"><code>samples</code></em>
+ number of samples, removing
+the necessary amount of samples from the end and <em class="parameter"><code>trim</code></em>
+ number of samples
+from the beginning.</p>
+<p>After calling this function the caller does not own a reference to
+<em class="parameter"><code>buffer</code></em>
+ anymore.</p>
+<div class="refsect3">
+<a name="gst-audio-buffer-truncate.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>The buffer to truncate. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>bpf</p></td>
+<td class="parameter_description"><p>size of one audio frame in bytes. This is the size of one sample *
+number of channels.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>trim</p></td>
+<td class="parameter_description"><p>the number of samples to remove from the beginning of the buffer</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>samples</p></td>
+<td class="parameter_description"><p>the final number of samples that should exist in this buffer or -1
+to use all the remaining samples if you are only removing samples from the
+beginning.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-buffer-truncate.returns"></a><h4>Returns</h4>
+<p>the truncated buffer or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the arguments
+were invalid. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-audio-buffer-unmap"></a><h3>gst_audio_buffer_unmap ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_audio_buffer_unmap (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioBuffer" title="GstAudioBuffer"><span class="type">GstAudioBuffer</span></a> *buffer</code></em>);</pre>
+<p>Unmaps an audio buffer that was previously mapped with
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-buffer-map" title="gst_audio_buffer_map ()"><code class="function">gst_audio_buffer_map()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-audio-buffer-unmap.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>buffer</p></td>
+<td class="parameter_description"><p>the <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioBuffer" title="GstAudioBuffer"><span class="type">GstAudioBuffer</span></a> to unmap</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-audio-resampler-free"></a><h3>gst_audio_resampler_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_audio_resampler_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a> *resampler</code></em>);</pre>
@@ -1662,7 +1876,7 @@ gst_audio_resampler_free (<em class="parameter"><code><a class="link" href="gst-
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1805,6 +2019,16 @@ gst_audio_resampler_new (<em class="parameter"><code><a class="link" href="gst-p
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>the <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormat" title="enum GstAudioFormat"><span class="type">GstAudioFormat</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>channels</p></td>
+<td class="parameter_description"><p>the number of channels</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
 <td class="parameter_name"><p>in_rate</p></td>
 <td class="parameter_description"><p>input rate</p></td>
 <td class="parameter_annotations"> </td>
@@ -1824,7 +2048,8 @@ gst_audio_resampler_new (<em class="parameter"><code><a class="link" href="gst-p
 </div>
 <div class="refsect3">
 <a name="gst-audio-resampler-new.returns"></a><h4>Returns</h4>
-<p><a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success. </p>
+<p>The new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioResampler" title="GstAudioResampler"><span class="type">GstAudioResampler</span></a>, or
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure. </p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -2038,14 +2263,14 @@ not be called concurrently with any other function on <em class="parameter"><cod
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-new"></a><h3>gst_audio_stream_align_new ()</h3>
-<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
 gst_audio_stream_align_new (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> rate</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> alignment_threshold</code></em>,
                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> discont_wait</code></em>);</pre>
-<p>Allocate a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> with the given configuration. All
+<p>Allocate a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> with the given configuration. All
 processing happens according to sample rate <em class="parameter"><code>rate</code></em>
 , until
-<code class="function">gst_audio_discont_wait_set_rate()</code> is called with a new <em class="parameter"><code>rate</code></em>
+<a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-set-rate" title="gst_audio_stream_align_set_rate ()"><code class="function">gst_audio_stream_align_set_rate()</code></a> is called with a new <em class="parameter"><code>rate</code></em>
 .
 A negative rate can be used for reverse playback.</p>
 <p><em class="parameter"><code>alignment_threshold</code></em>
@@ -2085,15 +2310,15 @@ be re-configured with <a class="link" href="gst-plugins-base-libs-GstAudio.html#
 </div>
 <div class="refsect3">
 <a name="gst-audio-stream-align-new.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a>. free with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-free" title="gst_audio_stream_align_free ()"><code class="function">gst_audio_stream_align_free()</code></a>.</p>
+<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a>. free with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-free" title="gst_audio_stream_align_free ()"><code class="function">gst_audio_stream_align_free()</code></a>.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-copy"></a><h3>gst_audio_stream_align_copy ()</h3>
-<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
-gst_audio_stream_align_copy (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="returnvalue">GstAudioStreamAlign</span></a> *
+gst_audio_stream_align_copy (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
 <p>Copy a GstAudioStreamAlign structure.</p>
 <div class="refsect3">
 <a name="gst-audio-stream-align-copy.parameters"></a><h4>Parameters</h4>
@@ -2105,22 +2330,22 @@ gst_audio_stream_align_copy (<em class="parameter"><code>const <a class="link" h
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>align</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="gst-audio-stream-align-copy.returns"></a><h4>Returns</h4>
-<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a>. free with gst_audio_stream_align_free.</p>
+<p> a new <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a>. free with gst_audio_stream_align_free.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-free"></a><h3>gst_audio_stream_align_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_audio_stream_align_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+gst_audio_stream_align_free (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
 <p>Free a GstAudioStreamAlign structure previously allocated with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-new" title="gst_audio_stream_align_new ()"><code class="function">gst_audio_stream_align_new()</code></a>
 or <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-align-copy" title="gst_audio_stream_align_copy ()"><code class="function">gst_audio_stream_align_copy()</code></a>.</p>
 <div class="refsect3">
@@ -2133,18 +2358,18 @@ or <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-stream-al
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>align</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-mark-discont"></a><h3>gst_audio_stream_align_mark_discont ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_audio_stream_align_mark_discont (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+gst_audio_stream_align_mark_discont (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
 <p>Marks the next buffer as discontinuous and resets timestamp tracking.</p>
 <div class="refsect3">
 <a name="gst-audio-stream-align-mark-discont.parameters"></a><h4>Parameters</h4>
@@ -2156,18 +2381,18 @@ gst_audio_stream_align_mark_discont (<em class="parameter"><code><a class="link"
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>align</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-process"></a><h3>gst_audio_stream_align_process ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gst_audio_stream_align_process (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
+gst_audio_stream_align_process (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> discont</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timestamp</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_samples</code></em>,
@@ -2201,7 +2426,7 @@ of the current one.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>align</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2241,14 +2466,14 @@ of the current one.</p>
 <a name="gst-audio-stream-align-process.returns"></a><h4>Returns</h4>
 <p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if a discontinuity was detected, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-get-samples-since-discont"></a><h3>gst_audio_stream_align_get_samples_since_discont ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="returnvalue">guint64</span></a>
 gst_audio_stream_align_get_samples_since_discont
-                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
 <p>Returns the number of samples that were processed since the last
 discontinuity was detected.</p>
 <div class="refsect3">
@@ -2261,7 +2486,7 @@ discontinuity was detected.</p>
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>align</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -2270,14 +2495,14 @@ discontinuity was detected.</p>
 <a name="gst-audio-stream-align-get-samples-since-discont.returns"></a><h4>Returns</h4>
 <p> The number of samples processed since the last discontinuity.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-get-timestamp-at-discont"></a><h3>gst_audio_stream_align_get_timestamp_at_discont ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
 gst_audio_stream_align_get_timestamp_at_discont
-                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
 <p>Timestamp that was passed when a discontinuity was detected, i.e. the first
 timestamp after the discontinuity.</p>
 <div class="refsect3">
@@ -2290,7 +2515,7 @@ timestamp after the discontinuity.</p>
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>align</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -2299,50 +2524,189 @@ timestamp after the discontinuity.</p>
 <a name="gst-audio-stream-align-get-timestamp-at-discont.returns"></a><h4>Returns</h4>
 <p> The last timestamp at when a discontinuity was detected</p>
 </div>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-get-alignment-threshold"></a><h3>gst_audio_stream_align_get_alignment_threshold ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
 gst_audio_stream_align_get_alignment_threshold
-                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+<p>Gets the currently configured alignment threshold.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-alignment-threshold.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-alignment-threshold.returns"></a><h4>Returns</h4>
+<p> The currently configured alignment threshold</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-set-alignment-threshold"></a><h3>gst_audio_stream_align_set_alignment_threshold ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_audio_stream_align_set_alignment_threshold
-                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> alignment_threshold</code></em>);</pre>
+<p>Sets <em class="parameter"><code>alignment_treshold</code></em>
+ as new alignment threshold for the following processing.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-set-alignment-threshold.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>alignment_threshold</p></td>
+<td class="parameter_description"><p>a new alignment threshold</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-get-discont-wait"></a><h3>gst_audio_stream_align_get_discont_wait ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="returnvalue">GstClockTime</span></a>
 gst_audio_stream_align_get_discont_wait
-                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+<p>Gets the currently configured discont wait.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-discont-wait.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-discont-wait.returns"></a><h4>Returns</h4>
+<p> The currently configured discont wait</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-set-discont-wait"></a><h3>gst_audio_stream_align_set_discont_wait ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_audio_stream_align_set_discont_wait
-                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> discont_wait</code></em>);</pre>
+<p>Sets <em class="parameter"><code>alignment_treshold</code></em>
+ as new discont wait for the following processing.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-set-discont-wait.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>discont_wait</p></td>
+<td class="parameter_description"><p>a new discont wait</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-get-rate"></a><h3>gst_audio_stream_align_get_rate ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
-gst_audio_stream_align_get_rate (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+gst_audio_stream_align_get_rate (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>);</pre>
+<p>Gets the currently configured sample rate.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-rate.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-audio-stream-align-get-rate.returns"></a><h4>Returns</h4>
+<p> The currently configured sample rate</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-audio-stream-align-set-rate"></a><h3>gst_audio_stream_align_set_rate ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_audio_stream_align_set_rate (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
+gst_audio_stream_align_set_rate (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> *align</code></em>,
                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> rate</code></em>);</pre>
+<p>Sets <em class="parameter"><code>rate</code></em>
+ as new sample rate for the following processing. If the sample
+rate differs this implicitely marks the next data as discontinuous.</p>
+<div class="refsect3">
+<a name="gst-audio-stream-align-set-rate.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>align</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>rate</p></td>
+<td class="parameter_description"><p>a new sample rate</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -2772,7 +3136,7 @@ gst_audio_stream_align_set_rate (<em class="parameter"><code><a class="link" hre
 </div>
 <hr>
 <div class="refsect2">
-<a name="GstAudioFormatInfo"></a><h3>struct GstAudioFormatInfo</h3>
+<a name="GstAudioFormatInfo-struct"></a><h3>struct GstAudioFormatInfo</h3>
 <pre class="programlisting">struct GstAudioFormatInfo {
   GstAudioFormat format;
   const gchar *name;
@@ -2799,59 +3163,59 @@ gst_audio_stream_align_set_rate (<em class="parameter"><code><a class="link" hre
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormat" title="enum GstAudioFormat"><span class="type">GstAudioFormat</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo.format"></a>format</code></em>;</p></td>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormat" title="enum GstAudioFormat"><span class="type">GstAudioFormat</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo-struct.format"></a>format</code></em>;</p></td>
 <td class="struct_member_description"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormat" title="enum GstAudioFormat"><span class="type">GstAudioFormat</span></a></p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstAudioFormatInfo.name"></a>name</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstAudioFormatInfo-struct.name"></a>name</code></em>;</p></td>
 <td class="struct_member_description"><p>string representation of the format</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstAudioFormatInfo.description"></a>description</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GstAudioFormatInfo-struct.description"></a>description</code></em>;</p></td>
 <td class="struct_member_description"><p>user readable description of the format</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatFlags" title="enum GstAudioFormatFlags"><span class="type">GstAudioFormatFlags</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo.flags"></a>flags</code></em>;</p></td>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatFlags" title="enum GstAudioFormatFlags"><span class="type">GstAudioFormatFlags</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo-struct.flags"></a>flags</code></em>;</p></td>
 <td class="struct_member_description"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatFlags" title="enum GstAudioFormatFlags"><span class="type">GstAudioFormatFlags</span></a></p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo.endianness"></a>endianness</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo-struct.endianness"></a>endianness</code></em>;</p></td>
 <td class="struct_member_description"><p>the endianness</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo.width"></a>width</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo-struct.width"></a>width</code></em>;</p></td>
 <td class="struct_member_description"><p>amount of bits used for one sample</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo.depth"></a>depth</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo-struct.depth"></a>depth</code></em>;</p></td>
 <td class="struct_member_description"><p>amount of valid bits in <em class="parameter"><code>width</code></em>
 </p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo.silence"></a>silence</code></em>[8];</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint8"><span class="type">guint8</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo-struct.silence"></a>silence</code></em>[8];</p></td>
 <td class="struct_member_description"><p><em class="parameter"><code>width</code></em>
 /8 bytes with 1 silent sample</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormat" title="enum GstAudioFormat"><span class="type">GstAudioFormat</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo.unpack-format"></a>unpack_format</code></em>;</p></td>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormat" title="enum GstAudioFormat"><span class="type">GstAudioFormat</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo-struct.unpack-format"></a>unpack_format</code></em>;</p></td>
 <td class="struct_member_description"><p>the format of the unpacked samples</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatUnpack" title="GstAudioFormatUnpack ()"><span class="type">GstAudioFormatUnpack</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo.unpack-func"></a>unpack_func</code></em>;</p></td>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatUnpack" title="GstAudioFormatUnpack ()"><span class="type">GstAudioFormatUnpack</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo-struct.unpack-func"></a>unpack_func</code></em>;</p></td>
 <td class="struct_member_description"><p>function to unpack samples</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatPack" title="GstAudioFormatPack ()"><span class="type">GstAudioFormatPack</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo.pack-func"></a>pack_func</code></em>;</p></td>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatPack" title="GstAudioFormatPack ()"><span class="type">GstAudioFormatPack</span></a> <em class="structfield"><code><a name="GstAudioFormatInfo-struct.pack-func"></a>pack_func</code></em>;</p></td>
 <td class="struct_member_description"><p>function to pack samples</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -2861,7 +3225,7 @@ gst_audio_stream_align_set_rate (<em class="parameter"><code><a class="link" hre
 </div>
 <hr>
 <div class="refsect2">
-<a name="GstAudioInfo"></a><h3>struct GstAudioInfo</h3>
+<a name="GstAudioInfo-struct"></a><h3>struct GstAudioInfo</h3>
 <pre class="programlisting">struct GstAudioInfo {
   const GstAudioFormatInfo *finfo;
   GstAudioFlags             flags;
@@ -2885,39 +3249,39 @@ in from GstCaps with <a class="link" href="gst-plugins-base-libs-GstAudio.html#g
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo" title="struct GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> *<em class="structfield"><code><a name="GstAudioInfo.finfo"></a>finfo</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFormatInfo"><span class="type">GstAudioFormatInfo</span></a> *<em class="structfield"><code><a name="GstAudioInfo-struct.finfo"></a>finfo</code></em>;</p></td>
 <td class="struct_member_description"><p>the format info of the audio</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFlags" title="enum GstAudioFlags"><span class="type">GstAudioFlags</span></a> <em class="structfield"><code><a name="GstAudioInfo.flags"></a>flags</code></em>;</p></td>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioFlags" title="enum GstAudioFlags"><span class="type">GstAudioFlags</span></a> <em class="structfield"><code><a name="GstAudioInfo-struct.flags"></a>flags</code></em>;</p></td>
 <td class="struct_member_description"><p>additional audio flags</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioLayout" title="enum GstAudioLayout"><span class="type">GstAudioLayout</span></a> <em class="structfield"><code><a name="GstAudioInfo.layout"></a>layout</code></em>;</p></td>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioLayout" title="enum GstAudioLayout"><span class="type">GstAudioLayout</span></a> <em class="structfield"><code><a name="GstAudioInfo-struct.layout"></a>layout</code></em>;</p></td>
 <td class="struct_member_description"><p>audio layout</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioInfo.rate"></a>rate</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioInfo-struct.rate"></a>rate</code></em>;</p></td>
 <td class="struct_member_description"><p>the audio sample rate</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioInfo.channels"></a>channels</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioInfo-struct.channels"></a>channels</code></em>;</p></td>
 <td class="struct_member_description"><p>the number of channels</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioInfo.bpf"></a>bpf</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioInfo-struct.bpf"></a>bpf</code></em>;</p></td>
 <td class="struct_member_description"><p>the number of bytes for one frame, this is the size of one
 sample * <em class="parameter"><code>channels</code></em>
 </p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-Audio-channels.html#GstAudioChannelPosition" title="enum GstAudioChannelPosition"><span class="type">GstAudioChannelPosition</span></a> <em class="structfield"><code><a name="GstAudioInfo.position"></a>position</code></em>[64];</p></td>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-Audio-channels.html#GstAudioChannelPosition" title="enum GstAudioChannelPosition"><span class="type">GstAudioChannelPosition</span></a> <em class="structfield"><code><a name="GstAudioInfo-struct.position"></a>position</code></em>[64];</p></td>
 <td class="struct_member_description"><p>the positions for each channel</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -2997,7 +3361,7 @@ sample * <em class="parameter"><code>channels</code></em>
 <pre class="programlisting">#define GST_META_TAG_AUDIO_STR "audio"
 </pre>
 <p>This metadata is relevant for audio streams.</p>
-<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix14.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3005,7 +3369,7 @@ sample * <em class="parameter"><code>channels</code></em>
 <pre class="programlisting">#define GST_META_TAG_AUDIO_CHANNELS_STR "channels"
 </pre>
 <p>This metadata stays relevant as long as channels are unchanged.</p>
-<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix14.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3013,7 +3377,7 @@ sample * <em class="parameter"><code>channels</code></em>
 <pre class="programlisting">#define GST_META_TAG_AUDIO_RATE_STR "rate"
 </pre>
 <p>This metadata stays relevant as long as sample rate is unchanged.</p>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3058,67 +3422,73 @@ sample * <em class="parameter"><code>channels</code></em>
 </div>
 <hr>
 <div class="refsect2">
-<a name="GstAudioResampler"></a><h3>GstAudioResampler</h3>
+<a name="GstAudioBuffer"></a><h3>GstAudioBuffer</h3>
 <pre class="programlisting">typedef struct {
-  GstAudioResamplerMethod method;
-  GstAudioResamplerFlags flags;
-  GstAudioFormat format;
-  GstStructure *options;
-  gint format_index;
-  gint channels;
-  gint in_rate;
-  gint out_rate;
+  GstAudioInfo info;
 
-  gint bps;
-  gint ostride;
+  gsize        n_samples;
+  gint         n_planes;
+  gpointer     *planes;
 
-  GstAudioResamplerFilterMode filter_mode;
-  guint filter_threshold;
-  GstAudioResamplerFilterInterpolation filter_interpolation;
-
-  gdouble cutoff;
-  gdouble kaiser_beta;
-  /* for cubic */
-  gdouble b, c;
-
-  /* temp taps */
-  gpointer tmp_taps;
-
-  /* oversampled main filter table */
-  gint oversample;
-  gint n_taps;
-  gpointer taps;
-  gpointer taps_mem;
-  gsize taps_stride;
-  gint n_phases;
-  gint alloc_taps;
-  gint alloc_phases;
-
-  /* cached taps */
-  gpointer *cached_phases;
-  gpointer cached_taps;
-  gpointer cached_taps_mem;
-  gsize cached_taps_stride;
-
-  ConvertTapsFunc convert_taps;
-  InterpolateFunc interpolate;
-  DeinterleaveFunc deinterleave;
-  ResampleFunc resample;
-
-  gint blocks;
-  gint inc;
-  gint samp_inc;
-  gint samp_frac;
-  gint samp_index;
-  gint samp_phase;
-  gint skip;
-
-  gpointer samples;
-  gsize samples_len;
-  gsize samples_avail;
-  gpointer *sbuf;
-} GstAudioResampler;
+  GstBuffer    *buffer;
+} GstAudioBuffer;
 </pre>
+<p>A structure containing the result of an audio buffer map operation,
+which is executed with <a class="link" href="gst-plugins-base-libs-GstAudio.html#gst-audio-buffer-map" title="gst_audio_buffer_map ()"><code class="function">gst_audio_buffer_map()</code></a>. For non-interleaved (planar)
+buffers, the beginning of each channel in the buffer has its own pointer in
+the <em class="parameter"><code>planes</code></em>
+ array. For interleaved buffers, the <em class="parameter"><code>planes</code></em>
+ array only contains
+one item, which is the pointer to the beginning of the buffer, and <em class="parameter"><code>n_planes</code></em>
+
+equals 1.</p>
+<p>The different channels in <em class="parameter"><code>planes</code></em>
+ are always in the GStreamer channel order.</p>
+<div class="refsect3">
+<a name="GstAudioBuffer.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> <em class="structfield"><code><a name="GstAudioBuffer.info"></a>info</code></em>;</p></td>
+<td class="struct_member_description"><p>a <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> describing the audio properties of this buffer</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAudioBuffer.n-samples"></a>n_samples</code></em>;</p></td>
+<td class="struct_member_description"><p>the size of the buffer in samples</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="GstAudioBuffer.n-planes"></a>n_planes</code></em>;</p></td>
+<td class="struct_member_description"><p>the number of planes available</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> *<em class="structfield"><code><a name="GstAudioBuffer.planes"></a>planes</code></em>;</p></td>
+<td class="struct_member_description"><p>an array of <em class="parameter"><code>n_planes</code></em>
+pointers pointing to the start of each
+plane in the mapped buffer</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="GstAudioBuffer.buffer"></a>buffer</code></em>;</p></td>
+<td class="struct_member_description"><p>the mapped buffer</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioResampler"></a><h3>GstAudioResampler</h3>
+<pre class="programlisting">typedef struct _GstAudioResampler GstAudioResampler;</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -3306,7 +3676,7 @@ sample * <em class="parameter"><code>channels</code></em>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3425,10 +3795,10 @@ transition band for the kaiser window. 0.087 is the default.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="GstAudioStreamAlign"></a><h3>GstAudioStreamAlign</h3>
+<a name="GstAudioStreamAlign-struct"></a><h3>GstAudioStreamAlign</h3>
 <pre class="programlisting">typedef struct _GstAudioStreamAlign GstAudioStreamAlign;</pre>
-<p>The opaque <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign" title="GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> data structure.</p>
-<p class="since">Since: <a class="link" href="ix03.html#api-index-1.14">1.14</a></p>
+<p>The opaque <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioStreamAlign"><span class="type">GstAudioStreamAlign</span></a> data structure.</p>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 </div>
 </div>

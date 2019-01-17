@@ -22,31 +22,31 @@ rtsp_headers = [
 ]
 install_headers(rtsp_headers, subdir : 'gstreamer-1.0/gst/rtsp/')
 
-mkenums = find_program('rtsp_mkenum.py')
+rtsp_enums = gnome.mkenums_simple('gstrtsp-enumtypes',
+  sources : rtsp_headers,
+  body_prefix : '#ifdef HAVE_CONFIG_H\n#include "config.h"\n#endif',
+  header_prefix : '#include <gst/rtsp/rtsp-prelude.h>',
+  decorator : 'GST_RTSP_API',
+  install_header: true,
+  install_dir : join_paths(get_option('includedir'), 'gstreamer-1.0/gst/rtsp'))
+gstrtsp_c = rtsp_enums[0]
+gstrtsp_h = rtsp_enums[1]
 
-gstrtsp_h = custom_target('gstrtspenum_h',
-  output : 'gstrtsp-enumtypes.h',
-  input : rtsp_headers,
-  install : true,
-  install_dir : 'include/gstreamer-1.0/gst/rtsp/',
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
+if host_system == 'windows'
+  winsock2 = cc.find_library('ws2_32')
+else
+  winsock2 = []
+endif
+gstrtsp_deps = [gst_base_dep, gst_dep, gio_dep, libm, winsock2]
 
-gstrtsp_c = custom_target('gstrtspenum_c',
-  output : 'gstrtsp-enumtypes.c',
-  input : rtsp_headers,
-  depends : [gstrtsp_h],
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
-
-winsock2 = cc.find_library('ws2_32', required : false)
-
-gstrtsp_deps = [gst_dep, gio_dep, libm, winsock2]
 gst_rtsp = library('gstrtsp-@0@'.format(api_version),
   rtsp_sources,
   gstrtsp_h, gstrtsp_c,
-  c_args : gst_plugins_base_args,
+  c_args : gst_plugins_base_args + ['-DBUILDING_GST_RTSP'],
   include_directories: [configinc, libsinc],
   version : libversion,
   soversion : soversion,
+  darwin_versions : osxversion,
   install : true,
   dependencies : gstrtsp_deps,
 )
@@ -61,7 +61,7 @@ if build_gir
     identifier_prefix : 'Gst',
     symbol_prefix : 'gst',
     export_packages : 'gstreamer-rtsp-1.0',
-    includes : ['Gst-1.0', 'GstSdp-1.0', 'Gio-2.0'],
+    includes : ['Gst-1.0', 'GstBase-1.0', 'GstSdp-1.0', 'Gio-2.0'],
     install : true,
     extra_args : gst_gir_extra_args,
     dependencies : gstrtsp_deps + [sdp_dep]

@@ -117,9 +117,21 @@
 <div class="refsect1">
 <a name="gst-plugins-base-plugins-audiotestsrc.description"></a><h2>Description</h2>
 <p>AudioTestSrc can be used to generate basic audio signals. It support several
-different waveforms and allows to set the base frequency and volume.</p>
+different waveforms and allows to set the base frequency and volume. Some
+waveforms might use additional properties.</p>
+<p>Waveform specific notes:</p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><div class="itemizedlist">
+<p class="title"><b>Gaussian white noise</b></p>
+<ul class="itemizedlist" style="list-style-type: disc; "></ul>
+</div></li>
+<li class="listitem"><div class="itemizedlist">
+<p class="title"><b>Ticks</b></p>
+<ul class="itemizedlist" style="list-style-type: disc; "></ul>
+</div></li>
+</ol></div>
 <div class="refsect3">
-<a name="id-1.2.13.7.3"></a><h4>Example launch line</h4>
+<a name="id-1.2.13.7.5"></a><h4>Example launch line</h4>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -138,8 +150,10 @@ default volume, 0.8 (relative to a maximum 1.0).</p>
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
-        <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> audiotestsrc wave<span class="gtkdoc opt">=</span><span class="number">2</span> freq<span class="gtkdoc opt">=</span><span class="number">200</span> <span class="gtkdoc opt">!</span> tee name<span class="gtkdoc opt">=</span>t <span class="gtkdoc opt">!</span> queue <span class="gtkdoc opt">!</span> audioconvert <span class="gtkdoc opt">!</span> autoaudiosink t<span class="gtkdoc opt">. !</span> queue <span class="gtkdoc opt">!</span> audioconvert <span class="gtkdoc opt">!</span> libvisual_lv_scope <span class="gtkdoc opt">!</span> videoconvert <span class="gtkdoc opt">!</span> autovideosink</pre></td>
+        <td class="listing_lines" align="right"><pre>1
+2</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> audiotestsrc wave<span class="gtkdoc opt">=</span><span class="number">2</span> freq<span class="gtkdoc opt">=</span><span class="number">200</span> <span class="gtkdoc opt">!</span> tee name<span class="gtkdoc opt">=</span>t <span class="gtkdoc opt">!</span> queue <span class="gtkdoc opt">!</span> audioconvert <span class="gtkdoc opt">!</span> \
+    autoaudiosink t<span class="gtkdoc opt">. !</span> queue <span class="gtkdoc opt">!</span> audioconvert <span class="gtkdoc opt">!</span> libvisual_lv_scope <span class="gtkdoc opt">!</span> videoconvert <span class="gtkdoc opt">!</span> autovideosink</pre></td>
       </tr>
     </tbody>
   </table>
@@ -149,11 +163,28 @@ default volume, 0.8 (relative to a maximum 1.0).</p>
  In this example a saw wave is generated. The wave is shown using a
 scope visualizer from libvisual, allowing you to visually verify that
 the saw wave is correct.</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> audiotestsrc wave<span class="gtkdoc opt">=</span>ticks apply<span class="gtkdoc opt">-</span>tick<span class="gtkdoc opt">-</span>ramp<span class="gtkdoc opt">=</span><span class="keyword">true</span> tick<span class="gtkdoc opt">-</span>interval<span class="gtkdoc opt">=</span><span class="number">100000000</span> \
+    freq<span class="gtkdoc opt">=</span><span class="number">10000</span> volume<span class="gtkdoc opt">=</span><span class="number">0.4</span> marker<span class="gtkdoc opt">-</span>tick<span class="gtkdoc opt">-</span>period<span class="gtkdoc opt">=</span><span class="number">10</span> sine<span class="gtkdoc opt">-</span>periods<span class="gtkdoc opt">-</span>per<span class="gtkdoc opt">-</span>tick<span class="gtkdoc opt">=</span><span class="number">20</span> <span class="gtkdoc opt">!</span> autoaudiosink</pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p> This pipeline produces a series of 10 kHz sine wave ticks. Each tick is
+20 sine wave periods long, ticks occur every 100 ms and have a volume of
+0.4. Every 10th tick is a marker tick and has the default marker tick volume
+of 1.0. The beginning and end of the ticks are modulated with the ramp.</p>
 </div>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.13.7.4.1"></a><h3>Element Information</h3>
+<a name="id-1.2.13.7.6.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -179,7 +210,7 @@ the saw wave is correct.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.13.7.4.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.13.7.6.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -297,7 +328,7 @@ the saw wave is correct.</p>
 <tr>
 <td class="enum_member_name"><p><a name="GST-AUDIO-TEST-SRC-WAVE-GAUSSIAN-WHITE-NOISE:CAPS"></a>GST_AUDIO_TEST_SRC_WAVE_GAUSSIAN_WHITE_NOISE</p></td>
 <td class="enum_member_description">
-<p>white (zero mean) Gaussian noise;  volume sets the standard deviation of the noise in units of the range of values of the sample type, e.g. volume=0.1 produces noise with a standard deviation of 0.1*32767=3277 with 16-bit integer samples, or 0.1*1.0=0.1 with floating-point samples.</p>
+<p>white (zero mean) Gaussian noise</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>

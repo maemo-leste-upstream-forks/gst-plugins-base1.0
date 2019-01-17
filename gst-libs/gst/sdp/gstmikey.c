@@ -29,6 +29,9 @@
  *
  * Since: 1.4
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <string.h>
 
@@ -921,7 +924,7 @@ gst_mikey_message_new_from_bytes (GBytes * bytes, GstMIKEYDecryptInfo * info,
  * @V: verify flag
  * @prf_func: the #GstMIKEYPRFFunc function to use
  * @CSB_id: the Crypto Session Bundle id
- * @map_type: the #GstMIKEYCSIDMapType
+ * @map_type: the #GstMIKEYMapType
  *
  * Set the information in @msg.
  *

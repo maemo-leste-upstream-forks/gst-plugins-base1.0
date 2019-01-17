@@ -237,6 +237,30 @@ gst_sdp_message_new (GstSDPMessage ** msg)
 }
 
 /**
+ * gst_sdp_message_new_from_text:
+ * @msg: (out) (transfer full): pointer to new #GstSDPMessage
+ * @text: A dynamically allocated string representing the SDP description
+ *
+ * Parse @text and create a new SDPMessage from these.
+ *
+ * Returns: a #GstSDPResult.
+ * Since: 1.16
+ */
+GstSDPResult
+gst_sdp_message_new_from_text (const gchar * text, GstSDPMessage ** msg)
+{
+  GstSDPResult res;
+
+  if ((res = gst_sdp_message_new (msg)) != GST_SDP_OK)
+    return res;
+
+  res =
+      gst_sdp_message_parse_buffer ((const guint8 *) text, strlen (text), *msg);
+
+  return res;
+}
+
+/**
  * gst_sdp_message_init:
  * @msg: a #GstSDPMessage
  *
@@ -724,7 +748,7 @@ gst_sdp_message_as_uri (const gchar * scheme, const GstSDPMessage * msg)
   g_return_val_if_fail (scheme != NULL, NULL);
   g_return_val_if_fail (msg != NULL, NULL);
 
-  p = serialized = gst_sdp_message_as_text (msg);
+  serialized = gst_sdp_message_as_text (msg);
 
   lines = g_string_new ("");
   g_string_append_printf (lines, "%s:///#", scheme);
@@ -1431,7 +1455,7 @@ DEFINE_ARRAY_GETTER (zone, zones, GstSDPZone);
  * gst_sdp_message_insert_zone:
  * @msg: a #GstSDPMessage
  * @idx: an index
- * @zone a #GstSDPZone
+ * @zone: a #GstSDPZone
  *
  * Insert zone parameters into the array of zones in @msg
  * at index @idx.
@@ -4071,7 +4095,7 @@ gst_sdp_message_attributes_to_caps (const GstSDPMessage * msg, GstCaps * caps)
   g_return_val_if_fail (msg != NULL, GST_SDP_EINVAL);
   g_return_val_if_fail (caps != NULL && GST_IS_CAPS (caps), GST_SDP_EINVAL);
 
-  res = gst_sdp_message_parse_keymgmt (msg, &mikey);
+  gst_sdp_message_parse_keymgmt (msg, &mikey);
   if (mikey) {
     if (gst_mikey_message_to_caps (mikey, caps)) {
       res = GST_SDP_EINVAL;
@@ -4107,7 +4131,7 @@ gst_sdp_media_attributes_to_caps (const GstSDPMedia * media, GstCaps * caps)
   g_return_val_if_fail (media != NULL, GST_SDP_EINVAL);
   g_return_val_if_fail (caps != NULL && GST_IS_CAPS (caps), GST_SDP_EINVAL);
 
-  res = gst_sdp_media_parse_keymgmt (media, &mikey);
+  gst_sdp_media_parse_keymgmt (media, &mikey);
   if (mikey) {
     if (!gst_mikey_message_to_caps (mikey, caps)) {
       res = GST_SDP_EINVAL;

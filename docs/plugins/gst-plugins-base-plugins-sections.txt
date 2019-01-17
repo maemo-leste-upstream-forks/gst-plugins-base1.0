@@ -227,6 +227,23 @@ gst_clock_overlay_get_type
 </SECTION>
 
 <SECTION>
+<FILE>element-compositor</FILE>
+<TITLE>compositor</TITLE>
+GstCompositor
+GstCompositorBackground
+<SUBSECTION Standard>
+GstCompositorClass
+GST_COMPOSITOR
+GST_COMPOSITOR_CAST
+GST_IS_COMPOSITOR
+GST_COMPOSITOR_CLASS
+GST_IS_COMPOSITOR_CLASS
+GST_TYPE_COMPOSITOR
+<SUBSECTION Private>
+gst_compositor_get_type
+</SECTION>
+
+<SECTION>
 <FILE>element-decodebin</FILE>
 <TITLE>decodebin</TITLE>
 GstDecodeBin
@@ -869,6 +886,39 @@ gst_gl_image_sink_bin_get_type
 </SECTION>
 
 <SECTION>
+<FILE>element-glmixerbin</FILE>
+<TITLE>glmixerbin</TITLE>
+GstGLMixerBin
+GstGLMixerBinStartTimeSelection
+<SUBSECTION Standard>
+GstGLMixerBinClass
+GST_GL_MIXER_BIN
+GST_GL_MIXER_BIN_CAST
+GST_IS_GL_MIXER_BIN
+GST_GL_MIXER_BIN_CLASS
+GST_IS_GL_MIXER_BIN_CLASS
+GST_TYPE_GL_MIXER_BIN
+<SUBSECTION Private>
+gst_gl_mixer_bin_get_type
+</SECTION>
+
+<SECTION>
+<FILE>element-glmosaic</FILE>
+<TITLE>glmosaic</TITLE>
+GstGLMosaic
+<SUBSECTION Standard>
+GstGLMosaicClass
+GST_GL_MOSAIC
+GST_GL_MOSAIC_CAST
+GST_IS_GL_MOSAIC
+GST_GL_MOSAIC_CLASS
+GST_IS_GL_MOSAIC_CLASS
+GST_TYPE_GL_MOSAIC
+<SUBSECTION Private>
+gst_gl_mosaic_get_type
+</SECTION>
+
+<SECTION>
 <FILE>element-gloverlay</FILE>
 <TITLE>gloverlay</TITLE>
 GstGLOverlay
@@ -914,6 +964,22 @@ GST_IS_GL_SRC_BIN_CLASS
 GST_TYPE_GL_SRC_BIN
 <SUBSECTION Private>
 gst_gl_src_bin_get_type
+</SECTION>
+
+<SECTION>
+<FILE>element-glstereomix</FILE>
+<TITLE>glstereomix</TITLE>
+GstGLStereoMix
+<SUBSECTION Standard>
+GstGLStereoMixClass
+GST_GL_STEREO_MIX
+GST_GL_STEREO_MIX_CAST
+GST_IS_GL_STEREO_MIX
+GST_GL_STEREO_MIX_CLASS
+GST_IS_GL_STEREO_MIX_CLASS
+GST_TYPE_GL_STEREO_MIX
+<SUBSECTION Private>
+gst_gl_stereo_mix_get_type
 </SECTION>
 
 <SECTION>
@@ -976,6 +1042,39 @@ GST_IS_GL_UPLOAD_ELEMENT_CLASS
 GST_TYPE_GL_UPLOAD_ELEMENT
 <SUBSECTION Private>
 gst_gl_upload_element_get_type
+</SECTION>
+
+<SECTION>
+<FILE>element-glvideomixerelement</FILE>
+<TITLE>glvideomixerelement</TITLE>
+GstGLVideoMixer
+GstGLVideoMixerBackground
+<SUBSECTION Standard>
+GstGLVideoMixerClass
+GST_GL_VIDEO_MIXER
+GST_GL_VIDEO_MIXER_CAST
+GST_IS_GL_VIDEO_MIXER
+GST_GL_VIDEO_MIXER_CLASS
+GST_IS_GL_VIDEO_MIXER_CLASS
+GST_TYPE_GL_VIDEO_MIXER
+<SUBSECTION Private>
+gst_gl_video_mixer_get_type
+</SECTION>
+
+<SECTION>
+<FILE>element-glvideomixer</FILE>
+<TITLE>glvideomixer</TITLE>
+GstGLVideoMixerBin
+<SUBSECTION Standard>
+GstGLVideoMixerBinClass
+GST_GL_VIDEO_MIXER_BIN
+GST_GL_VIDEO_MIXER_BIN_CAST
+GST_IS_GL_VIDEO_MIXER_BIN
+GST_GL_VIDEO_MIXER_BIN_CLASS
+GST_IS_GL_VIDEO_MIXER_BIN_CLASS
+GST_TYPE_GL_VIDEO_MIXER_BIN
+<SUBSECTION Private>
+gst_gl_video_mixer_bin_get_type
 </SECTION>
 
 <SECTION>
@@ -1172,6 +1271,22 @@ GST_IS_OPUS_ENC_CLASS
 GST_TYPE_OPUS_ENC
 <SUBSECTION Private>
 gst_opus_enc_get_type
+</SECTION>
+
+<SECTION>
+<FILE>element-overlaycomposition</FILE>
+<TITLE>overlaycomposition</TITLE>
+GstOverlayComposition
+<SUBSECTION Standard>
+GstOverlayCompositionClass
+GST_OVERLAY_COMPOSITION
+GST_OVERLAY_COMPOSITION_CAST
+GST_IS_OVERLAY_COMPOSITION
+GST_OVERLAY_COMPOSITION_CLASS
+GST_IS_OVERLAY_COMPOSITION_CLASS
+GST_TYPE_OVERLAY_COMPOSITION
+<SUBSECTION Private>
+gst_overlay_composition_get_type
 </SECTION>
 
 <SECTION>
