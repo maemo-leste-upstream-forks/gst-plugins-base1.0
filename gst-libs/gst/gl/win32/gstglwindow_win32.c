@@ -24,15 +24,11 @@
 #endif
 
 #include "gstglwindow_win32.h"
-#include "win32_message_source.h"
 
 LRESULT CALLBACK window_proc (HWND hWnd, UINT uMsg, WPARAM wParam,
     LPARAM lParam);
 LRESULT FAR PASCAL sub_class_proc (HWND hWnd, UINT uMsg, WPARAM wParam,
     LPARAM lParam);
-
-#define GST_GL_WINDOW_WIN32_GET_PRIVATE(o)  \
-  (G_TYPE_INSTANCE_GET_PRIVATE((o), GST_TYPE_GL_WINDOW_WIN32, GstGLWindowWin32Private))
 
 enum
 {
@@ -43,6 +39,7 @@ struct _GstGLWindowWin32Private
 {
   gint preferred_width;
   gint preferred_height;
+  GIOChannel *msg_io_channel;
 };
 
 #define GST_CAT_DEFAULT gst_gl_window_win32_debug
@@ -52,7 +49,7 @@ GST_DEBUG_CATEGORY_STATIC (GST_CAT_DEFAULT);
   GST_DEBUG_CATEGORY_GET (GST_CAT_DEFAULT, "glwindow");
 #define gst_gl_window_win32_parent_class parent_class
 G_DEFINE_TYPE_WITH_CODE (GstGLWindowWin32, gst_gl_window_win32,
-    GST_TYPE_GL_WINDOW, DEBUG_INIT);
+    GST_TYPE_GL_WINDOW, G_ADD_PRIVATE (GstGLWindowWin32) DEBUG_INIT);
 
 static void gst_gl_window_win32_set_window_handle (GstGLWindow * window,
     guintptr handle);
@@ -70,8 +67,6 @@ gst_gl_window_win32_class_init (GstGLWindowWin32Class * klass)
 {
   GstGLWindowClass *window_class = (GstGLWindowClass *) klass;
 
-  g_type_class_add_private (klass, sizeof (GstGLWindowWin32Private));
-
   window_class->set_window_handle =
       GST_DEBUG_FUNCPTR (gst_gl_window_win32_set_window_handle);
   window_class->draw = GST_DEBUG_FUNCPTR (gst_gl_window_win32_draw);
@@ -87,7 +82,7 @@ gst_gl_window_win32_class_init (GstGLWindowWin32Class * klass)
 static void
 gst_gl_window_win32_init (GstGLWindowWin32 * window)
 {
-  window->priv = GST_GL_WINDOW_WIN32_GET_PRIVATE (window);
+  window->priv = gst_gl_window_win32_get_instance_private (window);
 }
 
 GstGLWindowWin32 *
@@ -106,12 +101,19 @@ gst_gl_window_win32_new (GstGLDisplay * display)
   return window;
 }
 
-static void
-msg_cb (GstGLWindowWin32 * window_win32, MSG * msg, gpointer user_data)
+static gboolean
+msg_cb (GIOChannel * source, GIOCondition condition, gpointer data)
 {
+  MSG msg;
+
+  if (!PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
+    return G_SOURCE_CONTINUE;
+
   GST_TRACE ("handle message");
-  TranslateMessage (msg);
-  DispatchMessage (msg);
+  TranslateMessage (&msg);
+  DispatchMessage (&msg);
+
+  return G_SOURCE_CONTINUE;
 }
 
 gboolean
@@ -122,9 +124,11 @@ gst_gl_window_win32_open (GstGLWindow * window, GError ** error)
   if (!GST_GL_WINDOW_CLASS (parent_class)->open (window, error))
     return FALSE;
 
-  window_win32->msg_source = win32_message_source_new (window_win32);
-  g_source_set_callback (window_win32->msg_source, (GSourceFunc) msg_cb,
-      NULL, NULL);
+  window_win32->priv->msg_io_channel = g_io_channel_win32_new_messages (0);
+  window_win32->msg_source =
+      g_io_create_watch (window_win32->priv->msg_io_channel, G_IO_IN);
+  g_source_set_callback (window_win32->msg_source, (GSourceFunc) msg_cb, NULL,
+      NULL);
   g_source_attach (window_win32->msg_source, window->main_context);
 
   return TRUE;
@@ -150,6 +154,8 @@ gst_gl_window_win32_close (GstGLWindow * window)
   g_source_destroy (window_win32->msg_source);
   g_source_unref (window_win32->msg_source);
   window_win32->msg_source = NULL;
+  g_io_channel_unref (window_win32->priv->msg_io_channel);
+  window_win32->priv->msg_io_channel = NULL;
 
   GST_GL_WINDOW_CLASS (parent_class)->close (window);
 }

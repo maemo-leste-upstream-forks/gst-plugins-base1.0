@@ -69,6 +69,22 @@
 <a class="link" href="GstRTPBaseDepayload.html#gst-rtp-base-depayload-push-list" title="gst_rtp_base_depayload_push_list ()">gst_rtp_base_depayload_push_list</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstRTPBaseDepayload.html#gst-rtp-base-depayload-is-source-info-enabled" title="gst_rtp_base_depayload_is_source_info_enabled ()">gst_rtp_base_depayload_is_source_info_enabled</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstRTPBaseDepayload.html#gst-rtp-base-depayload-set-source-info-enabled" title="gst_rtp_base_depayload_set_source_info_enabled ()">gst_rtp_base_depayload_set_source_info_enabled</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -80,12 +96,19 @@
 <col width="300px" class="properties_name">
 <col width="200px" class="properties_flags">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="GstRTPBaseDepayload.html#GstRTPBaseDepayload--source-info" title="The “source-info” property">source-info</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
 <td class="property_type">
 <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *</td>
 <td class="property_name"><a class="link" href="GstRTPBaseDepayload.html#GstRTPBaseDepayload--stats" title="The “stats” property">stats</a></td>
 <td class="property_flags">Read</td>
-</tr></tbody>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
@@ -118,7 +141,7 @@
 </div>
 <div class="refsect1">
 <a name="GstRTPBaseDepayload.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/rtp/gstrtpbasedepayload.h&gt;
+<pre class="synopsis">#include &lt;gst/rtp/rtp.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -216,6 +239,66 @@ gst_rtp_base_depayload_push_list (<em class="parameter"><code><a class="link" hr
 <p> a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a>.</p>
 </div>
 </div>
+<hr>
+<div class="refsect2">
+<a name="gst-rtp-base-depayload-is-source-info-enabled"></a><h3>gst_rtp_base_depayload_is_source_info_enabled ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_rtp_base_depayload_is_source_info_enabled
+                               (<em class="parameter"><code><a class="link" href="GstRTPBaseDepayload.html" title="GstRTPBaseDepayload"><span class="type">GstRTPBaseDepayload</span></a> *depayload</code></em>);</pre>
+<p>Queries whether <a class="link" href="gst-plugins-base-libs-GstMeta-for-RTP.html#GstRTPSourceMeta" title="struct GstRTPSourceMeta"><span class="type">GstRTPSourceMeta</span></a> will be added to depayloaded buffers.</p>
+<div class="refsect3">
+<a name="gst-rtp-base-depayload-is-source-info-enabled.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>depayload</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstRTPBaseDepayload.html" title="GstRTPBaseDepayload"><span class="type">GstRTPBaseDepayload</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-rtp-base-depayload-is-source-info-enabled.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if source-info is enabled.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-rtp-base-depayload-set-source-info-enabled"></a><h3>gst_rtp_base_depayload_set_source_info_enabled ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_rtp_base_depayload_set_source_info_enabled
+                               (<em class="parameter"><code><a class="link" href="GstRTPBaseDepayload.html" title="GstRTPBaseDepayload"><span class="type">GstRTPBaseDepayload</span></a> *depayload</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> enable</code></em>);</pre>
+<p>Enable or disable adding <a class="link" href="gst-plugins-base-libs-GstMeta-for-RTP.html#GstRTPSourceMeta" title="struct GstRTPSourceMeta"><span class="type">GstRTPSourceMeta</span></a> to depayloaded buffers.</p>
+<div class="refsect3">
+<a name="gst-rtp-base-depayload-set-source-info-enabled.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>depayload</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstRTPBaseDepayload.html" title="GstRTPBaseDepayload"><span class="type">GstRTPBaseDepayload</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>enable</p></td>
+<td class="parameter_description"><p>whether to add meta about RTP sources to buffer</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GstRTPBaseDepayload.other_details"></a><h2>Types and Values</h2>
@@ -232,12 +315,7 @@ gst_rtp_base_depayload_push_list (<em class="parameter"><code><a class="link" hr
   /* virtuals, inform the subclass of the caps. */
   gboolean (*set_caps) (GstRTPBaseDepayload *filter, GstCaps *caps);
 
-  /* pure virtual function, child must implement either this method
-   * or the process_rtp_packet virtual method to process incoming
-   * rtp packets. If the child returns a buffer without a valid timestamp,
-   * the timestamp of @in will be applied to the result buffer and the
-   * buffer will be pushed. If this function returns %NULL, nothing is
-   * pushed.  */
+  /* pure virtual function */
   GstBuffer * (*process) (GstRTPBaseDepayload *base, GstBuffer *in);
 
   /* non-pure function used to to signal the depayloader about packet loss. the
@@ -249,17 +327,6 @@ gst_rtp_base_depayload_push_list (<em class="parameter"><code><a class="link" hr
    * implementation can override. */
   gboolean (*handle_event) (GstRTPBaseDepayload * filter, GstEvent * event);
 
-  /* Optional. Same as the process virtual function, but slightly more
-   * efficient, since it is passed the rtp buffer structure that has already
-   * been mapped (with GST_MAP_READ) by the base class and thus does not have
-   * to be mapped again by the subclass. Can be used by the subclass to process
-   * incoming rtp packets. If the subclass returns a buffer without a valid
-   * timestamp, the timestamp of the input buffer will be applied to the result
-   * buffer and the output buffer will be pushed out. If this function returns
-   * %NULL, nothing is pushed out.
-   *
-   * Since: 1.6
-   */
   GstBuffer * (*process_rtp_packet) (GstRTPBaseDepayload *base, GstRTPBuffer * rtp_buffer);
 };
 </pre>
@@ -280,7 +347,12 @@ gst_rtp_base_depayload_push_list (<em class="parameter"><code><a class="link" hr
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBaseDepayloadClass.process"></a>process</code></em> ()</p></td>
-<td class="struct_member_description"><p>process incoming rtp packets</p></td>
+<td class="struct_member_description"><p>process incoming rtp packets. Subclass must implement either
+this method or <em class="parameter"><code>process_rtp_packet</code></em>
+to process incoming rtp packets.
+If the child returns a buffer without a valid timestamp, the timestamp
+of the provided buffer will be applied to the result buffer and the
+buffer will be pushed. If this function returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, nothing is pushed.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
@@ -295,8 +367,15 @@ gst_rtp_base_depayload_push_list (<em class="parameter"><code><a class="link" hr
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstRTPBaseDepayloadClass.process-rtp-packet"></a>process_rtp_packet</code></em> ()</p></td>
-<td> </td>
-<td> </td>
+<td class="struct_member_description"><p>Same as the process virtual function, but slightly more
+efficient, since it is passed the rtp buffer structure that has already
+been mapped (with GST_MAP_READ) by the base class and thus does not have
+to be mapped again by the subclass. Can be used by the subclass to process
+incoming rtp packets. If the subclass returns a buffer without a valid
+timestamp, the timestamp of the input buffer will be applied to the result
+buffer and the output buffer will be pushed out. If this function returns
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, nothing is pushed out. Since: 1.6.</p></td>
+<td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -305,6 +384,15 @@ gst_rtp_base_depayload_push_list (<em class="parameter"><code><a class="link" hr
 </div>
 <div class="refsect1">
 <a name="GstRTPBaseDepayload.property-details"></a><h2>Property Details</h2>
+<div class="refsect2">
+<a name="GstRTPBaseDepayload--source-info"></a><h3>The <code class="literal">“source-info”</code> property</h3>
+<pre class="programlisting">  “source-info”              <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Add RTP source information found in RTP header as meta to output buffer.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
+</div>
+<hr>
 <div class="refsect2">
 <a name="GstRTPBaseDepayload--stats"></a><h3>The <code class="literal">“stats”</code> property</h3>
 <pre class="programlisting">  “stats”                    <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *</pre>

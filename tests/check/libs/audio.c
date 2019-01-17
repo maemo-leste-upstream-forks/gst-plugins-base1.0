@@ -113,6 +113,49 @@ GST_START_TEST (test_buffer_clip_time_start_and_stop)
 
 GST_END_TEST;
 
+GST_START_TEST (test_buffer_clip_time_start_and_stop_planar)
+{
+  GstSegment s;
+  GstBuffer *buf;
+  GstBuffer *ret;
+  GstAudioInfo info;
+  GstAudioBuffer abuf;
+  guint8 *data;
+
+  /* Clip start and end */
+  buf = make_buffer (&data);
+
+  gst_audio_info_init (&info);
+  gst_audio_info_set_format (&info, GST_AUDIO_FORMAT_S8, 44100, 1, NULL);
+  info.layout = GST_AUDIO_LAYOUT_NON_INTERLEAVED;
+  gst_buffer_add_audio_meta (buf, &info, 1000, NULL);
+
+  setup_segment (&s, GST_FORMAT_TIME, 4 * GST_SECOND, 8 * GST_SECOND,
+      4 * GST_SECOND);
+
+  GST_BUFFER_TIMESTAMP (buf) = 2 * GST_SECOND;
+  GST_BUFFER_DURATION (buf) = 10 * GST_SECOND;
+  GST_BUFFER_OFFSET (buf) = 200;
+  GST_BUFFER_OFFSET_END (buf) = 1200;
+
+  ret = gst_audio_buffer_clip (buf, &s, 100, 1);
+  fail_unless (ret != NULL);
+
+  fail_unless_equals_int64 (GST_BUFFER_TIMESTAMP (ret), 4 * GST_SECOND);
+  fail_unless_equals_int64 (GST_BUFFER_DURATION (ret), 4 * GST_SECOND);
+  fail_unless_equals_int64 (GST_BUFFER_OFFSET (ret), 400);
+  fail_unless_equals_int64 (GST_BUFFER_OFFSET_END (ret), 800);
+  gst_audio_buffer_map (&abuf, &info, ret, GST_MAP_READ);
+  fail_unless_equals_int (abuf.n_planes, 1);
+  fail_unless_equals_int (GST_AUDIO_BUFFER_PLANE_SIZE (&abuf), 400);
+  fail_unless_equals_pointer (abuf.planes[0], data + 200);
+  gst_audio_buffer_unmap (&abuf);
+
+  gst_buffer_unref (ret);
+}
+
+GST_END_TEST;
+
 GST_START_TEST (test_buffer_clip_time_start)
 {
   GstSegment s;
@@ -148,6 +191,57 @@ GST_START_TEST (test_buffer_clip_time_start)
 
 GST_END_TEST;
 
+GST_START_TEST (test_buffer_clip_time_start_planar)
+{
+  GstSegment s;
+  GstBuffer *buf;
+  GstBuffer *ret;
+  GstAudioInfo info;
+  GstAudioMeta *meta;
+  GstAudioBuffer abuf;
+  guint8 *data;
+
+  /* Clip only start */
+  buf = make_buffer (&data);
+
+  gst_audio_info_init (&info);
+  gst_audio_info_set_format (&info, GST_AUDIO_FORMAT_S8, 44100, 2, NULL);
+  info.layout = GST_AUDIO_LAYOUT_NON_INTERLEAVED;
+  gst_buffer_add_audio_meta (buf, &info, 500, NULL);
+
+  setup_segment (&s, GST_FORMAT_TIME, 4 * GST_SECOND, 12 * GST_SECOND,
+      4 * GST_SECOND);
+
+  GST_BUFFER_TIMESTAMP (buf) = 2 * GST_SECOND;
+  GST_BUFFER_DURATION (buf) = 5 * GST_SECOND;
+  GST_BUFFER_OFFSET (buf) = 200;
+  GST_BUFFER_OFFSET_END (buf) = 700;
+
+  ret = gst_audio_buffer_clip (buf, &s, 100, 2);
+  fail_unless (ret != NULL);
+
+  fail_unless_equals_int64 (GST_BUFFER_TIMESTAMP (ret), 4 * GST_SECOND);
+  fail_unless_equals_int64 (GST_BUFFER_DURATION (ret), 3 * GST_SECOND);
+  fail_unless_equals_int64 (GST_BUFFER_OFFSET (ret), 400);
+  fail_unless_equals_int64 (GST_BUFFER_OFFSET_END (ret), 700);
+
+  meta = gst_buffer_get_audio_meta (ret);
+  fail_unless (meta);
+  fail_unless_equals_int (meta->info.channels, 2);
+  fail_unless_equals_int (meta->samples, 300);
+
+  gst_audio_buffer_map (&abuf, &info, ret, GST_MAP_READ);
+  fail_unless_equals_int (abuf.n_planes, 2);
+  fail_unless_equals_int (GST_AUDIO_BUFFER_PLANE_SIZE (&abuf), 300);
+  fail_unless_equals_pointer (abuf.planes[0], data + 200);
+  fail_unless_equals_pointer (abuf.planes[1], data + 700);
+  gst_audio_buffer_unmap (&abuf);
+
+  gst_buffer_unref (ret);
+}
+
+GST_END_TEST;
+
 GST_START_TEST (test_buffer_clip_time_stop)
 {
   GstSegment s;
@@ -177,6 +271,57 @@ GST_START_TEST (test_buffer_clip_time_stop)
   fail_unless (map.data == data);
   fail_unless (map.size == 800);
   gst_buffer_unmap (ret, &map);
+
+  gst_buffer_unref (ret);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_buffer_clip_time_stop_planar)
+{
+  GstSegment s;
+  GstBuffer *buf;
+  GstBuffer *ret;
+  GstAudioInfo info;
+  GstAudioMeta *meta;
+  GstAudioBuffer abuf;
+  guint8 *data;
+
+  /* Clip only stop */
+  buf = make_buffer (&data);
+
+  gst_audio_info_init (&info);
+  gst_audio_info_set_format (&info, GST_AUDIO_FORMAT_S8, 44100, 2, NULL);
+  info.layout = GST_AUDIO_LAYOUT_NON_INTERLEAVED;
+  gst_buffer_add_audio_meta (buf, &info, 500, NULL);
+
+  setup_segment (&s, GST_FORMAT_TIME, 2 * GST_SECOND, 6 * GST_SECOND,
+      2 * GST_SECOND);
+
+  GST_BUFFER_TIMESTAMP (buf) = 2 * GST_SECOND;
+  GST_BUFFER_DURATION (buf) = 5 * GST_SECOND;
+  GST_BUFFER_OFFSET (buf) = 200;
+  GST_BUFFER_OFFSET_END (buf) = 700;
+
+  ret = gst_audio_buffer_clip (buf, &s, 100, 2);
+  fail_unless (ret != NULL);
+
+  fail_unless_equals_int64 (GST_BUFFER_TIMESTAMP (ret), 2 * GST_SECOND);
+  fail_unless_equals_int64 (GST_BUFFER_DURATION (ret), 4 * GST_SECOND);
+  fail_unless_equals_int64 (GST_BUFFER_OFFSET (ret), 200);
+  fail_unless_equals_int64 (GST_BUFFER_OFFSET_END (ret), 600);
+
+  meta = gst_buffer_get_audio_meta (ret);
+  fail_unless (meta);
+  fail_unless_equals_int (meta->info.channels, 2);
+  fail_unless_equals_int (meta->samples, 400);
+
+  gst_audio_buffer_map (&abuf, &info, ret, GST_MAP_READ);
+  fail_unless_equals_int (abuf.n_planes, 2);
+  fail_unless_equals_int (GST_AUDIO_BUFFER_PLANE_SIZE (&abuf), 400);
+  fail_unless_equals_pointer (abuf.planes[0], data);
+  fail_unless_equals_pointer (abuf.planes[1], data + 500);
+  gst_audio_buffer_unmap (&abuf);
 
   gst_buffer_unref (ret);
 }
@@ -333,6 +478,57 @@ GST_START_TEST (test_buffer_clip_samples_start_and_stop)
   fail_unless (map.data == data + 200);
   fail_unless (map.size == 400);
   gst_buffer_unmap (ret, &map);
+
+  gst_buffer_unref (ret);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_buffer_clip_samples_start_and_stop_planar)
+{
+  GstSegment s;
+  GstBuffer *buf;
+  GstBuffer *ret;
+  GstAudioInfo info;
+  GstAudioMeta *meta;
+  GstAudioBuffer abuf;
+  guint8 *data;
+
+  /* Clip start and end */
+  buf = make_buffer (&data);
+
+  gst_audio_info_init (&info);
+  gst_audio_info_set_format (&info, GST_AUDIO_FORMAT_S8, 44100, 2, NULL);
+  info.layout = GST_AUDIO_LAYOUT_NON_INTERLEAVED;
+  gst_buffer_add_audio_meta (buf, &info, 500, NULL);
+
+
+  setup_segment (&s, GST_FORMAT_DEFAULT, 400, 600, 400);
+
+  GST_BUFFER_TIMESTAMP (buf) = 2 * GST_SECOND;
+  GST_BUFFER_DURATION (buf) = 5 * GST_SECOND;
+  GST_BUFFER_OFFSET (buf) = 200;
+  GST_BUFFER_OFFSET_END (buf) = 700;
+
+  ret = gst_audio_buffer_clip (buf, &s, 100, 2);
+  fail_unless (ret != NULL);
+
+  fail_unless_equals_int64 (GST_BUFFER_TIMESTAMP (ret), 4 * GST_SECOND);
+  fail_unless_equals_int64 (GST_BUFFER_DURATION (ret), 2 * GST_SECOND);
+  fail_unless_equals_int64 (GST_BUFFER_OFFSET (ret), 400);
+  fail_unless_equals_int64 (GST_BUFFER_OFFSET_END (ret), 600);
+
+  meta = gst_buffer_get_audio_meta (ret);
+  fail_unless (meta);
+  fail_unless_equals_int (meta->info.channels, 2);
+  fail_unless_equals_int (meta->samples, 200);
+
+  gst_audio_buffer_map (&abuf, &info, ret, GST_MAP_READ);
+  fail_unless_equals_int (abuf.n_planes, 2);
+  fail_unless_equals_int (GST_AUDIO_BUFFER_PLANE_SIZE (&abuf), 200);
+  fail_unless_equals_pointer (abuf.planes[0], data + 200);
+  fail_unless_equals_pointer (abuf.planes[1], data + 700);
+  gst_audio_buffer_unmap (&abuf);
 
   gst_buffer_unref (ret);
 }
@@ -566,6 +762,7 @@ typedef struct
   gint channels;
   GstAudioChannelPosition from[32], to[32];
   gint32 in[32], out[32];
+  gint32 plane_offsets[32];
   gboolean fail;
 } MultichannelReorderData;
 
@@ -577,12 +774,14 @@ GST_START_TEST (test_multichannel_reorder)
           {GST_AUDIO_CHANNEL_POSITION_MONO},
           {0, 1, 2, 3},
           {0, 1, 2, 3},
+          {0},
         FALSE},
     {1,
           {GST_AUDIO_CHANNEL_POSITION_MONO},
           {GST_AUDIO_CHANNEL_POSITION_FRONT_CENTER},
           {0, 1, 2, 3},
           {0, 1, 2, 3},
+          {0},
         TRUE},
     {2,
           {GST_AUDIO_CHANNEL_POSITION_FRONT_LEFT,
@@ -591,6 +790,7 @@ GST_START_TEST (test_multichannel_reorder)
               GST_AUDIO_CHANNEL_POSITION_FRONT_RIGHT},
           {0, 1, 2, 3},
           {0, 1, 2, 3},
+          {0, 1},
         FALSE},
     {2,
           {GST_AUDIO_CHANNEL_POSITION_FRONT_LEFT,
@@ -599,6 +799,7 @@ GST_START_TEST (test_multichannel_reorder)
               GST_AUDIO_CHANNEL_POSITION_FRONT_LEFT},
           {0, 1, 2, 3},
           {1, 0, 3, 2},
+          {1, 0},
         FALSE},
     {4,
           {GST_AUDIO_CHANNEL_POSITION_FRONT_LEFT,
@@ -610,6 +811,7 @@ GST_START_TEST (test_multichannel_reorder)
                 GST_AUDIO_CHANNEL_POSITION_FRONT_LEFT,
               GST_AUDIO_CHANNEL_POSITION_REAR_CENTER},
           {0, 1, 2, 3},
+          {1, 2, 0, 3},
           {1, 2, 0, 3},
         FALSE},
     {4,
@@ -623,6 +825,7 @@ GST_START_TEST (test_multichannel_reorder)
               GST_AUDIO_CHANNEL_POSITION_FRONT_CENTER},
           {0, 1, 2, 3},
           {3, 0, 1, 2},
+          {3, 0, 1, 2},
         FALSE},
     {4,
           {GST_AUDIO_CHANNEL_POSITION_FRONT_LEFT,
@@ -635,11 +838,14 @@ GST_START_TEST (test_multichannel_reorder)
               GST_AUDIO_CHANNEL_POSITION_FRONT_LEFT},
           {0, 1, 2, 3},
           {3, 2, 1, 0},
+          {3, 2, 1, 0},
         FALSE},
   };
-  gint i;
+  gint i, j;
   GstBuffer *buf;
   GstMapInfo map;
+  GstAudioInfo info;
+  GstAudioBuffer abuf;
 
   for (i = 0; i < G_N_ELEMENTS (tests); i++) {
     buf =
@@ -650,6 +856,8 @@ GST_START_TEST (test_multichannel_reorder)
       fail_if (gst_audio_buffer_reorder_channels (buf, GST_AUDIO_FORMAT_S32,
               tests[i].channels, tests[i].from, tests[i].to));
     } else {
+      /* first interpret as interleaved */
+
       fail_unless (gst_audio_buffer_reorder_channels (buf, GST_AUDIO_FORMAT_S32,
               tests[i].channels, tests[i].from, tests[i].to));
 
@@ -657,6 +865,30 @@ GST_START_TEST (test_multichannel_reorder)
       fail_unless_equals_int (map.size, sizeof (tests[i].in));
       fail_unless (memcmp (tests[i].out, map.data, map.size) == 0);
       gst_buffer_unmap (buf, &map);
+
+      /* now interpret as planar */
+
+      gst_audio_info_init (&info);
+      gst_audio_info_set_format (&info, GST_AUDIO_FORMAT_S32, 44100,
+          tests[i].channels, NULL);
+      info.layout = GST_AUDIO_LAYOUT_NON_INTERLEAVED;
+
+      gst_buffer_add_audio_meta (buf, &info,
+          sizeof (tests[i].in) / (tests[i].channels * sizeof (gint32)), NULL);
+
+      fail_unless (gst_audio_buffer_reorder_channels (buf, GST_AUDIO_FORMAT_S32,
+              tests[i].channels, tests[i].from, tests[i].to));
+
+      fail_unless (gst_audio_buffer_map (&abuf, &info, buf, GST_MAP_READ));
+      fail_unless_equals_int (abuf.n_planes, tests[i].channels);
+      fail_unless_equals_int (GST_AUDIO_BUFFER_PLANE_SIZE (&abuf),
+          sizeof (tests[i].in) / tests[i].channels);
+      for (j = 0; j < abuf.n_planes; j++) {
+        fail_unless_equals_pointer (abuf.planes[j],
+            abuf.map_infos[0].data +
+            tests[i].plane_offsets[j] * GST_AUDIO_BUFFER_PLANE_SIZE (&abuf));
+      }
+      gst_audio_buffer_unmap (&abuf);
     }
     gst_buffer_unref (buf);
   }
@@ -1065,6 +1297,110 @@ GST_START_TEST (test_stream_align_reverse)
 
 GST_END_TEST;
 
+typedef struct
+{
+  GstAudioFormat format;
+  GstAudioLayout layout;
+  gint channels;
+  gsize samples;
+  gsize plane_size;
+  gsize offsets[10];
+  gboolean add_meta;
+  gboolean use_offsets;
+} AudioBufferTestData;
+
+GST_START_TEST (test_audio_buffer_and_audio_meta)
+{
+  AudioBufferTestData td[] = {
+    {GST_AUDIO_FORMAT_S24_32, GST_AUDIO_LAYOUT_NON_INTERLEAVED,
+        4, 60, 240, {10, 760, 510, 260}, TRUE, TRUE},
+    {GST_AUDIO_FORMAT_F32, GST_AUDIO_LAYOUT_NON_INTERLEAVED,
+        4, 60, 240, {0, 240, 480, 720}, TRUE, FALSE},
+    {GST_AUDIO_FORMAT_S16, GST_AUDIO_LAYOUT_INTERLEAVED,
+        4, 125, 1000, {0}, TRUE, FALSE},
+    {GST_AUDIO_FORMAT_S16, GST_AUDIO_LAYOUT_INTERLEAVED,
+        4, 125, 1000, {0}, FALSE, FALSE},
+    {GST_AUDIO_FORMAT_S8, GST_AUDIO_LAYOUT_INTERLEAVED,
+        8, 125, 1000, {0}, FALSE, FALSE},
+    {GST_AUDIO_FORMAT_U8, GST_AUDIO_LAYOUT_NON_INTERLEAVED,
+        8, 125, 125, {0, 125, 250, 375, 500, 625, 750, 875}, TRUE, FALSE},
+    {GST_AUDIO_FORMAT_U32, GST_AUDIO_LAYOUT_NON_INTERLEAVED,
+          10, 25, 100, {0, 100, 200, 300, 400, 500, 600, 700, 800, 900}, TRUE,
+        FALSE},
+    {GST_AUDIO_FORMAT_U32, GST_AUDIO_LAYOUT_INTERLEAVED,
+        10, 25, 1000, {0}, FALSE, FALSE},
+  };
+  gint i;
+
+  for (i = 0; i < G_N_ELEMENTS (td); i++) {
+    GstBuffer *buf;
+    guint8 *data;
+    GstAudioInfo info;
+    GstAudioMeta *meta;
+    GstAudioBuffer buffer;
+    gint j;
+
+    gst_audio_info_init (&info);
+    gst_audio_info_set_format (&info, td[i].format, 44100, td[i].channels,
+        NULL);
+    info.layout = td[i].layout;
+
+    buf = make_buffer (&data);
+    if (td[i].add_meta) {
+      meta = gst_buffer_add_audio_meta (buf, &info, td[i].samples,
+          td[i].use_offsets ? td[i].offsets : NULL);
+
+      fail_unless (meta);
+      fail_unless (GST_AUDIO_INFO_IS_VALID (&meta->info));
+      fail_unless (gst_audio_info_is_equal (&meta->info, &info));
+      fail_unless_equals_int (meta->info.finfo->format, td[i].format);
+      fail_unless_equals_int (meta->info.layout, td[i].layout);
+      fail_unless_equals_int (meta->info.channels, td[i].channels);
+      fail_unless_equals_int (meta->samples, td[i].samples);
+
+      if (td[i].layout == GST_AUDIO_LAYOUT_NON_INTERLEAVED) {
+        fail_unless (meta->offsets);
+        for (j = 0; j < td[i].channels; j++) {
+          fail_unless_equals_int (meta->offsets[j], td[i].offsets[j]);
+        }
+      } else {
+        fail_if (meta->offsets);
+      }
+    }
+
+    fail_unless (gst_audio_buffer_map (&buffer, &info, buf, GST_MAP_READ));
+    fail_unless_equals_pointer (buffer.buffer, buf);
+    fail_unless (GST_AUDIO_INFO_IS_VALID (&buffer.info));
+    fail_unless (gst_audio_info_is_equal (&buffer.info, &info));
+    fail_unless_equals_int (buffer.n_samples, td[i].samples);
+
+    if (td[i].layout == GST_AUDIO_LAYOUT_NON_INTERLEAVED) {
+      fail_unless_equals_int (buffer.n_planes, td[i].channels);
+      for (j = 0; j < td[i].channels; j++) {
+        fail_unless_equals_pointer (buffer.planes[j], data + td[i].offsets[j]);
+      }
+    } else {
+      fail_unless_equals_int (buffer.n_planes, 1);
+      fail_unless_equals_pointer (buffer.planes[0], data);
+    }
+
+    fail_unless_equals_int (GST_AUDIO_BUFFER_PLANE_SIZE (&buffer),
+        td[i].plane_size);
+
+    if (buffer.n_planes <= 8) {
+      fail_unless_equals_pointer (buffer.map_infos, buffer.priv_map_infos_arr);
+      fail_unless_equals_pointer (buffer.planes, buffer.priv_planes_arr);
+    } else {
+      fail_if (buffer.map_infos == buffer.priv_map_infos_arr);
+      fail_if (buffer.planes == buffer.priv_planes_arr);
+    }
+
+    gst_audio_buffer_unmap (&buffer);
+  }
+}
+
+GST_END_TEST;
+
 static Suite *
 audio_suite (void)
 {
@@ -1075,13 +1411,17 @@ audio_suite (void)
   suite_add_tcase (s, tc_chain);
   tcase_add_test (tc_chain, test_buffer_clip_unsupported_format);
   tcase_add_test (tc_chain, test_buffer_clip_time_start_and_stop);
+  tcase_add_test (tc_chain, test_buffer_clip_time_start_and_stop_planar);
   tcase_add_test (tc_chain, test_buffer_clip_time_start);
+  tcase_add_test (tc_chain, test_buffer_clip_time_start_planar);
   tcase_add_test (tc_chain, test_buffer_clip_time_stop);
+  tcase_add_test (tc_chain, test_buffer_clip_time_stop_planar);
   tcase_add_test (tc_chain, test_buffer_clip_time_outside);
   tcase_add_test (tc_chain, test_buffer_clip_time_start_and_stop_no_meta);
   tcase_add_test (tc_chain, test_buffer_clip_time_no_timestamp);
   tcase_add_test (tc_chain, test_buffer_clip_time_handles_rounding);
   tcase_add_test (tc_chain, test_buffer_clip_samples_start_and_stop);
+  tcase_add_test (tc_chain, test_buffer_clip_samples_start_and_stop_planar);
   tcase_add_test (tc_chain, test_buffer_clip_samples_start);
   tcase_add_test (tc_chain, test_buffer_clip_samples_stop);
   tcase_add_test (tc_chain, test_buffer_clip_samples_outside);
@@ -1094,6 +1434,7 @@ audio_suite (void)
   tcase_add_test (tc_chain, test_fill_silence);
   tcase_add_test (tc_chain, test_stream_align);
   tcase_add_test (tc_chain, test_stream_align_reverse);
+  tcase_add_test (tc_chain, test_audio_buffer_and_audio_meta);
 
   return s;
 }

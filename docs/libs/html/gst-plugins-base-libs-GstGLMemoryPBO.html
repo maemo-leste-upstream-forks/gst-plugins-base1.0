@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gl.html" title="OpenGL Integration Library">
 <link rel="prev" href="gst-plugins-base-libs-gstglmemoryegl.html" title="GstGLMemoryEGL">
-<link rel="next" href="gst-plugins-base-libs-GstGLOverlayCompositor.html" title="GstGLOverlayCompositor">
+<link rel="next" href="GstGLOverlayCompositor.html" title="GstGLOverlayCompositor">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -21,7 +21,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gl.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gst-plugins-base-libs-gstglmemoryegl.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-libs-GstGLOverlayCompositor.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstGLOverlayCompositor.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-libs-GstGLMemoryPBO"></a><div class="titlepage"></div>
@@ -158,7 +158,7 @@ gst_is_gl_memory_pbo (<em class="parameter"><code><a href="/usr/share/gtk-doc/ht
 <p> whether the memory at <em class="parameter"><code>mem</code></em>
 is a <a class="link" href="gst-plugins-base-libs-GstGLMemoryPBO.html#GstGLMemoryPBO" title="GstGLMemoryPBO"><span class="type">GstGLMemoryPBO</span></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -249,7 +249,7 @@ mappings between texture formats.</p>
 <a name="gst-gl-memory-pbo-copy-into-texture.returns"></a><h4>Returns</h4>
 <p> Whether the copy suceeded</p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -272,7 +272,7 @@ gst_gl_memory_pbo_download_transfer (<em class="parameter"><code><a class="link"
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -301,7 +301,7 @@ gst_gl_memory_pbo_upload_transfer (<em class="parameter"><code><a class="link" h
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -309,6 +309,7 @@ gst_gl_memory_pbo_upload_transfer (<em class="parameter"><code><a class="link" h
 <div class="refsect2">
 <a name="GstGLMemoryPBOAllocator-struct"></a><h3>GstGLMemoryPBOAllocator</h3>
 <pre class="programlisting">typedef struct _GstGLMemoryPBOAllocator GstGLMemoryPBOAllocator;</pre>
+<p>Opaque <a class="link" href="gst-plugins-base-libs-GstGLMemoryPBO.html#GstGLMemoryPBOAllocator"><span class="type">GstGLMemoryPBOAllocator</span></a> struct</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -317,6 +318,7 @@ gst_gl_memory_pbo_upload_transfer (<em class="parameter"><code><a class="link" h
   GstGLMemoryAllocatorClass parent_class;
 } GstGLMemoryPBOAllocatorClass;
 </pre>
+<p>Only contains private data</p>
 </div>
 <hr>
 <div class="refsect2">

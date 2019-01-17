@@ -3,6 +3,7 @@ rtp_sources = [
   'gstrtcpbuffer.c',
   'gstrtppayloads.c',
   'gstrtphdrext.c',
+  'gstrtpmeta.c',
   'gstrtpbaseaudiopayload.c',
   'gstrtpbasepayload.c',
   'gstrtpbasedepayload.c'
@@ -16,34 +17,31 @@ rtp_headers = [
   'gstrtpbuffer.h',
   'gstrtpdefs.h',
   'gstrtphdrext.h',
+  'gstrtpmeta.h',
   'gstrtppayloads.h',
   'rtp-prelude.h',
   'rtp.h',
 ]
 install_headers(rtp_headers, subdir : 'gstreamer-1.0/gst/rtp/')
 
-mkenums = find_program('rtp_mkenum.py')
-
-gstrtp_enum_h = custom_target('gstrtp_enum_h',
-  output : 'gstrtp-enumtypes.h',
-  input : rtp_headers,
-  install : true,
-  install_dir : 'include/gstreamer-1.0/gst/rtp/',
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
-
-gstrtp_enum_c = custom_target('gstrtp_enum_c',
-  output : 'gstrtp-enumtypes.c',
-  input : rtp_headers,
-  depends : [gstaudio_h, gstrtp_enum_h],
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
+rtp_enums = gnome.mkenums_simple('gstrtp-enumtypes',
+  sources : rtp_headers,
+  body_prefix : '#ifdef HAVE_CONFIG_H\n#include "config.h"\n#endif',
+  header_prefix : '#include <gst/rtp/rtp-prelude.h>',
+  decorator : 'GST_RTP_API',
+  install_header: true,
+  install_dir : join_paths(get_option('includedir'), 'gstreamer-1.0/gst/rtp'))
+gstrtp_enum_c = rtp_enums[0]
+gstrtp_enum_h = rtp_enums[1]
 
 gstrtp_deps = [audio_dep, gst_base_dep]
 gst_rtp = library('gstrtp-@0@'.format(api_version),
   rtp_sources, gstrtp_enum_c, gstrtp_enum_h,
-  c_args : gst_plugins_base_args,
+  c_args : gst_plugins_base_args + ['-DBUILDING_GST_RTP'],
   include_directories: [configinc, libsinc],
   version : libversion,
   soversion : soversion,
+  darwin_versions : osxversion,
   install : true,
   dependencies : gstrtp_deps,
 )

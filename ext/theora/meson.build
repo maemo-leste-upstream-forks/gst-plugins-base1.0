@@ -3,8 +3,8 @@ theora_sources = [
   'gsttheoraparse.c',
 ]
 
-theoradec_dep = dependency('theoradec', version : '>=1.1', required : false)
-theoraenc_dep = dependency('theoraenc', version : '>=1.1', required : false)
+theoradec_dep = dependency('theoradec', version : '>=1.1', required : get_option('theora'))
+theoraenc_dep = dependency('theoraenc', version : '>=1.1', required : get_option('theora'))
 core_conf.set('HAVE_THEORA', theoradec_dep.found() and theoraenc_dep.found())
 theora_deps = []
 
@@ -26,4 +26,5 @@ if theoradec_dep.found() or theoraenc_dep.found()
     install : true,
     install_dir : plugins_install_dir,
   )
+  pkgconfig.generate(gsttheora, install_dir : plugins_pkgconfig_install_dir)
 endif

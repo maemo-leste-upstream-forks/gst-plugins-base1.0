@@ -1,3 +1,10 @@
+if get_option('gl').disabled()
+  message('GStreamer OpenGL integration disabled via options.')
+  gstgl_dep = dependency('', required: false)
+  build_gstgl = false
+  subdir_done()
+endif
+
 gl_sources = [
   'gstglapi.c',
   'gstglbasefilter.c',
@@ -28,7 +35,7 @@ gl_sources = [
   'gstglwindow.c',
 ]
 
-gl_headers = [
+gir_gl_headers = [
   'gl.h',
   'gl-prelude.h',
   'gstgl_enums.h',
@@ -45,7 +52,6 @@ gl_headers = [
   'gstglfeature.h',
   'gstglfilter.h',
   'gstglformat.h',
-  'gstglfuncs.h',
   'gstglframebuffer.h',
   'gstglmemory.h',
   'gstglmemorypbo.h',
@@ -61,6 +67,10 @@ gl_headers = [
   'gstglutils.h',
   'gstglviewconvert.h',
   'gstglwindow.h',
+]
+
+gl_headers = gir_gl_headers + [
+  'gstglfuncs.h',
 ]
 
 gl_prototype_headers = [
@@ -129,8 +139,6 @@ foreach option : glconf_options
   glconf.set10(option, false)
 endforeach
 
-gmodule_dep = dependency('gmodule-no-export-2.0',
-  fallback: ['glib', 'libgmodule_dep'])
 unneeded_dep = dependency('', required : false)
 if unneeded_dep.found()
   error ('Found unfindable dependency')
@@ -145,34 +153,35 @@ gl_winsys_deps = []
 # other things we need.
 gl_misc_deps = []
 # Other preprocessor arguments
-gl_cpp_args = ['-DGST_EXPORTS']
+gl_cpp_args = []
+gl_includes = []
+gl_objc_args = []
 
 enabled_gl_apis = []
 enabled_gl_platforms = []
 enabled_gl_winsys = []
 
 # parse provided options
-libegl_module_name = get_option('with_egl_module_name')
+libegl_module_name = get_option('egl_module_name')
 if libegl_module_name != ''
   gl_cpp_args += ['-DGST_GL_LIBEGL_MODULE_NAME="@0@"'.format(libegl_module_name)]
 endif
-libgles2_module_name = get_option('with_gles2_module_name')
+libgles2_module_name = get_option('gles2_module_name')
 if libgles2_module_name != ''
   gl_cpp_args += ['-DGST_GL_LIBGLESV2_MODULE_NAME="@0@"'.format(libgles2_module_name)]
 endif
-libgl_module_name = get_option('with_opengl_module_name')
+libgl_module_name = get_option('opengl_module_name')
 if libgl_module_name != ''
   gl_cpp_args += ['-DGST_GL_LIBGL_MODULE_NAME="@0@"'.format(libgl_module_name)]
 endif
 
-gl_apis_s = get_option ('with_gl_api')
-if gl_apis_s == 'auto'
+gl_apis = get_option('gl_api')
+if gl_apis.contains('auto')
   need_api_opengl = 'auto'
   need_api_gles2 = 'auto'
 else
   need_api_opengl = 'no'
   need_api_gles2 = 'no'
-  gl_apis = gl_apis_s.split(',')
   foreach api : gl_apis
     if api == 'opengl'
       need_api_opengl = 'yes'
@@ -184,8 +193,8 @@ else
   endforeach
 endif
 
-gl_platforms_s = get_option ('with_gl_platform')
-if gl_platforms_s == 'auto'
+gl_platforms = get_option('gl_platform')
+if gl_platforms.contains('auto')
   need_platform_egl = 'auto'
   need_platform_glx = 'auto'
   need_platform_cgl = 'auto'
@@ -197,26 +206,25 @@ else
   need_platform_cgl = 'no'
   need_platform_wgl = 'no'
   need_platform_eagl = 'no'
-  gl_platforms = gl_platforms_s.split(',')
   foreach platform : gl_platforms
     if platform == 'egl'
       need_platform_egl = 'yes'
     elif platform == 'glx'
       need_platform_glx = 'yes'
-#    elif platform == 'cgl'
-#      need_platform_cgl = 'yes'
+    elif platform == 'cgl'
+      need_platform_cgl = 'yes'
     elif platform == 'wgl'
       need_platform_wgl = 'yes'
-#    elif platform == 'eagl'
-#      need_platform_eagl = 'yes'
+    elif platform == 'eagl'
+      need_platform_eagl = 'yes'
     else
       error('Unsupported GL platform provided ' + platform)
     endif
   endforeach
 endif
 
-gl_winsys_s = get_option ('with_gl_winsys')
-if gl_winsys_s == 'auto'
+gl_winsys = get_option('gl_winsys')
+if gl_winsys.contains('auto')
   need_win_x11 = 'auto'
   need_win_wayland = 'auto'
   need_win_win32 = 'auto'
@@ -225,6 +233,7 @@ if gl_winsys_s == 'auto'
   need_win_dispmanx = 'auto'
   need_win_viv_fb = 'auto'
   need_win_gbm = 'auto'
+  need_win_android = 'auto'
 else
   need_win_x11 = 'no'
   need_win_wayland = 'no'
@@ -234,7 +243,7 @@ else
   need_win_dispmanx = 'no'
   need_win_viv_fb = 'no'
   need_win_gbm = 'no'
-  gl_winsys = gl_winsys_s.split(',')
+  need_win_android = 'no'
   foreach winsys : gl_winsys
     if winsys == 'x11'
       need_win_x11 = 'yes'
@@ -242,16 +251,18 @@ else
       need_win_wayland = 'yes'
     elif winsys == 'win32'
       need_win_win32 = 'yes'
-#    elif winsys == 'cocoa'
-#      need_win_cocoa = 'yes'
-#    elif winsys == 'eagl'
-#      need_win_eagl = 'yes'
+    elif winsys == 'cocoa'
+      need_win_cocoa = 'yes'
+    elif winsys == 'eagl'
+      need_win_eagl = 'yes'
     elif winsys == 'dispmanx'
       need_win_dispmanx = 'yes'
     elif winsys == 'viv-fb'
       need_win_viv_fb = 'yes'
     elif winsys == 'gbm'
-      need_win_gbm = 'no'
+      need_win_gbm = 'yes'
+    elif winsys == 'android'
+      need_win_android = 'yes'
     else
       error('Unsupported GL winsys provided ' + winsys)
     endif
@@ -268,30 +279,54 @@ gl_include_header = '''
 #endif
 '''
 
+# convoluted way of getting at the subproject taking into account the wrap-mode
+# so we don't download a subproject unless allowed
+gl_header_dep = dependency('', fallback : ['gl-headers', 'gl_headers_dummy_dep'],
+    required : false)
+if gl_header_dep.type_name() == 'internal'
+  # this will only contain the includes of headers that are not found
+  compat_includes = subproject('gl-headers').get_variable('compatibility_includes')
+else
+  compat_includes = []
+endif
+
 # Desktop OpenGL checks
 gl_dep = unneeded_dep
 glx_dep = unneeded_dep
 if need_api_opengl != 'no' or need_platform_glx != 'no'
-  gl_dep = dependency('gl', required : false)
+  if host_system == 'darwin'
+    gl_dep = dependency('appleframeworks', modules : ['OpenGL'], required : false)
+  else
+    # override meson's braindead gl detection on osx/windows/etc by forcing pkg-config
+    gl_dep = dependency('gl', method: 'pkg-config', required : false)
+  endif
+
   if not gl_dep.found()
-    if host_machine.system() == 'windows'
+    if host_system == 'windows'
       gl_dep = cc.find_library('opengl32', required : false)
-#    elif host_machine.system() == 'darwin'
-#      gl_dep = cc.find_library('OpenGL', required : false)
     else
       gl_dep = cc.find_library('GL', required : false)
     endif
 
-    if not cc.has_header('GL/gl.h')
+    if not cc.has_header('GL/gl.h', include_directories : compat_includes)
       gl_dep = unneeded_dep
     endif
 
     if not gl_dep.found() and need_api_opengl == 'yes'
       error ('Could not find requested OpenGL library')
     endif
+
+    if gl_dep.found()
+      gl_includes += [compat_includes]
+    endif
   endif
 
-  glx_dep = gl_dep
+  if host_system == 'darwin'
+    glx_dep = cc.find_library('GL', required : false)
+  else
+    glx_dep = gl_dep
+  endif
+
   if need_api_opengl == 'no'
     gl_dep = unneeded_dep
   endif
@@ -299,24 +334,27 @@ if need_api_opengl != 'no' or need_platform_glx != 'no'
     glx_dep = unneeded_dep
   endif
 
-  opengl_includes = '''
-#ifdef __APPLE__
-# include <OpenGL/OpenGL.h>
-# include <OpenGL/gl.h>
-# if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
-#  define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
-#  include <OpenGL/gl3.h>
-# endif
-#else
-# if _MSC_VER
-#  include <windows.h>
-# endif
-# include <GL/gl.h>
-# if __WIN32__ || _WIN32
-#  include <GL/glext.h>
-# endif
+  opengl_includes = ''
+  if host_system == 'darwin'
+    opengl_includes += '''
+#include <OpenGL/OpenGL.h>
+#include <OpenGL/gl.h>
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+# define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
+# include <OpenGL/gl3.h>
 #endif
 '''
+  else
+    opengl_includes += '''
+#if _MSC_VER
+# include <windows.h>
+#endif
+#include <GL/gl.h>
+#if __WIN32__ || _WIN32
+# include <GL/glext.h>
+#endif
+'''
+  endif
 endif
 
 # GLES2 checks
@@ -324,48 +362,58 @@ gles2_dep = unneeded_dep
 gles3_h = false
 gles3ext3_h = false
 if need_api_gles2 != 'no'
-  gles2_dep = dependency('glesv2', required : false)
+  if host_system == 'ios'
+    gles2_dep = dependency('appleframeworks', modules : ['OpenGLES'], required : false)
+  else
+    gles2_dep = dependency('glesv2', required : false)
+  endif
+
   if not gles2_dep.found()
-#    if host_machine.system() == 'windows'
-#    elif host_machine.system() == 'darwin'
+#    if host_system == 'windows'
+#    elif host_system == ios
 #      gles2_dep = cc.find_library('GLESv2', required : false)
 #    else
       gles2_dep = cc.find_library('GLESv2', required : false)
 #    endif
 
-     if not cc.has_header('GLES2/gl2.h')
-       gles2_dep = unneeded_dep
-     endif
+    if not cc.has_header('GLES2/gl2.h', include_directories : compat_includes)
+      gles2_dep = unneeded_dep
+    endif
 
     if not gles2_dep.found() and need_api_gles2 == 'yes'
       error ('Could not find requested OpenGL ES library')
     endif
+
+    if gles2_dep.found()
+      gl_includes += [compat_includes]
+    endif
   endif
 
-  gles3_h = gles2_dep.found() and cc.has_header('GLES3/gl3.h', dependencies : gles2_dep)
+  gles3_h = gles2_dep.found() and cc.has_header('GLES3/gl3.h', dependencies : gles2_dep, include_directories : compat_includes)
 
-  gles_includes = '''
-#ifdef HAVE_IOS /* FIXME */
+  gles_includes = ''
+  if host_system == 'ios'
+    gles_includes += '''
 # include <OpenGLES/ES2/gl.h>
 # include <OpenGLES/ES2/glext.h>
-#else'''
-  if gles3_h
-    gles3ext3_h = gles3_h and cc.has_header('GLES3/gl3ext.h', dependencies : gles2_dep)
-    gles_includes += '''
+'''
+  else
+    if gles3_h
+      gl_includes += [compat_includes]
+      gles3ext3_h = gles3_h and cc.has_header('GLES3/gl3ext.h', dependencies : gles2_dep, include_directories : compat_includes)
+      gles_includes += '''
 # include <GLES3/gl3.h>
 # include <GLES2/gl2ext.h>'''
-    if gles3ext3_h
-      gles_includes += '''
+      if gles3ext3_h
+        gles_includes += '''
 # include <GLES3/gl3ext.h>'''
-    endif
-  else
-    gles_includes += '''
+      endif
+    else
+      gles_includes += '''
 # include <GLES2/gl2.h>
 # include <GLES2/gl2ext.h>'''
+    endif
   endif
-  gles_includes += '''
-#endif
-'''
 endif
 
 # can we include both gles2 and opengl headers?
@@ -373,7 +421,7 @@ if gles2_dep.found() and gl_dep.found()
   gl_include_block = gl_include_header + gles_includes + opengl_includes
   # TODO: Revert to passing gl_include_block via prefix: once
   # https://github.com/mesonbuild/meson/issues/2364 is fixed
-  if not cc.compiles(gl_include_block + '\n' + 'void f (void) {}',dependencies : [gles2_dep, gl_dep])
+  if not cc.compiles(gl_include_block + '\n' + 'void f (void) {}',dependencies : [gles2_dep, gl_dep], include_directories : compat_includes)
     message ('Cannot include both OpenGL and OpenGL ES headers')
     if need_api_gles2 != 'yes'
       gles2_dep = unneeded_dep
@@ -416,10 +464,17 @@ if need_platform_egl != 'no'
   egl_dep = dependency('egl', required : false)
   if not egl_dep.found()
     egl_dep = cc.find_library('EGL', required : false)
+  endif
 
-    if not egl_dep.found() and need_platform_egl == 'yes'
-      error ('Could not find requested EGL library')
-    endif
+  if egl_dep.found() and not cc.has_header('EGL/egl.h',
+                                           dependencies : egl_dep,
+                                           include_directories : compat_includes)
+    egl_dep = unneeded_dep
+  endif
+  if egl_dep.found() and not cc.has_header('EGL/eglext.h',
+                                           dependencies : egl_dep,
+                                           include_directories : compat_includes)
+    egl_dep = unneeded_dep
   endif
 
   if egl_dep.found()
@@ -449,8 +504,9 @@ if need_platform_egl != 'no'
 #include <EGL/eglext.h>
 '''
     enabled_gl_platforms += 'egl'
+  elif need_platform_egl == 'yes'
+    error ('Could not find requested EGL library')
   endif
-
 endif
 
 # wayland checks
@@ -521,7 +577,7 @@ if need_win_x11 != 'no'
     gl_winsys_deps += [x11_dep, xcb_dep]
     enabled_gl_winsys += 'x11'
 
-    if need_platform_glx != 'no' and glx_dep.found()
+    if need_platform_glx != 'no' and glx_dep.found() and cc.has_function ('glXMakeCurrent', dependencies : glx_dep)
       glconf.set('GST_GL_HAVE_PLATFORM_GLX', 1)
       gl_sources += [
         'x11/gstglcontext_glx.c',
@@ -570,18 +626,18 @@ if need_platform_wgl == 'yes'
   endif
 endif
 
-# XXX: untested
 if need_platform_wgl != 'no' and need_win_win32 != 'no'
   gdi_dep = cc.find_library('gdi32', required : false)
   # FIXME: Revert back to has_header once it gains prefix support
-  wglext_h = cc.has_header_symbol('GL/wglext.h', 'WGL_WGLEXT_VERSION',
-                                  prefix : '''#include <windows.h>
-                                              #include <GL/gl.h>''')
+  wglext_h = cc.has_header('GL/wglext.h',
+                           prefix : '''#include <windows.h>
+                                       #include <GL/gl.h>''',
+                           include_directories : compat_includes)
 
   if wglext_h and gdi_dep.found() and gl_dep.found()
+    gl_includes += [compat_includes]
     gl_platform_deps += gdi_dep
     gl_sources += [
-      'win32/win32_message_source.c',
       'win32/gstglwindow_win32.c',
       'win32/gstglwindow_win32.c',
       'win32/gstglcontext_wgl.c',
@@ -594,15 +650,103 @@ if need_platform_wgl != 'no' and need_win_win32 != 'no'
   endif
 endif
 
-if host_machine.system() == 'darwin'
-  # FIXME: how to know if we're on iOS or OS X?
-#  gl_cocoa_headers += [
-#    'gstglcontext_cocoa.h',
-#    'gstglcaopengllayer.h',
-#  ]
+if ['darwin', 'ios'].contains(host_system)
+  if not have_objc
+    error('No ObjC compiler found')
+  endif
+
+  objc = meson.get_compiler('objc')
+  if not objc.has_argument('-fobjc-arc')
+    error('ARC is required for building')
+  endif
+
+  gl_objc_args += ['-fobjc-arc']
 endif
 
-# GDM Checks
+# OSX check
+if need_platform_cgl == 'yes'
+  if need_win_cocoa == 'no'
+    error('Impossible situation requested: Cannot use CGL without Cocoa support')
+  elif need_api_opengl == 'no'
+    error('Impossible situation requested: Cannot use CGL without the OpenGL library')
+  endif
+elif need_platform_cgl == 'no' and need_win_cocoa == 'yes'
+  error('Impossible situation requested: Cannot use Cocoa without CGL support')
+endif
+
+if host_system == 'darwin'
+  foundation_dep = dependency('appleframeworks', modules : ['Foundation'], required : false)
+  quartzcore_dep = dependency('appleframeworks', modules : ['QuartzCore'], required : false)
+  corefoundation_dep = dependency('appleframeworks', modules : ['CoreFoundation'], required : false)
+
+  if need_platform_cgl != 'no'
+    if foundation_dep.found() and quartzcore_dep.found() and corefoundation_dep.found()
+      gl_platform_deps += [quartzcore_dep, corefoundation_dep, foundation_dep]
+      enabled_gl_platforms += 'cgl'
+      glconf.set10('GST_GL_HAVE_PLATFORM_CGL', 1)
+
+      if need_win_cocoa != 'no'
+        cocoa_dep = dependency('appleframeworks', modules : ['Cocoa'], required : false)
+        if cocoa_dep.found()
+          gl_sources += [
+            'cocoa/gstglcaopengllayer.m',
+            'cocoa/gstglcontext_cocoa.m',
+            'cocoa/gstgldisplay_cocoa.m',
+            'cocoa/gstglwindow_cocoa.m'
+          ]
+          gl_winsys_deps += cocoa_dep
+          enabled_gl_winsys += 'cocoa'
+          glconf.set10('GST_GL_HAVE_WINDOW_COCOA', 1)
+        elif need_win_cocoa == 'yes'
+          error('Could not find Cocoa')
+        endif
+      endif
+    elif need_platform_cgl == 'yes'
+      error('Could not find CGL dependencies')
+    endif
+  endif
+endif
+
+if need_platform_eagl == 'yes'
+  if host_system != 'ios'
+    error('Can only use EAGL on iOS')
+  endif
+  if need_win_eagl == 'no'
+    error('Impossible situation requested: Cannot use EAGL platform without the EAGL window system')
+  elif need_api_gles == 'no'
+    error('Impossible situation requested: Cannot use EAGL platform without the GLES library')
+  endif
+elif need_platform_eagl == 'no' and need_win_eagl == 'yes'
+  error('Impossible situation requested: Cannot use EAGL window system without the EAGL platform')
+endif
+
+if host_system == 'ios' and need_platform_eagl != 'no' and need_win_eagl != 'no'
+  foundation_dep = dependency('appleframeworks', modules : ['Foundation'], required : false)
+  corefoundation_dep = dependency('appleframeworks', modules : ['CoreFoundation'], required : false)
+  coregraphics_dep = dependency('appleframeworks', modules : ['CoreGraphics'], required : false)
+  uikit_dep = dependency('appleframeworks', modules : ['UIkit'], required : false)
+
+  if foundation_dep.found() and corefoundation_dep.found() and coregraphics_dep.found() and uikit_dep.found()
+    gl_platform_deps += [
+      corefoundation_dep,
+      foundation_dep,
+      coregraphics_dep,
+      uikit_dep,
+    ]
+    gl_sources += [
+      'eagl/gstglcontext_eagl.m',
+      'eagl/gstglwindow_eagl.m',
+    ]
+    enabled_gl_winsys += 'eagl'
+    enabled_gl_platforms += 'eagl'
+    glconf.set('GST_GL_HAVE_WINDOW_EAGL', 1)
+    glconf.set('GST_GL_HAVE_PLATFORM_EAGL', 1)
+  elif need_platform_eagl == 'yes' or need_win_eagl == 'yes'
+    error('Could not find dependencies for EAGL')
+  endif
+endif
+
+# GBM Checks
 gbm_gudev_dep = unneeded_dep
 gbm_libdrm_dep = unneeded_dep
 gbm_dep = unneeded_dep
@@ -650,8 +794,28 @@ if need_platform_egl != 'no' and need_win_viv_fb != 'no'
   endif
 endif
 
+if need_win_android == 'yes'
+  if need_platform_egl == 'no'
+    error('Impossible situation requested: Cannot build for Android without EGL')
+  elif need_api_gles2 == 'no'
+    error('Impossible situation requested: Cannot build for Android without GLES2 support')
+  elif host_system != 'android'
+    error('Impossible situation requested: Cannot build for Android without an android system')
+  endif
+endif
+
+if host_system == 'android' and need_win_android != 'no' and need_platform_egl != 'no'
+  if gles2_dep.found() and egl_dep.found()
+    enabled_gl_winsys += ['android']
+    glconf.set10('GST_GL_HAVE_WINDOW_ANDROID', 1)
+    gl_sources += [
+      'android/gstglwindow_android_egl.c'
+    ]
+  endif
+endif
+
 # TODO: Add rest of gl config here.
-# iOS, OS X, win32 specific support
+# iOS, specific support
 
 build_gstgl = true
 if enabled_gl_apis.length() == 0
@@ -669,31 +833,31 @@ endif
 
 if build_gstgl
   # find some types that may or may not be defined
-  if cc.has_type('GLeglImageOES', prefix : gl_include_block, dependencies : gl_lib_deps)
+  if cc.has_type('GLeglImageOES', prefix : gl_include_block, dependencies : gl_lib_deps, include_directories : gl_includes)
     glconf.set('GST_GL_HAVE_GLEGLIMAGEOES', 1)
   endif
-  if cc.has_type('GLchar', prefix : gl_include_block, dependencies : gl_lib_deps)
+  if cc.has_type('GLchar', prefix : gl_include_block, dependencies : gl_lib_deps, include_directories : gl_includes)
     glconf.set('GST_GL_HAVE_GLCHAR', 1)
   endif
-  if cc.has_type('GLsizeiptr', prefix : gl_include_block, dependencies : gl_lib_deps)
+  if cc.has_type('GLsizeiptr', prefix : gl_include_block, dependencies : gl_lib_deps, include_directories : gl_includes)
     glconf.set('GST_GL_HAVE_GLSIZEIPTR', 1)
   endif
-  if cc.has_type('GLintptr', prefix : gl_include_block, dependencies : gl_lib_deps)
+  if cc.has_type('GLintptr', prefix : gl_include_block, dependencies : gl_lib_deps, include_directories : gl_includes)
     glconf.set('GST_GL_HAVE_GLINTPTR', 1)
   endif
-  if cc.has_type('GLsync', prefix : gl_include_block, dependencies : gl_lib_deps)
+  if cc.has_type('GLsync', prefix : gl_include_block, dependencies : gl_lib_deps, include_directories : gl_includes)
     glconf.set('GST_GL_HAVE_GLSYNC', 1)
   endif
-  if cc.has_type('GLuint64', prefix : gl_include_block, dependencies : gl_lib_deps)
+  if cc.has_type('GLuint64', prefix : gl_include_block, dependencies : gl_lib_deps, include_directories : gl_includes)
     glconf.set('GST_GL_HAVE_GLUINT64', 1)
   endif
-  if cc.has_type('GLint64', prefix : gl_include_block, dependencies : gl_lib_deps)
+  if cc.has_type('GLint64', prefix : gl_include_block, dependencies : gl_lib_deps, include_directories : gl_includes)
     glconf.set('GST_GL_HAVE_GLINT64', 1)
   endif
-  if egl_dep.found() and cc.has_type('EGLAttrib', prefix : gl_include_block + egl_includes, dependencies : gl_lib_deps + [egl_dep])
+  if egl_dep.found() and cc.has_type('EGLAttrib', prefix : gl_include_block + egl_includes, dependencies : gl_lib_deps + [egl_dep], include_directories : gl_includes)
     glconf.set('GST_GL_HAVE_EGLATTRIB', 1)
   endif
-  if egl_dep.found() and cc.has_type('EGLuint64KHR', prefix : gl_include_block + egl_includes, dependencies : gl_lib_deps + [egl_dep])
+  if egl_dep.found() and cc.has_type('EGLuint64KHR', prefix : gl_include_block + egl_includes, dependencies : gl_lib_deps + [egl_dep], include_directories : gl_includes)
     glconf.set('GST_GL_HAVE_EGLUINT64KHR', 1)
   endif
 
@@ -713,19 +877,31 @@ if build_gstgl
     install_dir : get_option('libdir') + '/gstreamer-1.0/include/gst/gl',
     configuration : glconf)
 
+  gl_enums = gnome.mkenums_simple('gl-enumtypes',
+    sources : gir_gl_headers,
+    body_prefix : '#ifdef HAVE_CONFIG_H\n#include "config.h"\n#endif',
+    header_prefix : '#include <gst/gl/gl-prelude.h>',
+    decorator : 'GST_GL_API',
+    install_header: true,
+    install_dir : join_paths(get_option('includedir'), 'gstreamer-1.0/gst/gl'))
+  gl_enumtypes_c = gl_enums[0]
+  gl_enumtypes_h = gl_enums[1]
+  gen_sources = [gl_enumtypes_h]
+
   gstgl = library('gstgl-' + api_version,
-    gl_sources,
-    c_args : gst_plugins_base_args + gl_cpp_args,
-    include_directories : [configinc, libsinc],
+    gl_sources, gl_enumtypes_c, gl_enumtypes_h,
+    c_args : gst_plugins_base_args + gl_cpp_args + ['-DBUILDING_GST_GL'],
+    objc_args : gst_plugins_base_args + gl_cpp_args + gl_objc_args + ['-DBUILDING_GST_GL'],
+    include_directories : [configinc, libsinc, gl_includes],
     version : libversion,
     soversion : soversion,
+  darwin_versions : osxversion,
     install : true,
     dependencies : [gst_base_dep, video_dep, allocators_dep, gmodule_dep,
                     gl_lib_deps, gl_platform_deps, gl_winsys_deps, gl_misc_deps])
-  gen_sources = []
   if build_gir
     gl_gir = gnome.generate_gir(gstgl,
-      sources : gl_sources + gl_headers,
+      sources : gl_sources + [gl_enumtypes_h] + [gl_enumtypes_c] + gir_gl_headers + gl_x11_headers + gl_wayland_headers + gl_win32_headers + gl_cocoa_headers + gl_egl_headers,
       namespace : 'GstGL',
       nsversion : api_version,
       identifier_prefix : 'Gst',
@@ -741,7 +917,12 @@ if build_gstgl
 
 
   gstgl_dep = declare_dependency(link_with : gstgl,
-    include_directories : [libsinc],
+    include_directories : [libsinc, compat_includes],
     sources: gen_sources,
     dependencies : [video_dep, gst_base_dep] + gl_winsys_deps)
+
+elif get_option('gl').enabled()
+  error('GStreamer OpenGL integration required via options, but needed dependencies not found.')
+else
+  gstgl_dep = dependency('', required : false)
 endif

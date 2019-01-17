@@ -462,7 +462,8 @@ GST_DEBUG_CATEGORY_STATIC (gst_gl_color_convert_debug);
   GST_DEBUG_CATEGORY_INIT (gst_gl_color_convert_debug, "glconvert", 0, "convert");
 
 G_DEFINE_TYPE_WITH_CODE (GstGLColorConvert, gst_gl_color_convert,
-    GST_TYPE_OBJECT, DEBUG_INIT);
+    GST_TYPE_OBJECT, G_ADD_PRIVATE (GstGLColorConvert) DEBUG_INIT);
+
 static void gst_gl_color_convert_finalize (GObject * object);
 static void gst_gl_color_convert_reset (GstGLColorConvert * convert);
 
@@ -472,15 +473,13 @@ static void gst_gl_color_convert_reset (GstGLColorConvert * convert);
 static void
 gst_gl_color_convert_class_init (GstGLColorConvertClass * klass)
 {
-  g_type_class_add_private (klass, sizeof (GstGLColorConvertPrivate));
-
   G_OBJECT_CLASS (klass)->finalize = gst_gl_color_convert_finalize;
 }
 
 static void
 gst_gl_color_convert_init (GstGLColorConvert * convert)
 {
-  convert->priv = GST_GL_COLOR_CONVERT_GET_PRIVATE (convert);
+  convert->priv = gst_gl_color_convert_get_instance_private (convert);
 
   gst_gl_color_convert_reset (convert);
 }
@@ -781,7 +780,7 @@ gst_gl_color_convert_set_caps (GstGLColorConvert * convert,
  * @convert: a #GstGLColorConvert
  * @query: a completed ALLOCATION #GstQuery
  *
- * Provides an implementation of #GstBaseTransfromClass::decide_allocation()
+ * Provides an implementation of #GstBaseTransformClass.decide_allocation()
  *
  * Returns: whether the allocation parameters were successfully chosen
  *
@@ -882,18 +881,78 @@ _init_value_string_list (GValue * list, ...)
   va_end (args);
 }
 
+static void
+_append_value_string_list (GValue * list, ...)
+{
+  GValue item = G_VALUE_INIT;
+  gchar *str;
+  va_list args;
+
+  va_start (args, list);
+  while ((str = va_arg (args, gchar *))) {
+    g_value_init (&item, G_TYPE_STRING);
+    g_value_set_string (&item, str);
+
+    gst_value_list_append_value (list, &item);
+    g_value_unset (&item);
+  }
+  va_end (args);
+}
+
+static void
+_init_supported_formats (GstGLContext * context, gboolean output,
+    GValue * supported_formats)
+{
+  /* Assume if context == NULL that we don't have a GL context and can
+   * do the conversion */
+
+  /* Always supported input and output formats */
+  _init_value_string_list (supported_formats, "RGBA", "RGB", "RGBx", "BGR",
+      "BGRx", "BGRA", "xRGB", "xBGR", "ARGB", "ABGR", "GRAY8", "GRAY16_LE",
+      "GRAY16_BE", "AYUV", "YUY2", "UYVY", NULL);
+
+  /* Always supported input formats or output with multiple draw buffers */
+  if (!output || (!context || context->gl_vtable->DrawBuffers))
+    _append_value_string_list (supported_formats, "Y444", "I420", "YV12",
+        "Y42B", "Y41B", "NV12", "NV21", NULL);
+
+  /* Requires reading from a RG/LA framebuffer... */
+  if (!context || (USING_GLES3 (context) || USING_OPENGL (context)))
+    _append_value_string_list (supported_formats, "YUY2", "UYVY", NULL);
+
+  if (!context || gst_gl_format_is_supported (context, GST_GL_RGBA16))
+    _append_value_string_list (supported_formats, "ARGB64", NULL);
+
+  if (!context || gst_gl_format_is_supported (context, GST_GL_RGB565))
+    _append_value_string_list (supported_formats, "RGB16", "BGR16", NULL);
+}
+
 /* copies the given caps */
 static GstCaps *
-gst_gl_color_convert_caps_transform_format_info (GstCaps * caps)
+gst_gl_color_convert_caps_transform_format_info (GstGLContext * context,
+    gboolean output, GstCaps * caps)
 {
   GstStructure *st;
   GstCapsFeatures *f;
   gint i, n;
   GstCaps *res;
+  GValue supported_formats = G_VALUE_INIT;
   GValue rgb_formats = G_VALUE_INIT;
+  GValue supported_rgb_formats = G_VALUE_INIT;
+
+  /* There are effectively two modes here with the RGB/YUV transition:
+   * 1. There is a RGB-like format as input and we can transform to YUV or,
+   * 2. No RGB-like format as input so we can only transform to RGB-like formats
+   *
+   * We also filter down the list of formats depending on what the OpenGL
+   * context supports (when provided).
+   */
 
   _init_value_string_list (&rgb_formats, "RGBA", "ARGB", "BGRA", "ABGR", "RGBx",
-      "xRGB", "BGRx", "xBGR", "RGB", "BGR", NULL);
+      "xRGB", "BGRx", "xBGR", "RGB", "BGR", "ARGB64", NULL);
+  _init_supported_formats (context, output, &supported_formats);
+  gst_value_intersect (&supported_rgb_formats, &rgb_formats,
+      &supported_formats);
 
   res = gst_caps_new_empty ();
 
@@ -933,13 +992,13 @@ gst_gl_color_convert_caps_transform_format_info (GstCaps * caps)
         }
       }
       if (have_rgb_formats) {
-        gst_structure_remove_fields (st, "format", NULL);
+        gst_structure_set_value (st, "format", &supported_formats);
       } else {
         /* add passthrough structure, then the rgb conversion structure */
         gst_structure_set_value (st, "format", &passthrough_formats);
         gst_caps_append_structure_full (res, gst_structure_copy (st),
             gst_caps_features_copy (f));
-        gst_structure_set_value (st, "format", &rgb_formats);
+        gst_structure_set_value (st, "format", &supported_rgb_formats);
       }
       g_value_unset (&passthrough_formats);
     } else if (G_VALUE_HOLDS_STRING (format)) {
@@ -952,9 +1011,9 @@ gst_gl_color_convert_caps_transform_format_info (GstCaps * caps)
         gst_structure_set_value (st, "format", format);
         gst_caps_append_structure_full (res, gst_structure_copy (st),
             gst_caps_features_copy (f));
-        gst_structure_set_value (st, "format", &rgb_formats);
+        gst_structure_set_value (st, "format", &supported_rgb_formats);
       } else {                  /* RGB */
-        gst_structure_remove_fields (st, "format", NULL);
+        gst_structure_set_value (st, "format", &supported_formats);
       }
     }
     gst_structure_remove_fields (st, "colorimetry", "chroma-site",
@@ -963,7 +1022,9 @@ gst_gl_color_convert_caps_transform_format_info (GstCaps * caps)
     gst_caps_append_structure_full (res, st, gst_caps_features_copy (f));
   }
 
+  g_value_unset (&supported_formats);
   g_value_unset (&rgb_formats);
+  g_value_unset (&supported_rgb_formats);
 
   return res;
 }
@@ -975,7 +1036,7 @@ gst_gl_color_convert_caps_transform_format_info (GstCaps * caps)
  * @caps: (transfer none): the #GstCaps to transform
  * @filter: (transfer none): a set of filter #GstCaps
  *
- * Provides an implementation of #GstBaseTransformClass::transform_caps()
+ * Provides an implementation of #GstBaseTransformClass.transform_caps()
  *
  * Returns: (transfer full): the converted #GstCaps
  *
@@ -985,7 +1046,8 @@ GstCaps *
 gst_gl_color_convert_transform_caps (GstGLContext * context,
     GstPadDirection direction, GstCaps * caps, GstCaps * filter)
 {
-  caps = gst_gl_color_convert_caps_transform_format_info (caps);
+  caps = gst_gl_color_convert_caps_transform_format_info (context,
+      direction == GST_PAD_SRC, caps);
 
   if (filter) {
     GstCaps *tmp;
@@ -1213,7 +1275,7 @@ gst_gl_color_convert_fixate_format_target (GstCaps * caps, GstCaps * result)
  * @caps: (transfer none): the #GstCaps of @direction
  * @other: (transfer full): the #GstCaps to fixate
  *
- * Provides an implementation of #GstBaseTransformClass::fixate_caps()
+ * Provides an implementation of #GstBaseTransformClass.fixate_caps()
  *
  * Returns: (transfer full): the fixated #GstCaps
  *
@@ -1430,6 +1492,7 @@ _get_n_textures (GstVideoFormat v_format)
     case GST_VIDEO_FORMAT_UYVY:
     case GST_VIDEO_FORMAT_RGB16:
     case GST_VIDEO_FORMAT_BGR16:
+    case GST_VIDEO_FORMAT_ARGB64:
       return 1;
     case GST_VIDEO_FORMAT_NV12:
     case GST_VIDEO_FORMAT_NV21:
@@ -2526,7 +2589,8 @@ _do_convert_draw (GstGLContext * context, GstGLColorConvert * convert)
 
   if (gl->BindVertexArray)
     gl->BindVertexArray (0);
-  _unbind_buffer (convert);
+  else
+    _unbind_buffer (convert);
 
   if (gl->DrawBuffer)
     gl->DrawBuffer (GL_COLOR_ATTACHMENT0);

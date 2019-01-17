@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-video.html" title="Video Library">
 <link rel="prev" href="GstVideoOrientation.html" title="GstVideoOrientation">
-<link rel="next" href="gst-plugins-base-libs-GstVideoDecoder.html" title="GstVideoDecoder">
+<link rel="next" href="GstVideoDecoder.html" title="GstVideoDecoder">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -21,7 +21,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-video.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="GstVideoOrientation.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-libs-GstVideoDecoder.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstVideoDecoder.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GstVideoOverlay"></a><div class="titlepage"></div>
@@ -144,7 +144,7 @@
 </div>
 <div class="refsect1">
 <a name="GstVideoOverlay.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/video/videooverlay.h&gt;
+<pre class="synopsis">#include &lt;gst/video/video.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -246,7 +246,7 @@ immediately. Here is an example on how to do that correctly:</p>
 
 <p></p>
 <div class="refsect3">
-<a name="id-1.2.15.17.7.8"></a><h4>Two basic usage scenarios</h4>
+<a name="id-1.2.15.19.7.8"></a><h4>Two basic usage scenarios</h4>
 <p>There are two basic usage scenarios: in the simplest case, the application
 uses <span class="type">playbin</span> or <span class="type">plasink</span> or knows exactly what particular element is used
 for video output, which is usually the case when the application creates
@@ -286,7 +286,7 @@ sync handler; see below for a better approach without <a href="/usr/share/gtk-do
 used in the callback).</p>
 </div>
 <div class="refsect3">
-<a name="id-1.2.15.17.7.9"></a><h4>GstVideoOverlay and Gtk+</h4>
+<a name="id-1.2.15.19.7.9"></a><h4>GstVideoOverlay and Gtk+</h4>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -491,7 +491,7 @@ used in the callback).</p>
 <p></p>
 </div>
 <div class="refsect3">
-<a name="id-1.2.15.17.7.10"></a><h4>GstVideoOverlay and Qt</h4>
+<a name="id-1.2.15.19.7.10"></a><h4>GstVideoOverlay and Qt</h4>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>

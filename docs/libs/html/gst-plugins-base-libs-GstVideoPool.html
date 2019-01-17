@@ -6,8 +6,8 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-video.html" title="Video Library">
-<link rel="prev" href="gst-plugins-base-libs-GstVideoEncoder.html" title="GstVideoEncoder">
-<link rel="next" href="gst-plugins-base-libs-gstvideoutils.html" title="gstvideoutils">
+<link rel="prev" href="GstVideoEncoder.html" title="GstVideoEncoder">
+<link rel="next" href="gst-plugins-base-libs-GstVideo-Codec-utility-function.html" title="GstVideo Codec utility function">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -15,12 +15,13 @@
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
-                  <a href="#gst-plugins-base-libs-GstVideoPool.description" class="shortcut">Description</a></span>
+                  <a href="#gst-plugins-base-libs-GstVideoPool.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-libs-GstVideoPool.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-video.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gst-plugins-base-libs-GstVideoEncoder.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-libs-gstvideoutils.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="p" href="GstVideoEncoder.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-libs-GstVideo-Codec-utility-function.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-libs-GstVideoPool"></a><div class="titlepage"></div>
@@ -66,7 +67,7 @@
 </tbody>
 </table></div>
 </div>
-<div class="refsect1">
+<a name="GstVideoBufferPool"></a><div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoPool.other"></a><h2>Types and Values</h2>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
@@ -76,7 +77,7 @@
 <tbody>
 <tr>
 <td class="datatype_keyword">struct</td>
-<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstVideoPool.html#GstVideoBufferPool" title="struct GstVideoBufferPool">GstVideoBufferPool</a></td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstVideoPool.html#GstVideoBufferPool-struct" title="struct GstVideoBufferPool">GstVideoBufferPool</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword">struct</td>
@@ -94,8 +95,17 @@
 </table></div>
 </div>
 <div class="refsect1">
+<a name="gst-plugins-base-libs-GstVideoPool.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBufferPool.html#GstBufferPool-struct">GstBufferPool</a>
+                <span class="lineart">╰──</span> GstVideoBufferPool
+</pre>
+</div>
+<div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoPool.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/video/gstvideopool.h&gt;
+<pre class="synopsis">#include &lt;gst/video/video.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -103,7 +113,7 @@
 <p>Special GstBufferPool subclass for raw video buffers.</p>
 <p>Allows configuration of video-specific requirements such as
 stride alignments or pixel padding, and can also be configured
-to automatically add <a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> to the buffers.</p>
+to automatically add <a class="link" href="gst-plugins-base-libs-GstMeta-for-video.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> to the buffers.</p>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoPool.functions_details"></a><h2>Functions</h2>
@@ -125,7 +135,7 @@ supports all the video bufferpool options.</p>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_buffer_pool_config_get_video_alignment
                                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *config</code></em>,
-                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a> *align</code></em>);</pre>
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a> *align</code></em>);</pre>
 <p>Get the video alignment from the bufferpool configuration <em class="parameter"><code>config</code></em>
  in
 in <em class="parameter"><code>align</code></em>
@@ -146,7 +156,7 @@ in <em class="parameter"><code>align</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>align</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -164,7 +174,7 @@ could be parsed correctly.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_buffer_pool_config_set_video_alignment
                                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstStructure.html#GstStructure-struct"><span class="type">GstStructure</span></a> *config</code></em>,
-                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a> *align</code></em>);</pre>
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a> *align</code></em>);</pre>
 <p>Set the video alignment in <em class="parameter"><code>align</code></em>
  to the bufferpool configuration
 <em class="parameter"><code>config</code></em>
@@ -185,7 +195,7 @@ gst_buffer_pool_config_set_video_alignment
 </tr>
 <tr>
 <td class="parameter_name"><p>align</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoAlignment" title="struct GstVideoAlignment"><span class="type">GstVideoAlignment</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -196,13 +206,8 @@ gst_buffer_pool_config_set_video_alignment
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoPool.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
-<a name="GstVideoBufferPool"></a><h3>struct GstVideoBufferPool</h3>
-<pre class="programlisting">struct GstVideoBufferPool {
-  GstBufferPool bufferpool;
-
-  GstVideoBufferPoolPrivate *priv;
-};
-</pre>
+<a name="GstVideoBufferPool-struct"></a><h3>struct GstVideoBufferPool</h3>
+<pre class="programlisting">struct GstVideoBufferPool;</pre>
 </div>
 <hr>
 <div class="refsect2">

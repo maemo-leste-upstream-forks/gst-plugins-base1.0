@@ -42,6 +42,8 @@ check_gl=\
     libs/gstglslstage \
     libs/gstglshader \
     libs/gstglheaders \
+    libs/gstglformat \
+    libs/gstglfeature \
     elements/glimagesink \
     elements/glbin \
     pipelines/gl-launch-lines
@@ -98,10 +100,17 @@ else
 check_audiomixer =
 endif
 
+if USE_PLUGIN_COMPOSITOR
+check_compositor = elements/compositor
+else
+check_compositor =
+endif
+
 if USE_PLUGIN_PLAYBACK
 check_playback = elements/decodebin elements/playbin \
     elements/playbin-complex elements/streamsynchronizer \
-    elements/playsink
+    elements/playsink \
+    elements/urisourcebin
 else
 check_playback =
 endif
@@ -179,7 +188,7 @@ check_adder =
 endif
 
 if HAVE_ORC
-check_orc = orc/video orc/audio orc/audiomixer orc/adder orc/volume orc/videotestsrc
+check_orc = orc/video orc/audio orc/audiomixer orc/adder orc/compositor orc/volume orc/videotestsrc
 else
 check_orc =
 endif
@@ -218,6 +227,12 @@ else
 check_audioresample =
 endif
 
+if USE_PLUGIN_OVERLAYCOMPOSITION
+check_overlaycomposition = elements/overlaycomposition
+else
+check_overlaycomposition =
+endif
+
 if HAVE_CXX
 cxx_checks = libs/gstlibscpp
 else
@@ -243,11 +258,13 @@ check_PROGRAMS = \
 	libs/rtp \
 	libs/rtpbasedepayload \
 	libs/rtpbasepayload \
+	libs/rtpmeta \
 	libs/rtsp \
 	libs/rtspconnection \
 	libs/sdp \
 	libs/tag \
 	libs/video \
+	libs/videoanc \
 	libs/videodecoder \
 	libs/videoencoder \
 	libs/videotimecode \
@@ -263,11 +280,13 @@ check_PROGRAMS = \
 	$(check_audiorate) \
 	$(check_audioresample) \
 	$(check_audiotestsrc) \
+	$(check_compositor) \
 	$(check_encodebin) \
 	$(check_gio) \
 	$(check_gl) \
 	$(check_ogg) \
 	$(check_opus) \
+	$(check_overlaycomposition) \
 	$(check_pango) \
 	$(check_playback) \
 	$(check_rawparse) \
@@ -318,10 +337,6 @@ LDADD = $(GST_LIBS) $(GST_CHECK_LIBS)
 VALGRIND_TESTS_DISABLE = $(VALGRIND_TO_FIX)
 
 SUPPRESSIONS = $(top_srcdir)/common/gst.supp $(srcdir)/gst-plugins-base.supp
-
-generic_rtp_LDADD = \
-        $(top_builddir)/gst-libs/gst/rtp/libgstrtp-@GST_API_VERSION@.la \
-        $(LDADD)
 
 libs_libsabi_CFLAGS = \
 	$(GST_PLUGINS_BASE_CFLAGS) \
@@ -504,6 +519,22 @@ libs_gstglheaders_CFLAGS = \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
 
+libs_gstglformat_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglformat_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
+libs_gstglfeature_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
+
+libs_gstglfeature_LDADD = \
+	$(top_builddir)/gst-libs/gst/gl/libgstgl-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(GST_LIBS) $(LDADD)
+
 elements_glimagesink_CFLAGS = \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_BASE_CFLAGS) $(GST_CFLAGS) $(GL_CFLAGS) $(AM_CFLAGS)
@@ -564,6 +595,13 @@ libs_rtpbasedepayload_CFLAGS = \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(AM_CFLAGS)
 libs_rtpbasedepayload_LDADD = \
+	$(top_builddir)/gst-libs/gst/rtp/libgstrtp-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(LDADD)
+
+libs_rtpmeta_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(AM_CFLAGS)
+libs_rtpmeta_LDADD = \
 	$(top_builddir)/gst-libs/gst/rtp/libgstrtp-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) $(LDADD)
 
@@ -661,8 +699,24 @@ elements_audiointerleave_CFLAGS = \
 elements_audiorate_LDADD = \
 	$(top_builddir)/gst-libs/gst/audio/libgstaudio-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) \
+	$(top_builddir)/gst-libs/gst/app/libgstapp-@GST_API_VERSION@.la \
 	$(LDADD)
 elements_audiorate_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(CFLAGS) $(AM_CFLAGS)
+
+elements_audiotestsrc_LDADD = \
+	$(top_builddir)/gst-libs/gst/audio/libgstaudio-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(LDADD)
+elements_audiotestsrc_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) \
+	$(AM_CFLAGS)
+
+elements_compositor_LDADD = \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) $(LDADD)
+elements_compositor_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(CFLAGS) $(AM_CFLAGS)
 
 elements_libvisual_LDADD =  $(LDADD)
 elements_libvisual_CFLAGS = $(CFLAGS) $(AM_CFLAGS)
@@ -672,6 +726,9 @@ elements_playbin_CFLAGS = $(GST_BASE_CFLAGS) $(AM_CFLAGS)
 
 elements_playbin_complex_LDADD = $(top_builddir)/gst-libs/gst/audio/libgstaudio-@GST_API_VERSION@.la $(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la $(GST_BASE_LIBS) $(LDADD)
 elements_playbin_complex_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(AM_CFLAGS)
+
+elements_urisourcebin_LDADD = $(GST_BASE_LIBS) $(LDADD)
+elements_urisourcebin_CFLAGS = $(GST_BASE_CFLAGS) $(AM_CFLAGS)
 
 elements_decodebin_LDADD = $(GST_BASE_LIBS) $(LDADD)
 elements_decodebin_CFLAGS = $(GST_BASE_CFLAGS) $(AM_CFLAGS)
@@ -716,6 +773,16 @@ elements_volume_CFLAGS = \
 	$(GST_CONTROLLER_CFLAGS) \
 	$(GST_BASE_CFLAGS) \
 	$(AM_CFLAGS)
+
+elements_overlaycomposition_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) \
+	$(AM_CFLAGS)
+
+elements_overlaycomposition_LDADD = \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) \
+	$(LDADD)
 
 elements_vorbisdec_LDADD = \
 	$(LDADD) \
@@ -785,6 +852,16 @@ libs_video_CFLAGS = \
 	$(AM_CFLAGS)
 
 libs_video_LDADD = \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
+	$(GST_BASE_LIBS) \
+	$(LDADD)
+
+libs_videoanc_CFLAGS = \
+	$(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) \
+	$(AM_CFLAGS)
+
+libs_videoanc_LDADD = \
 	$(top_builddir)/gst-libs/gst/video/libgstvideo-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) \
 	$(LDADD)
@@ -876,6 +953,9 @@ nodist_orc_adder_SOURCES = orc/adder.c
 orc_audiomixer_CFLAGS = $(ORC_CFLAGS)
 orc_audiomixer_LDADD = $(ORC_LIBS) -lorc-test-0.4
 nodist_orc_audiomixer_SOURCES = orc/audiomixer.c
+orc_compositor_CFLAGS = $(ORC_CFLAGS)
+orc_compositor_LDADD = $(ORC_LIBS) -lorc-test-0.4
+nodist_orc_compositor_SOURCES = orc/compositor.c
 orc_volume_CFLAGS = $(ORC_CFLAGS)
 orc_volume_LDADD = $(ORC_LIBS) -lorc-test-0.4
 nodist_orc_volume_SOURCES = orc/volume.c
@@ -896,6 +976,10 @@ orc/audiomixer.c: $(top_srcdir)/gst/audiomixer/gstaudiomixerorc.orc
 	$(ORCC) --test -o $@ $<
 
 orc/adder.c: $(top_srcdir)/gst/adder/gstadderorc.orc
+	$(MKDIR_P) orc/
+	$(ORCC) --test -o $@ $<
+
+orc/compositor.c: $(top_srcdir)/gst/compositor/compositororc.orc
 	$(MKDIR_P) orc/
 	$(ORCC) --test -o $@ $<
 

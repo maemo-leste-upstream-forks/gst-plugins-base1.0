@@ -158,7 +158,7 @@ _do_init (void)
 };
 
 G_DEFINE_TYPE_EXTENDED (GstDiscoverer, gst_discoverer, G_TYPE_OBJECT, 0,
-    _do_init ());
+    G_ADD_PRIVATE (GstDiscoverer) _do_init ());
 
 enum
 {
@@ -211,8 +211,6 @@ gst_discoverer_class_init (GstDiscovererClass * klass)
 
   gobject_class->set_property = gst_discoverer_set_property;
   gobject_class->get_property = gst_discoverer_get_property;
-
-  g_type_class_add_private (klass, sizeof (GstDiscovererPrivate));
 
   /* properties */
   /**
@@ -312,8 +310,7 @@ gst_discoverer_init (GstDiscoverer * dc)
   GstElement *tmp;
   GstFormat format = GST_FORMAT_TIME;
 
-  dc->priv = G_TYPE_INSTANCE_GET_PRIVATE (dc, GST_TYPE_DISCOVERER,
-      GstDiscovererPrivate);
+  dc->priv = gst_discoverer_get_instance_private (dc);
 
   dc->priv->timeout = DEFAULT_PROP_TIMEOUT;
   dc->priv->async = FALSE;
@@ -547,16 +544,29 @@ _event_probe (GstPad * pad, GstPadProbeInfo * info, PrivateStream * ps)
   return GST_PAD_PROBE_OK;
 }
 
-static GstStaticCaps subtitle_caps = GST_STATIC_CAPS ("text/x-raw; "
-    "subpicture/x-pgs; subpicture/x-dvb; subpicture/x-dvd; "
-    "application/x-subtitle-unknown; application/x-ssa; application/x-ass; "
-    "subtitle/x-kate; application/x-kate; subpicture/x-xsub");
+static GstStaticCaps subtitle_caps =
+    GST_STATIC_CAPS
+    ("application/x-ssa; application/x-ass; application/x-kate");
 
 static gboolean
 is_subtitle_caps (const GstCaps * caps)
 {
   GstCaps *subs_caps;
+  GstStructure *s;
+  const gchar *name;
   gboolean ret;
+
+  s = gst_caps_get_structure (caps, 0);
+  if (!s)
+    return FALSE;
+
+  name = gst_structure_get_name (s);
+  if (g_str_has_prefix (name, "text/") ||
+      g_str_has_prefix (name, "subpicture/") ||
+      g_str_has_prefix (name, "subtitle/") ||
+      g_str_has_prefix (name, "closedcaption/") ||
+      g_str_has_prefix (name, "application/x-subtitle"))
+    return TRUE;
 
   subs_caps = gst_static_caps_get (&subtitle_caps);
   ret = gst_caps_can_intersect (caps, subs_caps);

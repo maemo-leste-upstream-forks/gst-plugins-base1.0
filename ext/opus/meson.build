@@ -6,7 +6,7 @@ opus_sources = [
   'gstopusheader.c',
 ]
 
-opus_dep = dependency('opus', version : '>= 0.9.4', required : false)
+opus_dep = dependency('opus', version : '>= 0.9.4', required : get_option('opus'))
 
 if opus_dep.found()
   gstopus = library('gstopus',
@@ -18,4 +18,5 @@ if opus_dep.found()
     install : true,
     install_dir : plugins_install_dir,
   )
+  pkgconfig.generate(gstopus, install_dir : plugins_pkgconfig_install_dir)
 endif

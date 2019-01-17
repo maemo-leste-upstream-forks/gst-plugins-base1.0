@@ -18,10 +18,20 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "gstvideoaffinetransformationmeta.h"
 
 #include <string.h>
+
+/**
+ * SECTION:gstvideoaffinetransformationmeta
+ * @title: GstVideoAffineTransformationMeta
+ * @short_description: GstMeta for video affine transformation
+ *
+ */
 
 GType
 gst_video_affine_transformation_meta_api_get_type (void)

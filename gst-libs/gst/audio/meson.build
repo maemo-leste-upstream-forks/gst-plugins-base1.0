@@ -1,5 +1,6 @@
 audio_src= [
   'audio.c',
+  'audio-buffer.c',
   'audio-channel-mixer.c',
   'audio-channels.c',
   'audio-converter.c',
@@ -45,6 +46,7 @@ audio_mkenum_headers = [
 # FIXME: check headers
 audio_headers = audio_mkenum_headers + [
   'audio-prelude.h',
+  'audio-buffer.h',
   'gstaudiobasesink.h',
   'gstaudiobasesrc.h',
   'gstaudiocdsrc.h',
@@ -60,19 +62,16 @@ audio_headers = audio_mkenum_headers + [
 ]
 install_headers(audio_headers, subdir : 'gstreamer-1.0/gst/audio/')
 
-mkenums = find_program('audio_mkenum.py')
-gstaudio_h = custom_target('gstaudioenum_h',
-  output : 'audio-enumtypes.h',
-  input : audio_mkenum_headers,
-  install : true,
-  install_dir : 'include/gstreamer-1.0/gst/audio/',
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
+audio_enums = gnome.mkenums_simple('audio-enumtypes',
+  sources : audio_mkenum_headers,
+  body_prefix : '#ifdef HAVE_CONFIG_H\n#include "config.h"\n#endif',
+  header_prefix : '#include <gst/audio/audio-prelude.h>',
+  decorator : 'GST_AUDIO_API',
+  install_header: true,
+  install_dir : join_paths(get_option('includedir'), 'gstreamer-1.0/gst/audio'))
+gstaudio_c = audio_enums[0]
+gstaudio_h = audio_enums[1]
 
-gstaudio_c = custom_target('gstaudioenum_c',
-  output : 'audio-enumtypes.c',
-  input : audio_mkenum_headers,
-  depends : [gstaudio_h],
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
 audio_gen_sources = [gstaudio_h]
 
 gstaudio_deps = [tag_dep, gst_base_dep, libm]
@@ -90,10 +89,10 @@ if have_orcc
 else
   orc_h = configure_file(input : orcsrc + '-dist.h',
     output : orcsrc + '.h',
-    configuration : configuration_data())
+    copy : true)
   orc_c = configure_file(input : orcsrc + '-dist.c',
     output : orcsrc + '.c',
-    configuration : configuration_data())
+    copy : true)
 endif
 
 simd_cargs = []
@@ -142,11 +141,12 @@ endif
 
 gstaudio = library('gstaudio-@0@'.format(api_version),
   audio_src, gstaudio_h, gstaudio_c, orc_c, orc_h,
-  c_args : gst_plugins_base_args + simd_cargs,
+  c_args : gst_plugins_base_args + simd_cargs + ['-DBUILDING_GST_AUDIO'],
   include_directories: [configinc, libsinc],
   link_with : simd_dependencies,
   version : libversion,
   soversion : soversion,
+  darwin_versions : osxversion,
   install : true,
   dependencies : gstaudio_deps,
 )

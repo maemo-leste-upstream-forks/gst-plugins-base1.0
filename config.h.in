@@ -50,6 +50,9 @@
 /* The GIO install prefix. */
 #undef GIO_PREFIX
 
+/* public symbol export define */
+#undef GST_API_EXPORT
+
 /* major/minor version */
 #undef GST_API_VERSION
 
@@ -261,6 +264,9 @@
 
 /* Define to enable libvisual visualization library (used by libvisual). */
 #undef HAVE_LIBVISUAL
+
+/* Define to 1 if you have the <linux/dma-buf.h> header file. */
+#undef HAVE_LINUX_DMA_BUF_H
 
 /* Define to 1 if you have the `localtime_r' function. */
 #undef HAVE_LOCALTIME_R

@@ -15,7 +15,7 @@
 <div>
 <div><table class="navigation" id="top" width="100%" cellpadding="2" cellspacing="0"><tr><th valign="middle"><p class="title">GStreamer Base Plugins 1.0 Library Reference Manual</p></th></tr></table></div>
 <div><p class="releaseinfo">
-      for GStreamer Base Library 1.0 (1.14.4)
+      for GStreamer Base Library 1.0 (1.15.1)
       <a class="ulink" href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/" target="_top">http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/</a>.
     </p></div>
 </div>
@@ -38,7 +38,7 @@ How to compile against the base plugins libraries
 <span class="refentrytitle"><a href="gst-plugins-base-libs-fdmemory.html">GstFdAllocator</a></span><span class="refpurpose"> — Memory wrapper for fd backed memory</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstPhysMemoryAllocator.html">GstPhysMemoryAllocator</a></span><span class="refpurpose"> — Interface for allocators that pass around physical memory addresses</span>
+<span class="refentrytitle"><a href="GstPhysMemoryAllocator.html">GstPhysMemoryAllocator</a></span><span class="refpurpose"> — Interface for allocators that pass around physical memory addresses</span>
 </dt>
 </dl></dd>
 <dt><span class="chapter"><a href="gstreamer-app.html">App Library</a></span></dt>
@@ -58,7 +58,7 @@ How to compile against the base plugins libraries
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstAudio.html">GstAudio</a></span><span class="refpurpose"> — Support library for audio elements</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstAudioDownmixMeta.html">GstAudioDownmixMeta</a></span><span class="refpurpose"> — Buffer metadata for audio downmix matrix handling</span>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstAudio-meta.html">GstAudio meta</a></span><span class="refpurpose"> — Buffer metadata for audio downmix matrix handling</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GstAudioAggregator.html">GstAudioAggregator</a></span><span class="refpurpose"> — Base class that manages a set of audio input pads
@@ -95,7 +95,7 @@ with the purpose of aggregating or mixing their raw audio input buffers</span>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-Audio-channels.html">Audio-channels</a></span><span class="refpurpose"> — Support library for audio channel handling</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstAudioConverter.html">GstAudioConverter</a></span><span class="refpurpose"></span>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstAudioConverter.html">GstAudioConverter</a></span><span class="refpurpose"> — Generic audio conversion</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstAudioQuantize.html">GstAudioQuantize</a></span><span class="refpurpose"></span>
@@ -135,6 +135,9 @@ with the purpose of aggregating or mixing their raw audio input buffers</span>
 <dt><span class="chapter"><a href="gstreamer-rtp.html">RTP Library</a></span></dt>
 <dd><dl>
 <dt>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstMeta-for-RTP.html">GstMeta for RTP</a></span><span class="refpurpose"> — RTP related GstMeta</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="GstRTPBaseAudioPayload.html">GstRTPBaseAudioPayload</a></span><span class="refpurpose"> — Base class for audio RTP payloader</span>
 </dt>
 <dt>
@@ -155,6 +158,9 @@ with the purpose of aggregating or mixing their raw audio input buffers</span>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstRtphdrext.html">GstRtphdrext</a></span><span class="refpurpose"> — Helper methods for dealing with RTP header extensions</span>
 </dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstRTPdefs.html">GstRTPdefs</a></span><span class="refpurpose"> — common RTP defines</span>
+</dt>
 </dl></dd>
 <dt><span class="chapter"><a href="gstreamer-rtsp.html">RTSP Library</a></span></dt>
 <dd><dl>
@@ -165,10 +171,10 @@ with the purpose of aggregating or mixing their raw audio input buffers</span>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstRtspdefs.html">GstRtspdefs</a></span><span class="refpurpose"> — common RTSP defines</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstRTSPExtension.html">GstRTSPExtension</a></span><span class="refpurpose"> — Interface for extending RTSP protocols</span>
+<span class="refentrytitle"><a href="GstRTSPExtension.html">GstRTSPExtension</a></span><span class="refpurpose"> — Interface for extending RTSP protocols</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstRTSPMessage.html">GstRTSPMessage</a></span><span class="refpurpose"> — RTSP messages</span>
+<span class="refentrytitle"><a href="GstRTSPMessage.html">GstRTSPMessage</a></span><span class="refpurpose"> — RTSP messages</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstRTSPTimeRange.html">GstRTSPTimeRange</a></span><span class="refpurpose"> — dealing with time ranges</span>
@@ -177,7 +183,7 @@ with the purpose of aggregating or mixing their raw audio input buffers</span>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstRTSPRange.html">GstRTSPRange</a></span><span class="refpurpose"> — dealing with RTSP transports</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstRTSPUrl.html">GstRTSPUrl</a></span><span class="refpurpose"> — handling RTSP urls</span>
+<span class="refentrytitle"><a href="GstRTSPUrl.html">GstRTSPUrl</a></span><span class="refpurpose"> — handling RTSP urls</span>
 </dt>
 </dl></dd>
 <dt><span class="chapter"><a href="gstreamer-sdp.html">SDP Library</a></span></dt>
@@ -254,17 +260,26 @@ and encoder, decoder, URI source and URI sink elements</span>
 <dt>
 <span class="refentrytitle"><a href="GstEncodingProfile.html">GstEncodingProfile</a></span><span class="refpurpose"> — Encoding profile library</span>
 </dt>
+<dt>
+<span class="refentrytitle"><a href="GstAudioVisualizer.html">GstAudioVisualizer</a></span><span class="refpurpose"> — Base class for visualizers.</span>
+</dt>
 </dl></dd>
 <dt><span class="chapter"><a href="gstreamer-video.html">Video Library</a></span></dt>
 <dd><dl>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstVideoAlignment.html">GstVideoAlignment</a></span><span class="refpurpose"> — Support library for video operations</span>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstVideo.html">GstVideo</a></span><span class="refpurpose"> — Support library for video operations</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-gstvideometa.html">gstvideometa</a></span><span class="refpurpose"></span>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstMeta-for-video.html">GstMeta for video</a></span><span class="refpurpose"> — Video related GstMeta</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-gstvideoaffinetransformationmeta.html">gstvideoaffinetransformationmeta</a></span><span class="refpurpose"></span>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstVideoAffineTransformationMeta.html">GstVideoAffineTransformationMeta</a></span><span class="refpurpose"> — GstMeta for video affine transformation</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GstVideoAggregator.html">GstVideoAggregator</a></span><span class="refpurpose"> — Base class for video aggregators</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GstVideoAggregatorPad.html">GstVideoAggregatorPad</a></span><span class="refpurpose"></span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstVideoOverlayRectangle.html">GstVideoOverlayRectangle</a></span><span class="refpurpose"> — Video Buffer Overlay Compositions (Subtitles, Logos)</span>
@@ -308,20 +323,23 @@ controls</span>
    video.</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstVideoDecoder.html">GstVideoDecoder</a></span><span class="refpurpose"> — Base class for video decoders</span>
+<span class="refentrytitle"><a href="GstVideoDecoder.html">GstVideoDecoder</a></span><span class="refpurpose"> — Base class for video decoders</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstVideoEncoder.html">GstVideoEncoder</a></span><span class="refpurpose"> — Base class for video encoders</span>
+<span class="refentrytitle"><a href="GstVideoEncoder.html">GstVideoEncoder</a></span><span class="refpurpose"> — Base class for video encoders</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstVideoPool.html">GstVideoBufferPool</a></span><span class="refpurpose"> — GstBufferPool for raw video buffers</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-gstvideoutils.html">gstvideoutils</a></span><span class="refpurpose"></span>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstVideo-Codec-utility-function.html">GstVideo Codec utility function</a></span><span class="refpurpose"> — Extra utility functions for video codecs</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GstNavigation.html">GstNavigation</a></span><span class="refpurpose"> — Interface for creating, sending and parsing navigation
 events.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstVideo-Ancillary.html">GstVideo Ancillary</a></span><span class="refpurpose"> — Utilities for Ancillary data, VBI and Closed Caption</span>
 </dt>
 </dl></dd>
 <dt><span class="chapter"><a href="gl.html">OpenGL Integration Library</a></span></dt>
@@ -351,7 +369,13 @@ events.</span>
 <span class="refentrytitle"><a href="GstGLDisplay.html">GstGLDisplay</a></span><span class="refpurpose"> — window system display connection abstraction</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstGLDisplayWayland.html">GstGLDisplayWayland</a></span><span class="refpurpose"></span>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstGLDisplayCocoa.html">GstGLDisplayCocoa</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gst-plugins-base-libs-GstGLDisplayEGL.html">GstGLDisplayEGL</a></span><span class="refpurpose"></span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GstGLDisplayWayland.html">GstGLDisplayWayland</a></span><span class="refpurpose"></span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstGLDisplayX11.html">GstGLDisplayX11</a></span><span class="refpurpose"></span>
@@ -375,7 +399,7 @@ events.</span>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstGLMemoryPBO.html">GstGLMemoryPBO</a></span><span class="refpurpose"> — memory subclass for GL textures</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gst-plugins-base-libs-GstGLOverlayCompositor.html">GstGLOverlayCompositor</a></span><span class="refpurpose"> — Composite multiple overlays using OpenGL</span>
+<span class="refentrytitle"><a href="GstGLOverlayCompositor.html">GstGLOverlayCompositor</a></span><span class="refpurpose"> — Composite multiple overlays using OpenGL</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="gst-plugins-base-libs-GstGLQuery.html">GstGLQuery</a></span><span class="refpurpose"> — OpenGL query abstraction</span>
@@ -418,18 +442,19 @@ events.</span>
 <dt><span class="part"><a href="gstreamer-libs-hierarchy.html">II. Object Hierarchy</a></span></dt>
 <dt><span class="index"><a href="api-index-full.html">Index</a></span></dt>
 <dt><span class="index"><a href="api-index-deprecated.html">Index of deprecated API</a></span></dt>
-<dt><span class="index"><a href="ix03.html">Index of new API in 1.14</a></span></dt>
-<dt><span class="index"><a href="ix04.html">Index of new API in 1.12</a></span></dt>
-<dt><span class="index"><a href="ix05.html">Index of new API in 1.10</a></span></dt>
-<dt><span class="index"><a href="ix06.html">Index of new API in 1.8.1</a></span></dt>
-<dt><span class="index"><a href="ix07.html">Index of new API in 1.8</a></span></dt>
-<dt><span class="index"><a href="ix08.html">Index of new API in 1.6.1</a></span></dt>
-<dt><span class="index"><a href="ix09.html">Index of new API in 1.6</a></span></dt>
-<dt><span class="index"><a href="ix10.html">Index of new API in 1.4</a></span></dt>
-<dt><span class="index"><a href="ix11.html">Index of new API in 1.2.2</a></span></dt>
-<dt><span class="index"><a href="ix12.html">Index of new API in 1.2.1</a></span></dt>
-<dt><span class="index"><a href="ix13.html">Index of new API in 1.2</a></span></dt>
-<dt><span class="index"><a href="ix14.html">Index of new API in 1.0.3</a></span></dt>
+<dt><span class="index"><a href="ix03.html">Index of new API in 1.16</a></span></dt>
+<dt><span class="index"><a href="ix04.html">Index of new API in 1.14</a></span></dt>
+<dt><span class="index"><a href="ix05.html">Index of new API in 1.12</a></span></dt>
+<dt><span class="index"><a href="ix06.html">Index of new API in 1.10</a></span></dt>
+<dt><span class="index"><a href="ix07.html">Index of new API in 1.8.1</a></span></dt>
+<dt><span class="index"><a href="ix08.html">Index of new API in 1.8</a></span></dt>
+<dt><span class="index"><a href="ix09.html">Index of new API in 1.6.1</a></span></dt>
+<dt><span class="index"><a href="ix10.html">Index of new API in 1.6</a></span></dt>
+<dt><span class="index"><a href="ix11.html">Index of new API in 1.4</a></span></dt>
+<dt><span class="index"><a href="ix12.html">Index of new API in 1.2.2</a></span></dt>
+<dt><span class="index"><a href="ix13.html">Index of new API in 1.2.1</a></span></dt>
+<dt><span class="index"><a href="ix14.html">Index of new API in 1.2</a></span></dt>
+<dt><span class="index"><a href="ix15.html">Index of new API in 1.0.3</a></span></dt>
 <dt><span class="glossary"><a href="annotation-glossary.html">Annotation Glossary</a></span></dt>
 </dl></div>
 </div>

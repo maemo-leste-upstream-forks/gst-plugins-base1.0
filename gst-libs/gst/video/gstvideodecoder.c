@@ -288,10 +288,6 @@
 GST_DEBUG_CATEGORY (videodecoder_debug);
 #define GST_CAT_DEFAULT videodecoder_debug
 
-#define GST_VIDEO_DECODER_GET_PRIVATE(obj)  \
-    (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GST_TYPE_VIDEO_DECODER, \
-        GstVideoDecoderPrivate))
-
 struct _GstVideoDecoderPrivate
 {
   /* FIXME introduce a context ? */
@@ -410,6 +406,8 @@ struct _GstVideoDecoderPrivate
 };
 
 static GstElementClass *parent_class = NULL;
+static gint private_offset = 0;
+
 static void gst_video_decoder_class_init (GstVideoDecoderClass * klass);
 static void gst_video_decoder_init (GstVideoDecoder * dec,
     GstVideoDecoderClass * klass);
@@ -493,9 +491,19 @@ gst_video_decoder_get_type (void)
 
     _type = g_type_register_static (GST_TYPE_ELEMENT,
         "GstVideoDecoder", &info, G_TYPE_FLAG_ABSTRACT);
+
+    private_offset =
+        g_type_add_instance_private (_type, sizeof (GstVideoDecoderPrivate));
+
     g_once_init_leave (&type, _type);
   }
   return type;
+}
+
+static inline GstVideoDecoderPrivate *
+gst_video_decoder_get_instance_private (GstVideoDecoder * self)
+{
+  return (G_STRUCT_MEMBER_P (self, private_offset));
 }
 
 static void
@@ -511,7 +519,9 @@ gst_video_decoder_class_init (GstVideoDecoderClass * klass)
       "Base Video Decoder");
 
   parent_class = g_type_class_peek_parent (klass);
-  g_type_class_add_private (klass, sizeof (GstVideoDecoderPrivate));
+
+  if (private_offset != 0)
+    g_type_class_adjust_private_offset (klass, &private_offset);
 
   gobject_class->finalize = gst_video_decoder_finalize;
 
@@ -536,7 +546,7 @@ gst_video_decoder_init (GstVideoDecoder * decoder, GstVideoDecoderClass * klass)
 
   GST_DEBUG_OBJECT (decoder, "gst_video_decoder_init");
 
-  decoder->priv = GST_VIDEO_DECODER_GET_PRIVATE (decoder);
+  decoder->priv = gst_video_decoder_get_instance_private (decoder);
 
   pad_template =
       gst_element_class_get_pad_template (GST_ELEMENT_CLASS (klass), "sink");
@@ -609,15 +619,16 @@ parse_fail:
 }
 
 static GstVideoCodecState *
-_new_output_state (GstVideoFormat fmt, guint width, guint height,
-    GstVideoCodecState * reference)
+_new_output_state (GstVideoFormat fmt, GstVideoInterlaceMode mode, guint width,
+    guint height, GstVideoCodecState * reference)
 {
   GstVideoCodecState *state;
 
   state = g_slice_new0 (GstVideoCodecState);
   state->ref_count = 1;
   gst_video_info_init (&state->info);
-  if (!gst_video_info_set_format (&state->info, fmt, width, height)) {
+  if (!gst_video_info_set_interlaced_format (&state->info, fmt, mode, width,
+          height)) {
     g_slice_free (GstVideoCodecState, state);
     return NULL;
   }
@@ -1056,7 +1067,6 @@ gst_video_decoder_negotiate_default_caps (GstVideoDecoder * decoder)
           1, 1, NULL);
   }
   caps = gst_caps_fixate (caps);
-  structure = gst_caps_get_structure (caps, 0);
 
   if (!caps || !gst_video_info_from_caps (&info, caps))
     goto caps_error;
@@ -1180,7 +1190,8 @@ gst_video_decoder_sink_event_default (GstVideoDecoder * decoder,
       GList *frame_events;
 
       GST_VIDEO_DECODER_STREAM_LOCK (decoder);
-      flow_ret = gst_video_decoder_drain_out (decoder, FALSE);
+      if (decoder->input_segment.flags & GST_SEEK_FLAG_TRICKMODE_KEY_UNITS)
+        flow_ret = gst_video_decoder_drain_out (decoder, FALSE);
       ret = (flow_ret == GST_FLOW_OK);
 
       /* Ensure we have caps before forwarding the event */
@@ -2114,7 +2125,8 @@ gst_video_decoder_chain_forward (GstVideoDecoder * decoder,
   /* Draining on DISCONT is handled in chain_reverse() for reverse playback,
    * and this function would only be called to get everything collected GOP
    * by GOP in the parse_gather list */
-  if (decoder->input_segment.rate > 0.0 && GST_BUFFER_IS_DISCONT (buf))
+  if (decoder->input_segment.rate > 0.0 && GST_BUFFER_IS_DISCONT (buf)
+      && (decoder->input_segment.flags & GST_SEEK_FLAG_TRICKMODE_KEY_UNITS))
     ret = gst_video_decoder_drain_out (decoder, FALSE);
 
   if (priv->current_frame == NULL)
@@ -2339,6 +2351,9 @@ gst_video_decoder_flush_parse (GstVideoDecoder * dec, gboolean at_eos)
       while (walk) {
         GstBuffer *buf = GST_BUFFER_CAST (walk->data);
 
+        priv->output_queued =
+            g_list_delete_link (priv->output_queued, priv->output_queued);
+
         if (G_LIKELY (res == GST_FLOW_OK)) {
           /* avoid stray DISCONT from forward processing,
            * which have no meaning in reverse pushing */
@@ -2363,8 +2378,6 @@ gst_video_decoder_flush_parse (GstVideoDecoder * dec, gboolean at_eos)
           gst_buffer_unref (buf);
         }
 
-        priv->output_queued =
-            g_list_delete_link (priv->output_queued, priv->output_queued);
         walk = priv->output_queued;
       }
 
@@ -3203,7 +3216,11 @@ gst_video_decoder_clip_and_push_buf (GstVideoDecoder * decoder, GstBuffer * buf)
   }
 #endif
 
+  /* release STREAM_LOCK not to block upstream 
+   * while pushing buffer downstream */
+  GST_VIDEO_DECODER_STREAM_UNLOCK (decoder);
   ret = gst_pad_push (decoder->srcpad, buf);
+  GST_VIDEO_DECODER_STREAM_LOCK (decoder);
 
 done:
   return ret;
@@ -3474,6 +3491,31 @@ gst_video_decoder_set_output_state (GstVideoDecoder * decoder,
     GstVideoFormat fmt, guint width, guint height,
     GstVideoCodecState * reference)
 {
+  return gst_video_decoder_set_interlaced_output_state (decoder, fmt,
+      GST_VIDEO_INTERLACE_MODE_PROGRESSIVE, width, height, reference);
+}
+
+/**
+ * gst_video_decoder_set_interlaced_output_state:
+ * @decoder: a #GstVideoDecoder
+ * @fmt: a #GstVideoFormat
+ * @width: The width in pixels
+ * @height: The height in pixels
+ * @mode: A #GstVideoInterlaceMode
+ * @reference: (allow-none) (transfer none): An optional reference #GstVideoCodecState
+ *
+ * Same as #gst_video_decoder_set_output_state() but also allows you to also set
+ * the interlacing mode.
+ *
+ * Returns: (transfer full): the newly configured output state.
+ *
+ * Since: 1.16.
+ */
+GstVideoCodecState *
+gst_video_decoder_set_interlaced_output_state (GstVideoDecoder * decoder,
+    GstVideoFormat fmt, GstVideoInterlaceMode mode, guint width, guint height,
+    GstVideoCodecState * reference)
+{
   GstVideoDecoderPrivate *priv = decoder->priv;
   GstVideoCodecState *state;
 
@@ -3481,7 +3523,7 @@ gst_video_decoder_set_output_state (GstVideoDecoder * decoder,
       fmt, width, height, reference);
 
   /* Create the new output state */
-  state = _new_output_state (fmt, width, height, reference);
+  state = _new_output_state (fmt, mode, width, height, reference);
   if (!state)
     return NULL;
 
@@ -4391,7 +4433,7 @@ gst_video_decoder_get_buffer_pool (GstVideoDecoder * decoder)
  * @allocator: (out) (allow-none) (transfer full): the #GstAllocator
  * used
  * @params: (out) (allow-none) (transfer full): the
- * #GstAllocatorParams of @allocator
+ * #GstAllocationParams of @allocator
  *
  * Lets #GstVideoDecoder sub-classes to know the memory @allocator
  * used by the base class and its @params.

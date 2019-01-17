@@ -11,6 +11,7 @@ GstAudioInterleave GstChildProxy
 GstAudioMixer GstChildProxy
 GstBin GstChildProxy
 GstCdParanoiaSrc GstURIHandler
+GstCompositor GstChildProxy
 GstDecodeBin GstChildProxy
 GstDecodebin3 GstChildProxy
 GstEncodeBin GstChildProxy
@@ -18,8 +19,13 @@ GstGLColorBalance GstColorBalance
 GstGLFilterBin GstChildProxy
 GstGLImageSink GstVideoOverlay GstNavigation
 GstGLImageSinkBin GstChildProxy GstVideoOverlay GstNavigation GstColorBalance
+GstGLMixerBin GstChildProxy
+GstGLMosaic GstChildProxy
 GstGLSinkBin GstChildProxy GstVideoOverlay GstNavigation GstColorBalance
 GstGLSrcBin GstChildProxy
+GstGLStereoMix GstChildProxy
+GstGLVideoMixer GstChildProxy
+GstGLVideoMixerBin GstChildProxy
 GstGioSink GstURIHandler
 GstGioSrc GstURIHandler
 GstLiveAdder GstChildProxy

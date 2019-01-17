@@ -1,18 +1,16 @@
-# some of the examples want GTK+
-gtk_dep = dependency('gtk+-3.0', version : '>= 3.10', required : false)
-gtk_x11_dep = dependency('gtk+-x11-3.0', version : '>= 3.10', required : false)
-gtk_quartz_dep = dependency('gtk+-quartz-3.0', version : '>= 3.10', required : false)
-gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', required : false)
-
 subdir('app')
 subdir('audio')
+subdir('compositor')
 subdir('dynamic')
 subdir('decodebin_next')
 subdir('encoding')
 subdir('fft')
 subdir('gio')
-subdir('gl')
+if build_gstgl
+  subdir('gl')
+endif
 subdir('overlay')
+subdir('overlaycomposition')
 subdir('playback')
 subdir('playrec')
 subdir('seek')
