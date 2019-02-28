@@ -82,6 +82,31 @@
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-audiotestsrc.html#GstAudioTestSrc--wave" title="The “wave” property">wave</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-audiotestsrc.html#GstAudioTestSrc--apply-tick-ramp" title="The “apply-tick-ramp” property">apply-tick-ramp</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-audiotestsrc.html#GstAudioTestSrc--marker-tick-period" title="The “marker-tick-period” property">marker-tick-period</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-audiotestsrc.html#GstAudioTestSrc--marker-tick-volume" title="The “marker-tick-volume” property">marker-tick-volume</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-audiotestsrc.html#GstAudioTestSrc--sine-periods-per-tick" title="The “sine-periods-per-tick” property">sine-periods-per-tick</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-audiotestsrc.html#GstAudioTestSrc--tick-interval" title="The “tick-interval” property">tick-interval</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -231,7 +256,7 @@ of 1.0. The beginning and end of the ticks are modulated with the ramp.</p>
 </tr>
 <tr>
 <td><p><span class="term">details</span></p></td>
-<td>audio/x-raw, format=(string){ S16LE, S16BE, U16LE, U16BE, S24_32LE, S24_32BE, U24_32LE, U24_32BE, S32LE, S32BE, U32LE, U32BE, S24LE, S24BE, U24LE, U24BE, S20LE, S20BE, U20LE, U20BE, S18LE, S18BE, U18LE, U18BE, F32LE, F32BE, F64LE, F64BE, S8, U8 }, layout=(string)interleaved, rate=(int)[ 1, 2147483647 ], channels=(int)[ 1, 2147483647 ]</td>
+<td>audio/x-raw, format=(string){ S16LE, S16BE, U16LE, U16BE, S24_32LE, S24_32BE, U24_32LE, U24_32BE, S32LE, S32BE, U32LE, U32BE, S24LE, S24BE, U24LE, U24BE, S20LE, S20BE, U20LE, U20BE, S18LE, S18BE, U18LE, U18BE, F32LE, F32BE, F64LE, F64BE, S8, U8 }, layout=(string){ interleaved, non-interleaved }, rate=(int)[ 1, 2147483647 ], channels=(int)[ 1, 2147483647 ]</td>
 </tr>
 </tbody>
 </table></div>
@@ -425,6 +450,49 @@ of 1.0. The beginning and end of the ticks are modulated with the ramp.</p>
 <p>Oscillator waveform.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: Sine</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioTestSrc--apply-tick-ramp"></a><h3>The <code class="literal">“apply-tick-ramp”</code> property</h3>
+<pre class="programlisting">  “apply-tick-ramp”          <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Apply ramp to tick samples.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioTestSrc--marker-tick-period"></a><h3>The <code class="literal">“marker-tick-period”</code> property</h3>
+<pre class="programlisting">  “marker-tick-period”       <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<p>Make every Nth tick a marker tick (= a tick with different volume). Only used if wave = ticks. 0 = no marker ticks.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 0</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioTestSrc--marker-tick-volume"></a><h3>The <code class="literal">“marker-tick-volume”</code> property</h3>
+<pre class="programlisting">  “marker-tick-volume”       <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a></pre>
+<p>Volume of marker ticks. Only used if wave = ticks andmarker-tick-period is set to a nonzero value.</p>
+<p>Flags: Read / Write</p>
+<p>Allowed values: [0,1]</p>
+<p>Default value: 1</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioTestSrc--sine-periods-per-tick"></a><h3>The <code class="literal">“sine-periods-per-tick”</code> property</h3>
+<pre class="programlisting">  “sine-periods-per-tick”    <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<p>Number of sine wave periods in one tick. Only used if wave = ticks.</p>
+<p>Flags: Read / Write</p>
+<p>Allowed values: &gt;= 1</p>
+<p>Default value: 10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstAudioTestSrc--tick-interval"></a><h3>The <code class="literal">“tick-interval”</code> property</h3>
+<pre class="programlisting">  “tick-interval”            <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a></pre>
+<p>Distance between start of current and start of next tick, in nanoseconds.</p>
+<p>Flags: Read / Write</p>
+<p>Allowed values: &gt;= 1</p>
+<p>Default value: 1000000000</p>
 </div>
 </div>
 </div>

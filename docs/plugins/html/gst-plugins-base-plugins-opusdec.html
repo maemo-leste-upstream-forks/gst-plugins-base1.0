@@ -52,6 +52,11 @@
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-opusdec.html#GstOpusDec--use-inband-fec" title="The “use-inband-fec” property">use-inband-fec</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-opusdec.html#GstOpusDec--phase-inversion" title="The “phase-inversion” property">phase-inversion</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -207,6 +212,14 @@ Decode an Ogg/Opus file. To create an Ogg/Opus file refer to the documentation o
 <a name="GstOpusDec--use-inband-fec"></a><h3>The <code class="literal">“use-inband-fec”</code> property</h3>
 <pre class="programlisting">  “use-inband-fec”           <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Use forward error correction if available (needs PLC enabled).</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstOpusDec--phase-inversion"></a><h3>The <code class="literal">“phase-inversion”</code> property</h3>
+<pre class="programlisting">  “phase-inversion”          <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Set to true to enable phase inversion, this will slightly improve stereo quality, but will have side effects when downmixed to mono.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
 </div>

@@ -157,7 +157,7 @@ fourcc_get_size (struct fourcc_list_struct *fourcc, int w, int h)
 
   fourcc->paint_setup (p, NULL);
 
-  return (unsigned long) p->endptr;
+  return GPOINTER_TO_INT (p->endptr);
 }
 
 static void
@@ -555,19 +555,19 @@ GST_START_TEST (test_video_formats)
         off1 = GST_VIDEO_INFO_COMP_OFFSET (&vinfo, 1);
         off2 = GST_VIDEO_INFO_COMP_OFFSET (&vinfo, 2);
 
-        GST_INFO ("size %d <> %d", size, (int) ((guintptr) paintinfo.endptr));
-        GST_INFO ("off0 %d <> %d", off0, (int) ((guintptr) paintinfo.yp));
-        GST_INFO ("off1 %d <> %d", off1, (int) ((guintptr) paintinfo.up));
-        GST_INFO ("off2 %d <> %d", off2, (int) ((guintptr) paintinfo.vp));
+        GST_INFO ("size %d <> %d", size, GPOINTER_TO_INT (paintinfo.endptr));
+        GST_INFO ("off0 %d <> %d", off0, GPOINTER_TO_INT (paintinfo.yp));
+        GST_INFO ("off1 %d <> %d", off1, GPOINTER_TO_INT (paintinfo.up));
+        GST_INFO ("off2 %d <> %d", off2, GPOINTER_TO_INT (paintinfo.vp));
 
-        fail_unless_equals_int (size, (unsigned long) paintinfo.endptr);
-        fail_unless_equals_int (off0, (unsigned long) paintinfo.yp);
-        fail_unless_equals_int (off1, (unsigned long) paintinfo.up);
-        fail_unless_equals_int (off2, (unsigned long) paintinfo.vp);
+        fail_unless_equals_int (size, GPOINTER_TO_INT (paintinfo.endptr));
+        fail_unless_equals_int (off0, GPOINTER_TO_INT (paintinfo.yp));
+        fail_unless_equals_int (off1, GPOINTER_TO_INT (paintinfo.up));
+        fail_unless_equals_int (off2, GPOINTER_TO_INT (paintinfo.vp));
 
         /* should be 0 if there's no alpha component */
         off3 = GST_VIDEO_INFO_COMP_OFFSET (&vinfo, 3);
-        fail_unless_equals_int (off3, (unsigned long) paintinfo.ap);
+        fail_unless_equals_int (off3, GPOINTER_TO_INT (paintinfo.ap));
 
         cs0 = GST_VIDEO_INFO_COMP_WIDTH (&vinfo, 0) *
             GST_VIDEO_INFO_COMP_HEIGHT (&vinfo, 0);
@@ -2942,6 +2942,61 @@ GST_START_TEST (test_overlay_composition_over_transparency)
 
 GST_END_TEST;
 
+GST_START_TEST (test_video_format_enum_stability)
+{
+  /* When adding new formats, adding a format in the middle of the enum will
+   * break the API. This check picks the last known format and checks that
+   * it's value isn't changing. This test should ideall be updated when a new
+   * format is added, though will stay valid. */
+  fail_unless_equals_int (GST_VIDEO_FORMAT_Y210, 82);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_video_formats_pstrides)
+{
+  GstVideoFormat fmt = GST_VIDEO_FORMAT_I420;
+
+
+  while ((gst_video_format_to_string (fmt) != NULL)) {
+    const GstVideoFormatInfo *vf_info = gst_video_format_get_info (fmt);
+    guint n_comps = GST_VIDEO_FORMAT_INFO_N_COMPONENTS (vf_info);
+
+    GST_LOG ("format: %s (%d), n_comps = %u", vf_info->name, fmt, n_comps);
+
+    if (fmt == GST_VIDEO_FORMAT_v210
+        || fmt == GST_VIDEO_FORMAT_UYVP
+        || fmt == GST_VIDEO_FORMAT_IYU1
+        || fmt == GST_VIDEO_FORMAT_GRAY10_LE32
+        || fmt == GST_VIDEO_FORMAT_NV12_64Z32
+        || fmt == GST_VIDEO_FORMAT_NV12_10LE32
+        || fmt == GST_VIDEO_FORMAT_NV16_10LE32
+        || fmt == GST_VIDEO_FORMAT_NV12_10LE40
+        || fmt == GST_VIDEO_FORMAT_Y410) {
+      fmt++;
+      continue;
+    }
+
+    switch (n_comps) {
+      case 4:
+        fail_unless (GST_VIDEO_FORMAT_INFO_PSTRIDE (vf_info, 3) > 0);
+        /* fall through */
+      case 3:
+        fail_unless (GST_VIDEO_FORMAT_INFO_PSTRIDE (vf_info, 2) > 0);
+        /* fall through */
+      case 2:
+        fail_unless (GST_VIDEO_FORMAT_INFO_PSTRIDE (vf_info, 1) > 0);
+        /* fall through */
+      case 1:
+        fail_unless (GST_VIDEO_FORMAT_INFO_PSTRIDE (vf_info, 0) > 0);
+        break;
+    }
+
+    fmt++;
+  }
+}
+
+GST_END_TEST;
 
 static Suite *
 video_suite (void)
@@ -2982,6 +3037,8 @@ video_suite (void)
   tcase_add_test (tc_chain, test_overlay_blend);
   tcase_add_test (tc_chain, test_video_center_rect);
   tcase_add_test (tc_chain, test_overlay_composition_over_transparency);
+  tcase_add_test (tc_chain, test_video_format_enum_stability);
+  tcase_add_test (tc_chain, test_video_formats_pstrides);
 
   return s;
 }

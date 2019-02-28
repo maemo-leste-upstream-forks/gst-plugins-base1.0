@@ -15,7 +15,9 @@
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
-                  <a href="#gst-plugins-base-plugins-overlaycomposition.description" class="shortcut">Description</a></span>
+                  <a href="#gst-plugins-base-plugins-overlaycomposition.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-plugins-overlaycomposition.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_signals">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-plugins-overlaycomposition.signals" class="shortcut">Signals</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -32,6 +34,29 @@
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
+<a name="gst-plugins-base-plugins-overlaycomposition.signals"></a><h2>Signals</h2>
+<div class="informaltable"><table class="informaltable" border="0">
+<colgroup>
+<col width="150px" class="signals_return">
+<col width="300px" class="signals_name">
+<col width="200px" class="signals_flags">
+</colgroup>
+<tbody>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="gst-plugins-base-plugins-overlaycomposition.html#GstOverlayComposition-caps-changed" title="The “caps-changed” signal">caps-changed</a></td>
+<td class="signal_flags"> </td>
+</tr>
+<tr>
+<td class="signal_type">
+<a href="../html/gst-plugins-base-libs-GstVideoOverlayRectangle.html#GstVideoOverlayComposition"><span class="returnvalue">GstVideoOverlayComposition</span></a>*</td>
+<td class="signal_name"><a class="link" href="gst-plugins-base-plugins-overlaycomposition.html#GstOverlayComposition-draw" title="The “draw” signal">draw</a></td>
+<td class="signal_flags"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<a name="GstOverlayComposition"></a><div class="refsect1">
 <a name="gst-plugins-base-plugins-overlaycomposition.other"></a><h2>Types and Values</h2>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
@@ -40,9 +65,18 @@
 </colgroup>
 <tbody><tr>
 <td class="datatype_keyword">struct</td>
-<td class="function_name"><a class="link" href="gst-plugins-base-plugins-overlaycomposition.html#GstOverlayComposition" title="struct GstOverlayComposition">GstOverlayComposition</a></td>
+<td class="function_name"><a class="link" href="gst-plugins-base-plugins-overlaycomposition.html#GstOverlayComposition-struct" title="struct GstOverlayComposition">GstOverlayComposition</a></td>
 </tr></tbody>
 </table></div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-overlaycomposition.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstElement-struct">GstElement</a>
+                <span class="lineart">╰──</span> GstOverlayComposition
+</pre>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-plugins-overlaycomposition.description"></a><h2>Description</h2>
@@ -51,7 +85,7 @@ provided draw function.</p>
 <p>A more interesting example can be found at
 https://cgit.freedesktop.org/gstreamer/gst-plugins-base/tree/tests/examples/overlaycomposition/overlaycomposition.c</p>
 <div class="refsect2">
-<a name="id-1.2.81.4.4"></a><h3>Example code</h3>
+<a name="id-1.2.81.7.4"></a><h3>Example code</h3>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -231,7 +265,7 @@ overlay <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/s
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.81.4.5.1"></a><h3>Element Information</h3>
+<a name="id-1.2.81.7.5.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -257,7 +291,7 @@ overlay <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/s
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.81.4.5.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.81.7.5.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -282,7 +316,7 @@ overlay <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/s
 </tr>
 <tr>
 <td><p><span class="term"></span></p></td>
-<td> video/x-raw(ANY), format=(string){ I420, YV12, YUY2, UYVY, AYUV, RGBx, BGRx, xRGB, xBGR, RGBA, BGRA, ARGB, ABGR, RGB, BGR, Y41B, Y42B, YVYU, Y444, v210, v216, NV12, NV21, GRAY8, GRAY16_BE, GRAY16_LE, v308, RGB16, BGR16, RGB15, BGR15, UYVP, A420, RGB8P, YUV9, YVU9, IYU1, ARGB64, AYUV64, r210, I420_10BE, I420_10LE, I422_10BE, I422_10LE, Y444_10BE, Y444_10LE, GBR, GBR_10BE, GBR_10LE, NV16, NV24, NV12_64Z32, A420_10BE, A420_10LE, A422_10BE, A422_10LE, A444_10BE, A444_10LE, NV61, P010_10BE, P010_10LE, IYU2, VYUY, GBRA, GBRA_10BE, GBRA_10LE, GBR_12BE, GBR_12LE, GBRA_12BE, GBRA_12LE, I420_12BE, I420_12LE, I422_12BE, I422_12LE, Y444_12BE, Y444_12LE, GRAY10_LE32, NV12_10LE32, NV16_10LE32, NV12_10LE40 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</td>
+<td> video/x-raw(ANY), format=(string){ I420, YV12, YUY2, UYVY, AYUV, RGBx, BGRx, xRGB, xBGR, RGBA, BGRA, ARGB, ABGR, RGB, BGR, Y41B, Y42B, YVYU, Y444, v210, v216, Y210, Y410, NV12, NV21, GRAY8, GRAY16_BE, GRAY16_LE, v308, RGB16, BGR16, RGB15, BGR15, UYVP, A420, RGB8P, YUV9, YVU9, IYU1, ARGB64, AYUV64, r210, I420_10BE, I420_10LE, I422_10BE, I422_10LE, Y444_10BE, Y444_10LE, GBR, GBR_10BE, GBR_10LE, NV16, NV24, NV12_64Z32, A420_10BE, A420_10LE, A422_10BE, A422_10LE, A444_10BE, A444_10LE, NV61, P010_10BE, P010_10LE, IYU2, VYUY, GBRA, GBRA_10BE, GBRA_10LE, GBR_12BE, GBR_12LE, GBRA_12BE, GBRA_12LE, I420_12BE, I420_12LE, I422_12BE, I422_12LE, Y444_12BE, Y444_12LE, GRAY10_LE32, NV12_10LE32, NV16_10LE32, NV12_10LE40 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</td>
 </tr>
 </tbody>
 </table></div>
@@ -310,7 +344,7 @@ overlay <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/s
 </tr>
 <tr>
 <td><p><span class="term"></span></p></td>
-<td> video/x-raw(ANY), format=(string){ I420, YV12, YUY2, UYVY, AYUV, RGBx, BGRx, xRGB, xBGR, RGBA, BGRA, ARGB, ABGR, RGB, BGR, Y41B, Y42B, YVYU, Y444, v210, v216, NV12, NV21, GRAY8, GRAY16_BE, GRAY16_LE, v308, RGB16, BGR16, RGB15, BGR15, UYVP, A420, RGB8P, YUV9, YVU9, IYU1, ARGB64, AYUV64, r210, I420_10BE, I420_10LE, I422_10BE, I422_10LE, Y444_10BE, Y444_10LE, GBR, GBR_10BE, GBR_10LE, NV16, NV24, NV12_64Z32, A420_10BE, A420_10LE, A422_10BE, A422_10LE, A444_10BE, A444_10LE, NV61, P010_10BE, P010_10LE, IYU2, VYUY, GBRA, GBRA_10BE, GBRA_10LE, GBR_12BE, GBR_12LE, GBRA_12BE, GBRA_12LE, I420_12BE, I420_12LE, I422_12BE, I422_12LE, Y444_12BE, Y444_12LE, GRAY10_LE32, NV12_10LE32, NV16_10LE32, NV12_10LE40 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</td>
+<td> video/x-raw(ANY), format=(string){ I420, YV12, YUY2, UYVY, AYUV, RGBx, BGRx, xRGB, xBGR, RGBA, BGRA, ARGB, ABGR, RGB, BGR, Y41B, Y42B, YVYU, Y444, v210, v216, Y210, Y410, NV12, NV21, GRAY8, GRAY16_BE, GRAY16_LE, v308, RGB16, BGR16, RGB15, BGR15, UYVP, A420, RGB8P, YUV9, YVU9, IYU1, ARGB64, AYUV64, r210, I420_10BE, I420_10LE, I422_10BE, I422_10LE, Y444_10BE, Y444_10LE, GBR, GBR_10BE, GBR_10LE, NV16, NV24, NV12_64Z32, A420_10BE, A420_10LE, A422_10BE, A422_10LE, A444_10BE, A444_10LE, NV61, P010_10BE, P010_10LE, IYU2, VYUY, GBRA, GBRA_10BE, GBRA_10LE, GBR_12BE, GBR_12LE, GBRA_12BE, GBRA_12LE, I420_12BE, I420_12LE, I422_12BE, I422_12LE, Y444_12BE, Y444_12LE, GRAY10_LE32, NV12_10LE32, NV16_10LE32, NV12_10LE40 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</td>
 </tr>
 </tbody>
 </table></div>
@@ -324,21 +358,101 @@ overlay <span class="gtkdoc opt">=</span> <span class="function"><a href="/usr/s
 <div class="refsect1">
 <a name="gst-plugins-base-plugins-overlaycomposition.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
-<a name="GstOverlayComposition"></a><h3>struct GstOverlayComposition</h3>
-<pre class="programlisting">struct GstOverlayComposition {
-  GstElement parent;
-
-  GstPad *sinkpad, *srcpad;
-
-  /* state */
-  GstSample *sample;
-  GstSegment segment;
-  GstCaps *caps;
-  GstVideoInfo info;
-  guint window_width, window_height;
-  gboolean attach_compo_to_buffer;
-};
-</pre>
+<a name="GstOverlayComposition-struct"></a><h3>struct GstOverlayComposition</h3>
+<pre class="programlisting">struct GstOverlayComposition;</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-overlaycomposition.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2">
+<a name="GstOverlayComposition-caps-changed"></a><h3>The <code class="literal">“caps-changed”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="gst-plugins-base-plugins-overlaycomposition.html#GstOverlayComposition"><span class="type">GstOverlayComposition</span></a> *overlay,
+               <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>               *caps,
+               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                  window_width,
+               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                  window_height,
+               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>               user_data)</pre>
+<p>This signal is emitted when the caps of the element has changed.</p>
+<p>The window width and height define the resolution at which the frame is
+going to be rendered in the end by e.g. a video sink (i.e. the window
+size).</p>
+<div class="refsect3">
+<a name="GstOverlayComposition-caps-changed.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>overlay</p></td>
+<td class="parameter_description"><p>Overlay element emitting the signal.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>caps</p></td>
+<td class="parameter_description"><p>The <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> of the element.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>window_width</p></td>
+<td class="parameter_description"><p>The window render width of downstream, or 0.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>window_height</p></td>
+<td class="parameter_description"><p>The window render height of downstream, or 0.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstOverlayComposition-draw"></a><h3>The <code class="literal">“draw”</code> signal</h3>
+<pre class="programlisting"><a href="../html/gst-plugins-base-libs-GstVideoOverlayRectangle.html#GstVideoOverlayComposition"><span class="returnvalue">GstVideoOverlayComposition</span></a>*
+user_function (<a class="link" href="gst-plugins-base-plugins-overlaycomposition.html#GstOverlayComposition"><span class="type">GstOverlayComposition</span></a> *overlay,
+               <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstSample.html#GstSample-struct"><span class="type">GstSample</span></a>             *sample,
+               <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>               user_data)</pre>
+<p>This signal is emitted when the overlay should be drawn.</p>
+<div class="refsect3">
+<a name="GstOverlayComposition-draw.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>overlay</p></td>
+<td class="parameter_description"><p>Overlay element emitting the signal.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>sample</p></td>
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstSample.html#GstSample-struct"><span class="type">GstSample</span></a> containing the current buffer, caps and segment.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="GstOverlayComposition-draw.returns"></a><h4>Returns</h4>
+<p> <a href="../html/gst-plugins-base-libs-GstVideoOverlayRectangle.html#GstVideoOverlayComposition"><span class="type">GstVideoOverlayComposition</span></a> or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
+</div>
 </div>
 </div>
 </div>

@@ -231,6 +231,11 @@
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin--video-multiview-mode" title="The “video-multiview-mode” property">video-multiview-mode</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-playbin.html#GstPlayBin--text-offset" title="The “text-offset” property">text-offset</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -896,6 +901,16 @@ is created and deleted as-needed.</p>
 <p>Re-interpret a video stream as one of several frame-packed stereoscopic modes.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: GST_VIDEO_MULTIVIEW_FRAME_PACKING_NONE</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstPlayBin--text-offset"></a><h3>The <code class="literal">“text-offset”</code> property</h3>
+<pre class="programlisting">  “text-offset”              <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a></pre>
+<p>Control the synchronisation offset between the text and video streams.
+Positive values make the text ahead of the video and negative values make
+the text go behind the video.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 0</p>
 </div>
 </div>
 <div class="refsect1">

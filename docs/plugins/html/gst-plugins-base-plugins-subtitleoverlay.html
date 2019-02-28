@@ -60,6 +60,11 @@
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-subtitleoverlay.html#GstSubtitleOverlay--subtitle-encoding" title="The “subtitle-encoding” property">subtitle-encoding</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-subtitleoverlay.html#GstSubtitleOverlay--subtitle-ts-offset" title="The “subtitle-ts-offset” property">subtitle-ts-offset</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -254,6 +259,14 @@ DVD subpicture subtitles.</p>
 <p>Encoding to assume if input subtitles are not in UTF-8 encoding. If not set, the GST_SUBTITLE_ENCODING environment variable will be checked for an encoding to use. If that is not set either, ISO-8859-15 will be assumed.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: NULL</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstSubtitleOverlay--subtitle-ts-offset"></a><h3>The <code class="literal">“subtitle-ts-offset”</code> property</h3>
+<pre class="programlisting">  “subtitle-ts-offset”       <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a></pre>
+<p>The synchronisation offset between text and video in nanoseconds.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 0</p>
 </div>
 </div>
 </div>
