@@ -935,6 +935,7 @@
     <keyword type="function" name="gst_rtsp_connection_write ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-write"/>
     <keyword type="function" name="gst_rtsp_connection_poll ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-poll"/>
     <keyword type="function" name="gst_rtsp_connection_send ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-send"/>
+    <keyword type="function" name="gst_rtsp_connection_send_messages ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-send-messages" since="1.16"/>
     <keyword type="function" name="gst_rtsp_connection_receive ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-receive"/>
     <keyword type="function" name="gst_rtsp_connection_next_timeout ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-next-timeout"/>
     <keyword type="function" name="gst_rtsp_connection_reset_timeout ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-reset-timeout"/>
@@ -970,6 +971,7 @@
     <keyword type="function" name="gst_rtsp_watch_attach ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-attach"/>
     <keyword type="function" name="gst_rtsp_watch_reset ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-reset"/>
     <keyword type="function" name="gst_rtsp_watch_send_message ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-send-message"/>
+    <keyword type="function" name="gst_rtsp_watch_send_messages ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-send-messages" since="1.16"/>
     <keyword type="function" name="gst_rtsp_watch_write_data ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-write-data"/>
     <keyword type="function" name="gst_rtsp_watch_get_send_backlog ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-get-send-backlog" since="1.2"/>
     <keyword type="function" name="gst_rtsp_watch_set_send_backlog ()" link="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-set-send-backlog" since="1.2"/>
@@ -1032,6 +1034,11 @@
     <keyword type="function" name="gst_rtsp_message_take_body ()" link="GstRTSPMessage.html#gst-rtsp-message-take-body"/>
     <keyword type="function" name="gst_rtsp_message_get_body ()" link="GstRTSPMessage.html#gst-rtsp-message-get-body"/>
     <keyword type="function" name="gst_rtsp_message_steal_body ()" link="GstRTSPMessage.html#gst-rtsp-message-steal-body"/>
+    <keyword type="function" name="gst_rtsp_message_set_body_buffer ()" link="GstRTSPMessage.html#gst-rtsp-message-set-body-buffer" since="1.16"/>
+    <keyword type="function" name="gst_rtsp_message_take_body_buffer ()" link="GstRTSPMessage.html#gst-rtsp-message-take-body-buffer" since="1.16"/>
+    <keyword type="function" name="gst_rtsp_message_has_body_buffer ()" link="GstRTSPMessage.html#gst-rtsp-message-has-body-buffer" since="1.16"/>
+    <keyword type="function" name="gst_rtsp_message_get_body_buffer ()" link="GstRTSPMessage.html#gst-rtsp-message-get-body-buffer" since="1.16"/>
+    <keyword type="function" name="gst_rtsp_message_steal_body_buffer ()" link="GstRTSPMessage.html#gst-rtsp-message-steal-body-buffer" since="1.16"/>
     <keyword type="function" name="gst_rtsp_message_parse_auth_credentials ()" link="GstRTSPMessage.html#gst-rtsp-message-parse-auth-credentials" since="1.12"/>
     <keyword type="function" name="gst_rtsp_auth_credentials_free ()" link="GstRTSPMessage.html#gst-rtsp-auth-credentials-free" since="1.12"/>
     <keyword type="function" name="gst_rtsp_auth_param_copy ()" link="GstRTSPMessage.html#gst-rtsp-auth-param-copy"/>

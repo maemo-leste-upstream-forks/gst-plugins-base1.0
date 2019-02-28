@@ -17,7 +17,8 @@
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
                   <a href="#gst-plugins-base-plugins-compositor.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
                   <a href="#gst-plugins-base-plugins-compositor.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_interfaces">  <span class="dim">|</span> 
-                  <a href="#gst-plugins-base-plugins-compositor.implemented-interfaces" class="shortcut">Implemented Interfaces</a></span>
+                  <a href="#gst-plugins-base-plugins-compositor.implemented-interfaces" class="shortcut">Implemented Interfaces</a></span><span id="nav_properties">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-plugins-compositor.properties" class="shortcut">Properties</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -33,6 +34,21 @@
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-compositor.properties"></a><h2>Properties</h2>
+<div class="informaltable"><table class="informaltable" border="0">
+<colgroup>
+<col width="150px" class="properties_type">
+<col width="300px" class="properties_name">
+<col width="200px" class="properties_flags">
+</colgroup>
+<tbody><tr>
+<td class="property_type"><a class="link" href="gst-plugins-base-plugins-compositor.html#GstCompositorBackground" title="enum GstCompositorBackground"><span class="type">GstCompositorBackground</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-compositor.html#GstCompositor--background" title="The “background” property">background</a></td>
+<td class="property_flags">Read / Write</td>
+</tr></tbody>
+</table></div>
+</div>
 <a name="GstCompositor"></a><div class="refsect1">
 <a name="gst-plugins-base-plugins-compositor.other"></a><h2>Types and Values</h2>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -88,7 +104,7 @@ is a simple copy when fully-transparent (0.0) and fully-opaque (1.0). (<a href="
 <li class="listitem"><p>"zorder": The z-order position of the picture in the composition (<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>)</p></li>
 </ul></div>
 <div class="refsect3">
-<a name="id-1.2.16.7.6"></a><h4>Sample pipelines</h4>
+<a name="id-1.2.16.8.6"></a><h4>Sample pipelines</h4>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -191,7 +207,7 @@ framerate of the output video is 10 frames per second.</p>
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.16.7.7.1"></a><h3>Element Information</h3>
+<a name="id-1.2.16.8.7.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -217,7 +233,7 @@ framerate of the output video is 10 frames per second.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.16.7.7.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.16.8.7.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -324,6 +340,16 @@ framerate of the output video is 10 frames per second.</p>
 </tbody>
 </table></div>
 </div>
+</div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-compositor.property-details"></a><h2>Property Details</h2>
+<div class="refsect2">
+<a name="GstCompositor--background"></a><h3>The <code class="literal">“background”</code> property</h3>
+<pre class="programlisting">  “background”               <a class="link" href="gst-plugins-base-plugins-compositor.html#GstCompositorBackground" title="enum GstCompositorBackground"><span class="type">GstCompositorBackground</span></a></pre>
+<p>Background type.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: Checker pattern</p>
 </div>
 </div>
 </div>

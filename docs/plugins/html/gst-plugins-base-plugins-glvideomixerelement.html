@@ -15,7 +15,10 @@
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
-                  <a href="#gst-plugins-base-plugins-glvideomixerelement.description" class="shortcut">Description</a></span>
+                  <a href="#gst-plugins-base-plugins-glvideomixerelement.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-plugins-glvideomixerelement.object-hierarchy" class="shortcut">Object Hierarchy</a></span><span id="nav_interfaces">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-plugins-glvideomixerelement.implemented-interfaces" class="shortcut">Implemented Interfaces</a></span><span id="nav_properties">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-plugins-glvideomixerelement.properties" class="shortcut">Properties</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
@@ -32,6 +35,21 @@
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
+<a name="gst-plugins-base-plugins-glvideomixerelement.properties"></a><h2>Properties</h2>
+<div class="informaltable"><table class="informaltable" border="0">
+<colgroup>
+<col width="150px" class="properties_type">
+<col width="300px" class="properties_name">
+<col width="200px" class="properties_flags">
+</colgroup>
+<tbody><tr>
+<td class="property_type"><a class="link" href="gst-plugins-base-plugins-glvideomixerelement.html#GstGLVideoMixerBackground" title="enum GstGLVideoMixerBackground"><span class="type">GstGLVideoMixerBackground</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-glvideomixerelement.html#GstGLVideoMixer--background" title="The “background” property">background</a></td>
+<td class="property_flags">Read / Write</td>
+</tr></tbody>
+</table></div>
+</div>
+<a name="GstGLVideoMixer"></a><div class="refsect1">
 <a name="gst-plugins-base-plugins-glvideomixerelement.other"></a><h2>Types and Values</h2>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
@@ -41,7 +59,7 @@
 <tbody>
 <tr>
 <td class="datatype_keyword">struct</td>
-<td class="function_name"><a class="link" href="gst-plugins-base-plugins-glvideomixerelement.html#GstGLVideoMixer" title="struct GstGLVideoMixer">GstGLVideoMixer</a></td>
+<td class="function_name"><a class="link" href="gst-plugins-base-plugins-glvideomixerelement.html#GstGLVideoMixer-struct" title="struct GstGLVideoMixer">GstGLVideoMixer</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword">enum</td>
@@ -51,7 +69,106 @@
 </table></div>
 </div>
 <div class="refsect1">
+<a name="gst-plugins-base-plugins-glvideomixerelement.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstElement-struct">GstElement</a>
+                <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstAggregator.html#GstAggregator-struct">GstAggregator</a>
+                    <span class="lineart">╰──</span> <a href="../html/GstVideoAggregator.html#GstVideoAggregator-struct">GstVideoAggregator</a>
+                        <span class="lineart">╰──</span> GstGLBaseMixer
+                            <span class="lineart">╰──</span> GstGLMixer
+                                <span class="lineart">╰──</span> GstGLVideoMixer
+</pre>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-glvideomixerelement.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+GstGLVideoMixer implements
+ <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstChildProxy.html#GstChildProxy-struct">GstChildProxy</a>.</p>
+</div>
+<div class="refsect1">
 <a name="gst-plugins-base-plugins-glvideomixerelement.description"></a><h2>Description</h2>
+<div class="refsynopsisdiv">
+<h2>Synopsis</h2>
+<div class="refsect2">
+<a name="id-1.2.67.8.2.1"></a><h3>Element Information</h3>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term">plugin</span></p></td>
+<td>
+            <a class="link" href="gst-plugins-base-plugins-plugin-opengl.html#plugin-opengl">opengl</a>
+          </td>
+</tr>
+<tr>
+<td><p><span class="term">author</span></p></td>
+<td>Matthew Waters &lt;matthew@centricular.com&gt;</td>
+</tr>
+<tr>
+<td><p><span class="term">class</span></p></td>
+<td>Filter/Effect/Video/Compositor</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="id-1.2.67.8.2.2"></a><h3>Element Pads</h3>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term">name</span></p></td>
+<td>sink_%u</td>
+</tr>
+<tr>
+<td><p><span class="term">direction</span></p></td>
+<td>sink</td>
+</tr>
+<tr>
+<td><p><span class="term">presence</span></p></td>
+<td>request</td>
+</tr>
+<tr>
+<td><p><span class="term">details</span></p></td>
+<td>video/x-raw(memory:GLMemory), format=(string)RGBA, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</td>
+</tr>
+</tbody>
+</table></div>
+<div class="variablelist"><table border="0" class="variablelist">
+<colgroup>
+<col align="left" valign="top">
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><p><span class="term">name</span></p></td>
+<td>src</td>
+</tr>
+<tr>
+<td><p><span class="term">direction</span></p></td>
+<td>source</td>
+</tr>
+<tr>
+<td><p><span class="term">presence</span></p></td>
+<td>always</td>
+</tr>
+<tr>
+<td><p><span class="term">details</span></p></td>
+<td>video/x-raw(memory:GLMemory), format=(string)RGBA, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-plugins-glvideomixerelement.functions_details"></a><h2>Functions</h2>
@@ -60,23 +177,8 @@
 <div class="refsect1">
 <a name="gst-plugins-base-plugins-glvideomixerelement.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
-<a name="GstGLVideoMixer"></a><h3>struct GstGLVideoMixer</h3>
-<pre class="programlisting">struct GstGLVideoMixer {
-    GstGLMixer mixer;
-
-    GstGLVideoMixerBackground background;
-
-    GstGLShader *shader;
-    GstGLShader *checker;
-
-    GLuint vao;
-    GLuint vbo_indices;
-    GLuint checker_vbo;
-    GstGLMemory *out_tex;
-
-    gboolean output_geo_change;
-};
-</pre>
+<a name="GstGLVideoMixer-struct"></a><h3>struct GstGLVideoMixer</h3>
+<pre class="programlisting">struct GstGLVideoMixer;</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -122,6 +224,16 @@
 </tbody>
 </table></div>
 </div>
+</div>
+</div>
+<div class="refsect1">
+<a name="gst-plugins-base-plugins-glvideomixerelement.property-details"></a><h2>Property Details</h2>
+<div class="refsect2">
+<a name="GstGLVideoMixer--background"></a><h3>The <code class="literal">“background”</code> property</h3>
+<pre class="programlisting">  “background”               <a class="link" href="gst-plugins-base-plugins-glvideomixerelement.html#GstGLVideoMixerBackground" title="enum GstGLVideoMixerBackground"><span class="type">GstGLVideoMixerBackground</span></a></pre>
+<p>Background type.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: Checker pattern</p>
 </div>
 </div>
 </div>

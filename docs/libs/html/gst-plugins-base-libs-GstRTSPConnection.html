@@ -132,6 +132,14 @@
 <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
 </td>
 <td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-send-messages" title="gst_rtsp_connection_send_messages ()">gst_rtsp_connection_send_messages</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
+</td>
+<td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-receive" title="gst_rtsp_connection_receive ()">gst_rtsp_connection_receive</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -403,6 +411,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-send-message" title="gst_rtsp_watch_send_message ()">gst_rtsp_watch_send_message</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-send-messages" title="gst_rtsp_watch_send_messages ()">gst_rtsp_watch_send_messages</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -987,6 +1003,60 @@ might block forever.</p>
 <a name="gst-rtsp-connection-send.returns"></a><h4>Returns</h4>
 <p> <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-OK:CAPS"><span class="type">GST_RTSP_OK</span></a> on success.</p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-rtsp-connection-send-messages"></a><h3>gst_rtsp_connection_send_messages ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
+gst_rtsp_connection_send_messages (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a> *conn</code></em>,
+                                   <em class="parameter"><code><a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *messages</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_messages</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Date-and-Time-Functions.html#GTimeVal"><span class="type">GTimeVal</span></a> *timeout</code></em>);</pre>
+<p>Attempt to send <em class="parameter"><code>messages</code></em>
+ to the connected <em class="parameter"><code>conn</code></em>
+, blocking up to
+the specified <em class="parameter"><code>timeout</code></em>
+. <em class="parameter"><code>timeout</code></em>
+ can be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, in which case this function
+might block forever.</p>
+<p>This function can be cancelled with <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-flush" title="gst_rtsp_connection_flush ()"><code class="function">gst_rtsp_connection_flush()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-rtsp-connection-send-messages.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>conn</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>messages</p></td>
+<td class="parameter_description"><p>the messages to send. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_messages]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>n_messages</p></td>
+<td class="parameter_description"><p>the number of messages to send</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timeout</p></td>
+<td class="parameter_description"><p>a timeout value or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-rtsp-connection-send-messages.returns"></a><h4>Returns</h4>
+<p> <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-OK:CAPS"><span class="type">GST_RTSP_OK</span></a> on success.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2187,6 +2257,66 @@ callback.</p>
 <a name="gst-rtsp-watch-send-message.returns"></a><h4>Returns</h4>
 <p> <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-OK:CAPS"><span class="type">GST_RTSP_OK</span></a> on success.</p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-rtsp-watch-send-messages"></a><h3>gst_rtsp_watch_send_messages ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
+gst_rtsp_watch_send_messages (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPWatch" title="GstRTSPWatch"><span class="type">GstRTSPWatch</span></a> *watch</code></em>,
+                              <em class="parameter"><code><a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *messages</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_messages</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *id</code></em>);</pre>
+<p>Sends <em class="parameter"><code>messages</code></em>
+ using the connection of the <em class="parameter"><code>watch</code></em>
+. If they cannot be sent
+immediately, they will be queued for transmission in <em class="parameter"><code>watch</code></em>
+. The contents of
+<em class="parameter"><code>messages</code></em>
+ will then be serialized and transmitted when the connection of the
+<em class="parameter"><code>watch</code></em>
+ becomes writable. In case the <em class="parameter"><code>messages</code></em>
+ are queued, the ID returned in
+<em class="parameter"><code>id</code></em>
+ will be non-zero and used as the ID argument in the message_sent
+callback once the last message is sent. The callback will only be called
+once for the last message.</p>
+<div class="refsect3">
+<a name="gst-rtsp-watch-send-messages.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>watch</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPWatch" title="GstRTSPWatch"><span class="type">GstRTSPWatch</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>messages</p></td>
+<td class="parameter_description"><p>the messages to send. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_messages]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>n_messages</p></td>
+<td class="parameter_description"><p>the number of messages to send</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>id</p></td>
+<td class="parameter_description"><p>location for a message ID or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-rtsp-watch-send-messages.returns"></a><h4>Returns</h4>
+<p> <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-OK:CAPS"><span class="type">GST_RTSP_OK</span></a> on success.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
 </div>
 <hr>
 <div class="refsect2">
