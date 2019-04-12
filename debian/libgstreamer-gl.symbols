@@ -9,7 +9,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_egl_get_error_string@Base 1.14.0
  (arch=linux-any kfreebsd-any)gst_egl_image_export_dmabuf@Base 1.14.0
  (arch=linux-any kfreebsd-any)gst_egl_image_from_dmabuf@Base 1.14.0
- gst_egl_image_from_dmabuf_direct@Base 1.15.2
+ gst_egl_image_from_dmabuf_direct@Base 1.15.90
  gst_egl_image_from_texture@Base 1.14.0
  gst_egl_image_get_image@Base 1.14.0
  gst_egl_image_get_type@Base 1.14.0
@@ -21,7 +21,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_allocation_params_get_type@Base 1.14.0
  gst_gl_allocation_params_init@Base 1.14.0
  gst_gl_api_from_string@Base 1.14.0
- gst_gl_api_get_type@Base 1.15.2
+ gst_gl_api_get_type@Base 1.15.90
  gst_gl_api_to_string@Base 1.14.0
  gst_gl_async_debug_free@Base 1.14.0
  gst_gl_async_debug_freeze@Base 1.14.0
@@ -32,18 +32,18 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_async_debug_store_log_msg_valist@Base 1.14.0
  gst_gl_async_debug_thaw@Base 1.14.0
  gst_gl_async_debug_unset@Base 1.14.0
- gst_gl_base_filter_find_gl_context@Base 1.15.2
+ gst_gl_base_filter_find_gl_context@Base 1.15.90
  gst_gl_base_filter_get_type@Base 1.14.0
  gst_gl_base_memory_alloc@Base 1.14.0
  gst_gl_base_memory_alloc_data@Base 1.14.0
  gst_gl_base_memory_allocator_get_type@Base 1.14.0
- gst_gl_base_memory_error_get_type@Base 1.15.2
+ gst_gl_base_memory_error_get_type@Base 1.15.90
  gst_gl_base_memory_error_quark@Base 1.14.0
  gst_gl_base_memory_get_type@Base 1.14.0
  gst_gl_base_memory_init@Base 1.14.0
  gst_gl_base_memory_init_once@Base 1.14.0
  gst_gl_base_memory_memcpy@Base 1.14.0
- gst_gl_base_memory_transfer_get_type@Base 1.15.2
+ gst_gl_base_memory_transfer_get_type@Base 1.15.90
  gst_gl_buffer_allocation_params_get_type@Base 1.14.0
  gst_gl_buffer_allocation_params_new@Base 1.14.0
  gst_gl_buffer_allocator_get_type@Base 1.14.0
@@ -68,7 +68,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_context_create@Base 1.14.0
  gst_gl_context_default_get_proc_address@Base 1.14.0
  gst_gl_context_destroy@Base 1.14.0
- gst_gl_context_error_get_type@Base 1.15.2
+ gst_gl_context_error_get_type@Base 1.15.90
  gst_gl_context_error_quark@Base 1.14.0
  gst_gl_context_fill_info@Base 1.14.0
  gst_gl_context_get_current@Base 1.14.0
@@ -91,6 +91,8 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_context_set_shared_with@Base 1.14.0
  gst_gl_context_set_window@Base 1.14.0
  gst_gl_context_supports_glsl_profile_version@Base 1.14.0
+ gst_gl_context_supports_precision@Base 1.15.90
+ gst_gl_context_supports_precision_highp@Base 1.15.90
  gst_gl_context_swap_buffers@Base 1.14.0
  gst_gl_context_thread_add@Base 1.14.0
  gst_gl_display_add_context@Base 1.14.0
@@ -111,7 +113,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_display_get_type@Base 1.14.0
  gst_gl_display_new@Base 1.14.0
  gst_gl_display_remove_window@Base 1.14.0
- gst_gl_display_type_get_type@Base 1.15.2
+ gst_gl_display_type_get_type@Base 1.15.90
  (arch=linux-any)gst_gl_display_wayland_get_type@Base 1.14.0
  (arch=linux-any)gst_gl_display_wayland_new@Base 1.14.0
  (arch=linux-any)gst_gl_display_wayland_new_with_display@Base 1.14.0
@@ -127,9 +129,9 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_filter_render_to_target@Base 1.14.0
  gst_gl_filter_render_to_target_with_shader@Base 1.14.0
  gst_gl_format_from_video_info@Base 1.14.0
- gst_gl_format_get_type@Base 1.15.2
- gst_gl_format_is_supported@Base 1.15.2
- gst_gl_format_type_from_sized_gl_format@Base 1.15.2
+ gst_gl_format_get_type@Base 1.15.90
+ gst_gl_format_is_supported@Base 1.15.90
+ gst_gl_format_type_from_sized_gl_format@Base 1.15.90
  gst_gl_format_type_n_bytes@Base 1.14.0
  gst_gl_framebuffer_attach@Base 1.14.0
  gst_gl_framebuffer_bind@Base 1.14.0
@@ -174,7 +176,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_overlay_compositor_new@Base 1.14.0
  gst_gl_overlay_compositor_upload_overlays@Base 1.14.0
  gst_gl_platform_from_string@Base 1.14.0
- gst_gl_platform_get_type@Base 1.15.2
+ gst_gl_platform_get_type@Base 1.15.90
  gst_gl_platform_to_string@Base 1.14.0
  gst_gl_query_counter@Base 1.14.0
  gst_gl_query_end@Base 1.14.0
@@ -184,7 +186,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_query_new@Base 1.14.0
  gst_gl_query_result@Base 1.14.0
  gst_gl_query_start@Base 1.14.0
- gst_gl_query_type_get_type@Base 1.15.2
+ gst_gl_query_type_get_type@Base 1.15.90
  gst_gl_query_unset@Base 1.14.0
  gst_gl_renderbuffer_allocation_params_get_type@Base 1.14.0
  gst_gl_renderbuffer_allocation_params_new@Base 1.14.0
@@ -240,12 +242,17 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_shader_set_uniform_matrix_4x3fv@Base 1.14.0
  gst_gl_shader_string_fragment_default@Base 1.14.0
  gst_gl_shader_string_fragment_external_oes_default@Base 1.14.0
+ gst_gl_shader_string_fragment_external_oes_get_default@Base 1.15.90
+ gst_gl_shader_string_fragment_get_default@Base 1.15.90
+ gst_gl_shader_string_fragment_highp_precision@Base 1.15.90
+ gst_gl_shader_string_fragment_mediump_precision@Base 1.15.90
+ gst_gl_shader_string_get_highest_precision@Base 1.15.90
  gst_gl_shader_string_vertex_default@Base 1.14.0
  gst_gl_shader_string_vertex_mat4_texture_transform@Base 1.14.0
  gst_gl_shader_string_vertex_mat4_vertex_transform@Base 1.14.0
  gst_gl_shader_use@Base 1.14.0
  gst_gl_sized_gl_format_from_gl_format_type@Base 1.14.0
- gst_gl_stereo_downmix_get_type@Base 1.15.2
+ gst_gl_stereo_downmix_get_type@Base 1.15.90
  gst_gl_stereo_downmix_mode_get_type@Base 1.14.0
  gst_gl_sync_meta_api_get_type@Base 1.14.0
  gst_gl_sync_meta_get_info@Base 1.14.0
@@ -254,7 +261,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_sync_meta_wait_cpu@Base 1.14.0
  gst_gl_texture_target_from_gl@Base 1.14.0
  gst_gl_texture_target_from_string@Base 1.14.0
- gst_gl_texture_target_get_type@Base 1.15.2
+ gst_gl_texture_target_get_type@Base 1.15.90
  gst_gl_texture_target_to_buffer_pool_option@Base 1.14.0
  gst_gl_texture_target_to_gl@Base 1.14.0
  gst_gl_texture_target_to_string@Base 1.14.0
@@ -264,7 +271,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_upload_new@Base 1.14.0
  gst_gl_upload_perform_with_buffer@Base 1.14.0
  gst_gl_upload_propose_allocation@Base 1.14.0
- gst_gl_upload_return_get_type@Base 1.15.2
+ gst_gl_upload_return_get_type@Base 1.15.90
  gst_gl_upload_set_caps@Base 1.14.0
  gst_gl_upload_set_context@Base 1.14.0
  gst_gl_upload_transform_caps@Base 1.14.0
@@ -290,8 +297,9 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_view_convert_set_context@Base 1.14.0
  gst_gl_view_convert_submit_input_buffer@Base 1.14.0
  gst_gl_view_convert_transform_caps@Base 1.14.0
+ gst_gl_window_controls_viewport@Base 1.15.90
  gst_gl_window_draw@Base 1.14.0
- gst_gl_window_error_get_type@Base 1.15.2
+ gst_gl_window_error_get_type@Base 1.15.90
  gst_gl_window_error_quark@Base 1.14.0
  gst_gl_window_get_context@Base 1.14.0
  gst_gl_window_get_display@Base 1.14.0
@@ -315,10 +323,10 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_window_set_resize_callback@Base 1.14.0
  gst_gl_window_set_window_handle@Base 1.14.0
  gst_gl_window_show@Base 1.14.0
- gst_glsl_error_get_type@Base 1.15.2
+ gst_glsl_error_get_type@Base 1.15.90
  gst_glsl_error_quark@Base 1.14.0
  gst_glsl_profile_from_string@Base 1.14.0
- gst_glsl_profile_get_type@Base 1.15.2
+ gst_glsl_profile_get_type@Base 1.15.90
  gst_glsl_profile_to_string@Base 1.14.0
  gst_glsl_stage_compile@Base 1.14.0
  gst_glsl_stage_get_handle@Base 1.14.0
@@ -334,7 +342,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_glsl_stage_set_strings@Base 1.14.0
  gst_glsl_string_get_version_profile@Base 1.14.0
  gst_glsl_version_from_string@Base 1.14.0
- gst_glsl_version_get_type@Base 1.15.2
+ gst_glsl_version_get_type@Base 1.15.90
  gst_glsl_version_profile_from_string@Base 1.14.0
  gst_glsl_version_profile_to_string@Base 1.14.0
  gst_glsl_version_to_string@Base 1.14.0
