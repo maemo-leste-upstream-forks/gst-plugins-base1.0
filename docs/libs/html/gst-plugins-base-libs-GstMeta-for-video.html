@@ -1018,8 +1018,9 @@ parameters.</p>
 <div class="refsect3">
 <a name="gst-buffer-add-video-time-code-meta.returns"></a><h4>Returns</h4>
 <p>the <a class="link" href="gst-plugins-base-libs-GstMeta-for-video.html#GstVideoTimeCodeMeta" title="GstVideoTimeCodeMeta"><span class="type">GstVideoTimeCodeMeta</span></a> on <em class="parameter"><code>buffer</code></em>
-. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+, or
+(since 1.16) <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the timecode was invalid. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
@@ -1106,7 +1107,8 @@ parameters.</p>
 <div class="refsect3">
 <a name="gst-buffer-add-video-time-code-meta-full.returns"></a><h4>Returns</h4>
 <p>the <a class="link" href="gst-plugins-base-libs-GstMeta-for-video.html#GstVideoTimeCodeMeta" title="GstVideoTimeCodeMeta"><span class="type">GstVideoTimeCodeMeta</span></a> on <em class="parameter"><code>buffer</code></em>
-. </p>
+, or
+(since 1.16) <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the timecode was invalid. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>

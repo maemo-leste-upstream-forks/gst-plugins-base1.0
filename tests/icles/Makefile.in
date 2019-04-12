@@ -96,7 +96,8 @@ noinst_PROGRAMS = $(am__EXEEXT_2) $(am__EXEEXT_3) \
 	test-scale$(EXEEXT) test-box$(EXEEXT) \
 	test-effect-switch$(EXEEXT) test-overlay-blending$(EXEEXT) \
 	test-reverseplay$(EXEEXT) test-resample$(EXEEXT) \
-	benchmark-appsink$(EXEEXT) benchmark-appsrc$(EXEEXT)
+	benchmark-appsink$(EXEEXT) benchmark-appsrc$(EXEEXT) \
+	benchmark-video-conversion$(EXEEXT)
 subdir = tests/icles
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
@@ -179,6 +180,15 @@ benchmark_appsrc_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(benchmark_appsrc_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
+am_benchmark_video_conversion_OBJECTS = benchmark_video_conversion-benchmark-video-conversion.$(OBJEXT)
+benchmark_video_conversion_OBJECTS =  \
+	$(am_benchmark_video_conversion_OBJECTS)
+benchmark_video_conversion_DEPENDENCIES = $(top_builddir)/gst-libs/gst/video/libgstvideo-$(GST_API_VERSION).la \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+benchmark_video_conversion_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(benchmark_video_conversion_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am__input_selector_test_SOURCES_DIST = input-selector-test.c
 @USE_X_TRUE@am_input_selector_test_OBJECTS =  \
 @USE_X_TRUE@	input_selector_test-input-selector-test.$(OBJEXT)
@@ -328,6 +338,7 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/audio_trickplay-audio-trickplay.Po \
 	./$(DEPDIR)/benchmark_appsink-benchmark-appsink.Po \
 	./$(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Po \
+	./$(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Po \
 	./$(DEPDIR)/input_selector_test-input-selector-test.Po \
 	./$(DEPDIR)/output_selector_test-output-selector-test.Po \
 	./$(DEPDIR)/playbin_text-playbin-text.Po \
@@ -363,16 +374,19 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(audio_trickplay_SOURCES) $(benchmark_appsink_SOURCES) \
-	$(benchmark_appsrc_SOURCES) $(input_selector_test_SOURCES) \
-	$(output_selector_test_SOURCES) $(playbin_text_SOURCES) \
-	$(position_formats_SOURCES) $(stress_playbin_SOURCES) \
-	$(stress_videooverlay_SOURCES) $(test_box_SOURCES) \
-	$(test_colorkey_SOURCES) $(test_effect_switch_SOURCES) \
-	$(test_overlay_blending_SOURCES) $(test_resample_SOURCES) \
-	$(test_reverseplay_SOURCES) $(test_scale_SOURCES) \
-	$(test_textoverlay_SOURCES) $(test_videooverlay_SOURCES)
+	$(benchmark_appsrc_SOURCES) \
+	$(benchmark_video_conversion_SOURCES) \
+	$(input_selector_test_SOURCES) $(output_selector_test_SOURCES) \
+	$(playbin_text_SOURCES) $(position_formats_SOURCES) \
+	$(stress_playbin_SOURCES) $(stress_videooverlay_SOURCES) \
+	$(test_box_SOURCES) $(test_colorkey_SOURCES) \
+	$(test_effect_switch_SOURCES) $(test_overlay_blending_SOURCES) \
+	$(test_resample_SOURCES) $(test_reverseplay_SOURCES) \
+	$(test_scale_SOURCES) $(test_textoverlay_SOURCES) \
+	$(test_videooverlay_SOURCES)
 DIST_SOURCES = $(audio_trickplay_SOURCES) $(benchmark_appsink_SOURCES) \
 	$(benchmark_appsrc_SOURCES) \
+	$(benchmark_video_conversion_SOURCES) \
 	$(am__input_selector_test_SOURCES_DIST) \
 	$(am__output_selector_test_SOURCES_DIST) \
 	$(playbin_text_SOURCES) $(position_formats_SOURCES) \
@@ -821,6 +835,14 @@ benchmark_appsrc_LDADD = \
 	$(top_builddir)/gst-libs/gst/app/libgstapp-$(GST_API_VERSION).la \
 	$(GST_LIBS)
 
+benchmark_video_conversion_SOURCES = benchmark-video-conversion.c
+benchmark_video_conversion_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) \
+	$(GST_BASE_CFLAGS) $(GST_CFLAGS)
+
+benchmark_video_conversion_LDADD = \
+	$(top_builddir)/gst-libs/gst/video/libgstvideo-$(GST_API_VERSION).la \
+	$(GST_LIBS) $(LIBM)
+
 @USE_X_FALSE@X_TESTS = 
 @USE_X_TRUE@X_TESTS = stress-videooverlay $(am__append_1) \
 @USE_X_TRUE@	output-selector-test input-selector-test
@@ -952,6 +974,10 @@ benchmark-appsrc$(EXEEXT): $(benchmark_appsrc_OBJECTS) $(benchmark_appsrc_DEPEND
 	@rm -f benchmark-appsrc$(EXEEXT)
 	$(AM_V_CCLD)$(benchmark_appsrc_LINK) $(benchmark_appsrc_OBJECTS) $(benchmark_appsrc_LDADD) $(LIBS)
 
+benchmark-video-conversion$(EXEEXT): $(benchmark_video_conversion_OBJECTS) $(benchmark_video_conversion_DEPENDENCIES) $(EXTRA_benchmark_video_conversion_DEPENDENCIES) 
+	@rm -f benchmark-video-conversion$(EXEEXT)
+	$(AM_V_CCLD)$(benchmark_video_conversion_LINK) $(benchmark_video_conversion_OBJECTS) $(benchmark_video_conversion_LDADD) $(LIBS)
+
 input-selector-test$(EXEEXT): $(input_selector_test_OBJECTS) $(input_selector_test_DEPENDENCIES) $(EXTRA_input_selector_test_DEPENDENCIES) 
 	@rm -f input-selector-test$(EXEEXT)
 	$(AM_V_CCLD)$(input_selector_test_LINK) $(input_selector_test_OBJECTS) $(input_selector_test_LDADD) $(LIBS)
@@ -1021,6 +1047,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audio_trickplay-audio-trickplay.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/benchmark_appsink-benchmark-appsink.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/input_selector_test-input-selector-test.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/output_selector_test-output-selector-test.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/playbin_text-playbin-text.Po@am__quote@ # am--include-marker
@@ -1108,6 +1135,20 @@ benchmark_appsrc-benchmark-appsrc.obj: benchmark-appsrc.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='benchmark-appsrc.c' object='benchmark_appsrc-benchmark-appsrc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_appsrc_CFLAGS) $(CFLAGS) -c -o benchmark_appsrc-benchmark-appsrc.obj `if test -f 'benchmark-appsrc.c'; then $(CYGPATH_W) 'benchmark-appsrc.c'; else $(CYGPATH_W) '$(srcdir)/benchmark-appsrc.c'; fi`
+
+benchmark_video_conversion-benchmark-video-conversion.o: benchmark-video-conversion.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_video_conversion_CFLAGS) $(CFLAGS) -MT benchmark_video_conversion-benchmark-video-conversion.o -MD -MP -MF $(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Tpo -c -o benchmark_video_conversion-benchmark-video-conversion.o `test -f 'benchmark-video-conversion.c' || echo '$(srcdir)/'`benchmark-video-conversion.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Tpo $(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='benchmark-video-conversion.c' object='benchmark_video_conversion-benchmark-video-conversion.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_video_conversion_CFLAGS) $(CFLAGS) -c -o benchmark_video_conversion-benchmark-video-conversion.o `test -f 'benchmark-video-conversion.c' || echo '$(srcdir)/'`benchmark-video-conversion.c
+
+benchmark_video_conversion-benchmark-video-conversion.obj: benchmark-video-conversion.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_video_conversion_CFLAGS) $(CFLAGS) -MT benchmark_video_conversion-benchmark-video-conversion.obj -MD -MP -MF $(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Tpo -c -o benchmark_video_conversion-benchmark-video-conversion.obj `if test -f 'benchmark-video-conversion.c'; then $(CYGPATH_W) 'benchmark-video-conversion.c'; else $(CYGPATH_W) '$(srcdir)/benchmark-video-conversion.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Tpo $(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='benchmark-video-conversion.c' object='benchmark_video_conversion-benchmark-video-conversion.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(benchmark_video_conversion_CFLAGS) $(CFLAGS) -c -o benchmark_video_conversion-benchmark-video-conversion.obj `if test -f 'benchmark-video-conversion.c'; then $(CYGPATH_W) 'benchmark-video-conversion.c'; else $(CYGPATH_W) '$(srcdir)/benchmark-video-conversion.c'; fi`
 
 input_selector_test-input-selector-test.o: input-selector-test.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(input_selector_test_CFLAGS) $(CFLAGS) -MT input_selector_test-input-selector-test.o -MD -MP -MF $(DEPDIR)/input_selector_test-input-selector-test.Tpo -c -o input_selector_test-input-selector-test.o `test -f 'input-selector-test.c' || echo '$(srcdir)/'`input-selector-test.c
@@ -1526,6 +1567,7 @@ distclean: distclean-recursive
 		-rm -f ./$(DEPDIR)/audio_trickplay-audio-trickplay.Po
 	-rm -f ./$(DEPDIR)/benchmark_appsink-benchmark-appsink.Po
 	-rm -f ./$(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Po
+	-rm -f ./$(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Po
 	-rm -f ./$(DEPDIR)/input_selector_test-input-selector-test.Po
 	-rm -f ./$(DEPDIR)/output_selector_test-output-selector-test.Po
 	-rm -f ./$(DEPDIR)/playbin_text-playbin-text.Po
@@ -1589,6 +1631,7 @@ maintainer-clean: maintainer-clean-recursive
 		-rm -f ./$(DEPDIR)/audio_trickplay-audio-trickplay.Po
 	-rm -f ./$(DEPDIR)/benchmark_appsink-benchmark-appsink.Po
 	-rm -f ./$(DEPDIR)/benchmark_appsrc-benchmark-appsrc.Po
+	-rm -f ./$(DEPDIR)/benchmark_video_conversion-benchmark-video-conversion.Po
 	-rm -f ./$(DEPDIR)/input_selector_test-input-selector-test.Po
 	-rm -f ./$(DEPDIR)/output_selector_test-output-selector-test.Po
 	-rm -f ./$(DEPDIR)/playbin_text-playbin-text.Po

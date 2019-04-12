@@ -185,12 +185,19 @@ validate_colorimetry (GstVideoInfo * info)
   const GstVideoFormatInfo *finfo = info->finfo;
 
   if (!GST_VIDEO_FORMAT_INFO_IS_RGB (finfo) &&
-      info->colorimetry.matrix == GST_VIDEO_COLOR_MATRIX_RGB)
+      info->colorimetry.matrix == GST_VIDEO_COLOR_MATRIX_RGB) {
+    GST_WARNING
+        ("color matrix RGB is only supported with RGB format, %s is not",
+        finfo->name);
     return FALSE;
+  }
 
   if (GST_VIDEO_FORMAT_INFO_IS_YUV (finfo) &&
-      info->colorimetry.matrix == GST_VIDEO_COLOR_MATRIX_UNKNOWN)
+      info->colorimetry.matrix == GST_VIDEO_COLOR_MATRIX_UNKNOWN) {
+    GST_WARNING ("Need to specify a color matrix when using YUV format (%s)",
+        finfo->name);
     return FALSE;
+  }
 
   return TRUE;
 }
@@ -455,7 +462,19 @@ gst_video_info_from_caps (GstVideoInfo * info, const GstCaps * caps)
   else
     info->interlace_mode = GST_VIDEO_INTERLACE_MODE_PROGRESSIVE;
 
-  if (info->interlace_mode == GST_VIDEO_INTERLACE_MODE_INTERLEAVED &&
+  /* Interlaced feature is mandatory for raw alternate streams */
+  if (info->interlace_mode == GST_VIDEO_INTERLACE_MODE_ALTERNATE &&
+      format != GST_VIDEO_FORMAT_ENCODED) {
+    GstCapsFeatures *f;
+
+    f = gst_caps_get_features (caps, 0);
+    if (!f
+        || !gst_caps_features_contains (f, GST_CAPS_FEATURE_FORMAT_INTERLACED))
+      goto alternate_no_feature;
+  }
+
+  if ((info->interlace_mode == GST_VIDEO_INTERLACE_MODE_INTERLEAVED ||
+          info->interlace_mode == GST_VIDEO_INTERLACE_MODE_ALTERNATE) &&
       (s = gst_structure_get_string (structure, "field-order"))) {
     GST_VIDEO_INFO_FIELD_ORDER (info) = gst_video_field_order_from_string (s);
   } else {
@@ -538,6 +557,12 @@ no_width:
 no_height:
   {
     GST_ERROR ("no height property given");
+    return FALSE;
+  }
+alternate_no_feature:
+  {
+    GST_ERROR
+        ("caps has 'interlace-mode=alternate' but doesn't have the Interlaced feature");
     return FALSE;
   }
 }
@@ -636,7 +661,8 @@ gst_video_info_to_caps (GstVideoInfo * info)
   gst_caps_set_simple (caps, "interlace-mode", G_TYPE_STRING,
       gst_video_interlace_mode_to_string (info->interlace_mode), NULL);
 
-  if (info->interlace_mode == GST_VIDEO_INTERLACE_MODE_INTERLEAVED &&
+  if ((info->interlace_mode == GST_VIDEO_INTERLACE_MODE_INTERLEAVED ||
+          info->interlace_mode == GST_VIDEO_INTERLACE_MODE_ALTERNATE) &&
       GST_VIDEO_INFO_FIELD_ORDER (info) != GST_VIDEO_FIELD_ORDER_UNKNOWN) {
     gst_caps_set_simple (caps, "field-order", G_TYPE_STRING,
         gst_video_field_order_to_string (GST_VIDEO_INFO_FIELD_ORDER (info)),
@@ -763,6 +789,8 @@ fill_planes (GstVideoInfo * info)
     case GST_VIDEO_FORMAT_ABGR:
     case GST_VIDEO_FORMAT_r210:
     case GST_VIDEO_FORMAT_Y410:
+    case GST_VIDEO_FORMAT_VUYA:
+    case GST_VIDEO_FORMAT_BGR10A2_LE:
       info->stride[0] = width * 4;
       info->offset[0] = 0;
       info->size = info->stride[0] * height;
