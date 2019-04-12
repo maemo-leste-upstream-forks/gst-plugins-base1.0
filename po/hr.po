@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base-1.15.1\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2019-02-26 11:43+0000\n"
+"POT-Creation-Date: 2019-04-11 00:23+0100\n"
 "PO-Revision-Date: 2019-03-03 13:33-0800\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
@@ -687,6 +687,11 @@ msgstr "Rabi playbin3 cjevovod"
 
 msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
 msgstr "(zadano: varira, ovisno o varijabli okružja „USE_PLAYBIN“)"
+
+msgid ""
+"Keep showing the last frame on EOS until quit or playlist change command "
+"(gapless is ignored)"
+msgstr ""
 
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."

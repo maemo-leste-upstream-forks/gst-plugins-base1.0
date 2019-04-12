@@ -294,11 +294,10 @@ strings with unknown identifiers. This allows other plugin-based
 libraries to use the same mechanism for their automatic plugin
 installation needs, or for the format to be changed should it turn
 out to be insufficient.</p></li>
-<li class="listitem"><p>plugin system version, e.g. "0.10"
-This is required so that when there is a GStreamer-0.12 or
-GStreamer-1.0 at some point in future, the different major versions
-can still co-exist and use the same plugin install mechanism in the
-same way.</p></li>
+<li class="listitem"><p>plugin system version, e.g. "1.0"
+This is required so that when there is GStreamer-2.0 at some point
+in future, the different major versions can still co-exist and use
+the same plugin install mechanism in the same way.</p></li>
 <li class="listitem"><p>application identifier, e.g. "totem"
 This may also be in the form of "pid/12345" if the program name
 can't be obtained for some reason.</p></li>
@@ -329,7 +328,7 @@ mpegversion=(int)2</p></li>
 <li class="listitem"><p>optional further fields not yet specified</p></li>
 </ul></div>
 <p>An entire ID string might then look like this, for example: <code class="literal">
-gstreamer|0.10|totem|Vorbis audio decoder|decoder-audio/x-vorbis</code></p>
+gstreamer|1.0|totem|Vorbis audio decoder|decoder-audio/x-vorbis</code></p>
 <p>Plugin installers parsing this ID string should expect further fields
 also separated by '|' symbols and either ignore them, warn the user, or
 error out when encountering them.</p>

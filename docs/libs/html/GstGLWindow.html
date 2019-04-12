@@ -1084,6 +1084,7 @@ provided api.</p>
   void     (*show)               (GstGLWindow *window);
   gboolean (*set_render_rectangle)(GstGLWindow *window, gint x, gint y, gint width, gint height);
   void     (*queue_resize)       (GstGLWindow *window);
+  gboolean (*controls_viewport)  (GstGLWindow *window);
 } GstGLWindowClass;
 </pre>
 <div class="refsect3">
@@ -1176,6 +1177,12 @@ implementation is free to ignore this information.</p></td>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GstGLWindowClass.queue-resize"></a>queue_resize</code></em> ()</p></td>
 <td class="struct_member_description"><p>request a resize to occur when possible</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstGLWindowClass.controls-viewport"></a>controls_viewport</code></em> ()</p></td>
+<td class="struct_member_description"><p>Whether the window takes care of glViewport setup.
+and the user does not need to deal with viewports</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>

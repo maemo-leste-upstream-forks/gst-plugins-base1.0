@@ -97,6 +97,11 @@
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-videorate.html#GstVideoRate--rate" title="The “rate” property">rate</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-videorate.html#GstVideoRate--max-duplication-time" title="The “max-duplication-time” property">max-duplication-time</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -408,6 +413,16 @@ configured.</p>
 <p>Allowed values: &gt;= 0</p>
 <p>Default value: 1</p>
 <p class="since">Since: 1.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstVideoRate--max-duplication-time"></a><h3>The <code class="literal">“max-duplication-time”</code> property</h3>
+<pre class="programlisting">  “max-duplication-time”     <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint64"><span class="type">guint64</span></a></pre>
+<p>Duplicate frames only if the gap between two consecutive frames does not
+exceed this duration.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 0</p>
+<p class="since">Since: 1.16</p>
 </div>
 </div>
 </div>

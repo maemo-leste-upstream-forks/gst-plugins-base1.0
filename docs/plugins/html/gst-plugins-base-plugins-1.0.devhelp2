@@ -653,6 +653,7 @@
     <keyword type="property" name="The “silent” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--silent"/>
     <keyword type="property" name="The “skip-to-first” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--skip-to-first"/>
     <keyword type="property" name="The “rate” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--rate"/>
+    <keyword type="property" name="The “max-duplication-time” property" link="gst-plugins-base-plugins-videorate.html#GstVideoRate--max-duplication-time"/>
     <keyword type="struct" name="struct GstVideoScale" link="gst-plugins-base-plugins-videoscale.html#GstVideoScale-struct"/>
     <keyword type="enum" name="enum GstVideoScaleMethod" link="gst-plugins-base-plugins-videoscale.html#GstVideoScaleMethod"/>
     <keyword type="property" name="The “add-borders” property" link="gst-plugins-base-plugins-videoscale.html#GstVideoScale--add-borders"/>

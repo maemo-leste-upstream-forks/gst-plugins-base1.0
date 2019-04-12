@@ -417,6 +417,7 @@
     <keyword type="macro" name="GST_AUDIO_DECODER_STREAM_LOCK()" link="GstAudioDecoder.html#GST-AUDIO-DECODER-STREAM-LOCK:CAPS"/>
     <keyword type="macro" name="GST_AUDIO_DECODER_STREAM_UNLOCK()" link="GstAudioDecoder.html#GST-AUDIO-DECODER-STREAM-UNLOCK:CAPS"/>
     <keyword type="function" name="gst_audio_decoder_finish_frame ()" link="GstAudioDecoder.html#gst-audio-decoder-finish-frame"/>
+    <keyword type="function" name="gst_audio_decoder_finish_subframe ()" link="GstAudioDecoder.html#gst-audio-decoder-finish-subframe" since="1.16"/>
     <keyword type="function" name="gst_audio_decoder_set_output_format ()" link="GstAudioDecoder.html#gst-audio-decoder-set-output-format"/>
     <keyword type="function" name="gst_audio_decoder_set_output_caps ()" link="GstAudioDecoder.html#gst-audio-decoder-set-output-caps" since="1.16"/>
     <keyword type="function" name="gst_audio_decoder_negotiate ()" link="GstAudioDecoder.html#gst-audio-decoder-negotiate"/>
@@ -739,6 +740,7 @@
     <keyword type="property" name="The “max-ptime” property" link="GstRTPBasePayload.html#GstRTPBasePayload--max-ptime"/>
     <keyword type="property" name="The “min-ptime” property" link="GstRTPBasePayload.html#GstRTPBasePayload--min-ptime"/>
     <keyword type="property" name="The “mtu” property" link="GstRTPBasePayload.html#GstRTPBasePayload--mtu"/>
+    <keyword type="property" name="The “onvif-no-rate-control” property" link="GstRTPBasePayload.html#GstRTPBasePayload--onvif-no-rate-control"/>
     <keyword type="property" name="The “perfect-rtptime” property" link="GstRTPBasePayload.html#GstRTPBasePayload--perfect-rtptime"/>
     <keyword type="property" name="The “pt” property" link="GstRTPBasePayload.html#GstRTPBasePayload--pt"/>
     <keyword type="property" name="The “ptime-multiple” property" link="GstRTPBasePayload.html#GstRTPBasePayload--ptime-multiple"/>
@@ -1519,6 +1521,7 @@
     <keyword type="struct" name="GstDiscovererVideoInfo" link="GstDiscoverer.html#GstDiscovererVideoInfo"/>
     <keyword type="struct" name="GstDiscovererSubtitleInfo" link="GstDiscoverer.html#GstDiscovererSubtitleInfo"/>
     <keyword type="property" name="The “timeout” property" link="GstDiscoverer.html#GstDiscoverer--timeout"/>
+    <keyword type="property" name="The “use-cache” property" link="GstDiscoverer.html#GstDiscoverer--use-cache"/>
     <keyword type="signal" name="The “discovered” signal" link="GstDiscoverer.html#GstDiscoverer-discovered"/>
     <keyword type="signal" name="The “finished” signal" link="GstDiscoverer.html#GstDiscoverer-finished"/>
     <keyword type="signal" name="The “source-setup” signal" link="GstDiscoverer.html#GstDiscoverer-source-setup"/>
@@ -2493,6 +2496,8 @@
     <keyword type="function" name="gst_gl_shader_get_attribute_location ()" link="GstGLShader.html#gst-gl-shader-get-attribute-location"/>
     <keyword type="function" name="gst_gl_shader_bind_attribute_location ()" link="GstGLShader.html#gst-gl-shader-bind-attribute-location"/>
     <keyword type="function" name="gst_gl_shader_bind_frag_data_location ()" link="GstGLShader.html#gst-gl-shader-bind-frag-data-location"/>
+    <keyword type="function" name="gst_gl_shader_string_fragment_get_default ()" link="GstGLShader.html#gst-gl-shader-string-fragment-get-default"/>
+    <keyword type="function" name="gst_gl_shader_string_fragment_external_oes_get_default ()" link="GstGLShader.html#gst-gl-shader-string-fragment-external-oes-get-default"/>
     <keyword type="struct" name="GstGLShader" link="GstGLShader.html#GstGLShader-struct"/>
     <keyword type="property" name="The “linked” property" link="GstGLShader.html#GstGLShader--linked"/>
     <keyword type="function" name="gst_glsl_profile_from_string ()" link="gst-plugins-base-libs-GstGLSL.html#gst-glsl-profile-from-string"/>
@@ -2504,6 +2509,8 @@
     <keyword type="function" name="gst_glsl_string_get_version_profile ()" link="gst-plugins-base-libs-GstGLSL.html#gst-glsl-string-get-version-profile"/>
     <keyword type="function" name="gst_gl_context_supports_glsl_profile_version ()" link="gst-plugins-base-libs-GstGLSL.html#gst-gl-context-supports-glsl-profile-version"/>
     <keyword type="function" name="gst_gl_version_to_glsl_version ()" link="gst-plugins-base-libs-GstGLSL.html#gst-gl-version-to-glsl-version"/>
+    <keyword type="function" name="gst_gl_context_supports_precision ()" link="gst-plugins-base-libs-GstGLSL.html#gst-gl-context-supports-precision"/>
+    <keyword type="function" name="gst_gl_context_supports_precision_highp ()" link="gst-plugins-base-libs-GstGLSL.html#gst-gl-context-supports-precision-highp"/>
     <keyword type="macro" name="GST_GLSL_ERROR" link="gst-plugins-base-libs-GstGLSL.html#GST-GLSL-ERROR:CAPS"/>
     <keyword type="enum" name="enum GstGLSLError" link="gst-plugins-base-libs-GstGLSL.html#GstGLSLError" since="1.8"/>
     <keyword type="enum" name="enum GstGLSLProfile" link="gst-plugins-base-libs-GstGLSL.html#GstGLSLProfile" since="1.8"/>
@@ -3016,6 +3023,8 @@
     <keyword type="constant" name="GST_RTSP_HDR_MEDIA_PROPERTIES" link="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-HDR-MEDIA-PROPERTIES:CAPS"/>
     <keyword type="constant" name="GST_RTSP_HDR_SEEK_STYLE" link="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-HDR-SEEK-STYLE:CAPS"/>
     <keyword type="constant" name="GST_RTSP_HDR_ACCEPT_RANGES" link="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-HDR-ACCEPT-RANGES:CAPS"/>
+    <keyword type="constant" name="GST_RTSP_HDR_FRAMES" link="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-HDR-FRAMES:CAPS"/>
+    <keyword type="constant" name="GST_RTSP_HDR_RATE_CONTROL" link="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-HDR-RATE-CONTROL:CAPS"/>
     <keyword type="constant" name="GST_RTSP_HDR_LAST" link="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-HDR-LAST:CAPS"/>
     <keyword type="constant" name="GST_RTSP_STS_INVALID" link="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-STS-INVALID:CAPS"/>
     <keyword type="constant" name="GST_RTSP_STS_CONTINUE" link="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-STS-CONTINUE:CAPS"/>
@@ -3128,6 +3137,7 @@
     <keyword type="constant" name="GST_MIKEY_ENC_NULL" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-ENC-NULL:CAPS"/>
     <keyword type="constant" name="GST_MIKEY_ENC_AES_CM_128" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-ENC-AES-CM-128:CAPS"/>
     <keyword type="constant" name="GST_MIKEY_ENC_AES_KW_128" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-ENC-AES-KW-128:CAPS"/>
+    <keyword type="constant" name="GST_MIKEY_ENC_AES_GCM_128" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-ENC-AES-GCM-128:CAPS"/>
     <keyword type="constant" name="GST_MIKEY_MAC_NULL" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-MAC-NULL:CAPS"/>
     <keyword type="constant" name="GST_MIKEY_MAC_HMAC_SHA_1_160" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-MAC-HMAC-SHA-1-160:CAPS"/>
     <keyword type="constant" name="GST_MIKEY_CACHE_NONE" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-CACHE-NONE:CAPS"/>
@@ -3150,6 +3160,7 @@
     <keyword type="constant" name="GST_MIKEY_SP_SRTP_SRTP_AUTH" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-SP-SRTP-SRTP-AUTH:CAPS"/>
     <keyword type="constant" name="GST_MIKEY_SP_SRTP_AUTH_TAG_LEN" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-SP-SRTP-AUTH-TAG-LEN:CAPS"/>
     <keyword type="constant" name="GST_MIKEY_SP_SRTP_SRTP_PREFIX_LEN" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-SP-SRTP-SRTP-PREFIX-LEN:CAPS"/>
+    <keyword type="constant" name="GST_MIKEY_SP_SRTP_AEAD_AUTH_TAG_LEN" link="gst-plugins-base-libs-GstMIKEYMessage.html#GST-MIKEY-SP-SRTP-AEAD-AUTH-TAG-LEN:CAPS"/>
     <keyword type="constant" name="GST_TAG_IMAGE_TYPE_NONE" link="gst-plugins-base-libs-Tags.html#GST-TAG-IMAGE-TYPE-NONE:CAPS"/>
     <keyword type="constant" name="GST_TAG_IMAGE_TYPE_UNDEFINED" link="gst-plugins-base-libs-Tags.html#GST-TAG-IMAGE-TYPE-UNDEFINED:CAPS"/>
     <keyword type="constant" name="GST_TAG_IMAGE_TYPE_FRONT_COVER" link="gst-plugins-base-libs-Tags.html#GST-TAG-IMAGE-TYPE-FRONT-COVER:CAPS"/>
@@ -3313,6 +3324,8 @@
     <keyword type="constant" name="GST_VIDEO_FORMAT_NV12_10LE40" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-NV12-10LE40:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_Y210" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-Y210:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_Y410" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-Y410:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_FORMAT_VUYA" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-VUYA:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_FORMAT_BGR10A2_LE" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-BGR10A2-LE:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_FLAG_YUV" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-FLAG-YUV:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_FLAG_RGB" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-FLAG-RGB:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_FORMAT_FLAG_GRAY" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-FLAG-GRAY:CAPS"/>
@@ -3344,6 +3357,10 @@
     <keyword type="constant" name="GST_VIDEO_COLOR_PRIMARIES_FILM" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-COLOR-PRIMARIES-FILM:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_COLOR_PRIMARIES_BT2020" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-COLOR-PRIMARIES-BT2020:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_COLOR_PRIMARIES_ADOBERGB" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-COLOR-PRIMARIES-ADOBERGB:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_COLOR_PRIMARIES_SMPTEST428" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-COLOR-PRIMARIES-SMPTEST428:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_COLOR_PRIMARIES_SMPTERP431" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-COLOR-PRIMARIES-SMPTERP431:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_COLOR_PRIMARIES_SMPTEEG432" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-COLOR-PRIMARIES-SMPTEEG432:CAPS"/>
+    <keyword type="constant" name="GST_VIDEO_COLOR_PRIMARIES_EBU3213" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-COLOR-PRIMARIES-EBU3213:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_TRANSFER_UNKNOWN" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-TRANSFER-UNKNOWN:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_TRANSFER_GAMMA10" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-TRANSFER-GAMMA10:CAPS"/>
     <keyword type="constant" name="GST_VIDEO_TRANSFER_GAMMA18" link="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-TRANSFER-GAMMA18:CAPS"/>
@@ -4295,5 +4312,6 @@
     <keyword type="member" name="GstGLWindowClass.show" link="GstGLWindow.html#GstGLWindowClass.show"/>
     <keyword type="member" name="GstGLWindowClass.set-render-rectangle" link="GstGLWindow.html#GstGLWindowClass.set-render-rectangle"/>
     <keyword type="member" name="GstGLWindowClass.queue-resize" link="GstGLWindow.html#GstGLWindowClass.queue-resize"/>
+    <keyword type="member" name="GstGLWindowClass.controls-viewport" link="GstGLWindow.html#GstGLWindowClass.controls-viewport"/>
   </functions>
 </book>

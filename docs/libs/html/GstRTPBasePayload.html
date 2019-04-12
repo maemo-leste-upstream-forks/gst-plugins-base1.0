@@ -166,6 +166,11 @@
 </tr>
 <tr>
 <td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="GstRTPBasePayload.html#GstRTPBasePayload--onvif-no-rate-control" title="The “onvif-no-rate-control” property">onvif-no-rate-control</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GstRTPBasePayload.html#GstRTPBasePayload--perfect-rtptime" title="The “perfect-rtptime” property">perfect-rtptime</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -819,6 +824,16 @@ gst_rtp_base_payload_set_source_info_enabled
 <p>Flags: Read / Write</p>
 <p>Allowed values: &gt;= 28</p>
 <p>Default value: 1400</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstRTPBasePayload--onvif-no-rate-control"></a><h3>The <code class="literal">“onvif-no-rate-control”</code> property</h3>
+<pre class="programlisting">  “onvif-no-rate-control”    <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Make the payloader timestamp packets according to the Rate-Control=no
+behaviour specified in the ONVIF replay spec.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
 </div>
 <hr>
 <div class="refsect2">
