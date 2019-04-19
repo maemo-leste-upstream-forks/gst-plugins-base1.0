@@ -5,10 +5,10 @@
 # Tianze Wang <zwpwjwtz@126.com>, 2015.
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.10.0\n"
+"Project-Id-Version: gst-plugins-base 1.15.1\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2019-04-11 00:23+0100\n"
-"PO-Revision-Date: 2016-11-02 13:38+0800\n"
+"POT-Creation-Date: 2019-04-19 00:20+0100\n"
+"PO-Revision-Date: 2019-03-05 16:30+0100\n"
 "Last-Translator: Tianze Wang <zwpwjwtz@126.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Generator: Poedit 1.8.9\n"
+"X-Generator: Poedit 2.0.7\n"
 
 msgid "Could not open device for playback in mono mode."
 msgstr "无法在单声道模式打开设备播放。"
@@ -70,13 +70,13 @@ msgid "Could not read CD."
 msgstr "无法读取 CD。"
 
 msgid "failed to draw pattern"
-msgstr ""
+msgstr "无法绘制图案"
 
 msgid "A GL error occurred"
-msgstr ""
+msgstr "发生了 GL 错误"
 
 msgid "format wasn't negotiated before get function"
-msgstr ""
+msgstr "在调用 get 函数之前未确定合适的格式"
 
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
@@ -91,9 +91,8 @@ msgstr "此文件是个文本文件"
 msgid "Could not create \"uridecodebin\" element."
 msgstr "无法创建“uridecodebin”组件。"
 
-#, fuzzy
 msgid "Could not create \"uridecodebin3\" element."
-msgstr "无法创建“uridecodebin”组件。"
+msgstr "无法创建“uridecodebin3”组件。"
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
@@ -226,10 +225,10 @@ msgid "TMPlayer subtitle format"
 msgstr "TMPlayer 字幕格式"
 
 msgid "CEA 608 Closed Caption"
-msgstr ""
+msgstr "CEA 608 隐藏式字幕"
 
 msgid "CEA 708 Closed Caption"
-msgstr ""
+msgstr "CEA 708 隐藏式字幕"
 
 msgid "Kate subtitle format"
 msgstr "Kate 字幕格式"
@@ -662,10 +661,10 @@ msgid "Do not print any output (apart from errors)"
 msgstr "不显示任何输出（除了错误信息）"
 
 msgid "Use playbin3 pipeline"
-msgstr ""
+msgstr "使用 playbin3 管道"
 
 msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
-msgstr ""
+msgstr "（默认配置取决于“USE_PLAYBIN”环境变量）"
 
 msgid ""
 "Keep showing the last frame on EOS until quit or playlist change command "
