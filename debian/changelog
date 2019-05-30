@@ -1,3 +1,10 @@
+gst-plugins-base1.0 (1.14.4-2) unstable; urgency=high
+
+  * debian/patches/0001-gstrtspconnection-Security-loophole-making-heap-over.patch:
+    + Add upstream patch for CVE-2019-9928 (Closes: #927978).
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 30 May 2019 11:27:53 +0300
+
 gst-plugins-base1.0 (1.14.4-1) unstable; urgency=medium
 
   * New upstream bugfix release
