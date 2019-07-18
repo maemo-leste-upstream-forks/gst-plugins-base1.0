@@ -18,7 +18,7 @@ libgstriff_@GST_API_VERSION@_la_LIBADD = \
   $(top_builddir)/gst-libs/gst/tag/libgsttag-@GST_API_VERSION@.la \
   $(GST_BASE_LIBS) $(GST_LIBS)
 
-libgstriff_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS)
+libgstriff_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS) -DBUILDING_GST_RIFF
 libgstriff_@GST_API_VERSION@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
 
 # *** GIR DISABLED for this library ***
@@ -49,7 +49,7 @@ libgstriff_@GST_API_VERSION@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) 
 #		--include=GstAudio-@GST_API_VERSION@ \
 #		--include=GstTag-@GST_API_VERSION@ \
 #		--include=Gst-@GST_API_VERSION@ \
-#		--libtool="$(top_builddir)/libtool" \
+#		--libtool="${LIBTOOL}" \
 #		--pkg gstreamer-@GST_API_VERSION@ \
 #		--pkg gstreamer-tag-@GST_API_VERSION@ \
 #		--pkg gstreamer-audio-@GST_API_VERSION@ \

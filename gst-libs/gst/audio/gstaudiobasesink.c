@@ -30,6 +30,9 @@
  * ::create_ringbuffer vmethod. This base class will then take care of
  * writing samples to the ringbuffer, synchronisation, clipping and flushing.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <string.h>
 
@@ -38,9 +41,6 @@
 
 GST_DEBUG_CATEGORY_STATIC (gst_audio_base_sink_debug);
 #define GST_CAT_DEFAULT gst_audio_base_sink_debug
-
-#define GST_AUDIO_BASE_SINK_GET_PRIVATE(obj)  \
-   (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GST_TYPE_AUDIO_BASE_SINK, GstAudioBaseSinkPrivate))
 
 struct _GstAudioBaseSinkPrivate
 {
@@ -125,7 +125,7 @@ enum
     GST_DEBUG_CATEGORY_INIT (gst_audio_base_sink_debug, "audiobasesink", 0, "audiobasesink element");
 #define gst_audio_base_sink_parent_class parent_class
 G_DEFINE_TYPE_WITH_CODE (GstAudioBaseSink, gst_audio_base_sink,
-    GST_TYPE_BASE_SINK, _do_init);
+    GST_TYPE_BASE_SINK, G_ADD_PRIVATE (GstAudioBaseSink) _do_init);
 
 static void gst_audio_base_sink_dispose (GObject * object);
 
@@ -179,8 +179,6 @@ gst_audio_base_sink_class_init (GstAudioBaseSinkClass * klass)
   gobject_class = (GObjectClass *) klass;
   gstelement_class = (GstElementClass *) klass;
   gstbasesink_class = (GstBaseSinkClass *) klass;
-
-  g_type_class_add_private (klass, sizeof (GstAudioBaseSinkPrivate));
 
   gobject_class->set_property = gst_audio_base_sink_set_property;
   gobject_class->get_property = gst_audio_base_sink_get_property;
@@ -278,9 +276,10 @@ gst_audio_base_sink_class_init (GstAudioBaseSinkClass * klass)
 static void
 gst_audio_base_sink_init (GstAudioBaseSink * audiobasesink)
 {
-  GstBaseSink *basesink;
+  GstBaseSink *basesink = GST_BASE_SINK_CAST (audiobasesink);
 
-  audiobasesink->priv = GST_AUDIO_BASE_SINK_GET_PRIVATE (audiobasesink);
+  audiobasesink->priv =
+      gst_audio_base_sink_get_instance_private (audiobasesink);
 
   audiobasesink->buffer_time = DEFAULT_BUFFER_TIME;
   audiobasesink->latency_time = DEFAULT_LATENCY_TIME;
@@ -296,7 +295,6 @@ gst_audio_base_sink_init (GstAudioBaseSink * audiobasesink)
       (GstAudioClockGetTimeFunc) gst_audio_base_sink_get_time, audiobasesink,
       NULL);
 
-  basesink = GST_BASE_SINK_CAST (audiobasesink);
   basesink->can_activate_push = TRUE;
   basesink->can_activate_pull = DEFAULT_CAN_ACTIVATE_PULL;
 
@@ -1410,7 +1408,7 @@ gst_audio_base_sink_skew_slaving (GstAudioBaseSink * sink,
 {
   GstClockTime cinternal, cexternal, crate_num, crate_denom;
   GstClockTime etime, itime;
-  GstClockTimeDiff skew, mdrift, mdrift2;
+  GstClockTimeDiff skew, drift, mdrift2;
   gint driftsamples;
   gint64 last_align;
 
@@ -1452,25 +1450,27 @@ gst_audio_base_sink_skew_slaving (GstAudioBaseSink * sink,
       GST_STIME_ARGS (sink->priv->avg_skew));
 
   /* the max drift we allow */
-  mdrift = sink->priv->drift_tolerance * 1000;
-  mdrift2 = mdrift / 2;
+  mdrift2 = (sink->priv->drift_tolerance * 1000) / 2;
 
   /* adjust playout pointer based on skew */
   if (sink->priv->avg_skew > mdrift2) {
-    /* master is running slower, move internal time forward */
+    /* master is running slower, move external time backwards */
     GST_WARNING_OBJECT (sink,
         "correct clock skew %" GST_STIME_FORMAT " > %" GST_STIME_FORMAT,
         GST_STIME_ARGS (sink->priv->avg_skew), GST_STIME_ARGS (mdrift2));
 
-    if (sink->priv->avg_skew > (2 * mdrift)) {
-      cexternal -= sink->priv->avg_skew;
-      sink->priv->avg_skew = 0;
-    } else {
-      cexternal = cexternal > mdrift ? cexternal - mdrift : 0;
-      sink->priv->avg_skew -= mdrift;
-    }
+    /* Move the external time backward by the average skew, but don't ever
+     * go negative.  Moving the average skew by the same distance defines
+     * the new clock skew window center point.  This allows the clock to
+     * drift equally into either direction after the correction. */
+    if (G_LIKELY (cexternal > sink->priv->avg_skew))
+      drift = sink->priv->avg_skew;
+    else
+      drift = cexternal;
+    cexternal -= drift;
+    sink->priv->avg_skew -= drift;
 
-    driftsamples = (sink->ringbuffer->spec.info.rate * mdrift) / GST_SECOND;
+    driftsamples = (sink->ringbuffer->spec.info.rate * drift) / GST_SECOND;
     last_align = sink->priv->last_align;
 
     /* if we were aligning in the wrong direction or we aligned more than what
@@ -1490,15 +1490,15 @@ gst_audio_base_sink_skew_slaving (GstAudioBaseSink * sink,
         "correct clock skew %" GST_STIME_FORMAT " < -%" GST_STIME_FORMAT,
         GST_STIME_ARGS (sink->priv->avg_skew), GST_STIME_ARGS (mdrift2));
 
-    if (sink->priv->avg_skew < (2 * -mdrift)) {
-      cexternal -= sink->priv->avg_skew;
-      sink->priv->avg_skew = 0;
-    } else {
-      cexternal += mdrift;
-      sink->priv->avg_skew += mdrift;
-    }
+    /* Move the external time forward by the average skew, and move the
+     * average skew by the same distance (which equals a reset to 0). This
+     * defines the new clock skew window center point.  This allows the
+     * clock to drift equally into either direction after the correction. */
+    drift = -sink->priv->avg_skew;
+    cexternal += drift;
+    sink->priv->avg_skew = 0;
 
-    driftsamples = (sink->ringbuffer->spec.info.rate * mdrift) / GST_SECOND;
+    driftsamples = (sink->ringbuffer->spec.info.rate * drift) / GST_SECOND;
     last_align = sink->priv->last_align;
 
     /* if we were aligning in the wrong direction or we aligned more than what
@@ -1863,7 +1863,6 @@ gst_audio_base_sink_render (GstBaseSink * bsink, GstBuffer * buf)
     goto wrong_size;
 
   samples = size / bpf;
-  out_samples = samples;
 
   time = GST_BUFFER_TIMESTAMP (buf);
 

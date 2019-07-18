@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-rtp.html" title="RTP Library">
-<link rel="prev" href="gstreamer-rtp.html" title="RTP Library">
+<link rel="prev" href="gst-plugins-base-libs-GstMeta-for-RTP.html" title="GstMeta for RTP">
 <link rel="next" href="GstRTPBaseDepayload.html" title="GstRTPBaseDepayload">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -21,7 +21,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-rtp.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-rtp.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gst-plugins-base-libs-GstMeta-for-RTP.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstRTPBaseDepayload.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -154,7 +154,7 @@
 </div>
 <div class="refsect1">
 <a name="GstRTPBaseAudioPayload.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/rtp/gstrtpbaseaudiopayload.h&gt;
+<pre class="synopsis">#include &lt;gst/rtp/rtp.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -173,7 +173,7 @@ equal to min-ptime (if set). If min-ptime is not set, any residual data is
 sent in a last RTP packet. In the case of frame based codecs, the resulting
 RTP packets always contain full frames.</p>
 <div class="refsect3">
-<a name="id-1.2.9.3.8.4"></a><h4>Usage</h4>
+<a name="id-1.2.9.4.8.4"></a><h4>Usage</h4>
 <p>To use this base class, your child element needs to call either
 <a class="link" href="GstRTPBaseAudioPayload.html#gst-rtp-base-audio-payload-set-frame-based" title="gst_rtp_base_audio_payload_set_frame_based ()"><code class="function">gst_rtp_base_audio_payload_set_frame_based()</code></a> or
 <a class="link" href="GstRTPBaseAudioPayload.html#gst-rtp-base-audio-payload-set-sample-based" title="gst_rtp_base_audio_payload_set_sample_based ()"><code class="function">gst_rtp_base_audio_payload_set_sample_based()</code></a>. This is usually done in the

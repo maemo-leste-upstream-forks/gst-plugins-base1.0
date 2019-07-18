@@ -54,7 +54,7 @@ libgstpbutils_@GST_API_VERSION@_la_LIBADD = \
   $(top_builddir)/gst-libs/gst/tag/libgsttag-@GST_API_VERSION@.la \
   $(GST_BASE_LIBS) \
   $(GST_LIBS)
-libgstpbutils_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS)
+libgstpbutils_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS) -DBUILDING_GST_PBUTILS
 libgstpbutils_@GST_API_VERSION@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
 
 BUILT_SOURCES = \
@@ -103,7 +103,7 @@ GstPbutils-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstpbutils-@GST_AP
 		--include=GstTag-@GST_API_VERSION@ \
 		--include=GstVideo-@GST_API_VERSION@ \
 		--include=GstAudio-@GST_API_VERSION@ \
-		--libtool="$(top_builddir)/libtool" \
+		--libtool="${LIBTOOL}" \
 		--pkg gstreamer-@GST_API_VERSION@ \
 		--pkg gstreamer-tag-@GST_API_VERSION@ \
 		--pkg gstreamer-video-@GST_API_VERSION@ \

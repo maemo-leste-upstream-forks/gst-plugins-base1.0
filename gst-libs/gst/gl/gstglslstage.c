@@ -55,14 +55,6 @@ static const gchar *es2_version_header = "#version 100\n";
 GST_DEBUG_CATEGORY_STATIC (gst_glsl_stage_debug);
 #define GST_CAT_DEFAULT gst_glsl_stage_debug
 
-G_DEFINE_TYPE_WITH_CODE (GstGLSLStage, gst_glsl_stage, GST_TYPE_OBJECT,
-    GST_DEBUG_CATEGORY_INIT (gst_glsl_stage_debug, "glslstage", 0,
-        "GLSL Stage");
-    );
-
-#define GST_GLSL_STAGE_GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE((o), GST_TYPE_GLSL_STAGE, GstGLSLStagePrivate))
-
 struct _GstGLSLStagePrivate
 {
   GstGLSLFuncs vtable;
@@ -76,6 +68,11 @@ struct _GstGLSLStagePrivate
 
   gboolean compiled;
 };
+
+G_DEFINE_TYPE_WITH_CODE (GstGLSLStage, gst_glsl_stage, GST_TYPE_OBJECT,
+    G_ADD_PRIVATE (GstGLSLStage)
+    GST_DEBUG_CATEGORY_INIT (gst_glsl_stage_debug, "glslstage", 0,
+        "GLSL Stage"););
 
 static void
 gst_glsl_stage_finalize (GObject * object)
@@ -125,8 +122,6 @@ gst_glsl_stage_class_init (GstGLSLStageClass * klass)
 {
   GObjectClass *obj_class = G_OBJECT_CLASS (klass);
 
-  g_type_class_add_private (klass, sizeof (GstGLSLStagePrivate));
-
   obj_class->finalize = gst_glsl_stage_finalize;
   obj_class->set_property = gst_glsl_stage_set_property;
   obj_class->get_property = gst_glsl_stage_get_property;
@@ -135,7 +130,7 @@ gst_glsl_stage_class_init (GstGLSLStageClass * klass)
 static void
 gst_glsl_stage_init (GstGLSLStage * stage)
 {
-  stage->priv = GST_GLSL_STAGE_GET_PRIVATE (stage);
+  stage->priv = gst_glsl_stage_get_instance_private (stage);
 }
 
 static gboolean
@@ -293,10 +288,20 @@ gst_glsl_stage_new_default_vertex (GstGLContext * context)
 GstGLSLStage *
 gst_glsl_stage_new_default_fragment (GstGLContext * context)
 {
-  return gst_glsl_stage_new_with_string (context, GL_FRAGMENT_SHADER,
-      GST_GLSL_VERSION_NONE,
-      GST_GLSL_PROFILE_ES | GST_GLSL_PROFILE_COMPATIBILITY,
-      gst_gl_shader_string_fragment_default);
+  GstGLSLProfile profile = GST_GLSL_PROFILE_ES | GST_GLSL_PROFILE_COMPATIBILITY;
+  GstGLSLVersion version = GST_GLSL_VERSION_NONE;
+  gchar *frag_str;
+  GstGLSLStage *stage;
+
+  frag_str =
+      gst_gl_shader_string_fragment_get_default (context, version, profile);
+
+  stage = gst_glsl_stage_new_with_string (context, GL_FRAGMENT_SHADER,
+      version, profile, frag_str);
+
+  g_free (frag_str);
+
+  return stage;
 }
 
 /**

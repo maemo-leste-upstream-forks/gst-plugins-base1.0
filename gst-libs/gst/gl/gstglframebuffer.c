@@ -45,6 +45,7 @@
 #include "gstglframebuffer.h"
 
 #include "gstglcontext.h"
+#include "gstglcontext_private.h"
 #include "gstglfuncs.h"
 #include "gstglmemory.h"
 #include "gstglrenderbuffer.h"
@@ -79,15 +80,6 @@
 GST_DEBUG_CATEGORY_STATIC (gst_gl_framebuffer_debug);
 #define GST_CAT_DEFAULT gst_gl_framebuffer_debug
 
-#define DEBUG_INIT \
-  GST_DEBUG_CATEGORY_INIT (gst_gl_framebuffer_debug, "glframebuffer", 0, "GL Framebuffer");
-
-G_DEFINE_TYPE_WITH_CODE (GstGLFramebuffer, gst_gl_framebuffer, GST_TYPE_OBJECT,
-    DEBUG_INIT);
-
-#define GST_GL_FRAMEBUFFER_GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE((o), GST_TYPE_GL_FRAMEBUFFER, GstGLFramebufferPrivate))
-
 static void gst_gl_framebuffer_finalize (GObject * object);
 
 struct _GstGLFramebufferPrivate
@@ -95,6 +87,12 @@ struct _GstGLFramebufferPrivate
   guint effective_width;
   guint effective_height;
 };
+
+#define DEBUG_INIT \
+  GST_DEBUG_CATEGORY_INIT (gst_gl_framebuffer_debug, "glframebuffer", 0, "GL Framebuffer");
+
+G_DEFINE_TYPE_WITH_CODE (GstGLFramebuffer, gst_gl_framebuffer, GST_TYPE_OBJECT,
+    G_ADD_PRIVATE (GstGLFramebuffer) DEBUG_INIT);
 
 struct fbo_attachment
 {
@@ -124,15 +122,13 @@ _fbo_attachment_unset (struct fbo_attachment *attach)
 static void
 gst_gl_framebuffer_class_init (GstGLFramebufferClass * klass)
 {
-  g_type_class_add_private (klass, sizeof (GstGLFramebufferPrivate));
-
   G_OBJECT_CLASS (klass)->finalize = gst_gl_framebuffer_finalize;
 }
 
 static void
 gst_gl_framebuffer_init (GstGLFramebuffer * fb)
 {
-  fb->priv = GST_GL_FRAMEBUFFER_GET_PRIVATE (fb);
+  fb->priv = gst_gl_framebuffer_get_instance_private (fb);
 
   fb->attachments =
       g_array_new (FALSE, FALSE, (sizeof (struct fbo_attachment)));
@@ -274,7 +270,6 @@ gboolean
 gst_gl_framebuffer_draw_to_texture (GstGLFramebuffer * fb, GstGLMemory * mem,
     GstGLFramebufferFunc func, gpointer user_data)
 {
-  GLint viewport_dim[4] = { 0 };
   const GstGLFuncs *gl;
   gboolean ret;
 
@@ -290,7 +285,6 @@ gst_gl_framebuffer_draw_to_texture (GstGLFramebuffer * fb, GstGLMemory * mem,
   gst_gl_framebuffer_bind (fb);
   gst_gl_framebuffer_attach (fb, GL_COLOR_ATTACHMENT0, (GstGLBaseMemory *) mem);
 
-  gl->GetIntegerv (GL_VIEWPORT, viewport_dim);
   gl->Viewport (0, 0, fb->priv->effective_width, fb->priv->effective_height);
   if (gst_gl_context_get_gl_api (fb->context) & (GST_GL_API_OPENGL |
           GST_GL_API_OPENGL3))
@@ -301,8 +295,6 @@ gst_gl_framebuffer_draw_to_texture (GstGLFramebuffer * fb, GstGLMemory * mem,
   if (gst_gl_context_get_gl_api (fb->context) & (GST_GL_API_OPENGL |
           GST_GL_API_OPENGL3))
     gl->DrawBuffer (GL_COLOR_ATTACHMENT0);
-  gl->Viewport (viewport_dim[0], viewport_dim[1], viewport_dim[2],
-      viewport_dim[3]);
   gst_gl_context_clear_framebuffer (fb->context);
 
   return ret;
@@ -531,6 +523,10 @@ gst_gl_context_check_framebuffer_status (GstGLContext * context,
     GST_ERROR_OBJECT (context, "fbo target is invalid");
     return FALSE;
   }
+
+  /* Don't do expensive framebuffer checks when debugging is disabled */
+  if (!_gst_gl_context_debug_is_enabled (context))
+    return TRUE;
 
   switch (context->gl_vtable->CheckFramebufferStatus (fbo_target)) {
     case GL_FRAMEBUFFER_COMPLETE:

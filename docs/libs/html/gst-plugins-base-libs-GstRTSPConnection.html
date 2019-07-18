@@ -132,6 +132,14 @@
 <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
 </td>
 <td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-send-messages" title="gst_rtsp_connection_send_messages ()">gst_rtsp_connection_send_messages</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
+</td>
+<td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-receive" title="gst_rtsp_connection_receive ()">gst_rtsp_connection_receive</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -208,7 +216,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a class="link" href="gst-plugins-base-libs-GstRTSPUrl.html#GstRTSPUrl" title="struct GstRTSPUrl"><span class="returnvalue">GstRTSPUrl</span></a> *
+<a class="link" href="GstRTSPUrl.html" title="GstRTSPUrl"><span class="returnvalue">GstRTSPUrl</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-get-url" title="gst_rtsp_connection_get_url ()">gst_rtsp_connection_get_url</a> <span class="c_punctuation">()</span>
@@ -351,6 +359,22 @@
 </tr>
 <tr>
 <td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnectionAcceptCertificateFunc" title="GstRTSPConnectionAcceptCertificateFunc ()">*GstRTSPConnectionAcceptCertificateFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-set-accept-certificate-func" title="gst_rtsp_connection_set_accept_certificate_func ()">gst_rtsp_connection_set_accept_certificate_func</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPWatch" title="GstRTSPWatch"><span class="returnvalue">GstRTSPWatch</span></a> *
 </td>
 <td class="function_name">
@@ -387,6 +411,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-send-message" title="gst_rtsp_watch_send_message ()">gst_rtsp_watch_send_message</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-watch-send-messages" title="gst_rtsp_watch_send_messages ()">gst_rtsp_watch_send_messages</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -457,7 +489,7 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstRTSPConnection.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/rtsp/gstrtspconnection.h&gt;
+<pre class="synopsis">#include &lt;gst/rtsp/rtsp.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -470,7 +502,7 @@ to receive and send bytes and messages.</p>
 <div class="refsect2">
 <a name="gst-rtsp-connection-create"></a><h3>gst_rtsp_connection_create ()</h3>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
-gst_rtsp_connection_create (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstRTSPUrl.html#GstRTSPUrl" title="struct GstRTSPUrl"><span class="type">GstRTSPUrl</span></a> *url</code></em>,
+gst_rtsp_connection_create (<em class="parameter"><code>const <a class="link" href="GstRTSPUrl.html" title="GstRTSPUrl"><span class="type">GstRTSPUrl</span></a> *url</code></em>,
                             <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a> **conn</code></em>);</pre>
 <p>Create a newly allocated <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a> from <em class="parameter"><code>url</code></em>
  and store it in <em class="parameter"><code>conn</code></em>
@@ -491,7 +523,7 @@ The connection will not yet attempt to connect to <em class="parameter"><code>ur
 <tbody>
 <tr>
 <td class="parameter_name"><p>url</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstRTSPUrl.html#GstRTSPUrl" title="struct GstRTSPUrl"><span class="type">GstRTSPUrl</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstRTSPUrl.html" title="GstRTSPUrl"><span class="type">GstRTSPUrl</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -659,7 +691,7 @@ forever. If <em class="parameter"><code>timeout</code></em>
 gst_rtsp_connection_connect_with_response
                                (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a> *conn</code></em>,
                                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Date-and-Time-Functions.html#GTimeVal"><span class="type">GTimeVal</span></a> *timeout</code></em>,
-                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPMessage.html#GstRTSPMessage" title="struct GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *response</code></em>);</pre>
+                                <em class="parameter"><code><a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *response</code></em>);</pre>
 <p>Attempt to connect to the url of <em class="parameter"><code>conn</code></em>
  made with
 <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-create" title="gst_rtsp_connection_create ()"><code class="function">gst_rtsp_connection_create()</code></a>. If <em class="parameter"><code>timeout</code></em>
@@ -692,7 +724,7 @@ forever. If <em class="parameter"><code>timeout</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>response</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstRTSPMessage.html#GstRTSPMessage" title="struct GstRTSPMessage"><span class="type">GstRTSPMessage</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -930,7 +962,7 @@ with <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-OK:CA
 <a name="gst-rtsp-connection-send"></a><h3>gst_rtsp_connection_send ()</h3>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
 gst_rtsp_connection_send (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a> *conn</code></em>,
-                          <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPMessage.html#GstRTSPMessage" title="struct GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *message</code></em>,
+                          <em class="parameter"><code><a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *message</code></em>,
                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Date-and-Time-Functions.html#GTimeVal"><span class="type">GTimeVal</span></a> *timeout</code></em>);</pre>
 <p>Attempt to send <em class="parameter"><code>message</code></em>
  to the connected <em class="parameter"><code>conn</code></em>
@@ -974,10 +1006,64 @@ might block forever.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-rtsp-connection-send-messages"></a><h3>gst_rtsp_connection_send_messages ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
+gst_rtsp_connection_send_messages (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a> *conn</code></em>,
+                                   <em class="parameter"><code><a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *messages</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_messages</code></em>,
+                                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Date-and-Time-Functions.html#GTimeVal"><span class="type">GTimeVal</span></a> *timeout</code></em>);</pre>
+<p>Attempt to send <em class="parameter"><code>messages</code></em>
+ to the connected <em class="parameter"><code>conn</code></em>
+, blocking up to
+the specified <em class="parameter"><code>timeout</code></em>
+. <em class="parameter"><code>timeout</code></em>
+ can be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, in which case this function
+might block forever.</p>
+<p>This function can be cancelled with <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-connection-flush" title="gst_rtsp_connection_flush ()"><code class="function">gst_rtsp_connection_flush()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-rtsp-connection-send-messages.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>conn</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>messages</p></td>
+<td class="parameter_description"><p>the messages to send. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_messages]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>n_messages</p></td>
+<td class="parameter_description"><p>the number of messages to send</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>timeout</p></td>
+<td class="parameter_description"><p>a timeout value or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-rtsp-connection-send-messages.returns"></a><h4>Returns</h4>
+<p> <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-OK:CAPS"><span class="type">GST_RTSP_OK</span></a> on success.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-rtsp-connection-receive"></a><h3>gst_rtsp_connection_receive ()</h3>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
 gst_rtsp_connection_receive (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a> *conn</code></em>,
-                             <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPMessage.html#GstRTSPMessage" title="struct GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *message</code></em>,
+                             <em class="parameter"><code><a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *message</code></em>,
                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Date-and-Time-Functions.html#GTimeVal"><span class="type">GTimeVal</span></a> *timeout</code></em>);</pre>
 <p>Attempt to read into <em class="parameter"><code>message</code></em>
  from the connected <em class="parameter"><code>conn</code></em>
@@ -1331,7 +1417,7 @@ connection is closed.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-rtsp-connection-get-url"></a><h3>gst_rtsp_connection_get_url ()</h3>
-<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstRTSPUrl.html#GstRTSPUrl" title="struct GstRTSPUrl"><span class="returnvalue">GstRTSPUrl</span></a> *
+<pre class="programlisting"><a class="link" href="GstRTSPUrl.html" title="GstRTSPUrl"><span class="returnvalue">GstRTSPUrl</span></a> *
 gst_rtsp_connection_get_url (<em class="parameter"><code>const <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a> *conn</code></em>);</pre>
 <p>Retrieve the URL of the other end of <em class="parameter"><code>conn</code></em>
 .</p>
@@ -1657,7 +1743,7 @@ calls. The server is then responsible for configuring the TLS connection.</p>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix14.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1696,7 +1782,7 @@ certificate when a TLS connection is established.</p>
 <em class="parameter"><code>conn</code></em>
 is NULL or is not a TLS connection.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix12.html#api-index-1.2.1">1.2.1</a></p>
+<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2.1">1.2.1</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1725,7 +1811,7 @@ when a TLS connection is established.</p>
 <a name="gst-rtsp-connection-get-tls-validation-flags.returns"></a><h4>Returns</h4>
 <p> the validationg flags.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix12.html#api-index-1.2.1">1.2.1</a></p>
+<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2.1">1.2.1</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1758,7 +1844,7 @@ can't be verified with the default certificate database first.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1790,7 +1876,7 @@ database has been previously set. Use <a href="/usr/share/gtk-doc/html/gobject/g
 certificate database. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1824,7 +1910,7 @@ user for passwords where necessary.</p>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1856,7 +1942,7 @@ user for passwords where necessary.</p>
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> to release. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1917,6 +2003,68 @@ response received and force it onto any further requests.</p>
 </tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstRTSPConnectionAcceptCertificateFunc"></a><h3>GstRTSPConnectionAcceptCertificateFunc ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="c_punctuation">(</span>*GstRTSPConnectionAcceptCertificateFunc<span class="c_punctuation">)</span>
+                               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/GTlsConnection.html#GTlsConnection-struct"><span class="type">GTlsConnection</span></a> *conn</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/GTlsCertificate.html#GTlsCertificate-struct"><span class="type">GTlsCertificate</span></a> *peer_cert</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/gio-TLS-Overview.html#GTlsCertificateFlags"><span class="type">GTlsCertificateFlags</span></a> errors</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-rtsp-connection-set-accept-certificate-func"></a><h3>gst_rtsp_connection_set_accept_certificate_func ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_rtsp_connection_set_accept_certificate_func
+                               (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a> *conn</code></em>,
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnectionAcceptCertificateFunc" title="GstRTSPConnectionAcceptCertificateFunc ()"><span class="type">GstRTSPConnectionAcceptCertificateFunc</span></a> func</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                                <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy_notify</code></em>);</pre>
+<p>Sets a custom accept-certificate function for checking certificates for
+validity. This will directly map to <a href="/usr/share/gtk-doc/html/gio/GTlsConnection.html#GTlsConnection-struct"><span class="type">GTlsConnection</span></a> 's "accept-certificate"
+signal and be performed after the default checks of <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a>
+(checking against the <a href="/usr/share/gtk-doc/html/gio/GTlsDatabase.html#GTlsDatabase-struct"><span class="type">GTlsDatabase</span></a> with the given <a href="/usr/share/gtk-doc/html/gio/gio-TLS-Overview.html#GTlsCertificateFlags"><span class="type">GTlsCertificateFlags</span></a>)
+have failed. If no <a href="/usr/share/gtk-doc/html/gio/GTlsDatabase.html#GTlsDatabase-struct"><span class="type">GTlsDatabase</span></a> is set on this connection, only <em class="parameter"><code>func</code></em>
+ will
+be called.</p>
+<div class="refsect3">
+<a name="gst-rtsp-connection-set-accept-certificate-func.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>conn</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnection" title="GstRTSPConnection"><span class="type">GstRTSPConnection</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPConnectionAcceptCertificateFunc" title="GstRTSPConnectionAcceptCertificateFunc ()"><span class="type">GstRTSPConnectionAcceptCertificateFunc</span></a> to check certificates</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>destroy_notify</p></td>
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> for <em class="parameter"><code>user_data</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>User data passed to <em class="parameter"><code>func</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.14">1.14</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2063,7 +2211,7 @@ when the file descriptors of the connection might have changed.</p>
 <a name="gst-rtsp-watch-send-message"></a><h3>gst_rtsp_watch_send_message ()</h3>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
 gst_rtsp_watch_send_message (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPWatch" title="GstRTSPWatch"><span class="type">GstRTSPWatch</span></a> *watch</code></em>,
-                             <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPMessage.html#GstRTSPMessage" title="struct GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *message</code></em>,
+                             <em class="parameter"><code><a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *message</code></em>,
                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *id</code></em>);</pre>
 <p>Send a <em class="parameter"><code>message</code></em>
  using the connection of the <em class="parameter"><code>watch</code></em>
@@ -2094,7 +2242,7 @@ callback.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>message</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstRTSPMessage.html#GstRTSPMessage" title="struct GstRTSPMessage"><span class="type">GstRTSPMessage</span></a></p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2109,6 +2257,66 @@ callback.</p>
 <a name="gst-rtsp-watch-send-message.returns"></a><h4>Returns</h4>
 <p> <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-OK:CAPS"><span class="type">GST_RTSP_OK</span></a> on success.</p>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-rtsp-watch-send-messages"></a><h3>gst_rtsp_watch_send_messages ()</h3>
+<pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GstRTSPResult" title="enum GstRTSPResult"><span class="returnvalue">GstRTSPResult</span></a>
+gst_rtsp_watch_send_messages (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPWatch" title="GstRTSPWatch"><span class="type">GstRTSPWatch</span></a> *watch</code></em>,
+                              <em class="parameter"><code><a class="link" href="GstRTSPMessage.html" title="GstRTSPMessage"><span class="type">GstRTSPMessage</span></a> *messages</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_messages</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *id</code></em>);</pre>
+<p>Sends <em class="parameter"><code>messages</code></em>
+ using the connection of the <em class="parameter"><code>watch</code></em>
+. If they cannot be sent
+immediately, they will be queued for transmission in <em class="parameter"><code>watch</code></em>
+. The contents of
+<em class="parameter"><code>messages</code></em>
+ will then be serialized and transmitted when the connection of the
+<em class="parameter"><code>watch</code></em>
+ becomes writable. In case the <em class="parameter"><code>messages</code></em>
+ are queued, the ID returned in
+<em class="parameter"><code>id</code></em>
+ will be non-zero and used as the ID argument in the message_sent
+callback once the last message is sent. The callback will only be called
+once for the last message.</p>
+<div class="refsect3">
+<a name="gst-rtsp-watch-send-messages.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>watch</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#GstRTSPWatch" title="GstRTSPWatch"><span class="type">GstRTSPWatch</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>messages</p></td>
+<td class="parameter_description"><p>the messages to send. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_messages]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>n_messages</p></td>
+<td class="parameter_description"><p>the number of messages to send</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>id</p></td>
+<td class="parameter_description"><p>location for a message ID or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-rtsp-watch-send-messages.returns"></a><h4>Returns</h4>
+<p> <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-OK:CAPS"><span class="type">GST_RTSP_OK</span></a> on success.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2213,7 +2421,7 @@ See <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html#gst-rtsp-
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix14.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2256,7 +2464,7 @@ When the maximum amounts are exceeded, <a class="link" href="gst-plugins-base-li
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix14.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2290,7 +2498,7 @@ and make sure <a class="link" href="gst-plugins-base-libs-GstRTSPConnection.html
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2341,7 +2549,7 @@ was reached.
 is flushing
 <a class="link" href="gst-plugins-base-libs-GstRtspdefs.html#GST-RTSP-EINVAL:CAPS"><code class="literal">GST_RTSP_EINVAL</code></a> when called with invalid parameters.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 </div>
 <div class="refsect1">

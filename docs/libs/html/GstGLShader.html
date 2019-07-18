@@ -393,6 +393,22 @@
 <a class="link" href="GstGLShader.html#gst-gl-shader-bind-frag-data-location" title="gst_gl_shader_bind_frag_data_location ()">gst_gl_shader_bind_frag_data_location</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstGLShader.html#gst-gl-shader-string-fragment-get-default" title="gst_gl_shader_string_fragment_get_default ()">gst_gl_shader_string_fragment_get_default</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GstGLShader.html#gst-gl-shader-string-fragment-external-oes-get-default" title="gst_gl_shader_string_fragment_external_oes_get_default ()">gst_gl_shader_string_fragment_external_oes_get_default</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -504,7 +520,7 @@ gst_gl_shader_new_default (<em class="parameter"><code><a class="link" href="Gst
 or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -552,7 +568,7 @@ contain the details of the error.</p>
 with the specified stages. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -599,7 +615,7 @@ gst_gl_shader_new_with_stages (<em class="parameter"><code><a class="link" href=
 with the specified stages. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -673,7 +689,7 @@ gst_gl_shader_get_program_handle (<em class="parameter"><code><a class="link" hr
 <a name="gst-gl-shader-get-program-handle.returns"></a><h4>Returns</h4>
 <p> the GL program handle for this shader</p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -697,7 +713,7 @@ gst_gl_shader_release (<em class="parameter"><code><a class="link" href="GstGLSh
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -721,7 +737,7 @@ gst_gl_shader_release_unlocked (<em class="parameter"><code><a class="link" href
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -763,7 +779,7 @@ with <a class="link" href="GstGLSLStage.html#gst-glsl-stage-compile" title="gst_
 could be attached to <em class="parameter"><code>shader</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -805,7 +821,7 @@ with <a class="link" href="GstGLSLStage.html#gst-glsl-stage-compile" title="gst_
 could be attached to <em class="parameter"><code>shader</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -851,7 +867,7 @@ gst_gl_shader_compile_attach_stage (<em class="parameter"><code><a class="link" 
 could be compiled and attached to <em class="parameter"><code>shader</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -888,7 +904,7 @@ to <em class="parameter"><code>shader</code></em>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -925,7 +941,7 @@ to <em class="parameter"><code>shader</code></em>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -953,7 +969,7 @@ gst_gl_shader_is_linked (<em class="parameter"><code><a class="link" href="GstGL
 <p> whether <em class="parameter"><code>shader</code></em>
 has been successfully linked</p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -991,7 +1007,7 @@ gst_gl_shader_link (<em class="parameter"><code><a class="link" href="GstGLShade
 <p> whether <em class="parameter"><code>shader</code></em>
 could be linked together.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix07.html#api-index-1.8">1.8</a></p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.8">1.8</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2288,6 +2304,88 @@ gst_gl_shader_bind_frag_data_location (<em class="parameter"><code><a class="lin
 </tr>
 </tbody>
 </table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-gl-shader-string-fragment-get-default"></a><h3>gst_gl_shader_string_fragment_get_default ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_gl_shader_string_fragment_get_default
+                               (<em class="parameter"><code><a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a> *context</code></em>,
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLSL.html#GstGLSLVersion" title="enum GstGLSLVersion"><span class="type">GstGLSLVersion</span></a> version</code></em>,
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLSL.html#GstGLSLProfile" title="enum GstGLSLProfile"><span class="type">GstGLSLProfile</span></a> profile</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-gl-shader-string-fragment-get-default.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>context</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>version</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLSL.html#GstGLSLVersion" title="enum GstGLSLVersion"><span class="type">GstGLSLVersion</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>profile</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLSL.html#GstGLSLProfile" title="enum GstGLSLProfile"><span class="type">GstGLSLProfile</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-gl-shader-string-fragment-get-default.returns"></a><h4>Returns</h4>
+<p> a passthrough shader string for copying an input texture to
+the output</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-gl-shader-string-fragment-external-oes-get-default"></a><h3>gst_gl_shader_string_fragment_external_oes_get_default ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_gl_shader_string_fragment_external_oes_get_default
+                               (<em class="parameter"><code><a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a> *context</code></em>,
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLSL.html#GstGLSLVersion" title="enum GstGLSLVersion"><span class="type">GstGLSLVersion</span></a> version</code></em>,
+                                <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstGLSL.html#GstGLSLProfile" title="enum GstGLSLProfile"><span class="type">GstGLSLProfile</span></a> profile</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-gl-shader-string-fragment-external-oes-get-default.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>context</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>version</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLSL.html#GstGLSLVersion" title="enum GstGLSLVersion"><span class="type">GstGLSLVersion</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>profile</p></td>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstGLSL.html#GstGLSLProfile" title="enum GstGLSLProfile"><span class="type">GstGLSLProfile</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-gl-shader-string-fragment-external-oes-get-default.returns"></a><h4>Returns</h4>
+<p> a passthrough shader string for copying an input external-oes
+texture to the output</p>
 </div>
 </div>
 </div>

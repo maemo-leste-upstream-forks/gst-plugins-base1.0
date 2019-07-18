@@ -242,6 +242,7 @@ static guint gst_app_src_signals[LAST_SIGNAL] = { 0 };
 
 #define gst_app_src_parent_class parent_class
 G_DEFINE_TYPE_WITH_CODE (GstAppSrc, gst_app_src, GST_TYPE_BASE_SRC,
+    G_ADD_PRIVATE (GstAppSrc)
     G_IMPLEMENT_INTERFACE (GST_TYPE_URI_HANDLER, gst_app_src_uri_handler_init));
 
 static void
@@ -372,7 +373,7 @@ gst_app_src_class_init (GstAppSrcClass * klass)
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * GstAppSrc::empty-percent:
+   * GstAppSrc::min-percent:
    *
    * Make appsrc emit the "need-data" signal when the amount of bytes in the
    * queue drops below this percentage of max-bytes.
@@ -562,8 +563,6 @@ gst_app_src_class_init (GstAppSrcClass * klass)
   klass->push_buffer_list = gst_app_src_push_buffer_list_action;
   klass->push_sample = gst_app_src_push_sample_action;
   klass->end_of_stream = gst_app_src_end_of_stream;
-
-  g_type_class_add_private (klass, sizeof (GstAppSrcPrivate));
 }
 
 static void
@@ -571,8 +570,7 @@ gst_app_src_init (GstAppSrc * appsrc)
 {
   GstAppSrcPrivate *priv;
 
-  priv = appsrc->priv = G_TYPE_INSTANCE_GET_PRIVATE (appsrc, GST_TYPE_APP_SRC,
-      GstAppSrcPrivate);
+  priv = appsrc->priv = gst_app_src_get_instance_private (appsrc);
 
   g_mutex_init (&priv->mutex);
   g_cond_init (&priv->cond);
@@ -1245,7 +1243,7 @@ gst_app_src_create (GstBaseSrc * bsrc, guint64 offset, guint size,
       if ((priv->wait_status & APP_WAITING))
         g_cond_broadcast (&priv->cond);
 
-      /* see if we go lower than the empty-percent */
+      /* see if we go lower than the min-percent */
       if (priv->min_percent && priv->max_bytes) {
         if (priv->queued_bytes * 100 / priv->max_bytes <= priv->min_percent)
           /* ignore flushing state, we got a buffer and we will return it now.
@@ -1983,6 +1981,9 @@ gst_app_src_push_buffer_list (GstAppSrc * appsrc, GstBufferList * buffer_list)
  * buffers that the appsrc element will push to its source pad. Any
  * previous caps that were set on appsrc will be replaced by the caps
  * associated with the sample if not equal.
+ *
+ * This function does not take ownership of the
+ * sample so the sample needs to be unreffed after calling this function.
  *
  * When the block property is TRUE, this function can block until free
  * space becomes available in the queue.

@@ -1,3 +1,44 @@
+gst-plugins-base1.0 (1.16.0-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Sebastian Dröge <slomo@debian.org>  Fri, 19 Apr 2019 10:14:10 +0300
+
+gst-plugins-base1.0 (1.15.90-1) experimental; urgency=medium
+
+  * New upstream release candidate
+
+ -- Sebastian Dröge <slomo@debian.org>  Fri, 12 Apr 2019 09:50:32 +0300
+
+gst-plugins-base1.0 (1.15.2-1) experimental; urgency=medium
+
+  * New upstream development release
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 28 Feb 2019 11:31:55 +0200
+
+gst-plugins-base1.0 (1.15.1-1) experimental; urgency=medium
+
+  * New upstream development release
+    + debian/control.in:
+      - Update Conflicts/Replaces/Breaks for moved files from gst-plugins-bad.
+    + debian/rules:
+      - Update GStreamer dependency.
+    + debian/libgstreamer-gl.symbols,
+      debian/libgstreamer-plugins-base.symbols:
+      - Update symbols files with new API.
+  * debian/control.in:
+    + Remove Sebastian Bacher and Loïc Minier from Uploaders. They didn't work
+      on the packages in a very long time (Closes: #857481).
+
+      Thanks a lot for their past work!
+  * debian/libgstreamer-gl.symbols:
+    + Fix symbols file for kfreebsd (Closes: #918568).
+  * debian/rules:
+    + Only build documentation if we build the documentation package. Thanks
+      to Simon McVittie for the patch.
+
+ -- Sebastian Dröge <slomo@debian.org>  Thu, 17 Jan 2019 15:25:34 +0200
+
 gst-plugins-base1.0 (1.14.4-2) unstable; urgency=high
 
   * debian/patches/0001-gstrtspconnection-Security-loophole-making-heap-over.patch:

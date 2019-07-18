@@ -253,6 +253,7 @@ libgstaudio_@GST_API_VERSION@_la_DEPENDENCIES = $(top_builddir)/gst-libs/gst/tag
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) $(am__append_2)
 am_libgstaudio_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstaudio_@GST_API_VERSION@_la-audio.lo \
+	libgstaudio_@GST_API_VERSION@_la-audio-buffer.lo \
 	libgstaudio_@GST_API_VERSION@_la-audio-format.lo \
 	libgstaudio_@GST_API_VERSION@_la-audio-channels.lo \
 	libgstaudio_@GST_API_VERSION@_la-audio-channel-mixer.lo \
@@ -306,6 +307,7 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/libaudio_resampler_sse2_la-audio-resampler-x86-sse2.Plo \
 	./$(DEPDIR)/libaudio_resampler_sse41_la-audio-resampler-x86-sse41.Plo \
 	./$(DEPDIR)/libaudio_resampler_sse_la-audio-resampler-x86-sse.Plo \
+	./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-buffer.Plo \
 	./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channel-mixer.Plo \
 	./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channels.Plo \
 	./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-converter.Plo \
@@ -413,12 +415,6 @@ CCDEPMODE = @CCDEPMODE@
 CDPARANOIA_CFLAGS = @CDPARANOIA_CFLAGS@
 CDPARANOIA_LIBS = @CDPARANOIA_LIBS@
 CFLAGS = @CFLAGS@
-CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
-CLUTTER_GLX_CFLAGS = @CLUTTER_GLX_CFLAGS@
-CLUTTER_GLX_LIBS = @CLUTTER_GLX_LIBS@
-CLUTTER_LIBS = @CLUTTER_LIBS@
-CLUTTER_X11_CFLAGS = @CLUTTER_X11_CFLAGS@
-CLUTTER_X11_LIBS = @CLUTTER_X11_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -537,9 +533,6 @@ GTK_X11_LIBS = @GTK_X11_LIBS@
 G_UDEV_CFLAGS = @G_UDEV_CFLAGS@
 G_UDEV_LIBS = @G_UDEV_LIBS@
 HAVE_CDPARANOIA = @HAVE_CDPARANOIA@
-HAVE_CLUTTER = @HAVE_CLUTTER@
-HAVE_CLUTTER_GLX = @HAVE_CLUTTER_GLX@
-HAVE_CLUTTER_X11 = @HAVE_CLUTTER_X11@
 HAVE_EGL = @HAVE_EGL@
 HAVE_GL = @HAVE_GL@
 HAVE_GLES2 = @HAVE_GLES2@
@@ -645,7 +638,6 @@ QT_LIBS = @QT_LIBS@
 QT_MOC = @QT_MOC@
 RANLIB = @RANLIB@
 SDL_CFLAGS = @SDL_CFLAGS@
-SDL_CLUTTER = @SDL_CLUTTER@
 SDL_LIBS = @SDL_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -672,11 +664,11 @@ WARNING_CXXFLAGS = @WARNING_CXXFLAGS@
 WARNING_OBJCFLAGS = @WARNING_OBJCFLAGS@
 WAYLAND_EGL_CFLAGS = @WAYLAND_EGL_CFLAGS@
 WAYLAND_EGL_LIBS = @WAYLAND_EGL_LIBS@
+WAYLAND_PROTOCOLS_DATADIR = @WAYLAND_PROTOCOLS_DATADIR@
+WAYLAND_SCANNER = @WAYLAND_SCANNER@
 WIN32_LIBS = @WIN32_LIBS@
 X11_XCB_CFLAGS = @X11_XCB_CFLAGS@
 X11_XCB_LIBS = @X11_XCB_LIBS@
-XCOMPOSITE_CFLAGS = @XCOMPOSITE_CFLAGS@
-XCOMPOSITE_LIBS = @XCOMPOSITE_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -793,6 +785,7 @@ lib_LTLIBRARIES = \
 CLEANFILES = $(BUILT_SOURCES) $(am__append_3)
 libgstaudio_@GST_API_VERSION@_la_SOURCES = \
 	audio.c \
+	audio-buffer.c \
 	audio-format.c \
 	audio-channels.c \
 	audio-channel-mixer.c \
@@ -823,6 +816,7 @@ libgstaudio_@GST_API_VERSION@include_HEADERS = \
 	audio.h \
 	audio-prelude.h	\
 	audio-format.h \
+	audio-buffer.h \
 	audio-channels.h \
 	audio-channel-mixer.h \
 	audio-converter.h \
@@ -859,7 +853,7 @@ noinst_HEADERS = \
 	audio-resampler-neon.h
 
 libgstaudio_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS) \
-		$(ORC_CFLAGS)
+		$(ORC_CFLAGS) -DBUILDING_GST_AUDIO
 
 libgstaudio_@GST_API_VERSION@_la_LIBADD = $(top_builddir)/gst-libs/gst/tag/libgsttag-@GST_API_VERSION@.la \
 	$(GST_BASE_LIBS) $(GST_LIBS) $(LIBM) $(ORC_LIBS) \
@@ -1017,6 +1011,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudio_resampler_sse2_la-audio-resampler-x86-sse2.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudio_resampler_sse41_la-audio-resampler-x86-sse41.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libaudio_resampler_sse_la-audio-resampler-x86-sse.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-buffer.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channel-mixer.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channels.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-converter.Plo@am__quote@ # am--include-marker
@@ -1101,6 +1096,13 @@ libgstaudio_@GST_API_VERSION@_la-audio.lo: audio.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='audio.c' object='libgstaudio_@GST_API_VERSION@_la-audio.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudio_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstaudio_@GST_API_VERSION@_la-audio.lo `test -f 'audio.c' || echo '$(srcdir)/'`audio.c
+
+libgstaudio_@GST_API_VERSION@_la-audio-buffer.lo: audio-buffer.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudio_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstaudio_@GST_API_VERSION@_la-audio-buffer.lo -MD -MP -MF $(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-buffer.Tpo -c -o libgstaudio_@GST_API_VERSION@_la-audio-buffer.lo `test -f 'audio-buffer.c' || echo '$(srcdir)/'`audio-buffer.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-buffer.Tpo $(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-buffer.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='audio-buffer.c' object='libgstaudio_@GST_API_VERSION@_la-audio-buffer.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudio_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstaudio_@GST_API_VERSION@_la-audio-buffer.lo `test -f 'audio-buffer.c' || echo '$(srcdir)/'`audio-buffer.c
 
 libgstaudio_@GST_API_VERSION@_la-audio-format.lo: audio-format.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstaudio_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstaudio_@GST_API_VERSION@_la-audio-format.lo -MD -MP -MF $(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-format.Tpo -c -o libgstaudio_@GST_API_VERSION@_la-audio-format.lo `test -f 'audio-format.c' || echo '$(srcdir)/'`audio-format.c
@@ -1505,6 +1507,7 @@ distclean: distclean-am
 		-rm -f ./$(DEPDIR)/libaudio_resampler_sse2_la-audio-resampler-x86-sse2.Plo
 	-rm -f ./$(DEPDIR)/libaudio_resampler_sse41_la-audio-resampler-x86-sse41.Plo
 	-rm -f ./$(DEPDIR)/libaudio_resampler_sse_la-audio-resampler-x86-sse.Plo
+	-rm -f ./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-buffer.Plo
 	-rm -f ./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channel-mixer.Plo
 	-rm -f ./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channels.Plo
 	-rm -f ./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-converter.Plo
@@ -1582,6 +1585,7 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/libaudio_resampler_sse2_la-audio-resampler-x86-sse2.Plo
 	-rm -f ./$(DEPDIR)/libaudio_resampler_sse41_la-audio-resampler-x86-sse41.Plo
 	-rm -f ./$(DEPDIR)/libaudio_resampler_sse_la-audio-resampler-x86-sse.Plo
+	-rm -f ./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-buffer.Plo
 	-rm -f ./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channel-mixer.Plo
 	-rm -f ./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-channels.Plo
 	-rm -f ./$(DEPDIR)/libgstaudio_@GST_API_VERSION@_la-audio-converter.Plo
@@ -1699,7 +1703,7 @@ $(glib_gen_basename)-marshal.h: $(glib_gen_basename)-marshal.list
 	mv $(glib_gen_basename)-marshal.h.tmp $(glib_gen_basename)-marshal.h
 
 $(glib_gen_basename)-marshal.c: $(glib_gen_basename)-marshal.list
-	$(AM_V_GEN)echo "#include \"$(glib_gen_basename)-marshal.h\"" >> $(glib_gen_basename)-marshal.c.tmp && \
+	$(AM_V_GEN)echo "#include \"config.h\"\n#include \"$(glib_gen_basename)-marshal.h\"" >> $(glib_gen_basename)-marshal.c.tmp && \
 	$(GLIB_GENMARSHAL) --body --prefix=$(glib_gen_prefix)_marshal $^ >> $(glib_gen_basename)-marshal.c.tmp && \
 	mv $(glib_gen_basename)-marshal.c.tmp $(glib_gen_basename)-marshal.c
 
@@ -1714,7 +1718,7 @@ $(glib_gen_basename)-enumtypes.h: $(glib_enum_headers)
 $(glib_gen_basename)-enumtypes.c: $(glib_enum_headers)
 	@if test "x$(glib_enum_headers)" = "x"; then echo "ERROR: glib_enum_headers is empty, please fix Makefile"; exit 1; fi
 	$(AM_V_GEN)$(GLIB_MKENUMS) \
-	--fhead "#include \"$(glib_gen_basename)-enumtypes.h\"\n$(enum_headers)" \
+	--fhead "#ifdef HAVE_CONFIG_H\n#include \"config.h\"\n#endif\n\n#include \"$(glib_gen_basename)-enumtypes.h\"\n$(enum_headers)" \
 	--fprod "\n/* enumerations from \"@filename@\" */" \
 	--vhead "GType\n@enum_name@_get_type (void)\n{\n  static volatile gsize g_define_type_id__volatile = 0;\n  if (g_once_init_enter (&g_define_type_id__volatile)) {\n    static const G@Type@Value values[] = {"     \
 	--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
@@ -1751,7 +1755,7 @@ $(glib_gen_basename)-enumtypes.c: $(glib_enum_headers)
 @HAVE_INTROSPECTION_TRUE@		--include=Gst-@GST_API_VERSION@ \
 @HAVE_INTROSPECTION_TRUE@		--include=GstBase-@GST_API_VERSION@ \
 @HAVE_INTROSPECTION_TRUE@		--include=GstTag-@GST_API_VERSION@ \
-@HAVE_INTROSPECTION_TRUE@		--libtool="$(top_builddir)/libtool" \
+@HAVE_INTROSPECTION_TRUE@		--libtool="${LIBTOOL}" \
 @HAVE_INTROSPECTION_TRUE@		--pkg gstreamer-@GST_API_VERSION@ \
 @HAVE_INTROSPECTION_TRUE@		--pkg gstreamer-base-@GST_API_VERSION@ \
 @HAVE_INTROSPECTION_TRUE@		--pkg-export gstreamer-audio-@GST_API_VERSION@ \

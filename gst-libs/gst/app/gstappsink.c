@@ -107,6 +107,8 @@ struct _GstAppSinkPrivate
   GstAppSinkCallbacks callbacks;
   gpointer user_data;
   GDestroyNotify notify;
+
+  GstSample *sample;
 };
 
 GST_DEBUG_CATEGORY_STATIC (app_sink_debug);
@@ -186,6 +188,7 @@ static guint gst_app_sink_signals[LAST_SIGNAL] = { 0 };
 
 #define gst_app_sink_parent_class parent_class
 G_DEFINE_TYPE_WITH_CODE (GstAppSink, gst_app_sink, GST_TYPE_BASE_SINK,
+    G_ADD_PRIVATE (GstAppSink)
     G_IMPLEMENT_INTERFACE (GST_TYPE_URI_HANDLER,
         gst_app_sink_uri_handler_init));
 
@@ -284,7 +287,7 @@ gst_app_sink_class_init (GstAppSinkClass * klass)
       NULL, NULL, NULL, GST_TYPE_FLOW_RETURN, 0, G_TYPE_NONE);
   /**
    * GstAppSink::new-sample:
-   * @appsink: the appsink element that emited the signal
+   * @appsink: the appsink element that emitted the signal
    *
    * Signal that a new sample is available.
    *
@@ -445,8 +448,6 @@ gst_app_sink_class_init (GstAppSinkClass * klass)
   klass->pull_sample = gst_app_sink_pull_sample;
   klass->try_pull_preroll = gst_app_sink_try_pull_preroll;
   klass->try_pull_sample = gst_app_sink_try_pull_sample;
-
-  g_type_class_add_private (klass, sizeof (GstAppSinkPrivate));
 }
 
 static void
@@ -454,13 +455,12 @@ gst_app_sink_init (GstAppSink * appsink)
 {
   GstAppSinkPrivate *priv;
 
-  priv = appsink->priv =
-      G_TYPE_INSTANCE_GET_PRIVATE (appsink, GST_TYPE_APP_SINK,
-      GstAppSinkPrivate);
+  priv = appsink->priv = gst_app_sink_get_instance_private (appsink);
 
   g_mutex_init (&priv->mutex);
   g_cond_init (&priv->cond);
   priv->queue = gst_queue_array_new (16);
+  priv->sample = gst_sample_new (NULL, NULL, NULL, NULL);
 
   priv->emit_signals = DEFAULT_PROP_EMIT_SIGNALS;
   priv->max_buffers = DEFAULT_PROP_MAX_BUFFERS;
@@ -496,6 +496,10 @@ gst_app_sink_dispose (GObject * obj)
   gst_buffer_replace (&priv->preroll_buffer, NULL);
   gst_caps_replace (&priv->preroll_caps, NULL);
   gst_caps_replace (&priv->last_caps, NULL);
+  if (priv->sample) {
+    gst_sample_unref (priv->sample);
+    priv->sample = NULL;
+  }
   g_mutex_unlock (&priv->mutex);
 
   G_OBJECT_CLASS (parent_class)->dispose (obj);
@@ -646,6 +650,11 @@ gst_app_sink_start (GstBaseSink * psink)
   priv->started = TRUE;
   gst_segment_init (&priv->preroll_segment, GST_FORMAT_TIME);
   gst_segment_init (&priv->last_segment, GST_FORMAT_TIME);
+  priv->sample = gst_sample_make_writable (priv->sample);
+  gst_sample_set_buffer (priv->sample, NULL);
+  gst_sample_set_buffer_list (priv->sample, NULL);
+  gst_sample_set_caps (priv->sample, NULL);
+  gst_sample_set_segment (priv->sample, NULL);
   g_mutex_unlock (&priv->mutex);
 
   return TRUE;
@@ -832,10 +841,14 @@ dequeue_buffer (GstAppSink * appsink)
           gst_event_parse_caps (event, &caps);
           GST_DEBUG_OBJECT (appsink, "activating caps %" GST_PTR_FORMAT, caps);
           gst_caps_replace (&priv->last_caps, caps);
+          priv->sample = gst_sample_make_writable (priv->sample);
+          gst_sample_set_caps (priv->sample, priv->last_caps);
           break;
         }
         case GST_EVENT_SEGMENT:
           gst_event_copy_segment (event, &priv->last_segment);
+          priv->sample = gst_sample_make_writable (priv->sample);
+          gst_sample_set_segment (priv->sample, &priv->last_segment);
           GST_DEBUG_OBJECT (appsink, "activated segment %" GST_SEGMENT_FORMAT,
               &priv->last_segment);
           break;
@@ -868,6 +881,7 @@ restart:
   if (G_UNLIKELY (!priv->last_caps &&
           gst_pad_has_current_caps (GST_BASE_SINK_PAD (psink)))) {
     priv->last_caps = gst_pad_get_current_caps (GST_BASE_SINK_PAD (psink));
+    gst_sample_set_caps (priv->sample, priv->last_caps);
     GST_DEBUG_OBJECT (appsink, "activating pad caps %" GST_PTR_FORMAT,
         priv->last_caps);
   }
@@ -1652,12 +1666,16 @@ gst_app_sink_try_pull_sample (GstAppSink * appsink, GstClockTime timeout)
   obj = dequeue_buffer (appsink);
   if (GST_IS_BUFFER (obj)) {
     GST_DEBUG_OBJECT (appsink, "we have a buffer %p", obj);
-    sample = gst_sample_new (GST_BUFFER_CAST (obj), priv->last_caps,
-        &priv->last_segment, NULL);
+    priv->sample = gst_sample_make_writable (priv->sample);
+    gst_sample_set_buffer_list (priv->sample, NULL);
+    gst_sample_set_buffer (priv->sample, GST_BUFFER_CAST (obj));
+    sample = gst_sample_ref (priv->sample);
   } else {
     GST_DEBUG_OBJECT (appsink, "we have a list %p", obj);
-    sample = gst_sample_new (NULL, priv->last_caps, &priv->last_segment, NULL);
-    gst_sample_set_buffer_list (sample, GST_BUFFER_LIST_CAST (obj));
+    priv->sample = gst_sample_make_writable (priv->sample);
+    gst_sample_set_buffer (priv->sample, NULL);
+    gst_sample_set_buffer_list (priv->sample, GST_BUFFER_LIST_CAST (obj));
+    sample = gst_sample_ref (priv->sample);
   }
   gst_mini_object_unref (obj);
 

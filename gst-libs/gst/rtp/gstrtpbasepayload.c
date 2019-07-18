@@ -29,12 +29,10 @@
 #include <gst/rtp/gstrtpbuffer.h>
 
 #include "gstrtpbasepayload.h"
+#include "gstrtpmeta.h"
 
 GST_DEBUG_CATEGORY_STATIC (rtpbasepayload_debug);
 #define GST_CAT_DEFAULT (rtpbasepayload_debug)
-
-#define GST_RTP_BASE_PAYLOAD_GET_PRIVATE(obj)  \
-   (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GST_TYPE_RTP_BASE_PAYLOAD, GstRTPBasePayloadPrivate))
 
 struct _GstRTPBasePayloadPrivate
 {
@@ -47,6 +45,9 @@ struct _GstRTPBasePayloadPrivate
 
   gboolean pt_set;
 
+  gboolean source_info;
+  GstBuffer *input_meta_buffer;
+
   guint64 base_offset;
   gint64 base_rtime;
   guint64 base_rtime_hz;
@@ -54,6 +55,8 @@ struct _GstRTPBasePayloadPrivate
 
   gint64 prop_max_ptime;
   gint64 caps_max_ptime;
+
+  gboolean onvif_no_rate_control;
 
   gboolean negotiated;
 
@@ -87,6 +90,8 @@ enum
 #define DEFAULT_PERFECT_RTPTIME         TRUE
 #define DEFAULT_PTIME_MULTIPLE          0
 #define DEFAULT_RUNNING_TIME            GST_CLOCK_TIME_NONE
+#define DEFAULT_SOURCE_INFO             FALSE
+#define DEFAULT_ONVIF_NO_RATE_CONTROL   FALSE
 
 enum
 {
@@ -103,6 +108,8 @@ enum
   PROP_PERFECT_RTPTIME,
   PROP_PTIME_MULTIPLE,
   PROP_STATS,
+  PROP_SOURCE_INFO,
+  PROP_ONVIF_NO_RATE_CONTROL,
   PROP_LAST
 };
 
@@ -141,6 +148,7 @@ static gboolean gst_rtp_base_payload_negotiate (GstRTPBasePayload * payload);
 
 
 static GstElementClass *parent_class = NULL;
+static gint private_offset = 0;
 
 GType
 gst_rtp_base_payload_get_type (void)
@@ -159,12 +167,23 @@ gst_rtp_base_payload_get_type (void)
       0,
       (GInstanceInitFunc) gst_rtp_base_payload_init,
     };
+    GType _type;
 
-    g_once_init_leave ((gsize *) & rtpbasepayload_type,
-        g_type_register_static (GST_TYPE_ELEMENT, "GstRTPBasePayload",
-            &rtpbasepayload_info, G_TYPE_FLAG_ABSTRACT));
+    _type = g_type_register_static (GST_TYPE_ELEMENT, "GstRTPBasePayload",
+        &rtpbasepayload_info, G_TYPE_FLAG_ABSTRACT);
+
+    private_offset =
+        g_type_add_instance_private (_type, sizeof (GstRTPBasePayloadPrivate));
+
+    g_once_init_leave ((gsize *) & rtpbasepayload_type, _type);
   }
   return rtpbasepayload_type;
+}
+
+static inline GstRTPBasePayloadPrivate *
+gst_rtp_base_payload_get_instance_private (GstRTPBasePayload * self)
+{
+  return (G_STRUCT_MEMBER_P (self, private_offset));
 }
 
 static void
@@ -176,7 +195,8 @@ gst_rtp_base_payload_class_init (GstRTPBasePayloadClass * klass)
   gobject_class = (GObjectClass *) klass;
   gstelement_class = (GstElementClass *) klass;
 
-  g_type_class_add_private (klass, sizeof (GstRTPBasePayloadPrivate));
+  if (private_offset != 0)
+    g_type_class_adjust_private_offset (klass, &private_offset);
 
   parent_class = g_type_class_peek_parent (klass);
 
@@ -289,6 +309,34 @@ gst_rtp_base_payload_class_init (GstRTPBasePayloadClass * klass)
       g_param_spec_boxed ("stats", "Statistics", "Various statistics",
           GST_TYPE_STRUCTURE, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * GstRTPBasePayload:source-info:
+   *
+   * Enable writing the CSRC field in allocated RTP header based on RTP source
+   * information found in the input buffer's #GstRTPSourceMeta.
+   *
+   * Since: 1.16
+   **/
+  g_object_class_install_property (gobject_class, PROP_SOURCE_INFO,
+      g_param_spec_boolean ("source-info", "RTP source information",
+          "Write CSRC based on buffer meta RTP source information",
+          DEFAULT_SOURCE_INFO, G_PARAM_READWRITE));
+
+  /**
+   * GstRTPBasePayload:onvif-no-rate-control:
+   *
+   * Make the payloader timestamp packets according to the Rate-Control=no
+   * behaviour specified in the ONVIF replay spec.
+   *
+   * Since: 1.16
+   */
+  g_object_class_install_property (G_OBJECT_CLASS (klass),
+      PROP_ONVIF_NO_RATE_CONTROL, g_param_spec_boolean ("onvif-no-rate-control",
+          "ONVIF no rate control",
+          "Enable ONVIF Rate-Control=no timestamping mode",
+          DEFAULT_ONVIF_NO_RATE_CONTROL,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
   gstelement_class->change_state = gst_rtp_base_payload_change_state;
 
   klass->get_caps = gst_rtp_base_payload_getcaps_default;
@@ -307,7 +355,7 @@ gst_rtp_base_payload_init (GstRTPBasePayload * rtpbasepayload, gpointer g_class)
   GstRTPBasePayloadPrivate *priv;
 
   rtpbasepayload->priv = priv =
-      GST_RTP_BASE_PAYLOAD_GET_PRIVATE (rtpbasepayload);
+      gst_rtp_base_payload_get_instance_private (rtpbasepayload);
 
   templ =
       gst_element_class_get_pad_template (GST_ELEMENT_CLASS (g_class), "src");
@@ -341,6 +389,7 @@ gst_rtp_base_payload_init (GstRTPBasePayload * rtpbasepayload, gpointer g_class)
   priv->ts_offset_random = (rtpbasepayload->ts_offset == -1);
   priv->ssrc_random = (rtpbasepayload->ssrc == -1);
   priv->pt_set = FALSE;
+  priv->source_info = DEFAULT_SOURCE_INFO;
 
   rtpbasepayload->max_ptime = DEFAULT_MAX_PTIME;
   rtpbasepayload->min_ptime = DEFAULT_MIN_PTIME;
@@ -348,6 +397,7 @@ gst_rtp_base_payload_init (GstRTPBasePayload * rtpbasepayload, gpointer g_class)
   rtpbasepayload->ptime_multiple = DEFAULT_PTIME_MULTIPLE;
   rtpbasepayload->priv->base_offset = GST_BUFFER_OFFSET_NONE;
   rtpbasepayload->priv->base_rtime_hz = GST_BUFFER_OFFSET_NONE;
+  rtpbasepayload->priv->onvif_no_rate_control = DEFAULT_ONVIF_NO_RATE_CONTROL;
 
   rtpbasepayload->media = NULL;
   rtpbasepayload->encoding_name = NULL;
@@ -623,6 +673,15 @@ gst_rtp_base_payload_chain (GstPad * pad, GstObject * parent,
   if (!rtpbasepayload->priv->negotiated)
     goto not_negotiated;
 
+  if (rtpbasepayload->priv->source_info) {
+    /* Save a copy of meta (instead of taking an extra reference before
+     * handle_buffer) to make the meta available when allocating a output
+     * buffer. */
+    rtpbasepayload->priv->input_meta_buffer = gst_buffer_new ();
+    gst_buffer_copy_into (rtpbasepayload->priv->input_meta_buffer, buffer,
+        GST_BUFFER_COPY_META, 0, -1);
+  }
+
   if (gst_pad_check_reconfigure (GST_RTP_BASE_PAYLOAD_SRCPAD (rtpbasepayload))) {
     if (!gst_rtp_base_payload_negotiate (rtpbasepayload)) {
       gst_pad_mark_reconfigure (GST_RTP_BASE_PAYLOAD_SRCPAD (rtpbasepayload));
@@ -635,6 +694,8 @@ gst_rtp_base_payload_chain (GstPad * pad, GstObject * parent,
   }
 
   ret = rtpbasepayload_class->handle_buffer (rtpbasepayload, buffer);
+
+  gst_buffer_replace (&rtpbasepayload->priv->input_meta_buffer, NULL);
 
   return ret;
 
@@ -1146,6 +1207,25 @@ map_failed:
   }
 }
 
+static gboolean
+foreach_metadata_drop (GstBuffer * buffer, GstMeta ** meta, gpointer user_data)
+{
+  GType drop_api_type = (GType) GPOINTER_TO_INT (user_data);
+  const GstMetaInfo *info = (*meta)->info;
+
+  if (info->api == drop_api_type)
+    *meta = NULL;
+
+  return TRUE;
+}
+
+static gboolean
+filter_meta (GstBuffer ** buffer, guint idx, gpointer user_data)
+{
+  return gst_buffer_foreach_meta (*buffer, foreach_metadata_drop,
+      GINT_TO_POINTER (GST_RTP_SOURCE_META_API_TYPE));
+}
+
 /* Updates the SSRC, payload type, seqnum and timestamp of the RTP buffer
  * before the buffer is pushed. */
 static GstFlowReturn
@@ -1204,8 +1284,12 @@ gst_rtp_base_payload_prepare_push (GstRTPBasePayload * payload,
     guint64 rtime_hz;
 
     /* no offset, use the gstreamer pts */
-    rtime_ns = gst_segment_to_running_time (&payload->segment, GST_FORMAT_TIME,
-        data.pts);
+    if (priv->onvif_no_rate_control)
+      rtime_ns = data.pts;
+    else
+      rtime_ns =
+          gst_segment_to_running_time (&payload->segment, GST_FORMAT_TIME,
+          data.pts);
 
     if (!GST_CLOCK_TIME_IS_VALID (rtime_ns)) {
       GST_LOG_OBJECT (payload, "Clipped pts, using base RTP timestamp");
@@ -1242,23 +1326,30 @@ gst_rtp_base_payload_prepare_push (GstRTPBasePayload * payload,
   }
 
   /* set ssrc, payload type, seq number, caps and rtptime */
+  /* remove unwanted meta */
   if (is_list) {
     gst_buffer_list_foreach (GST_BUFFER_LIST_CAST (obj), set_headers, &data);
+    gst_buffer_list_foreach (GST_BUFFER_LIST_CAST (obj), filter_meta, NULL);
+    /* sequence number has increased more if this was a buffer list */
+    payload->seqnum = data.seqnum - 1;
   } else {
     GstBuffer *buf = GST_BUFFER_CAST (obj);
     set_headers (&buf, 0, &data);
+    filter_meta (&buf, 0, NULL);
   }
 
   priv->next_seqnum = data.seqnum;
   payload->timestamp = data.rtptime;
 
-  GST_LOG_OBJECT (payload, "Preparing to push packet with size %"
+  GST_LOG_OBJECT (payload, "Preparing to push %s with size %"
       G_GSIZE_FORMAT ", seq=%d, rtptime=%u, pts %" GST_TIME_FORMAT,
-      (is_list) ? -1 : gst_buffer_get_size (GST_BUFFER (obj)),
+      (is_list) ? "list" : "packet",
+      (is_list) ? gst_buffer_list_length (GST_BUFFER_LIST_CAST (obj)) :
+      gst_buffer_get_size (GST_BUFFER (obj)),
       payload->seqnum, data.rtptime, GST_TIME_ARGS (data.pts));
 
-  if (g_atomic_int_compare_and_exchange (&payload->
-          priv->notified_first_timestamp, 1, 0)) {
+  if (g_atomic_int_compare_and_exchange (&payload->priv->
+          notified_first_timestamp, 1, 0)) {
     g_object_notify (G_OBJECT (payload), "timestamp");
     g_object_notify (G_OBJECT (payload), "seqnum");
   }
@@ -1341,6 +1432,62 @@ gst_rtp_base_payload_push (GstRTPBasePayload * payload, GstBuffer * buffer)
   return res;
 }
 
+/**
+ * gst_rtp_base_payload_allocate_output_buffer:
+ * @payload: a #GstRTPBasePayload
+ * @payload_len: the length of the payload
+ * @pad_len: the amount of padding
+ * @csrc_count: the minimum number of CSRC entries
+ *
+ * Allocate a new #GstBuffer with enough data to hold an RTP packet with
+ * minimum @csrc_count CSRCs, a payload length of @payload_len and padding of
+ * @pad_len. If @payload has #GstRTPBasePayload:source-info %TRUE additional
+ * CSRCs may be allocated and filled with RTP source information.
+ *
+ * Returns: A newly allocated buffer that can hold an RTP packet with given
+ * parameters.
+ *
+ * Since: 1.16
+ */
+GstBuffer *
+gst_rtp_base_payload_allocate_output_buffer (GstRTPBasePayload * payload,
+    guint payload_len, guint8 pad_len, guint8 csrc_count)
+{
+  GstBuffer *buffer = NULL;
+
+  if (payload->priv->input_meta_buffer != NULL) {
+    GstRTPSourceMeta *meta =
+        gst_buffer_get_rtp_source_meta (payload->priv->input_meta_buffer);
+    if (meta != NULL) {
+      guint total_csrc_count, idx, i;
+      GstRTPBuffer rtp = GST_RTP_BUFFER_INIT;
+
+      total_csrc_count = csrc_count + meta->csrc_count +
+          (meta->ssrc_valid ? 1 : 0);
+      total_csrc_count = MIN (total_csrc_count, 15);
+      buffer = gst_rtp_buffer_new_allocate (payload_len, pad_len,
+          total_csrc_count);
+
+      gst_rtp_buffer_map (buffer, GST_MAP_READWRITE, &rtp);
+
+      /* Skip CSRC fields requested by derived class and fill CSRCs from meta.
+       * Finally append the SSRC as a new CSRC. */
+      idx = csrc_count;
+      for (i = 0; i < meta->csrc_count && idx < 15; i++, idx++)
+        gst_rtp_buffer_set_csrc (&rtp, idx, meta->csrc[i]);
+      if (meta->ssrc_valid && idx < 15)
+        gst_rtp_buffer_set_csrc (&rtp, idx, meta->ssrc);
+
+      gst_rtp_buffer_unmap (&rtp);
+    }
+  }
+
+  if (buffer == NULL)
+    buffer = gst_rtp_buffer_new_allocate (payload_len, pad_len, csrc_count);
+
+  return buffer;
+}
+
 static GstStructure *
 gst_rtp_base_payload_create_stats (GstRTPBasePayload * rtpbasepayload)
 {
@@ -1411,6 +1558,13 @@ gst_rtp_base_payload_set_property (GObject * object, guint prop_id,
     case PROP_PTIME_MULTIPLE:
       rtpbasepayload->ptime_multiple = g_value_get_int64 (value);
       break;
+    case PROP_SOURCE_INFO:
+      gst_rtp_base_payload_set_source_info_enabled (rtpbasepayload,
+          g_value_get_boolean (value));
+      break;
+    case PROP_ONVIF_NO_RATE_CONTROL:
+      priv->onvif_no_rate_control = g_value_get_boolean (value);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -1473,6 +1627,13 @@ gst_rtp_base_payload_get_property (GObject * object, guint prop_id,
     case PROP_STATS:
       g_value_take_boxed (value,
           gst_rtp_base_payload_create_stats (rtpbasepayload));
+      break;
+    case PROP_SOURCE_INFO:
+      g_value_set_boolean (value,
+          gst_rtp_base_payload_is_source_info_enabled (rtpbasepayload));
+      break;
+    case PROP_ONVIF_NO_RATE_CONTROL:
+      g_value_set_boolean (value, priv->onvif_no_rate_control);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1540,4 +1701,69 @@ gst_rtp_base_payload_change_state (GstElement * element,
       break;
   }
   return ret;
+}
+
+/**
+ * gst_rtp_base_payload_set_source_info_enabled:
+ * @payload: a #GstRTPBasePayload
+ * @enable: whether to add contributing sources to RTP packets
+ *
+ * Enable or disable adding contributing sources to RTP packets from
+ * #GstRTPSourceMeta.
+ *
+ * Since: 1.16
+ **/
+void
+gst_rtp_base_payload_set_source_info_enabled (GstRTPBasePayload * payload,
+    gboolean enable)
+{
+  payload->priv->source_info = enable;
+}
+
+/**
+ * gst_rtp_base_payload_is_source_info_enabled:
+ * @payload: a #GstRTPBasePayload
+ *
+ * Queries whether the payloader will add contributing sources (CSRCs) to the
+ * RTP header from #GstRTPSourceMeta.
+ *
+ * Returns: %TRUE if source-info is enabled.
+ *
+ * Since: 1.16
+ **/
+gboolean
+gst_rtp_base_payload_is_source_info_enabled (GstRTPBasePayload * payload)
+{
+  return payload->priv->source_info;
+}
+
+
+/**
+ * gst_rtp_base_payload_get_source_count:
+ * @payload: a #GstRTPBasePayload
+ * @buffer: (transfer none): a #GstBuffer, typically the buffer to payload
+ *
+ * Count the total number of RTP sources found in the meta of @buffer, which
+ * will be automically added by gst_rtp_base_payload_allocate_output_buffer().
+ * If #GstRTPBasePayload:source-info is %FALSE the count will be 0.
+ *
+ * Returns: The number of sources.
+ *
+ * Since: 1.16
+ **/
+guint
+gst_rtp_base_payload_get_source_count (GstRTPBasePayload * payload,
+    GstBuffer * buffer)
+{
+  guint count = 0;
+
+  g_return_val_if_fail (buffer != NULL, 0);
+
+  if (gst_rtp_base_payload_is_source_info_enabled (payload)) {
+    GstRTPSourceMeta *meta = gst_buffer_get_rtp_source_meta (buffer);
+    if (meta != NULL)
+      count = gst_rtp_source_meta_get_source_count (meta);
+  }
+
+  return count;
 }

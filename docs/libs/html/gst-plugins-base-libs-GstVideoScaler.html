@@ -121,12 +121,16 @@
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScalerFlags" title="enum GstVideoScalerFlags">GstVideoScalerFlags</a></td>
 </tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GST-VIDEO-SCALER-OPT-DITHER-METHOD:CAPS" title="GST_VIDEO_SCALER_OPT_DITHER_METHOD">GST_VIDEO_SCALER_OPT_DITHER_METHOD</a></td>
+</tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoScaler.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/video/video-scaler.h&gt;
+<pre class="synopsis">#include &lt;gst/video/video.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -141,7 +145,7 @@ video frames using various interpolation / sampling methods.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_scaler_2d (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *hscale</code></em>,
                      <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *vscale</code></em>,
-                     <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
+                     <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src</code></em>,
                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> src_stride</code></em>,
                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
@@ -187,7 +191,7 @@ one dimension or do a copy without scaling.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>format</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> for <em class="parameter"><code>srcs</code></em>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> for <em class="parameter"><code>srcs</code></em>
 and <em class="parameter"><code>dest</code></em>
 </p></td>
 <td class="parameter_annotations"> </td>
@@ -242,8 +246,8 @@ and <em class="parameter"><code>dest</code></em>
 <pre class="programlisting"><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="returnvalue">GstVideoScaler</span></a> *
 gst_video_scaler_combine_packed_YUV (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *y_scale</code></em>,
                                      <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *uv_scale</code></em>,
-                                     <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> in_format</code></em>,
-                                     <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> out_format</code></em>);</pre>
+                                     <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> in_format</code></em>,
+                                     <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> out_format</code></em>);</pre>
 <p>Combine a scaler for Y and UV into one scaler for the packed <em class="parameter"><code>format</code></em>
 .</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
@@ -284,7 +288,7 @@ gst_video_scaler_combine_packed_YUV (<em class="parameter"><code><a class="link"
 <p> a new horizontal videoscaler for <em class="parameter"><code>format</code></em>
 .</p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -368,7 +372,7 @@ gdouble values with filter coefficients.</p>
 <a name="gst-video-scaler-horizontal"></a><h3>gst_video_scaler_horizontal ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_scaler_horizontal (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *scale</code></em>,
-                             <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
+                             <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src</code></em>,
                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> dest_offset</code></em>,
@@ -395,7 +399,7 @@ for <em class="parameter"><code>width</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>format</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> for <em class="parameter"><code>src</code></em>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> for <em class="parameter"><code>src</code></em>
 and <em class="parameter"><code>dest</code></em>
 </p></td>
 <td class="parameter_annotations"> </td>
@@ -491,7 +495,7 @@ on the <em class="parameter"><code>method</code></em>
 </div>
 <div class="refsect3">
 <a name="gst-video-scaler-new.returns"></a><h4>Returns</h4>
-<p> a <span class="type">GstVideoResample</span></p>
+<p> a <a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a></p>
 </div>
 </div>
 <hr>
@@ -499,7 +503,7 @@ on the <em class="parameter"><code>method</code></em>
 <a name="gst-video-scaler-vertical"></a><h3>gst_video_scaler_vertical ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_video_scaler_vertical (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoScaler.html#GstVideoScaler" title="GstVideoScaler"><span class="type">GstVideoScaler</span></a> *scale</code></em>,
-                           <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
+                           <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> format</code></em>,
                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> src_lines[]</code></em>,
                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> dest</code></em>,
                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> dest_offset</code></em>,
@@ -531,7 +535,7 @@ gst_video_scaler_vertical (<em class="parameter"><code><a class="link" href="gst
 </tr>
 <tr>
 <td class="parameter_name"><p>format</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> for <em class="parameter"><code>srcs</code></em>
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFormat" title="enum GstVideoFormat"><span class="type">GstVideoFormat</span></a> for <em class="parameter"><code>srcs</code></em>
 and <em class="parameter"><code>dest</code></em>
 </p></td>
 <td class="parameter_annotations"> </td>
@@ -624,6 +628,14 @@ gst_video_scaler_get_max_taps (<em class="parameter"><code><a class="link" href=
 </tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-SCALER-OPT-DITHER-METHOD:CAPS"></a><h3>GST_VIDEO_SCALER_OPT_DITHER_METHOD</h3>
+<pre class="programlisting">#define GST_VIDEO_SCALER_OPT_DITHER_METHOD   "GstVideoScaler.dither-method"
+</pre>
+<p><span class="type">GST_TYPE_VIDEO_DITHER_METHOD</span>, The dither method to use for propagating
+quatization errors.</p>
 </div>
 </div>
 </div>

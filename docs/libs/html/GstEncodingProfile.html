@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base-utils.html" title="Base Utils Library">
 <link rel="prev" href="GstDiscoverer.html" title="GstDiscoverer">
-<link rel="next" href="gstreamer-video.html" title="Video Library">
+<link rel="next" href="GstAudioVisualizer.html" title="GstAudioVisualizer">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -22,7 +22,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-base-utils.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="GstDiscoverer.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-video.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstAudioVisualizer.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GstEncodingProfile"></a><div class="titlepage"></div>
@@ -498,6 +498,10 @@
 <td class="function_name"><a class="link" href="GstEncodingProfile.html#GST-ENCODING-CATEGORY-CAPTURE:CAPS" title="GST_ENCODING_CATEGORY_CAPTURE">GST_ENCODING_CATEGORY_CAPTURE</a></td>
 </tr>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="GstEncodingProfile.html#GST-ENCODING-CATEGORY-FILE-EXTENSION:CAPS" title="GST_ENCODING_CATEGORY_FILE_EXTENSION">GST_ENCODING_CATEGORY_FILE_EXTENSION</a></td>
+</tr>
+<tr>
 <td class="datatype_keyword"> </td>
 <td class="function_name"><a class="link" href="GstEncodingProfile.html#GstEncodingTarget-struct" title="GstEncodingTarget">GstEncodingTarget</a></td>
 </tr>
@@ -516,7 +520,7 @@
 </div>
 <div class="refsect1">
 <a name="GstEncodingProfile.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/pbutils/encoding-profile.h&gt;
+<pre class="synopsis">#include &lt;gst/pbutils/pbutils.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -1137,9 +1141,9 @@ gst_encoding_profile_find (<em class="parameter"><code>const <a href="/usr/share
 </tr>
 <tr>
 <td class="parameter_name"><p>profilename</p></td>
-<td class="parameter_description"><p>(allow-none): The name of the profile, if <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<td class="parameter_description"><p>The name of the profile, if <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 provided, it will default to the encoding profile called <code class="literal">default</code>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>category</p></td>
@@ -2772,6 +2776,16 @@ storage.</p>
 </pre>
 <p><a class="link" href="GstEncodingProfile.html#GstEncodingTarget"><span class="type">GstEncodingTarget</span></a> category for recording and capture.
 Targets within this category are optimized for low latency encoding.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-ENCODING-CATEGORY-FILE-EXTENSION:CAPS"></a><h3>GST_ENCODING_CATEGORY_FILE_EXTENSION</h3>
+<pre class="programlisting">#define GST_ENCODING_CATEGORY_FILE_EXTENSION    "file-extension"
+</pre>
+<p><a class="link" href="GstEncodingProfile.html#GstEncodingTarget"><span class="type">GstEncodingTarget</span></a> category for file extensions.
+The name of the target will be the name of the file extensions possible
+for a particular target. Those targets are defining like 'default' formats
+usually used for a particular file extension.</p>
 </div>
 <hr>
 <div class="refsect2">

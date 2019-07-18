@@ -27,6 +27,7 @@
 #include "gstglbasememory.h"
 
 #include "gstglcontext.h"
+#include "gstglcontext_private.h"
 #include "gstglquery.h"
 
 /**
@@ -55,7 +56,7 @@ GST_DEFINE_MINI_OBJECT_TYPE (GstGLBaseMemory, gst_gl_base_memory);
 GQuark
 gst_gl_base_memory_error_quark (void)
 {
-  return g_quark_from_static_string ("gst-gl-base-buffer-error-quark");
+  return g_quark_from_static_string ("gst-gl-base-memory-error-quark");
 }
 
 static gboolean
@@ -89,7 +90,11 @@ _mem_create_gl (GstGLContext * context, struct create_data *transfer)
 
   g_return_if_fail (alloc_class->create != NULL);
 
-  transfer->mem->query = gst_gl_query_new (context, GST_GL_QUERY_TIME_ELAPSED);
+  /* Don't do expensive queries when debugging is disabled */
+  transfer->mem->query = NULL;
+  if (_gst_gl_context_debug_is_enabled (context))
+    transfer->mem->query =
+        gst_gl_query_new (context, GST_GL_QUERY_TIME_ELAPSED);
 
   if ((transfer->result = alloc_class->create (transfer->mem, &error)))
     return;

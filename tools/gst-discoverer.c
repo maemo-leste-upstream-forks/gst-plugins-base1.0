@@ -66,7 +66,9 @@ gst_stream_information_to_string (GstDiscovererStreamInfo * info, GString * s,
 {
   gchar *tmp;
   GstCaps *caps;
+#ifndef GST_DISABLE_DEPRECATED
   const GstStructure *misc;
+#endif
 
   my_g_string_append_printf (s, depth, "Codec:\n");
   caps = gst_discoverer_stream_info_get_caps (info);
@@ -75,6 +77,7 @@ gst_stream_information_to_string (GstDiscovererStreamInfo * info, GString * s,
   my_g_string_append_printf (s, depth, "  %s\n", tmp);
   g_free (tmp);
 
+#ifndef GST_DISABLE_DEPRECATED
   my_g_string_append_printf (s, depth, "Additional info:\n");
   if ((misc = gst_discoverer_stream_info_get_misc (info))) {
     tmp = gst_structure_to_string (misc);
@@ -83,6 +86,7 @@ gst_stream_information_to_string (GstDiscovererStreamInfo * info, GString * s,
   } else {
     my_g_string_append_printf (s, depth, "  None\n");
   }
+#endif
 
   my_g_string_append_printf (s, depth, "Stream ID: %s\n",
       gst_discoverer_stream_info_get_stream_id (info));
@@ -578,9 +582,14 @@ main (int argc, char **argv)
   GError *err = NULL;
   GstDiscoverer *dc;
   gint timeout = 10;
+  gboolean use_cache = FALSE, print_cache_dir = FALSE;
   GOptionEntry options[] = {
     {"async", 'a', 0, G_OPTION_ARG_NONE, &async,
         "Run asynchronously", NULL},
+    {"use-cache", 'a', 0, G_OPTION_ARG_NONE, &use_cache,
+        "Use GstDiscovererInfo from our cache.", NULL},
+    {"print-cache-dir", 0, 0, G_OPTION_ARG_NONE, &print_cache_dir,
+        "Print the directory of the discoverer cache.", NULL},
     {"timeout", 't', 0, G_OPTION_ARG_INT, &timeout,
         "Specify timeout (in seconds, default 10)", "T"},
     /* {"elem", 'e', 0, G_OPTION_ARG_NONE, &elem_seek, */
@@ -615,12 +624,23 @@ main (int argc, char **argv)
     exit (-1);
   }
 
+  if (print_cache_dir) {
+    gchar *cache_dir =
+        g_build_filename (g_get_user_cache_dir (), "gstreamer-" GST_API_VERSION,
+        "discoverer", NULL);
+    g_print ("\nGstDiscoverer cache directory:\n\n    %s\n\n", cache_dir);
+    g_free (cache_dir);
+    exit (0);
+  }
+
   dc = gst_discoverer_new (timeout * GST_SECOND, &err);
   if (G_UNLIKELY (dc == NULL)) {
     g_print ("Error initializing: %s\n", err->message);
     g_clear_error (&err);
     exit (1);
   }
+
+  g_object_set (dc, "use-cache", use_cache, NULL);
 
   if (!async) {
     gint i;

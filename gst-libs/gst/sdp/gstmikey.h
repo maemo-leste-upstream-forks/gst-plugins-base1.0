@@ -119,7 +119,7 @@ typedef enum
 
 /**
  * GstMIKEYMapType:
- * @GST_MIKEY_MAP_TYPE_SRTP:
+ * @GST_MIKEY_MAP_TYPE_SRTP: SRTP
  *
  * Specifies the method of uniquely mapping Crypto Sessions to the security
  * protocol sessions.
@@ -219,6 +219,7 @@ gst_mikey_payload_copy (const GstMIKEYPayload * payload)
  * @GST_MIKEY_ENC_NULL: no encryption
  * @GST_MIKEY_ENC_AES_CM_128: AES-CM using a 128-bit key
  * @GST_MIKEY_ENC_AES_KW_128: AES Key Wrap using a 128-bit key
+ * @GST_MIKEY_ENC_AES_GCM_128: AES-GCM using a 128-bit key (Since 1.16)
  *
  * The encryption algorithm used to encrypt the Encr data field
  */
@@ -226,7 +227,8 @@ typedef enum
 {
   GST_MIKEY_ENC_NULL        = 0,
   GST_MIKEY_ENC_AES_CM_128  = 1,
-  GST_MIKEY_ENC_AES_KW_128  = 2
+  GST_MIKEY_ENC_AES_KW_128  = 2,
+  GST_MIKEY_ENC_AES_GCM_128 = 6
 } GstMIKEYEncAlg;
 
 /**
@@ -369,7 +371,7 @@ typedef struct {
 
 /**
  * GstMIKEYSecProto:
- * @GST_MIKEY_SEC_PROTO_SRTP:
+ * @GST_MIKEY_SEC_PROTO_SRTP: SRTP
  *
  * Specifies the security protocol
  */
@@ -393,6 +395,7 @@ typedef enum
  * @GST_MIKEY_SP_SRTP_SRTP_AUTH: SRTP authentication off/on, 0 if off, 1 if on
  * @GST_MIKEY_SP_SRTP_AUTH_TAG_LEN: Authentication tag length
  * @GST_MIKEY_SP_SRTP_SRTP_PREFIX_LEN: SRTP prefix length
+ * @GST_MIKEY_SP_SRTP_AEAD_AUTH_TAG_LEN: AEAD authentication tag length (Since 1.16)
  *
  * This policy specifies the parameters for SRTP and SRTCP
  */
@@ -410,7 +413,8 @@ typedef enum
   GST_MIKEY_SP_SRTP_FEC_ORDER       =    9,
   GST_MIKEY_SP_SRTP_SRTP_AUTH       =   10,
   GST_MIKEY_SP_SRTP_AUTH_TAG_LEN    =   11,
-  GST_MIKEY_SP_SRTP_SRTP_PREFIX_LEN =   12
+  GST_MIKEY_SP_SRTP_SRTP_PREFIX_LEN =   12,
+  GST_MIKEY_SP_SRTP_AEAD_AUTH_TAG_LEN = 20
 } GstMIKEYSecSRTP;
 
 /**
@@ -418,7 +422,7 @@ typedef enum
  * @pt: the payload header
  * @policy: the policy number
  * @proto: the security protocol
- * @params: array of #GstMIKEYPayloadPSParam
+ * @params: array of #GstMIKEYPayloadSPParam
  *
  * The Security Policy payload defines a set of policies that apply to a
  * specific security protocol
@@ -498,9 +502,9 @@ typedef enum
 /**
  * GstMIKEYPayloadKeyData:
  * @pt: the payload header
- * @type: the #GstMIKEYKeyDataType of @key_data
+ * @key_type: the #GstMIKEYKeyDataType of @key_data
  * @key_len: length of @key_data
- * @key_dat: the key data
+ * @key_data: the key data
  * @salt_len: the length of @salt_data, can be 0
  * @salt_data: salt data
  * @kv_type: the Key Validity type

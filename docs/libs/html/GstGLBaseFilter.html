@@ -34,6 +34,23 @@
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
+<a name="GstGLBaseFilter.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody><tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstGLBaseFilter.html#gst-gl-base-filter-find-gl-context" title="gst_gl_base_filter_find_gl_context ()">gst_gl_base_filter_find_gl_context</a> <span class="c_punctuation">()</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect1">
 <a name="GstGLBaseFilter.properties"></a><h2>Properties</h2>
 <div class="informaltable"><table class="informaltable" border="0">
 <colgroup>
@@ -93,13 +110,45 @@ is available and current in the calling thread.</p>
 </div>
 <div class="refsect1">
 <a name="GstGLBaseFilter.functions_details"></a><h2>Functions</h2>
-<p></p>
+<div class="refsect2">
+<a name="gst-gl-base-filter-find-gl-context"></a><h3>gst_gl_base_filter_find_gl_context ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_gl_base_filter_find_gl_context (<em class="parameter"><code><a class="link" href="GstGLBaseFilter.html" title="GstGLBaseFilter"><span class="type">GstGLBaseFilter</span></a> *filter</code></em>);</pre>
+<div class="refsect3">
+<a name="gst-gl-base-filter-find-gl-context.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>filter</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstGLBaseFilter.html" title="GstGLBaseFilter"><span class="type">GstGLBaseFilter</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-gl-base-filter-find-gl-context.returns"></a><h4>Returns</h4>
+<p> Whether an OpenGL context could be retrieved or created successfully</p>
+</div>
+<p class="since">Since: <a class="link" href="ix03.html#api-index-1.16">1.16</a></p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GstGLBaseFilter.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="GstGLBaseFilter-struct"></a><h3>GstGLBaseFilter</h3>
-<pre class="programlisting">typedef struct _GstGLBaseFilter GstGLBaseFilter;</pre>
+<pre class="programlisting">typedef struct {
+  GstGLDisplay      *display;
+  GstGLContext      *context;
+
+  GstCaps           *in_caps;
+  GstCaps           *out_caps;
+} GstGLBaseFilter;
+</pre>
+<p>The parent instance type of a base GStreamer GL Filter.</p>
 <div class="refsect3">
 <a name="GstGLBaseFilter.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -108,7 +157,28 @@ is available and current in the calling thread.</p>
 <col class="struct_members_description">
 <col width="200px" class="struct_members_annotations">
 </colgroup>
-<tbody></tbody>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstGLDisplay.html" title="GstGLDisplay"><span class="type">GstGLDisplay</span></a> *<em class="structfield"><code><a name="GstGLBaseFilter-struct.display"></a>display</code></em>;</p></td>
+<td class="struct_member_description"><p>the currently configured <a class="link" href="GstGLDisplay.html" title="GstGLDisplay"><span class="type">GstGLDisplay</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a> *<em class="structfield"><code><a name="GstGLBaseFilter-struct.context"></a>context</code></em>;</p></td>
+<td class="struct_member_description"><p>the currently configured <a class="link" href="GstGLContext.html" title="GstGLContext"><span class="type">GstGLContext</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *<em class="structfield"><code><a name="GstGLBaseFilter-struct.in-caps"></a>in_caps</code></em>;</p></td>
+<td class="struct_member_description"><p>the currently configured input <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *<em class="structfield"><code><a name="GstGLBaseFilter-struct.out-caps"></a>out_caps</code></em>;</p></td>
+<td class="struct_member_description"><p>the currently configured output <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 </div>
@@ -117,6 +187,7 @@ is available and current in the calling thread.</p>
 <a name="GstGLBaseFilterClass"></a><h3>GstGLBaseFilterClass</h3>
 <pre class="programlisting">typedef struct {
   GstBaseTransformClass parent_class;
+
   GstGLAPI supported_gl_api;
 
   gboolean (*gl_start)          (GstGLBaseFilter *filter);
@@ -124,6 +195,7 @@ is available and current in the calling thread.</p>
   gboolean (*gl_set_caps)       (GstGLBaseFilter *filter, GstCaps * incaps, GstCaps * outcaps);
 } GstGLBaseFilterClass;
 </pre>
+<p>The base class for GStreamer GL Filter.</p>
 <div class="refsect3">
 <a name="GstGLBaseFilterClass.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">

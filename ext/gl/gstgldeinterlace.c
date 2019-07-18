@@ -62,6 +62,8 @@ static void gst_gl_deinterlace_get_property (GObject * object,
 
 static gboolean gst_gl_deinterlace_start (GstBaseTransform * trans);
 static gboolean gst_gl_deinterlace_reset (GstBaseTransform * trans);
+static GstCaps *gst_gl_deinterlace_transform_internal_caps (GstGLFilter *
+    filter, GstPadDirection direction, GstCaps * caps, GstCaps * caps_filter);
 static gboolean gst_gl_deinterlace_init_fbo (GstGLFilter * filter);
 static gboolean gst_gl_deinterlace_filter (GstGLFilter * filter,
     GstBuffer * inbuf, GstBuffer * outbuf);
@@ -74,9 +76,6 @@ static gboolean gst_gl_deinterlace_greedyh_callback (GstGLFilter * filter,
 
 /* *INDENT-OFF* */
 static const gchar *greedyh_fragment_source =
-  "#ifdef GL_ES\n"
-  "precision mediump float;\n"
-  "#endif\n"
   "uniform sampler2D tex;\n"
   "uniform sampler2D tex_prev;\n"
   "uniform float max_comb;\n"
@@ -155,9 +154,6 @@ static const gchar *greedyh_fragment_source =
   "}\n";
 
 const gchar *vfir_fragment_source =
-  "#ifdef GL_ES\n"
-  "precision mediump float;\n"
-  "#endif\n"
   "uniform sampler2D tex;\n"
   "uniform float width;\n"
   "uniform float height;\n"
@@ -264,6 +260,8 @@ gst_gl_deinterlace_class_init (GstGLDeinterlaceClass * klass)
   GST_BASE_TRANSFORM_CLASS (klass)->start = gst_gl_deinterlace_start;
   GST_BASE_TRANSFORM_CLASS (klass)->stop = gst_gl_deinterlace_reset;
 
+  GST_GL_FILTER_CLASS (klass)->transform_internal_caps =
+      gst_gl_deinterlace_transform_internal_caps;
   GST_GL_FILTER_CLASS (klass)->filter = gst_gl_deinterlace_filter;
   GST_GL_FILTER_CLASS (klass)->filter_texture =
       gst_gl_deinterlace_filter_texture;
@@ -325,6 +323,26 @@ gst_gl_deinterlace_reset (GstBaseTransform * trans)
   }
 
   return GST_BASE_TRANSFORM_CLASS (parent_class)->stop (trans);
+}
+
+static GstCaps *
+gst_gl_deinterlace_transform_internal_caps (GstGLFilter * filter,
+    GstPadDirection direction, GstCaps * caps, GstCaps * caps_filter)
+{
+  gint len;
+  GstCaps *res;
+  GstStructure *s;
+
+  res = gst_caps_copy (caps);
+
+  for (len = gst_caps_get_size (res); len > 0; len--) {
+    s = gst_caps_get_structure (res, len - 1);
+    if (direction == GST_PAD_SINK) {
+      gst_structure_remove_field (s, "interlace-mode");
+    }
+  }
+
+  return res;
 }
 
 static void
@@ -398,18 +416,25 @@ gst_gl_deinterlace_get_fragment_shader (GstGLFilter * filter,
   GstGLShader *shader = NULL;
   GstGLDeinterlace *deinterlace_filter = GST_GL_DEINTERLACE (filter);
   GstGLContext *context = GST_GL_BASE_FILTER (filter)->context;
+  const gchar *frags[2];
 
   shader = g_hash_table_lookup (deinterlace_filter->shaderstable, shader_name);
+
+  frags[0] =
+      gst_gl_shader_string_get_highest_precision (context,
+      GST_GLSL_VERSION_NONE,
+      GST_GLSL_PROFILE_ES | GST_GLSL_PROFILE_COMPATIBILITY);
+  frags[1] = shader_source;
 
   if (!shader) {
     GError *error = NULL;
 
     if (!(shader = gst_gl_shader_new_link_with_stages (context, &error,
                 gst_glsl_stage_new_default_vertex (context),
-                gst_glsl_stage_new_with_string (context, GL_FRAGMENT_SHADER,
+                gst_glsl_stage_new_with_strings (context, GL_FRAGMENT_SHADER,
                     GST_GLSL_VERSION_NONE,
-                    GST_GLSL_PROFILE_ES | GST_GLSL_PROFILE_COMPATIBILITY,
-                    shader_source), NULL))) {
+                    GST_GLSL_PROFILE_ES | GST_GLSL_PROFILE_COMPATIBILITY, 2,
+                    frags), NULL))) {
       GST_ELEMENT_ERROR (deinterlace_filter, RESOURCE, NOT_FOUND,
           ("Failed to initialize %s shader", shader_name), (NULL));
     }

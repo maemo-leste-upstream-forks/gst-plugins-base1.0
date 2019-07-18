@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-video.html" title="Video Library">
-<link rel="prev" href="gst-plugins-base-libs-gstvideoaffinetransformationmeta.html" title="gstvideoaffinetransformationmeta">
+<link rel="prev" href="GstVideoAggregatorPad.html" title="GstVideoAggregatorPad">
 <link rel="next" href="GstVideoFilter.html" title="GstVideoFilter">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -19,7 +19,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-video.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gst-plugins-base-libs-gstvideoaffinetransformationmeta.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GstVideoAggregatorPad.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstVideoFilter.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -291,7 +291,19 @@
 </tr>
 <tr>
 <td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstVideoOverlayRectangle.html#GST-VIDEO-OVERLAY-COMPOSITION-FORMAT-RGB:CAPS" title="GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_RGB">GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_RGB</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstVideoOverlayRectangle.html#GST-VIDEO-OVERLAY-COMPOSITION-FORMAT-YUV:CAPS" title="GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_YUV">GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_YUV</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gst-plugins-base-libs-GstVideoOverlayRectangle.html#GST-VIDEO-OVERLAY-COMPOSITION-BLEND-FORMATS:CAPS" title="GST_VIDEO_OVERLAY_COMPOSITION_BLEND_FORMATS">GST_VIDEO_OVERLAY_COMPOSITION_BLEND_FORMATS</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstVideoOverlayRectangle.html#GST-CAPS-FEATURE-META-GST-VIDEO-OVERLAY-COMPOSITION:CAPS" title="GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION">GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword">struct</td>
@@ -310,7 +322,7 @@
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstVideoOverlayRectangle.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/video/video-overlay-composition.h&gt;
+<pre class="synopsis">#include &lt;gst/video/video.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -330,7 +342,7 @@ one place.</p></li>
 </ul></div>
 <p>Together, this allows existing overlay elements to easily handle raw
 and non-raw video as input in without major changes (once the overlays
-have been put into a <span class="type">GstOverlayComposition</span> object anyway) - for raw
+have been put into a <a class="link" href="gst-plugins-base-libs-GstVideoOverlayRectangle.html#GstVideoOverlayComposition" title="GstVideoOverlayComposition"><span class="type">GstVideoOverlayComposition</span></a> object anyway) - for raw
 video the overlay can just use the blending function to blend the data
 on top of the video, and for surface buffers it can just attach them to
 the buffer and let the sink render the overlays.</p>
@@ -634,7 +646,7 @@ equivalent to <em class="parameter"><code>comp</code></em>
 <a name="gst-video-overlay-composition-blend"></a><h3>gst_video_overlay_composition_blend ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_video_overlay_composition_blend (<em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoOverlayRectangle.html#GstVideoOverlayComposition" title="GstVideoOverlayComposition"><span class="type">GstVideoOverlayComposition</span></a> *comp</code></em>,
-                                     <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFrame" title="struct GstVideoFrame"><span class="type">GstVideoFrame</span></a> *video_buf</code></em>);</pre>
+                                     <em class="parameter"><code><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFrame" title="struct GstVideoFrame"><span class="type">GstVideoFrame</span></a> *video_buf</code></em>);</pre>
 <p>Blends the overlay rectangles in <em class="parameter"><code>comp</code></em>
  on top of the raw video data
 contained in <em class="parameter"><code>video_buf</code></em>
@@ -660,7 +672,7 @@ mapped with flag GST_MAP_READWRITE.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>video_buf</p></td>
-<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoFrame" title="struct GstVideoFrame"><span class="type">GstVideoFrame</span></a> containing raw video data in a
+<td class="parameter_description"><p>a <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoFrame" title="struct GstVideoFrame"><span class="type">GstVideoFrame</span></a> containing raw video data in a
 supported format. It should be mapped using GST_MAP_READWRITE</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -737,14 +749,14 @@ gst_video_overlay_rectangle_new_raw (<em class="parameter"><code><a href="/usr/s
 <p>Creates a new video overlay rectangle with ARGB or AYUV pixel data.
 The layout in case of ARGB of the components in memory is B-G-R-A
 on little-endian platforms
-(corresponding to <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GST-VIDEO-FORMAT-BGRA:CAPS"><span class="type">GST_VIDEO_FORMAT_BGRA</span></a>) and A-R-G-B on big-endian
-platforms (corresponding to <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GST-VIDEO-FORMAT-ARGB:CAPS"><span class="type">GST_VIDEO_FORMAT_ARGB</span></a>). In other words,
+(corresponding to <a class="link" href="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-BGRA:CAPS"><span class="type">GST_VIDEO_FORMAT_BGRA</span></a>) and A-R-G-B on big-endian
+platforms (corresponding to <a class="link" href="gst-plugins-base-libs-GstVideo.html#GST-VIDEO-FORMAT-ARGB:CAPS"><span class="type">GST_VIDEO_FORMAT_ARGB</span></a>). In other words,
 pixels are treated as 32-bit words and the lowest 8 bits then contain
 the blue component value and the highest 8 bits contain the alpha
 component value. Unless specified in the flags, the RGB values are
 non-premultiplied. This is the format that is used by most hardware,
 and also many rendering libraries such as Cairo, for example.
-The pixel data buffer must have <a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> set.</p>
+The pixel data buffer must have <a class="link" href="gst-plugins-base-libs-GstMeta-for-video.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> set.</p>
 <div class="refsect3">
 <a name="gst-video-overlay-rectangle-new-raw.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -1023,7 +1035,7 @@ global_alpha is applied internally before returning the pixel-data.</p></td>
 <div class="refsect3">
 <a name="gst-video-overlay-rectangle-get-pixels-unscaled-raw.returns"></a><h4>Returns</h4>
 <p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> holding the pixel data with
-<a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> set. This function does not return a reference, the caller
+<a class="link" href="gst-plugins-base-libs-GstMeta-for-video.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> set. This function does not return a reference, the caller
 should obtain a reference of her own with <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#gst-buffer-ref"><code class="function">gst_buffer_ref()</code></a> if needed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -1068,7 +1080,7 @@ global_alpha is applied internally before returning the pixel-data.</p></td>
 <div class="refsect3">
 <a name="gst-video-overlay-rectangle-get-pixels-unscaled-argb.returns"></a><h4>Returns</h4>
 <p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> holding the ARGB pixel data with
-<a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> set. This function does not return a reference, the caller
+<a class="link" href="gst-plugins-base-libs-GstMeta-for-video.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> set. This function does not return a reference, the caller
 should obtain a reference of her own with <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#gst-buffer-ref"><code class="function">gst_buffer_ref()</code></a> if needed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -1113,7 +1125,7 @@ global_alpha is applied internally before returning the pixel-data.</p></td>
 <div class="refsect3">
 <a name="gst-video-overlay-rectangle-get-pixels-unscaled-ayuv.returns"></a><h4>Returns</h4>
 <p>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> holding the AYUV pixel data with
-<a class="link" href="gst-plugins-base-libs-gstvideometa.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> set. This function does not return a reference, the caller
+<a class="link" href="gst-plugins-base-libs-GstMeta-for-video.html#GstVideoMeta" title="struct GstVideoMeta"><span class="type">GstVideoMeta</span></a> set. This function does not return a reference, the caller
 should obtain a reference of her own with <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#gst-buffer-ref"><code class="function">gst_buffer_ref()</code></a> if needed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -1408,11 +1420,31 @@ multiple overlay rectangles.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-VIDEO-OVERLAY-COMPOSITION-FORMAT-RGB:CAPS"></a><h3>GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_RGB</h3>
+<pre class="programlisting">#define GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_RGB      GST_VIDEO_FORMAT_BGRA
+</pre>
+<p>Supported RGB overlay video format.</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-VIDEO-OVERLAY-COMPOSITION-FORMAT-YUV:CAPS"></a><h3>GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_YUV</h3>
+<pre class="programlisting">#define GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_YUV      GST_VIDEO_FORMAT_AYUV
+</pre>
+<p>Supported YUV overlay video format.</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GST-VIDEO-OVERLAY-COMPOSITION-BLEND-FORMATS:CAPS"></a><h3>GST_VIDEO_OVERLAY_COMPOSITION_BLEND_FORMATS</h3>
 <pre class="programlisting">#define             GST_VIDEO_OVERLAY_COMPOSITION_BLEND_FORMATS</pre>
 <p>Video formats supported by <a class="link" href="gst-plugins-base-libs-GstVideoOverlayRectangle.html#gst-video-overlay-composition-blend" title="gst_video_overlay_composition_blend ()"><code class="function">gst_video_overlay_composition_blend()</code></a>, for
 use in overlay elements' pad template caps.</p>
-<p class="since">Since: <a class="link" href="ix13.html#api-index-1.2">1.2</a></p>
+<p class="since">Since: <a class="link" href="ix14.html#api-index-1.2">1.2</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-CAPS-FEATURE-META-GST-VIDEO-OVERLAY-COMPOSITION:CAPS"></a><h3>GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION</h3>
+<pre class="programlisting">#define GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION "meta:GstVideoOverlayComposition"
+</pre>
 </div>
 <hr>
 <div class="refsect2">

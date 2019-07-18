@@ -33,6 +33,7 @@
 #include <gst/gl/gstglcontext.h>
 
 #include "gstgldisplay_wayland.h"
+#include "gstgldisplay_wayland_private.h"
 #include "gstglwindow_wayland_egl.h"
 
 #include "../gstglwindow_private.h"
@@ -57,6 +58,8 @@ static gboolean gst_gl_window_wayland_egl_open (GstGLWindow * window,
 static guintptr gst_gl_window_wayland_egl_get_display (GstGLWindow * window);
 static gboolean gst_gl_window_wayland_egl_set_render_rectangle (GstGLWindow *
     window, gint x, gint y, gint width, gint height);
+static void gst_gl_window_wayland_egl_set_preferred_size (GstGLWindow * window,
+    gint width, gint height);
 
 #if 0
 static void
@@ -138,11 +141,11 @@ pointer_handle_button (void *data, struct wl_pointer *pointer, uint32_t serial,
   window_egl->display.serial = serial;
 
   if (button == BTN_LEFT && state_w == WL_POINTER_BUTTON_STATE_PRESSED)
-    wl_shell_surface_move (window_egl->window.shell_surface,
+    wl_shell_surface_move (window_egl->window.wl_shell_surface,
         window_egl->display.seat, serial);
 
   if (button == BTN_RIGHT && state_w == WL_POINTER_BUTTON_STATE_PRESSED)
-    wl_shell_surface_resize (window_egl->window.shell_surface,
+    wl_shell_surface_resize (window_egl->window.wl_shell_surface,
         window_egl->display.seat, serial, edges);
 }
 
@@ -192,61 +195,167 @@ static const struct wl_seat_listener seat_listener = {
 };
 #endif
 static void
-handle_ping (void *data, struct wl_shell_surface *shell_surface,
+handle_ping (void *data, struct wl_shell_surface *wl_shell_surface,
     uint32_t serial)
 {
   GstGLWindowWaylandEGL *window_egl = data;
 
   GST_TRACE_OBJECT (window_egl, "ping received serial %u", serial);
 
-  wl_shell_surface_pong (shell_surface, serial);
+  wl_shell_surface_pong (wl_shell_surface, serial);
 }
 
 static void window_resize (GstGLWindowWaylandEGL * window_egl, guint width,
     guint height);
 
 static void
-handle_configure (void *data, struct wl_shell_surface *shell_surface,
+handle_configure (void *data, struct wl_shell_surface *wl_shell_surface,
     uint32_t edges, int32_t width, int32_t height)
 {
   GstGLWindowWaylandEGL *window_egl = data;
 
-  GST_DEBUG ("configure event on surface %p, %ix%i", shell_surface, width,
+  GST_DEBUG ("configure event on surface %p, %ix%i", wl_shell_surface, width,
       height);
 
   window_resize (window_egl, width, height);
 }
 
 static void
-handle_popup_done (void *data, struct wl_shell_surface *shell_surface)
+handle_popup_done (void *data, struct wl_shell_surface *wl_shell_surface)
 {
 }
 
-static const struct wl_shell_surface_listener shell_surface_listener = {
+static const struct wl_shell_surface_listener wl_shell_surface_listener = {
   handle_ping,
   handle_configure,
   handle_popup_done
 };
 
 static void
+handle_xdg_toplevel_close (void *data, struct xdg_toplevel *xdg_toplevel)
+{
+  GstGLWindowWaylandEGL *window_egl = data;
+
+  GST_DEBUG ("XDG toplevel got a \"close\" event.");
+
+  gst_gl_window_wayland_egl_close (GST_GL_WINDOW (window_egl));
+}
+
+static void
+handle_xdg_toplevel_configure (void *data, struct xdg_toplevel *xdg_toplevel,
+    int32_t width, int32_t height, struct wl_array *states)
+{
+  GstGLWindowWaylandEGL *window_egl = data;
+  const uint32_t *state;
+
+  GST_DEBUG ("configure event on XDG toplevel %p, %ix%i", xdg_toplevel,
+      width, height);
+
+  wl_array_for_each (state, states) {
+    switch (*state) {
+      case XDG_TOPLEVEL_STATE_FULLSCREEN:
+        window_egl->window.fullscreen = TRUE;
+        break;
+      case XDG_TOPLEVEL_STATE_MAXIMIZED:
+      case XDG_TOPLEVEL_STATE_RESIZING:
+      case XDG_TOPLEVEL_STATE_ACTIVATED:
+        break;
+    }
+  }
+
+  if (width > 0 && height > 0)
+    window_resize (window_egl, width, height);
+}
+
+static const struct xdg_toplevel_listener xdg_toplevel_listener = {
+  handle_xdg_toplevel_configure,
+  handle_xdg_toplevel_close,
+};
+
+static void
+handle_xdg_surface_configure (void *data, struct xdg_surface *xdg_surface,
+    uint32_t serial)
+{
+  xdg_surface_ack_configure (xdg_surface, serial);
+}
+
+static const struct xdg_surface_listener xdg_surface_listener = {
+  handle_xdg_surface_configure,
+};
+
+static void
 destroy_surfaces (GstGLWindowWaylandEGL * window_egl)
 {
-  if (window_egl->window.subsurface) {
-    wl_subsurface_destroy (window_egl->window.subsurface);
-    window_egl->window.subsurface = NULL;
+  g_clear_pointer (&window_egl->window.subsurface, wl_subsurface_destroy);
+  g_clear_pointer (&window_egl->window.xdg_toplevel, xdg_toplevel_destroy);
+  g_clear_pointer (&window_egl->window.xdg_surface, xdg_surface_destroy);
+  g_clear_pointer (&window_egl->window.wl_shell_surface,
+      wl_shell_surface_destroy);
+  g_clear_pointer (&window_egl->window.surface, wl_surface_destroy);
+  g_clear_pointer (&window_egl->window.native, wl_egl_window_destroy);
+}
+
+static void
+create_xdg_surface_and_toplevel (GstGLWindowWaylandEGL * window_egl)
+{
+  GstGLDisplayWayland *display =
+      GST_GL_DISPLAY_WAYLAND (GST_GL_WINDOW (window_egl)->display);
+  struct xdg_wm_base *xdg_wm_base;
+  struct xdg_surface *xdg_surface;
+  struct xdg_toplevel *xdg_toplevel;
+
+  GST_DEBUG ("Creating surfaces XDG-shell");
+
+  /* First create the XDG surface */
+  xdg_wm_base = gst_gl_display_wayland_get_xdg_wm_base (display);
+  xdg_surface = xdg_wm_base_get_xdg_surface (xdg_wm_base,
+      window_egl->window.surface);
+  if (window_egl->window.queue) {
+    wl_proxy_set_queue ((struct wl_proxy *) xdg_surface,
+        window_egl->window.queue);
   }
-  if (window_egl->window.shell_surface) {
-    wl_shell_surface_destroy (window_egl->window.shell_surface);
-    window_egl->window.shell_surface = NULL;
+  xdg_surface_add_listener (xdg_surface, &xdg_surface_listener, window_egl);
+
+  /* Then the XDG top-level */
+  xdg_toplevel = xdg_surface_get_toplevel (xdg_surface);
+  xdg_toplevel_set_title (xdg_toplevel, "OpenGL Renderer");
+  if (window_egl->window.queue) {
+    wl_proxy_set_queue ((struct wl_proxy *) xdg_toplevel,
+        window_egl->window.queue);
   }
-  if (window_egl->window.surface) {
-    wl_surface_destroy (window_egl->window.surface);
-    window_egl->window.surface = NULL;
+  xdg_toplevel_add_listener (xdg_toplevel, &xdg_toplevel_listener, window_egl);
+
+  /* Commit the xdg_surface state */
+  wl_surface_commit (window_egl->window.surface);
+
+  /* And save them into the fields */
+  window_egl->window.xdg_surface = xdg_surface;
+  window_egl->window.xdg_toplevel = xdg_toplevel;
+}
+
+static void
+create_wl_shell_surface (GstGLWindowWaylandEGL * window_egl)
+{
+  GstGLDisplayWayland *display =
+      GST_GL_DISPLAY_WAYLAND (GST_GL_WINDOW (window_egl)->display);
+  struct wl_shell_surface *wl_shell_surface;
+
+  GST_DEBUG ("Creating surfaces for wl-shell");
+
+  wl_shell_surface = wl_shell_get_shell_surface (display->wl_shell,
+      window_egl->window.surface);
+
+  if (window_egl->window.queue) {
+    wl_proxy_set_queue ((struct wl_proxy *) wl_shell_surface,
+        window_egl->window.queue);
   }
-  if (window_egl->window.native) {
-    wl_egl_window_destroy (window_egl->window.native);
-    window_egl->window.native = NULL;
-  }
+
+  wl_shell_surface_add_listener (wl_shell_surface, &wl_shell_surface_listener,
+      window_egl);
+  wl_shell_surface_set_title (wl_shell_surface, "OpenGL Renderer");
+  wl_shell_surface_set_toplevel (wl_shell_surface);
+
+  window_egl->window.wl_shell_surface = wl_shell_surface;
 }
 
 static void
@@ -287,31 +396,37 @@ create_surfaces (GstGLWindowWaylandEGL * window_egl)
     }
   } else {
   shell_window:
-    if (!window_egl->window.shell_surface) {
-      window_egl->window.shell_surface =
-          wl_shell_get_shell_surface (display->shell,
-          window_egl->window.surface);
-      if (window_egl->window.queue)
-        wl_proxy_set_queue ((struct wl_proxy *) window_egl->
-            window.shell_surface, window_egl->window.queue);
-
-      wl_shell_surface_add_listener (window_egl->window.shell_surface,
-          &shell_surface_listener, window_egl);
-
-      wl_shell_surface_set_title (window_egl->window.shell_surface,
-          "OpenGL Renderer");
-      wl_shell_surface_set_toplevel (window_egl->window.shell_surface);
+    if (gst_gl_display_wayland_get_xdg_wm_base (display)) {
+      if (!window_egl->window.xdg_surface)
+        create_xdg_surface_and_toplevel (window_egl);
+    } else if (!window_egl->window.wl_shell_surface) {
+      create_wl_shell_surface (window_egl);
     }
   }
 
-  if (window_egl->window.window_width > 0)
+  /*
+   * render_rect is the application requested size so choose that first if
+   * available.
+   * Else choose the already chosen size if set
+   * Else choose the preferred size if set
+   * Else choose a default value
+   */
+  if (window_egl->window.render_rect.w > 0)
+    width = window_egl->window.render_rect.w;
+  else if (window_egl->window.window_width > 0)
     width = window_egl->window.window_width;
+  else if (window_egl->window.preferred_width > 0)
+    width = window_egl->window.preferred_width;
   else
     width = 320;
   window_egl->window.window_width = width;
 
-  if (window_egl->window.window_height > 0)
+  if (window_egl->window.render_rect.h > 0)
+    height = window_egl->window.render_rect.h;
+  else if (window_egl->window.window_height > 0)
     height = window_egl->window.window_height;
+  else if (window_egl->window.preferred_height > 0)
+    height = window_egl->window.preferred_height;
   else
     height = 240;
   window_egl->window.window_height = height;
@@ -344,11 +459,14 @@ gst_gl_window_wayland_egl_class_init (GstGLWindowWaylandEGLClass * klass)
       GST_DEBUG_FUNCPTR (gst_gl_window_wayland_egl_get_display);
   window_class->set_render_rectangle =
       GST_DEBUG_FUNCPTR (gst_gl_window_wayland_egl_set_render_rectangle);
+  window_class->set_preferred_size =
+      GST_DEBUG_FUNCPTR (gst_gl_window_wayland_egl_set_preferred_size);
 }
 
 static void
 gst_gl_window_wayland_egl_init (GstGLWindowWaylandEGL * window)
 {
+  window->window.render_rect.w = window->window.render_rect.h = -1;
 }
 
 /* Must be called in the gl thread */
@@ -561,6 +679,8 @@ _set_render_rectangle (gpointer data)
   }
 
   window_resize (render->window_egl, render->rect.w, render->rect.h);
+
+  render->window_egl->window.render_rect = render->rect;
 }
 
 static gboolean
@@ -582,6 +702,23 @@ gst_gl_window_wayland_egl_set_render_rectangle (GstGLWindow * window,
       (GDestroyNotify) _free_set_render_rectangle);
 
   return TRUE;
+}
+
+static void
+gst_gl_window_wayland_egl_set_preferred_size (GstGLWindow * window, gint width,
+    gint height)
+{
+  GstGLWindowWaylandEGL *window_egl = GST_GL_WINDOW_WAYLAND_EGL (window);
+
+  window_egl->window.preferred_width = width;
+  window_egl->window.preferred_height = height;
+  if (window_egl->window.render_rect.w < 0
+      && window_egl->window.render_rect.h < 0) {
+    if (window_egl->window.window_height != height
+        || window_egl->window.window_width != width) {
+      window_resize (window_egl, width, height);
+    }
+  }
 }
 
 static guintptr

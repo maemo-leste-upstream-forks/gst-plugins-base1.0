@@ -27,10 +27,11 @@ install_headers(fft_headers, subdir : 'gstreamer-1.0/gst/fft/')
 
 gstfft = library('gstfft-@0@'.format(api_version),
   fft_sources,
-  c_args : gst_plugins_base_args,
+  c_args : gst_plugins_base_args + ['-DBUILDING_GST_FFT'],
   include_directories: [configinc, libsinc],
   version : libversion,
   soversion : soversion,
+  darwin_versions : osxversion,
   install : true,
   dependencies : [gst_dep, libm],
 )

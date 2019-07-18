@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch02.html" title="gst-plugins-base Plugins">
 <link rel="prev" href="gst-plugins-base-plugins-plugin-opus.html" title="opus">
-<link rel="next" href="gst-plugins-base-plugins-plugin-pango.html" title="pango">
+<link rel="next" href="gst-plugins-base-plugins-plugin-overlaycomposition.html" title="overlaycomposition">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -17,7 +17,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch02.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gst-plugins-base-plugins-plugin-opus.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-plugins-plugin-pango.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-plugins-plugin-overlaycomposition.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-plugins-plugin-opengl"></a><div class="titlepage"></div>
@@ -29,7 +29,7 @@
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
-<a name="id-1.3.17.3"></a><h2>Plugin Information</h2>
+<a name="id-1.3.18.3"></a><h2>Plugin Information</h2>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -42,7 +42,7 @@
 </tr>
 <tr>
 <td><p><span class="term">version</span></p></td>
-<td>1.14.4</td>
+<td>1.16.0</td>
 </tr>
 <tr>
 <td><p><span class="term">run-time license</span></p></td>
@@ -60,13 +60,17 @@
 </table></div>
 </div>
 <div class="refsect1">
-<a name="id-1.3.17.4"></a><h2>Elements</h2>
+<a name="id-1.3.18.4"></a><h2>Elements</h2>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
 <col>
 </colgroup>
 <tbody>
+<tr>
+<td><p><span class="term">glalpha</span></p></td>
+<td>Adds an alpha channel to video using OpenGL - uniform or chroma-keying</td>
+</tr>
 <tr>
 <td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glcolorbalance.html" title="glcolorbalance">glcolorbalance</a></span></p></td>
 <td>Adjusts brightness, contrast, hue, saturation on a video stream</td>
@@ -196,8 +200,20 @@
 <td>A videosink based on OpenGL</td>
 </tr>
 <tr>
+<td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glmixerbin.html" title="glmixerbin">glmixerbin</a></span></p></td>
+<td>OpenGL video_mixer empty bin</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glmosaic.html" title="glmosaic">glmosaic</a></span></p></td>
+<td>OpenGL mosaic</td>
+</tr>
+<tr>
 <td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-gloverlay.html" title="gloverlay">gloverlay</a></span></p></td>
 <td>Overlay GL video texture with a JPEG/PNG image</td>
+</tr>
+<tr>
+<td><p><span class="term">gloverlaycompositor</span></p></td>
+<td>Flatten a stream containing GstVideoOverlayCompositionMeta</td>
 </tr>
 <tr>
 <td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glshader.html" title="glshader">glshader</a></span></p></td>
@@ -212,6 +228,10 @@
 <td>Infrastructure to process GL textures</td>
 </tr>
 <tr>
+<td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glstereomix.html" title="glstereomix">glstereomix</a></span></p></td>
+<td>OpenGL stereo video combiner</td>
+</tr>
+<tr>
 <td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glstereosplit.html" title="glstereosplit">glstereosplit</a></span></p></td>
 <td>Splits a stereoscopic stream into separate left/right streams</td>
 </tr>
@@ -222,6 +242,14 @@
 <tr>
 <td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glupload.html" title="glupload">glupload</a></span></p></td>
 <td>Uploads data into OpenGL</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glvideomixer.html" title="glvideomixer">glvideomixer</a></span></p></td>
+<td>OpenGL video_mixer bin</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glvideomixerelement.html" title="glvideomixerelement">glvideomixerelement</a></span></p></td>
+<td>OpenGL video_mixer</td>
 </tr>
 <tr>
 <td><p><span class="term"><a class="link" href="gst-plugins-base-plugins-glviewconvert.html" title="glviewconvert">glviewconvert</a></span></p></td>

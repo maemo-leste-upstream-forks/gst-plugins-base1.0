@@ -29,9 +29,9 @@
  *
  * #GstEGLImage represents and holds an #EGLImage handle.
  *
- * A #GstEGLImage can be created from a dmabuf with gst_egl_image_from_dmabuf()
- * or #GstGLMemoryEGL provides a #GstAllocator to allocate #EGLImage's bound to
- * and OpenGL texture.
+ * A #GstEGLImage can be created from a dmabuf with gst_egl_image_from_dmabuf(),
+ * or gst_egl_image_from_dmabuf_direct(), or #GstGLMemoryEGL provides a
+ * #GstAllocator to allocate #EGLImage's bound to and OpenGL texture.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -84,6 +84,86 @@
 
 #ifndef EGL_DMA_BUF_PLANE0_PITCH_EXT
 #define EGL_DMA_BUF_PLANE0_PITCH_EXT 0x3274
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE1_FD_EXT
+#define EGL_DMA_BUF_PLANE1_FD_EXT 0x3275
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE1_OFFSET_EXT
+#define EGL_DMA_BUF_PLANE1_OFFSET_EXT 0x3276
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE1_PITCH_EXT
+#define EGL_DMA_BUF_PLANE1_PITCH_EXT 0x3277
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE2_FD_EXT
+#define EGL_DMA_BUF_PLANE2_FD_EXT 0x3278
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE2_OFFSET_EXT
+#define EGL_DMA_BUF_PLANE2_OFFSET_EXT 0x3279
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE2_PITCH_EXT
+#define EGL_DMA_BUF_PLANE2_PITCH_EXT 0x327A
+#endif
+
+#ifndef DRM_FORMAT_MOD_LINEAR
+#define DRM_FORMAT_MOD_LINEAR 0ULL
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT
+#define EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT 0x3443
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT
+#define EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT 0x3444
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE1_MODIFIER_LO_EXT
+#define EGL_DMA_BUF_PLANE1_MODIFIER_LO_EXT 0x3445
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE1_MODIFIER_HI_EXT
+#define EGL_DMA_BUF_PLANE1_MODIFIER_HI_EXT 0x3446
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE2_MODIFIER_LO_EXT
+#define EGL_DMA_BUF_PLANE2_MODIFIER_LO_EXT 0x3447
+#endif
+
+#ifndef EGL_DMA_BUF_PLANE2_MODIFIER_HI_EXT
+#define EGL_DMA_BUF_PLANE2_MODIFIER_HI_EXT 0x3448
+#endif
+
+#ifndef EGL_ITU_REC601_EXT
+#define EGL_ITU_REC601_EXT 0x327F
+#endif
+
+#ifndef EGL_ITU_REC709_EXT
+#define EGL_ITU_REC709_EXT 0x3280
+#endif
+
+#ifndef EGL_ITU_REC2020_EXT
+#define EGL_ITU_REC2020_EXT 0x3281
+#endif
+
+#ifndef EGL_SAMPLE_RANGE_HINT_EXT
+#define EGL_SAMPLE_RANGE_HINT_EXT 0x327C
+#endif
+
+#ifndef EGL_YUV_COLOR_SPACE_HINT_EXT
+#define EGL_YUV_COLOR_SPACE_HINT_EXT 0x327B
+#endif
+
+#ifndef EGL_YUV_FULL_RANGE_EXT
+#define EGL_YUV_FULL_RANGE_EXT 0x3282
+#endif
+
+#ifndef EGL_YUV_NARROW_RANGE_EXT
+#define EGL_YUV_NARROW_RANGE_EXT 0x3283
 #endif
 
 #if !GST_GL_HAVE_EGLUINT64KHR
@@ -157,7 +237,7 @@ _gst_egl_image_copy (GstMiniObject * obj)
  * @image: the image to wrap
  * @format: the #GstGLFormat
  * @user_data: user data
- * @user_data_destroy: called when @user_data is no longer needed
+ * @user_data_destroy: (destroy user_data): called when @user_data is no longer needed
  *
  * Returns: a new #GstEGLImage wrapping @image
  */
@@ -353,7 +433,8 @@ gst_egl_image_from_texture (GstGLContext * context, GstGLMemory * gl_mem,
  * target.
  */
 static int
-_drm_fourcc_from_info (GstVideoInfo * info, int plane)
+_drm_rgba_fourcc_from_info (GstVideoInfo * info, int plane,
+    GstGLFormat * out_format)
 {
   GstVideoFormat format = GST_VIDEO_INFO_FORMAT (info);
 #if G_BYTE_ORDER == G_LITTLE_ENDIAN
@@ -372,10 +453,12 @@ _drm_fourcc_from_info (GstVideoInfo * info, int plane)
   switch (format) {
     case GST_VIDEO_FORMAT_RGB16:
     case GST_VIDEO_FORMAT_BGR16:
+      *out_format = GST_GL_RGB565;
       return DRM_FORMAT_RGB565;
 
     case GST_VIDEO_FORMAT_RGB:
     case GST_VIDEO_FORMAT_BGR:
+      *out_format = GST_GL_RGB;
       return rgb_fourcc;
 
     case GST_VIDEO_FORMAT_RGBA:
@@ -387,19 +470,23 @@ _drm_fourcc_from_info (GstVideoInfo * info, int plane)
     case GST_VIDEO_FORMAT_ABGR:
     case GST_VIDEO_FORMAT_xBGR:
     case GST_VIDEO_FORMAT_AYUV:
+      *out_format = GST_GL_RGBA;
       return rgba_fourcc;
 
     case GST_VIDEO_FORMAT_GRAY8:
+      *out_format = GST_GL_RED;
       return DRM_FORMAT_R8;
 
     case GST_VIDEO_FORMAT_YUY2:
     case GST_VIDEO_FORMAT_UYVY:
     case GST_VIDEO_FORMAT_GRAY16_LE:
     case GST_VIDEO_FORMAT_GRAY16_BE:
+      *out_format = GST_GL_RG;
       return rg_fourcc;
 
     case GST_VIDEO_FORMAT_NV12:
     case GST_VIDEO_FORMAT_NV21:
+      *out_format = plane == 0 ? GST_GL_RED : GST_GL_RG;
       return plane == 0 ? DRM_FORMAT_R8 : rg_fourcc;
 
     case GST_VIDEO_FORMAT_I420:
@@ -407,6 +494,7 @@ _drm_fourcc_from_info (GstVideoInfo * info, int plane)
     case GST_VIDEO_FORMAT_Y41B:
     case GST_VIDEO_FORMAT_Y42B:
     case GST_VIDEO_FORMAT_Y444:
+      *out_format = GST_GL_RED;
       return DRM_FORMAT_R8;
 
     default:
@@ -423,22 +511,28 @@ _drm_fourcc_from_info (GstVideoInfo * info, int plane)
  * @plane: the plane in @in_info to create and #GstEGLImage for
  * @offset: the byte-offset in the data
  *
+ * Creates an EGL image that imports the dmabuf FD. The dmabuf data
+ * is passed as RGBA data. Shaders later take this "RGBA" data and
+ * convert it from its true format (described by in_info) to actual
+ * RGBA output. For example, with I420, three EGL images are created,
+ * one for each plane, each EGL image with a single-channel R format.
+ * With NV12, two EGL images are created, one with R format, one
+ * with RG format etc.
+ *
  * Returns: a #GstEGLImage wrapping @dmabuf or %NULL on failure
  */
 GstEGLImage *
 gst_egl_image_from_dmabuf (GstGLContext * context,
     gint dmabuf, GstVideoInfo * in_info, gint plane, gsize offset)
 {
-  GstGLFormat format;
+  GstGLFormat format = 0;
   guintptr attribs[13];
   EGLImageKHR img;
   gint atti = 0;
   gint fourcc;
   gint i;
 
-  fourcc = _drm_fourcc_from_info (in_info, plane);
-  format = gst_gl_format_from_video_info (context, in_info, plane);
-
+  fourcc = _drm_rgba_fourcc_from_info (in_info, plane, &format);
   GST_DEBUG ("fourcc %.4s (%d) plane %d (%dx%d)",
       (char *) &fourcc, fourcc, plane,
       GST_VIDEO_INFO_COMP_WIDTH (in_info, plane),
@@ -457,11 +551,10 @@ gst_egl_image_from_dmabuf (GstGLContext * context,
   attribs[atti++] = EGL_DMA_BUF_PLANE0_PITCH_EXT;
   attribs[atti++] = GST_VIDEO_INFO_PLANE_STRIDE (in_info, plane);
   attribs[atti] = EGL_NONE;
+  g_assert (atti == G_N_ELEMENTS (attribs) - 1);
 
   for (i = 0; i < atti; i++)
     GST_LOG ("attr %i: %" G_GINTPTR_FORMAT, i, attribs[i]);
-
-  g_assert (atti == 12);
 
   img = _gst_egl_image_create (context, EGL_LINUX_DMA_BUF_EXT, NULL, attribs);
   if (!img) {
@@ -471,6 +564,373 @@ gst_egl_image_from_dmabuf (GstGLContext * context,
   }
 
   return gst_egl_image_new_wrapped (context, img, format, NULL,
+      (GstEGLImageDestroyNotify) _destroy_egl_image);
+}
+
+/*
+ * Variant of _drm_rgba_fourcc_from_info() that is used in case the GPU can
+ * handle YUV formats directly (by using internal shaders, or hardwired
+ * YUV->RGB conversion matrices etc.)
+ */
+static int
+_drm_direct_fourcc_from_info (GstVideoInfo * info)
+{
+  GstVideoFormat format = GST_VIDEO_INFO_FORMAT (info);
+
+  GST_DEBUG ("Getting DRM fourcc for %s", gst_video_format_to_string (format));
+
+  switch (format) {
+    case GST_VIDEO_FORMAT_YUY2:
+      return DRM_FORMAT_YUYV;
+
+    case GST_VIDEO_FORMAT_YVYU:
+      return DRM_FORMAT_YVYU;
+
+    case GST_VIDEO_FORMAT_UYVY:
+      return DRM_FORMAT_UYVY;
+
+    case GST_VIDEO_FORMAT_VYUY:
+      return DRM_FORMAT_VYUY;
+
+    case GST_VIDEO_FORMAT_AYUV:
+      return DRM_FORMAT_AYUV;
+
+    case GST_VIDEO_FORMAT_NV12:
+      return DRM_FORMAT_NV12;
+
+    case GST_VIDEO_FORMAT_NV21:
+      return DRM_FORMAT_NV21;
+
+    case GST_VIDEO_FORMAT_NV16:
+      return DRM_FORMAT_NV16;
+
+    case GST_VIDEO_FORMAT_NV61:
+      return DRM_FORMAT_NV61;
+
+    case GST_VIDEO_FORMAT_NV24:
+      return DRM_FORMAT_NV24;
+
+    case GST_VIDEO_FORMAT_YUV9:
+      return DRM_FORMAT_YUV410;
+
+    case GST_VIDEO_FORMAT_YVU9:
+      return DRM_FORMAT_YVU410;
+
+    case GST_VIDEO_FORMAT_Y41B:
+      return DRM_FORMAT_YUV411;
+
+    case GST_VIDEO_FORMAT_I420:
+      return DRM_FORMAT_YUV420;
+
+    case GST_VIDEO_FORMAT_YV12:
+      return DRM_FORMAT_YVU420;
+
+    case GST_VIDEO_FORMAT_Y42B:
+      return DRM_FORMAT_YUV422;
+
+    case GST_VIDEO_FORMAT_Y444:
+      return DRM_FORMAT_YUV444;
+
+    case GST_VIDEO_FORMAT_RGB16:
+      return DRM_FORMAT_RGB565;
+
+    case GST_VIDEO_FORMAT_BGR16:
+      return DRM_FORMAT_BGR565;
+
+    case GST_VIDEO_FORMAT_RGBA:
+      return DRM_FORMAT_ABGR8888;
+
+    case GST_VIDEO_FORMAT_RGBx:
+      return DRM_FORMAT_XBGR8888;
+
+    case GST_VIDEO_FORMAT_BGRA:
+      return DRM_FORMAT_ARGB8888;
+
+    case GST_VIDEO_FORMAT_BGRx:
+      return DRM_FORMAT_XRGB8888;
+
+    case GST_VIDEO_FORMAT_ARGB:
+      return DRM_FORMAT_BGRA8888;
+
+    case GST_VIDEO_FORMAT_xRGB:
+      return DRM_FORMAT_BGRX8888;
+
+    case GST_VIDEO_FORMAT_ABGR:
+      return DRM_FORMAT_RGBA8888;
+
+    case GST_VIDEO_FORMAT_xBGR:
+      return DRM_FORMAT_RGBX8888;
+
+    default:
+      GST_INFO ("Unsupported format for direct DMABuf.");
+      return -1;
+  }
+}
+
+static gboolean
+_gst_egl_image_check_dmabuf_direct (GstGLContext * context, int fourcc)
+{
+  EGLDisplay egl_display = EGL_DEFAULT_DISPLAY;
+  GstGLDisplayEGL *display_egl;
+  EGLint *formats;
+  EGLint num_formats;
+  EGLuint64KHR *modifiers;
+  EGLBoolean *external_only;
+  int num_modifiers;
+  gboolean ret;
+  int i;
+
+  EGLBoolean (*gst_eglQueryDmaBufFormatsEXT) (EGLDisplay dpy,
+      EGLint max_formats, EGLint * formats, EGLint * num_formats);
+  EGLBoolean (*gst_eglQueryDmaBufModifiersEXT) (EGLDisplay dpy,
+      int format, int max_modifiers, EGLuint64KHR * modifiers,
+      EGLBoolean * external_only, int *num_modifiers);
+
+  gst_eglQueryDmaBufFormatsEXT =
+      gst_gl_context_get_proc_address (context, "eglQueryDmaBufFormatsEXT");
+  gst_eglQueryDmaBufModifiersEXT =
+      gst_gl_context_get_proc_address (context, "eglQueryDmaBufModifiersEXT");
+
+  if (!gst_eglQueryDmaBufFormatsEXT || !gst_eglQueryDmaBufModifiersEXT)
+    return FALSE;
+
+  display_egl = gst_gl_display_egl_from_gl_display (context->display);
+  if (!display_egl) {
+    GST_WARNING_OBJECT (context,
+        "Failed to retrieve GstGLDisplayEGL from %" GST_PTR_FORMAT,
+        context->display);
+    return FALSE;
+  }
+  egl_display =
+      (EGLDisplay) gst_gl_display_get_handle (GST_GL_DISPLAY (display_egl));
+  gst_object_unref (display_egl);
+
+  ret = gst_eglQueryDmaBufFormatsEXT (egl_display, 0, NULL, &num_formats);
+  if (!ret || num_formats == 0)
+    return FALSE;
+
+  formats = g_new (EGLint, num_formats);
+
+  ret = gst_eglQueryDmaBufFormatsEXT (egl_display, num_formats, formats,
+      &num_formats);
+  if (!ret || num_formats == 0) {
+    g_free (formats);
+    return FALSE;
+  }
+
+  for (i = 0; i < num_formats; i++) {
+    if (formats[i] == fourcc)
+      break;
+  }
+  g_free (formats);
+  if (i == num_formats) {
+    GST_DEBUG ("driver does not support importing fourcc %" GST_FOURCC_FORMAT,
+        GST_FOURCC_ARGS (fourcc));
+    return FALSE;
+  }
+
+  ret = gst_eglQueryDmaBufModifiersEXT (egl_display, fourcc, 0, NULL, NULL,
+      &num_modifiers);
+  if (!ret || num_modifiers == 0) {
+    GST_DEBUG ("driver does not report modifiers for fourcc %"
+        GST_FOURCC_FORMAT, GST_FOURCC_ARGS (fourcc));
+    return FALSE;
+  }
+
+  modifiers = g_new (EGLuint64KHR, num_modifiers);
+  external_only = g_new (EGLBoolean, num_modifiers);
+
+  ret = gst_eglQueryDmaBufModifiersEXT (egl_display, fourcc, num_modifiers,
+      modifiers, external_only, &num_modifiers);
+  if (!ret || num_modifiers == 0) {
+    g_free (modifiers);
+    g_free (external_only);
+    return FALSE;
+  }
+
+  for (i = 0; i < num_modifiers; ++i) {
+    if (modifiers[i] == DRM_FORMAT_MOD_LINEAR) {
+      if (external_only[i]) {
+        GST_DEBUG ("driver only supports external import of fourcc %"
+            GST_FOURCC_FORMAT, GST_FOURCC_ARGS (fourcc));
+      }
+      ret = !external_only[i];
+      g_free (modifiers);
+      g_free (external_only);
+      return ret;
+    }
+  }
+  GST_DEBUG ("driver only supports non-linear import of fourcc %"
+      GST_FOURCC_FORMAT, GST_FOURCC_ARGS (fourcc));
+  g_free (modifiers);
+  g_free (external_only);
+  return FALSE;
+}
+
+/**
+ * gst_egl_image_from_dmabuf_direct:
+ * @context: a #GstGLContext (must be an EGL context)
+ * @fd: Array of DMABuf file descriptors
+ * @offset: Array of offsets, relative to the DMABuf
+ * @in_info: the #GstVideoInfo
+ *
+ * Creates an EGL image that imports the dmabuf FD. The dmabuf data
+ * is passed directly as the format described in in_info. This is
+ * useful if the hardware is capable of performing color space conversions
+ * internally. The appropriate DRM format is picked, and the EGL image
+ * is created with this DRM format.
+ *
+ * Another notable difference to gst_egl_image_from_dmabuf()
+ * is that this function creates one EGL image for all planes, not one for
+ * a single plane.
+ *
+ * Returns: a #GstEGLImage wrapping @dmabuf or %NULL on failure
+ */
+GstEGLImage *
+gst_egl_image_from_dmabuf_direct (GstGLContext * context,
+    gint * fd, gsize * offset, GstVideoInfo * in_info)
+{
+
+  EGLImageKHR img;
+  guint n_planes = GST_VIDEO_INFO_N_PLANES (in_info);
+  gint fourcc;
+  gint i;
+  gboolean with_modifiers;
+
+  /* Explanation of array length:
+   * - 6 plane independent values are at the start (width, height, format FourCC)
+   * - 10 values per plane, and there are up to MAX_NUM_DMA_BUF_PLANES planes
+   * - 4 values for color space and range
+   * - 1 extra value for the EGL_NONE sentinel
+   */
+  guintptr attribs[41];         /* 6 + 10 * 3 + 4 + 1 */
+  gint atti = 0;
+
+  fourcc = _drm_direct_fourcc_from_info (in_info);
+  if (fourcc == -1)
+    return NULL;
+
+  if (!_gst_egl_image_check_dmabuf_direct (context, fourcc))
+    return NULL;
+
+  with_modifiers = gst_gl_context_check_feature (context,
+      "EGL_EXT_image_dma_buf_import_with_modifiers");
+
+  /* EGL DMABuf importation supports a maximum of 3 planes */
+  if (G_UNLIKELY (n_planes > 3))
+    return NULL;
+
+  attribs[atti++] = EGL_WIDTH;
+  attribs[atti++] = GST_VIDEO_INFO_WIDTH (in_info);
+  attribs[atti++] = EGL_HEIGHT;
+  attribs[atti++] = GST_VIDEO_INFO_HEIGHT (in_info);
+  attribs[atti++] = EGL_LINUX_DRM_FOURCC_EXT;
+  attribs[atti++] = fourcc;
+
+  /* first plane */
+  {
+    attribs[atti++] = EGL_DMA_BUF_PLANE0_FD_EXT;
+    attribs[atti++] = fd[0];
+    attribs[atti++] = EGL_DMA_BUF_PLANE0_OFFSET_EXT;
+    attribs[atti++] = offset[0];
+    attribs[atti++] = EGL_DMA_BUF_PLANE0_PITCH_EXT;
+    attribs[atti++] = in_info->stride[0];
+    if (with_modifiers) {
+      attribs[atti++] = EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT;
+      attribs[atti++] = DRM_FORMAT_MOD_LINEAR & 0xffffffff;
+      attribs[atti++] = EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT;
+      attribs[atti++] = (DRM_FORMAT_MOD_LINEAR >> 32) & 0xffffffff;
+    }
+  }
+
+  /* second plane */
+  if (n_planes >= 2) {
+    attribs[atti++] = EGL_DMA_BUF_PLANE1_FD_EXT;
+    attribs[atti++] = fd[1];
+    attribs[atti++] = EGL_DMA_BUF_PLANE1_OFFSET_EXT;
+    attribs[atti++] = offset[1];
+    attribs[atti++] = EGL_DMA_BUF_PLANE1_PITCH_EXT;
+    attribs[atti++] = in_info->stride[1];
+    if (with_modifiers) {
+      attribs[atti++] = EGL_DMA_BUF_PLANE1_MODIFIER_LO_EXT;
+      attribs[atti++] = DRM_FORMAT_MOD_LINEAR & 0xffffffff;
+      attribs[atti++] = EGL_DMA_BUF_PLANE1_MODIFIER_HI_EXT;
+      attribs[atti++] = (DRM_FORMAT_MOD_LINEAR >> 32) & 0xffffffff;
+    }
+  }
+
+  /* third plane */
+  if (n_planes == 3) {
+    attribs[atti++] = EGL_DMA_BUF_PLANE2_FD_EXT;
+    attribs[atti++] = fd[2];
+    attribs[atti++] = EGL_DMA_BUF_PLANE2_OFFSET_EXT;
+    attribs[atti++] = offset[2];
+    attribs[atti++] = EGL_DMA_BUF_PLANE2_PITCH_EXT;
+    attribs[atti++] = in_info->stride[2];
+    if (with_modifiers) {
+      attribs[atti++] = EGL_DMA_BUF_PLANE2_MODIFIER_LO_EXT;
+      attribs[atti++] = DRM_FORMAT_MOD_LINEAR & 0xffffffff;
+      attribs[atti++] = EGL_DMA_BUF_PLANE2_MODIFIER_HI_EXT;
+      attribs[atti++] = (DRM_FORMAT_MOD_LINEAR >> 32) & 0xffffffff;
+    }
+  }
+
+  {
+    uint32_t color_space;
+    switch (in_info->colorimetry.matrix) {
+      case GST_VIDEO_COLOR_MATRIX_BT601:
+        color_space = EGL_ITU_REC601_EXT;
+        break;
+      case GST_VIDEO_COLOR_MATRIX_BT709:
+        color_space = EGL_ITU_REC709_EXT;
+        break;
+      case GST_VIDEO_COLOR_MATRIX_BT2020:
+        color_space = EGL_ITU_REC2020_EXT;
+        break;
+      default:
+        color_space = 0;
+        break;
+    }
+    if (color_space != 0) {
+      attribs[atti++] = EGL_YUV_COLOR_SPACE_HINT_EXT;
+      attribs[atti++] = color_space;
+    }
+  }
+
+  {
+    uint32_t range;
+    switch (in_info->colorimetry.range) {
+      case GST_VIDEO_COLOR_RANGE_0_255:
+        range = EGL_YUV_FULL_RANGE_EXT;
+        break;
+      case GST_VIDEO_COLOR_RANGE_16_235:
+        range = EGL_YUV_NARROW_RANGE_EXT;
+        break;
+      default:
+        range = 0;
+        break;
+    }
+    if (range != 0) {
+      attribs[atti++] = EGL_SAMPLE_RANGE_HINT_EXT;
+      attribs[atti++] = range;
+    }
+  }
+
+  /* Add the EGL_NONE sentinel */
+  attribs[atti] = EGL_NONE;
+  g_assert (atti <= G_N_ELEMENTS (attribs) - 1);
+
+  for (i = 0; i < atti; i++)
+    GST_LOG ("attr %i: %" G_GINTPTR_FORMAT, i, attribs[i]);
+
+  img = _gst_egl_image_create (context, EGL_LINUX_DMA_BUF_EXT, NULL, attribs);
+  if (!img) {
+    GST_WARNING ("eglCreateImage failed: %s",
+        gst_egl_get_error_string (eglGetError ()));
+    return NULL;
+  }
+
+  return gst_egl_image_new_wrapped (context, img, GST_GL_RGBA, NULL,
       (GstEGLImageDestroyNotify) _destroy_egl_image);
 }
 

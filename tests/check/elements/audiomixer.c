@@ -1729,6 +1729,7 @@ change_src_caps (GstElement * fakesink, GstBuffer * buffer, GstPad * pad,
       "rate", G_TYPE_INT, 10, "channels", G_TYPE_INT, 1, NULL);
 
   g_object_set (capsfilter, "caps", caps, NULL);
+  gst_caps_unref (caps);
   g_signal_connect (fakesink, "handoff", (GCallback) handoff_buffer_cb, NULL);
   g_signal_handlers_disconnect_by_func (fakesink, change_src_caps, capsfilter);
 }
@@ -1835,6 +1836,7 @@ GST_START_TEST (test_change_output_caps)
     }
   }
   gst_buffer_unmap (handoff_buffer, &outmap);
+  gst_clear_buffer (&handoff_buffer);
 
   gst_element_release_request_pad (audiomixer, sinkpad);
   gst_object_unref (sinkpad);
@@ -1972,6 +1974,7 @@ GST_START_TEST (test_change_output_caps_mid_output_buffer)
   }
 
   gst_buffer_unmap (handoff_buffer, &outmap);
+  gst_clear_buffer (&handoff_buffer);
 
   gst_element_release_request_pad (audiomixer, sinkpad);
   gst_object_unref (sinkpad);

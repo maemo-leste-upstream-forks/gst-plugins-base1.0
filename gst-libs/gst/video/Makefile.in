@@ -210,6 +210,7 @@ am_libgstvideo_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstvideo_@GST_API_VERSION@_la-colorbalancechannel.lo \
 	libgstvideo_@GST_API_VERSION@_la-navigation.lo \
 	libgstvideo_@GST_API_VERSION@_la-video.lo \
+	libgstvideo_@GST_API_VERSION@_la-video-anc.lo \
 	libgstvideo_@GST_API_VERSION@_la-video-event.lo \
 	libgstvideo_@GST_API_VERSION@_la-video-format.lo \
 	libgstvideo_@GST_API_VERSION@_la-video-chroma.lo \
@@ -220,6 +221,7 @@ am_libgstvideo_@GST_API_VERSION@_la_OBJECTS =  \
 	libgstvideo_@GST_API_VERSION@_la-video-frame.lo \
 	libgstvideo_@GST_API_VERSION@_la-video-scaler.lo \
 	libgstvideo_@GST_API_VERSION@_la-video-tile.lo \
+	libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.lo \
 	libgstvideo_@GST_API_VERSION@_la-gstvideosink.lo \
 	libgstvideo_@GST_API_VERSION@_la-gstvideofilter.lo \
 	libgstvideo_@GST_API_VERSION@_la-convertframe.lo \
@@ -274,6 +276,7 @@ am__depfiles_remade =  \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-colorbalancechannel.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-convertframe.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaffinetransformationmeta.Plo \
+	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideodecoder.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoencoder.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideofilter.Plo \
@@ -285,6 +288,7 @@ am__depfiles_remade =  \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoutilsprivate.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-navigation.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-tmp-orc.Plo \
+	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-anc.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-blend.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-chroma.Plo \
 	./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-color.Plo \
@@ -379,12 +383,6 @@ CCDEPMODE = @CCDEPMODE@
 CDPARANOIA_CFLAGS = @CDPARANOIA_CFLAGS@
 CDPARANOIA_LIBS = @CDPARANOIA_LIBS@
 CFLAGS = @CFLAGS@
-CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
-CLUTTER_GLX_CFLAGS = @CLUTTER_GLX_CFLAGS@
-CLUTTER_GLX_LIBS = @CLUTTER_GLX_LIBS@
-CLUTTER_LIBS = @CLUTTER_LIBS@
-CLUTTER_X11_CFLAGS = @CLUTTER_X11_CFLAGS@
-CLUTTER_X11_LIBS = @CLUTTER_X11_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -503,9 +501,6 @@ GTK_X11_LIBS = @GTK_X11_LIBS@
 G_UDEV_CFLAGS = @G_UDEV_CFLAGS@
 G_UDEV_LIBS = @G_UDEV_LIBS@
 HAVE_CDPARANOIA = @HAVE_CDPARANOIA@
-HAVE_CLUTTER = @HAVE_CLUTTER@
-HAVE_CLUTTER_GLX = @HAVE_CLUTTER_GLX@
-HAVE_CLUTTER_X11 = @HAVE_CLUTTER_X11@
 HAVE_EGL = @HAVE_EGL@
 HAVE_GL = @HAVE_GL@
 HAVE_GLES2 = @HAVE_GLES2@
@@ -611,7 +606,6 @@ QT_LIBS = @QT_LIBS@
 QT_MOC = @QT_MOC@
 RANLIB = @RANLIB@
 SDL_CFLAGS = @SDL_CFLAGS@
-SDL_CLUTTER = @SDL_CLUTTER@
 SDL_LIBS = @SDL_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -638,11 +632,11 @@ WARNING_CXXFLAGS = @WARNING_CXXFLAGS@
 WARNING_OBJCFLAGS = @WARNING_OBJCFLAGS@
 WAYLAND_EGL_CFLAGS = @WAYLAND_EGL_CFLAGS@
 WAYLAND_EGL_LIBS = @WAYLAND_EGL_LIBS@
+WAYLAND_PROTOCOLS_DATADIR = @WAYLAND_PROTOCOLS_DATADIR@
+WAYLAND_SCANNER = @WAYLAND_SCANNER@
 WIN32_LIBS = @WIN32_LIBS@
 X11_XCB_CFLAGS = @X11_XCB_CFLAGS@
 X11_XCB_LIBS = @X11_XCB_LIBS@
-XCOMPOSITE_CFLAGS = @XCOMPOSITE_CFLAGS@
-XCOMPOSITE_LIBS = @XCOMPOSITE_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -734,7 +728,8 @@ cp_v_gen_ = $(cp_v_gen_@AM_DEFAULT_V@)
 cp_v_gen_0 = @echo "  CP     $@";
 glib_enum_headers = video.h video-format.h video-color.h video-info.h video-dither.h \
 			colorbalance.h navigation.h video-chroma.h video-tile.h video-converter.h \
-			video-resampler.h video-frame.h video-scaler.h
+			video-resampler.h video-frame.h video-scaler.h video-anc.h \
+			video-overlay-composition.h
 
 glib_enum_define = GST_VIDEO
 glib_gen_prefix = gst_video
@@ -750,6 +745,7 @@ libgstvideo_@GST_API_VERSION@_la_SOURCES = \
 	colorbalancechannel.c   \
 	navigation.c            \
 	video.c          	\
+	video-anc.c		\
 	video-event.c          	\
 	video-format.c         	\
 	video-chroma.c         	\
@@ -760,6 +756,7 @@ libgstvideo_@GST_API_VERSION@_la_SOURCES = \
 	video-frame.c         	\
 	video-scaler.c          \
 	video-tile.c         	\
+	gstvideoaggregator.c	\
 	gstvideosink.c   	\
 	gstvideofilter.c 	\
 	convertframe.c   	\
@@ -787,6 +784,7 @@ libgstvideo_@GST_API_VERSION@include_HEADERS = \
 	navigation.h            \
 	video.h			\
 	video-prelude.h		\
+	video-anc.h		\
 	video-event.h          	\
 	video-format.h         	\
 	video-chroma.h         	\
@@ -797,6 +795,7 @@ libgstvideo_@GST_API_VERSION@include_HEADERS = \
 	video-frame.h         	\
 	video-scaler.h          \
 	video-tile.h         	\
+	gstvideoaggregator.h	\
 	gstvideosink.h 		\
 	gstvideofilter.h	\
 	gstvideometa.h		\
@@ -817,7 +816,7 @@ libgstvideo_@GST_API_VERSION@include_HEADERS = \
 nodist_libgstvideo_@GST_API_VERSION@include_HEADERS = $(built_headers)
 noinst_HEADERS = gstvideoutilsprivate.h
 libgstvideo_@GST_API_VERSION@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS) \
-					$(ORC_CFLAGS)
+					$(ORC_CFLAGS) -DBUILDING_GST_VIDEO
 
 libgstvideo_@GST_API_VERSION@_la_LIBADD = $(GST_BASE_LIBS) $(GST_LIBS) $(ORC_LIBS) $(LIBM)
 libgstvideo_@GST_API_VERSION@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
@@ -922,6 +921,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-colorbalancechannel.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-convertframe.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaffinetransformationmeta.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideodecoder.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoencoder.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideofilter.Plo@am__quote@ # am--include-marker
@@ -933,6 +933,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoutilsprivate.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-navigation.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-tmp-orc.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-anc.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-blend.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-chroma.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-color.Plo@am__quote@ # am--include-marker
@@ -1011,6 +1012,13 @@ libgstvideo_@GST_API_VERSION@_la-video.lo: video.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstvideo_@GST_API_VERSION@_la-video.lo `test -f 'video.c' || echo '$(srcdir)/'`video.c
 
+libgstvideo_@GST_API_VERSION@_la-video-anc.lo: video-anc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstvideo_@GST_API_VERSION@_la-video-anc.lo -MD -MP -MF $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-anc.Tpo -c -o libgstvideo_@GST_API_VERSION@_la-video-anc.lo `test -f 'video-anc.c' || echo '$(srcdir)/'`video-anc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-anc.Tpo $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-anc.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='video-anc.c' object='libgstvideo_@GST_API_VERSION@_la-video-anc.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstvideo_@GST_API_VERSION@_la-video-anc.lo `test -f 'video-anc.c' || echo '$(srcdir)/'`video-anc.c
+
 libgstvideo_@GST_API_VERSION@_la-video-event.lo: video-event.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstvideo_@GST_API_VERSION@_la-video-event.lo -MD -MP -MF $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-event.Tpo -c -o libgstvideo_@GST_API_VERSION@_la-video-event.lo `test -f 'video-event.c' || echo '$(srcdir)/'`video-event.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-event.Tpo $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-event.Plo
@@ -1080,6 +1088,13 @@ libgstvideo_@GST_API_VERSION@_la-video-tile.lo: video-tile.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='video-tile.c' object='libgstvideo_@GST_API_VERSION@_la-video-tile.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstvideo_@GST_API_VERSION@_la-video-tile.lo `test -f 'video-tile.c' || echo '$(srcdir)/'`video-tile.c
+
+libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.lo: gstvideoaggregator.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.lo -MD -MP -MF $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.Tpo -c -o libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.lo `test -f 'gstvideoaggregator.c' || echo '$(srcdir)/'`gstvideoaggregator.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.Tpo $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gstvideoaggregator.c' object='libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -c -o libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.lo `test -f 'gstvideoaggregator.c' || echo '$(srcdir)/'`gstvideoaggregator.c
 
 libgstvideo_@GST_API_VERSION@_la-gstvideosink.lo: gstvideosink.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstvideo_@GST_API_VERSION@_la_CFLAGS) $(CFLAGS) -MT libgstvideo_@GST_API_VERSION@_la-gstvideosink.lo -MD -MP -MF $(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideosink.Tpo -c -o libgstvideo_@GST_API_VERSION@_la-gstvideosink.lo `test -f 'gstvideosink.c' || echo '$(srcdir)/'`gstvideosink.c
@@ -1450,6 +1465,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-colorbalancechannel.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-convertframe.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaffinetransformationmeta.Plo
+	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideodecoder.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoencoder.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideofilter.Plo
@@ -1461,6 +1477,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoutilsprivate.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-navigation.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-tmp-orc.Plo
+	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-anc.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-blend.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-chroma.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-color.Plo
@@ -1532,6 +1549,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-colorbalancechannel.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-convertframe.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaffinetransformationmeta.Plo
+	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoaggregator.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideodecoder.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoencoder.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideofilter.Plo
@@ -1543,6 +1561,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-gstvideoutilsprivate.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-navigation.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-tmp-orc.Plo
+	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-anc.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-blend.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-chroma.Plo
 	-rm -f ./$(DEPDIR)/libgstvideo_@GST_API_VERSION@_la-video-color.Plo
@@ -1653,7 +1672,7 @@ $(glib_gen_basename)-marshal.h: $(glib_gen_basename)-marshal.list
 	mv $(glib_gen_basename)-marshal.h.tmp $(glib_gen_basename)-marshal.h
 
 $(glib_gen_basename)-marshal.c: $(glib_gen_basename)-marshal.list
-	$(AM_V_GEN)echo "#include \"$(glib_gen_basename)-marshal.h\"" >> $(glib_gen_basename)-marshal.c.tmp && \
+	$(AM_V_GEN)echo "#include \"config.h\"\n#include \"$(glib_gen_basename)-marshal.h\"" >> $(glib_gen_basename)-marshal.c.tmp && \
 	$(GLIB_GENMARSHAL) --body --prefix=$(glib_gen_prefix)_marshal $^ >> $(glib_gen_basename)-marshal.c.tmp && \
 	mv $(glib_gen_basename)-marshal.c.tmp $(glib_gen_basename)-marshal.c
 
@@ -1668,7 +1687,7 @@ $(glib_gen_basename)-enumtypes.h: $(glib_enum_headers)
 $(glib_gen_basename)-enumtypes.c: $(glib_enum_headers)
 	@if test "x$(glib_enum_headers)" = "x"; then echo "ERROR: glib_enum_headers is empty, please fix Makefile"; exit 1; fi
 	$(AM_V_GEN)$(GLIB_MKENUMS) \
-	--fhead "#include \"$(glib_gen_basename)-enumtypes.h\"\n$(enum_headers)" \
+	--fhead "#ifdef HAVE_CONFIG_H\n#include \"config.h\"\n#endif\n\n#include \"$(glib_gen_basename)-enumtypes.h\"\n$(enum_headers)" \
 	--fprod "\n/* enumerations from \"@filename@\" */" \
 	--vhead "GType\n@enum_name@_get_type (void)\n{\n  static volatile gsize g_define_type_id__volatile = 0;\n  if (g_once_init_enter (&g_define_type_id__volatile)) {\n    static const G@Type@Value values[] = {"     \
 	--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
@@ -1700,7 +1719,7 @@ $(glib_gen_basename)-enumtypes.c: $(glib_enum_headers)
 @HAVE_INTROSPECTION_TRUE@		--library=libgstvideo-@GST_API_VERSION@.la \
 @HAVE_INTROSPECTION_TRUE@		--include=Gst-@GST_API_VERSION@ \
 @HAVE_INTROSPECTION_TRUE@		--include=GstBase-@GST_API_VERSION@ \
-@HAVE_INTROSPECTION_TRUE@		--libtool="$(top_builddir)/libtool" \
+@HAVE_INTROSPECTION_TRUE@		--libtool="${LIBTOOL}" \
 @HAVE_INTROSPECTION_TRUE@		--pkg gstreamer-@GST_API_VERSION@ \
 @HAVE_INTROSPECTION_TRUE@		--pkg gstreamer-base-@GST_API_VERSION@ \
 @HAVE_INTROSPECTION_TRUE@		--pkg-export gstreamer-video-@GST_API_VERSION@ \

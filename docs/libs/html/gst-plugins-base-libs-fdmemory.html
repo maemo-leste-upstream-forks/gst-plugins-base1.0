@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-allocators.html" title="Allocators Library">
 <link rel="prev" href="gst-plugins-base-libs-dmabuf.html" title="GstDmaBufAllocator">
-<link rel="next" href="gst-plugins-base-libs-GstPhysMemoryAllocator.html" title="GstPhysMemoryAllocator">
+<link rel="next" href="GstPhysMemoryAllocator.html" title="GstPhysMemoryAllocator">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -15,12 +15,13 @@
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
 <td width="100%" align="left" class="shortcuts">
 <a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
-                  <a href="#gst-plugins-base-libs-fdmemory.description" class="shortcut">Description</a></span>
+                  <a href="#gst-plugins-base-libs-fdmemory.description" class="shortcut">Description</a></span><span id="nav_hierarchy">  <span class="dim">|</span> 
+                  <a href="#gst-plugins-base-libs-fdmemory.object-hierarchy" class="shortcut">Object Hierarchy</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-allocators.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gst-plugins-base-libs-dmabuf.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gst-plugins-base-libs-GstPhysMemoryAllocator.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstPhysMemoryAllocator.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-libs-fdmemory"></a><div class="titlepage"></div>
@@ -45,14 +46,6 @@
 </td>
 <td class="function_name">
 <a class="link" href="gst-plugins-base-libs-fdmemory.html#gst-fd-allocator-alloc" title="gst_fd_allocator_alloc ()">gst_fd_allocator_alloc</a> <span class="c_punctuation">()</span>
-</td>
-</tr>
-<tr>
-<td class="function_type">
-<a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
-</td>
-<td class="function_name">
-<a class="link" href="gst-plugins-base-libs-fdmemory.html#gst-fd-allocator-get-type" title="gst_fd_allocator_get_type ()">gst_fd_allocator_get_type</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -82,7 +75,7 @@
 </tbody>
 </table></div>
 </div>
-<div class="refsect1">
+<a name="GstFdAllocator"></a><div class="refsect1">
 <a name="gst-plugins-base-libs-fdmemory.other"></a><h2>Types and Values</h2>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
@@ -96,8 +89,18 @@
 </table></div>
 </div>
 <div class="refsect1">
+<a name="gst-plugins-base-libs-fdmemory.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstAllocator.html#GstAllocator-struct">GstAllocator</a>
+                <span class="lineart">╰──</span> GstFdAllocator
+                    <span class="lineart">╰──</span> <a class="link" href="gst-plugins-base-libs-dmabuf.html#GstDmaBufAllocator">GstDmaBufAllocator</a>
+</pre>
+</div>
+<div class="refsect1">
 <a name="gst-plugins-base-libs-fdmemory.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/allocators/gstfdmemory.h&gt;
+<pre class="synopsis">#include &lt;gst/allocators/allocators.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -152,16 +155,10 @@ gst_fd_allocator_alloc (<em class="parameter"><code><a href="/usr/share/gtk-doc/
 When the buffer will be released the allocator will close the <em class="parameter"><code>fd</code></em>
 unless
 the <a class="link" href="gst-plugins-base-libs-fdmemory.html#GST-FD-MEMORY-FLAG-DONT-CLOSE:CAPS"><code class="literal">GST_FD_MEMORY_FLAG_DONT_CLOSE</code></a> flag is specified.
-The memory is only mmapped on <code class="function">gst_buffer_mmap()</code> request. </p>
+The memory is only mmapped on <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#gst-buffer-map"><code class="function">gst_buffer_map()</code></a> request. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gst-fd-allocator-get-type"></a><h3>gst_fd_allocator_get_type ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
-gst_fd_allocator_get_type (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -176,7 +173,7 @@ isn't available. Use <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.ht
 usage. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -208,7 +205,7 @@ an fd.</p>
 or -1 when there is no fd on <em class="parameter"><code>mem</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -238,7 +235,7 @@ gst_is_fd_memory (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/g
 has an fd that can be retrieved with
 <a class="link" href="gst-plugins-base-libs-fdmemory.html#gst-fd-memory-get-fd" title="gst_fd_memory_get_fd ()"><code class="function">gst_fd_memory_get_fd()</code></a>.</p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -289,7 +286,7 @@ has an fd that can be retrieved with
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">

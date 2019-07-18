@@ -19,7 +19,7 @@ pbconf.set('PACKAGE_VERSION_MICRO', gst_version_micro)
 pbconf.set('PACKAGE_VERSION_NANO', gst_version_nano)
 gst_pbutils_version_h = configure_file(input : 'gstpluginsbaseversion.h.in',
   output: 'gstpluginsbaseversion.h',
-  install_dir : 'include/gstreamer-1.0/gst/pbutils/',
+  install_dir : join_paths(get_option('includedir'), 'gstreamer-1.0/gst/pbutils'),
   configuration: pbconf)
 
 pbutils_headers = [
@@ -38,27 +38,24 @@ install_headers(pbutils_headers, subdir : 'gstreamer-1.0/gst/pbutils/')
 
 pbutils_mkenum_headers = pbutils_headers
 
-mkenums = find_program('pbutils_mkenum.py')
-gstpbutils_h = custom_target('gstpbutilsenum_h',
-  output : 'pbutils-enumtypes.h',
-  input : pbutils_mkenum_headers,
-  install : true,
-  install_dir : 'include/gstreamer-1.0/gst/pbutils/',
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
-
-gstpbutils_c = custom_target('gstpbutilsenum_c',
-  output : 'pbutils-enumtypes.c',
-  input : pbutils_mkenum_headers,
-  depends : [gstaudio_h, gstvideo_h, gstpbutils_h],
-  command : [mkenums, glib_mkenums, '@OUTPUT@', '@INPUT@'])
+pbutils_enums = gnome.mkenums_simple('pbutils-enumtypes',
+  sources : pbutils_mkenum_headers,
+  body_prefix : '#ifdef HAVE_CONFIG_H\n#include "config.h"\n#endif',
+  header_prefix : '#include <gst/pbutils/pbutils-prelude.h>',
+  decorator : 'GST_PBUTILS_API',
+  install_header: true,
+  install_dir : join_paths(get_option('includedir'), 'gstreamer-1.0/gst/pbutils'))
+gstpbutils_c = pbutils_enums[0]
+gstpbutils_h = pbutils_enums[1]
 
 gstpbutils_deps = [video_dep, audio_dep, tag_dep]
 pbutils = library('gstpbutils-@0@'.format(api_version),
   pbutils_sources, gstpbutils_c, gstpbutils_h,
-  c_args : gst_plugins_base_args,
+  c_args : gst_plugins_base_args + ['-DBUILDING_GST_PBUTILS'],
   include_directories: [configinc, libsinc],
   version : libversion,
   soversion : soversion,
+  darwin_versions : osxversion,
   install : true,
   dependencies : gstpbutils_deps,
 )

@@ -39,6 +39,9 @@ GST_DEBUG_CATEGORY_STATIC (gst_gl_display_debug);
 #ifndef EGL_PLATFORM_WAYLAND
 #define EGL_PLATFORM_WAYLAND 0x31D8
 #endif
+#ifndef EGL_PLATFORM_GBM_MESA
+#define EGL_PLATFORM_GBM_MESA 0x31D7
+#endif
 #ifndef EGL_PLATFORM_ANDROID
 #define EGL_PLATFORM_ANDROID 0x3141
 #endif
@@ -153,7 +156,7 @@ gst_gl_display_egl_get_from_native (GstGLDisplayType type, guintptr display)
 #if GST_GL_HAVE_WINDOW_GBM
   if (ret == EGL_NO_DISPLAY && (type & GST_GL_DISPLAY_TYPE_GBM) &&
       (gst_gl_check_extension ("EGL_MESA_platform_gbm", egl_exts) ||
-          gst_gl_check_extension ("EGL_MESA_platform_gbm", egl_exts))) {
+          gst_gl_check_extension ("EGL_KHR_platform_gbm", egl_exts))) {
     ret = _gst_eglGetPlatformDisplay (EGL_PLATFORM_GBM_MESA, (gpointer) display,
         NULL);
   }

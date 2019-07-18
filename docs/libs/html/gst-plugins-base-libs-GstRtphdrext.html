@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-rtp.html" title="RTP Library">
 <link rel="prev" href="gst-plugins-base-libs-GstRTPPayloadInfo.html" title="GstRTPPayloadInfo">
-<link rel="next" href="gstreamer-rtsp.html" title="RTSP Library">
+<link rel="next" href="gst-plugins-base-libs-GstRTPdefs.html" title="GstRTPdefs">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -20,7 +20,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-rtp.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gst-plugins-base-libs-GstRTPPayloadInfo.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-rtsp.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="gst-plugins-base-libs-GstRTPdefs.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gst-plugins-base-libs-GstRtphdrext"></a><div class="titlepage"></div>
@@ -75,8 +75,39 @@
 </table></div>
 </div>
 <div class="refsect1">
+<a name="gst-plugins-base-libs-GstRtphdrext.other"></a><h2>Types and Values</h2>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="name">
+<col class="description">
+</colgroup>
+<tbody>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstRtphdrext.html#GST-RTP-HDREXT-BASE:CAPS" title="GST_RTP_HDREXT_BASE">GST_RTP_HDREXT_BASE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstRtphdrext.html#GST-RTP-HDREXT-NTP-56:CAPS" title="GST_RTP_HDREXT_NTP_56">GST_RTP_HDREXT_NTP_56</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstRtphdrext.html#GST-RTP-HDREXT-NTP-56-SIZE:CAPS" title="GST_RTP_HDREXT_NTP_56_SIZE">GST_RTP_HDREXT_NTP_56_SIZE</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstRtphdrext.html#GST-RTP-HDREXT-NTP-64:CAPS" title="GST_RTP_HDREXT_NTP_64">GST_RTP_HDREXT_NTP_64</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gst-plugins-base-libs-GstRtphdrext.html#GST-RTP-HDREXT-NTP-64-SIZE:CAPS" title="GST_RTP_HDREXT_NTP_64_SIZE">GST_RTP_HDREXT_NTP_64_SIZE</a></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
 <a name="gst-plugins-base-libs-GstRtphdrext.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/rtp/gstrtphdrext.h&gt;
+<pre class="synopsis">#include &lt;gst/rtp/rtp.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -183,7 +214,7 @@ gst_rtp_hdrext_set_ntp_56 (<em class="parameter"><code><a href="/usr/share/gtk-d
 <p>Writes the NTP time in <em class="parameter"><code>ntptime</code></em>
  to the format required for the NTP-56 header
 extension. <em class="parameter"><code>data</code></em>
- must hold at least <span class="type">GST_RTP_HDREXT_NTP_56_SIZE</span> bytes.</p>
+ must hold at least <a class="link" href="gst-plugins-base-libs-GstRtphdrext.html#GST-RTP-HDREXT-NTP-56-SIZE:CAPS" title="GST_RTP_HDREXT_NTP_56_SIZE"><span class="type">GST_RTP_HDREXT_NTP_56_SIZE</span></a> bytes.</p>
 <div class="refsect3">
 <a name="gst-rtp-hdrext-set-ntp-56.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -227,7 +258,7 @@ gst_rtp_hdrext_set_ntp_64 (<em class="parameter"><code><a href="/usr/share/gtk-d
 <p>Writes the NTP time in <em class="parameter"><code>ntptime</code></em>
  to the format required for the NTP-64 header
 extension. <em class="parameter"><code>data</code></em>
- must hold at least <span class="type">GST_RTP_HDREXT_NTP_64_SIZE</span> bytes.</p>
+ must hold at least <a class="link" href="gst-plugins-base-libs-GstRtphdrext.html#GST-RTP-HDREXT-NTP-64-SIZE:CAPS" title="GST_RTP_HDREXT_NTP_64_SIZE"><span class="type">GST_RTP_HDREXT_NTP_64_SIZE</span></a> bytes.</p>
 <div class="refsect3">
 <a name="gst-rtp-hdrext-set-ntp-64.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -264,6 +295,35 @@ extension. <em class="parameter"><code>data</code></em>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstRtphdrext.other_details"></a><h2>Types and Values</h2>
+<div class="refsect2">
+<a name="GST-RTP-HDREXT-BASE:CAPS"></a><h3>GST_RTP_HDREXT_BASE</h3>
+<pre class="programlisting">#define GST_RTP_HDREXT_BASE "urn:ietf:params:rtp-hdrext:"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-RTP-HDREXT-NTP-56:CAPS"></a><h3>GST_RTP_HDREXT_NTP_56</h3>
+<pre class="programlisting">#define GST_RTP_HDREXT_NTP_56 "ntp-56"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-RTP-HDREXT-NTP-56-SIZE:CAPS"></a><h3>GST_RTP_HDREXT_NTP_56_SIZE</h3>
+<pre class="programlisting">#define GST_RTP_HDREXT_NTP_56_SIZE 7
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-RTP-HDREXT-NTP-64:CAPS"></a><h3>GST_RTP_HDREXT_NTP_64</h3>
+<pre class="programlisting">#define GST_RTP_HDREXT_NTP_64 "ntp-64"
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-RTP-HDREXT-NTP-64-SIZE:CAPS"></a><h3>GST_RTP_HDREXT_NTP_64_SIZE</h3>
+<pre class="programlisting">#define GST_RTP_HDREXT_NTP_64_SIZE 8
+</pre>
+</div>
 </div>
 <div class="refsect1">
 <a name="gst-plugins-base-libs-GstRtphdrext.see-also"></a><h2>See Also</h2>

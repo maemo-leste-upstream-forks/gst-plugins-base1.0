@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base 0.10.29.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2018-10-02 22:58+0100\n"
+"POT-Creation-Date: 2019-04-19 00:20+0100\n"
 "PO-Revision-Date: 2010-08-16 01:21+0300\n"
 "Last-Translator: Lucian Adrian Grijincu <lucian.grijincu@gmail.com>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -232,6 +232,12 @@ msgstr "Format subtitrare Sami"
 
 msgid "TMPlayer subtitle format"
 msgstr "Format subtitrare TMPlayer"
+
+msgid "CEA 608 Closed Caption"
+msgstr ""
+
+msgid "CEA 708 Closed Caption"
+msgstr ""
 
 msgid "Kate subtitle format"
 msgstr "Format subtitrare Kate"
@@ -673,6 +679,11 @@ msgid "Use playbin3 pipeline"
 msgstr ""
 
 msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
+msgstr ""
+
+msgid ""
+"Keep showing the last frame on EOS until quit or playlist change command "
+"(gapless is ignored)"
 msgstr ""
 
 #, c-format

@@ -54,6 +54,10 @@ gst_gl_upload_element_prepare_output_buffer (GstBaseTransform * bt,
 static GstFlowReturn gst_gl_upload_element_transform (GstBaseTransform * bt,
     GstBuffer * buffer, GstBuffer * outbuf);
 static gboolean gst_gl_upload_element_stop (GstBaseTransform * bt);
+static GstStateChangeReturn
+gst_gl_upload_element_change_state (GstElement * element,
+    GstStateChange transition);
+
 
 static GstStaticPadTemplate gst_gl_upload_element_src_pad_template =
 GST_STATIC_PAD_TEMPLATE ("src",
@@ -93,6 +97,8 @@ gst_gl_upload_element_class_init (GstGLUploadElementClass * klass)
 
   bt_class->passthrough_on_same_caps = TRUE;
 
+  element_class->change_state = gst_gl_upload_element_change_state;
+
   gst_element_class_add_static_pad_template (element_class,
       &gst_gl_upload_element_src_pad_template);
 
@@ -124,9 +130,6 @@ gst_gl_upload_element_stop (GstBaseTransform * bt)
     upload->upload = NULL;
   }
 
-  gst_caps_replace (&upload->in_caps, NULL);
-  gst_caps_replace (&upload->out_caps, NULL);
-
   return GST_BASE_TRANSFORM_CLASS (parent_class)->stop (bt);
 }
 
@@ -148,11 +151,16 @@ static GstCaps *
 _gst_gl_upload_element_transform_caps (GstBaseTransform * bt,
     GstPadDirection direction, GstCaps * caps, GstCaps * filter)
 {
+  GstGLBaseFilter *base_filter = GST_GL_BASE_FILTER (bt);
   GstGLUploadElement *upload = GST_GL_UPLOAD_ELEMENT (bt);
-  GstGLContext *context = GST_GL_BASE_FILTER (bt)->context;
+  GstGLContext *context;
 
+  if (base_filter->display && !gst_gl_base_filter_find_gl_context (base_filter))
+    return NULL;
+
+  context = GST_GL_BASE_FILTER (bt)->context;
   if (upload->upload == NULL)
-    upload->upload = gst_gl_upload_new (NULL);
+    upload->upload = gst_gl_upload_new (context);
 
   return gst_gl_upload_transform_caps (upload->upload, context, direction, caps,
       filter);
@@ -171,10 +179,15 @@ _gst_gl_upload_element_propose_allocation (GstBaseTransform * bt,
     GstQuery * decide_query, GstQuery * query)
 {
   GstGLUploadElement *upload = GST_GL_UPLOAD_ELEMENT (bt);
+  GstGLContext *context = GST_GL_BASE_FILTER (bt)->context;
   gboolean ret;
 
   if (!upload->upload)
     return FALSE;
+  if (!context)
+    return FALSE;
+
+  gst_gl_upload_set_context (upload->upload, context);
 
   ret = GST_BASE_TRANSFORM_CLASS (parent_class)->propose_allocation (bt,
       decide_query, query);
@@ -188,22 +201,14 @@ _gst_gl_upload_element_decide_allocation (GstBaseTransform * trans,
     GstQuery * query)
 {
   GstGLUploadElement *upload = GST_GL_UPLOAD_ELEMENT (trans);
-  GstGLContext *context;
-  gboolean ret;
+  GstGLContext *context = GST_GL_BASE_FILTER (trans)->context;
 
-  ret =
+  if (upload->upload && context)
+    gst_gl_upload_set_context (upload->upload, context);
+
+  return
       GST_BASE_TRANSFORM_CLASS
       (gst_gl_upload_element_parent_class)->decide_allocation (trans, query);
-  if (!ret)
-    return FALSE;
-
-  /* GstGLBaseFilter populates ->context in ::decide_allocation so now it's the
-   * time to set the ->upload context */
-  context = GST_GL_BASE_FILTER (trans)->context;
-  gst_gl_upload_set_context (upload->upload, context);
-
-  return gst_gl_upload_set_caps (upload->upload, upload->in_caps,
-      upload->out_caps);
 }
 
 static gboolean
@@ -212,13 +217,7 @@ _gst_gl_upload_element_set_caps (GstBaseTransform * bt, GstCaps * in_caps,
 {
   GstGLUploadElement *upload = GST_GL_UPLOAD_ELEMENT (bt);
 
-  gst_caps_replace (&upload->in_caps, in_caps);
-  gst_caps_replace (&upload->out_caps, out_caps);
-
-  if (upload->upload)
-    return gst_gl_upload_set_caps (upload->upload, in_caps, out_caps);
-
-  return TRUE;
+  return gst_gl_upload_set_caps (upload->upload, in_caps, out_caps);
 }
 
 GstFlowReturn
@@ -239,9 +238,22 @@ gst_gl_upload_element_prepare_output_buffer (GstBaseTransform * bt,
   if (!upload->upload)
     return GST_FLOW_NOT_NEGOTIATED;
 
+again:
   ret = gst_gl_upload_perform_with_buffer (upload->upload, buffer, outbuf);
   if (ret == GST_GL_UPLOAD_RECONFIGURE) {
-    gst_base_transform_reconfigure_src (bt);
+    GstPad *sinkpad = GST_BASE_TRANSFORM_SINK_PAD (bt);
+    GstCaps *incaps = gst_pad_get_current_caps (sinkpad);
+    GST_DEBUG_OBJECT (bt,
+        "Failed to upload with curren caps -- reconfiguring.");
+    /* Note: gst_base_transform_reconfigure_src() cannot be used here.
+     * Reconfiguring must be synchronous to avoid dropping the current
+     * buffer */
+    gst_pad_send_event (sinkpad, gst_event_new_caps (incaps));
+    gst_caps_unref (incaps);
+    if (!gst_pad_needs_reconfigure (GST_BASE_TRANSFORM_SRC_PAD (bt))) {
+      GST_DEBUG_OBJECT (bt, "Retry uploading with new caps");
+      goto again;
+    }
     return GST_FLOW_OK;
   }
 
@@ -267,4 +279,33 @@ gst_gl_upload_element_transform (GstBaseTransform * bt, GstBuffer * buffer,
     GstBuffer * outbuf)
 {
   return GST_FLOW_OK;
+}
+
+static GstStateChangeReturn
+gst_gl_upload_element_change_state (GstElement * element,
+    GstStateChange transition)
+{
+  GstGLUploadElement *upload = GST_GL_UPLOAD_ELEMENT (element);
+  GstStateChangeReturn ret = GST_STATE_CHANGE_SUCCESS;
+
+  GST_DEBUG_OBJECT (upload, "changing state: %s => %s",
+      gst_element_state_get_name (GST_STATE_TRANSITION_CURRENT (transition)),
+      gst_element_state_get_name (GST_STATE_TRANSITION_NEXT (transition)));
+
+  ret = GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
+  if (ret == GST_STATE_CHANGE_FAILURE)
+    return ret;
+
+  switch (transition) {
+    case GST_STATE_CHANGE_READY_TO_NULL:
+      if (upload->upload) {
+        gst_object_unref (upload->upload);
+        upload->upload = NULL;
+      }
+      break;
+    default:
+      break;
+  }
+
+  return ret;
 }

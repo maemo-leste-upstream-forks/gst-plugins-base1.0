@@ -96,14 +96,11 @@ struct _GstGLViewConvertPrivate
   GLuint attr_texture;
 };
 
-#define GST_GL_VIEW_CONVERT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), \
-    GST_TYPE_GL_VIEW_CONVERT, GstGLViewConvertPrivate))
-
 #define DEBUG_INIT \
   GST_DEBUG_CATEGORY_INIT (gst_gl_view_convert_debug, "glviewconvert", 0, "glviewconvert object");
 
 G_DEFINE_TYPE_WITH_CODE (GstGLViewConvert, gst_gl_view_convert,
-    GST_TYPE_OBJECT, DEBUG_INIT);
+    GST_TYPE_OBJECT, G_ADD_PRIVATE (GstGLViewConvert) DEBUG_INIT);
 
 static void gst_gl_view_convert_set_property (GObject * object,
     guint prop_id, const GValue * value, GParamSpec * pspec);
@@ -113,28 +110,6 @@ static void gst_gl_view_convert_finalize (GObject * object);
 
 static void _do_view_convert (GstGLContext * context,
     GstGLViewConvert * viewconvert);
-
-GType
-gst_gl_stereo_downmix_mode_get_type (void)
-{
-  static volatile gsize g_define_type_id__volatile = 0;
-  if (g_once_init_enter (&g_define_type_id__volatile)) {
-    static const GEnumValue values[] = {
-      {GST_GL_STEREO_DOWNMIX_ANAGLYPH_GREEN_MAGENTA_DUBOIS,
-          "Dubois optimised Green-Magenta anaglyph", "green-magenta-dubois"},
-      {GST_GL_STEREO_DOWNMIX_ANAGLYPH_RED_CYAN_DUBOIS,
-            "Dubois optimised Red-Cyan anaglyph",
-          "red-cyan-dubois"},
-      {GST_GL_STEREO_DOWNMIX_ANAGLYPH_AMBER_BLUE_DUBOIS,
-          "Dubois optimised Amber-Blue anaglyph", "amber-blue-dubois"},
-      {0, NULL, NULL}
-    };
-    GType g_define_type_id =
-        g_enum_register_static ("GstGLStereoDownmix", values);
-    g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
-  }
-  return g_define_type_id__volatile;
-}
 
 /* *INDENT-OFF* */
 /* These match the order and number of DOWNMIX_ANAGLYPH_* modes */
@@ -166,9 +141,6 @@ static gfloat identity_matrix[] = {
 
 /* *INDENT-OFF* */
 static const gchar *fragment_header =
-  "#ifdef GL_ES\n"
-  "precision mediump float;\n"
-  "#endif\n"
   "uniform sampler2D tex_l;\n"
   "uniform sampler2D tex_r;\n"
   "uniform float width;\n"
@@ -255,8 +227,6 @@ gst_gl_view_convert_class_init (GstGLViewConvertClass * klass)
 {
   GObjectClass *gobject_class = (GObjectClass *) klass;
 
-  g_type_class_add_private (klass, sizeof (GstGLViewConvertPrivate));
-
   gobject_class->set_property = gst_gl_view_convert_set_property;
   gobject_class->get_property = gst_gl_view_convert_get_property;
   gobject_class->finalize = gst_gl_view_convert_finalize;
@@ -289,14 +259,14 @@ gst_gl_view_convert_class_init (GstGLViewConvertClass * klass)
   g_object_class_install_property (gobject_class, PROP_OUTPUT_DOWNMIX_MODE,
       g_param_spec_enum ("downmix-mode", "Mode for mono downmixed output",
           "Output anaglyph type to generate when downmixing to mono",
-          GST_TYPE_GL_STEREO_DOWNMIX_MODE_TYPE, DEFAULT_DOWNMIX,
+          GST_TYPE_GL_STEREO_DOWNMIX, DEFAULT_DOWNMIX,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
 static void
 gst_gl_view_convert_init (GstGLViewConvert * convert)
 {
-  convert->priv = GST_GL_VIEW_CONVERT_GET_PRIVATE (convert);
+  convert->priv = gst_gl_view_convert_get_instance_private (convert);
 
   convert->shader = NULL;
   convert->downmix_mode = DEFAULT_DOWNMIX;
@@ -1077,7 +1047,7 @@ _intersect_with_mview_modes (GstCaps * caps, const GValue * modes)
  * @caps: (transfer none): the #GstCaps to transform
  * @filter: (transfer none): a set of filter #GstCaps
  *
- * Provides an implementation of #GstBaseTransformClass::transform_caps()
+ * Provides an implementation of #GstBaseTransformClass.transform_caps()
  *
  * Returns: (transfer full): the converted #GstCaps
  *
@@ -1267,7 +1237,7 @@ _fixate_texture_target (GstGLViewConvert * viewconvert,
  * @caps: (transfer none): the #GstCaps of @direction
  * @othercaps: (transfer full): the #GstCaps to fixate
  *
- * Provides an implementation of #GstBaseTransformClass::fixate_caps()
+ * Provides an implementation of #GstBaseTransformClass.fixate_caps()
  *
  * Returns: (transfer full): the fixated #GstCaps
  *
@@ -1543,6 +1513,9 @@ _get_shader_string (GstGLViewConvert * viewconvert, GstGLShader * shader,
   if (viewconvert->from_texture_target == GST_GL_TEXTURE_TARGET_EXTERNAL_OES)
     g_string_append (str, glsl_OES_extension_string);
 
+  g_string_append (str,
+      gst_gl_shader_string_get_highest_precision (viewconvert->context, version,
+          profile));
   g_string_append (str, fragment_header);
 
   /* GL 3.3+ and GL ES 3.x */
@@ -1877,7 +1850,6 @@ _do_view_convert_draw (GstGLContext * context, GstGLViewConvert * viewconvert)
   GstGLFuncs *gl;
   guint out_width, out_height;
   gint out_views, i;
-  GLint viewport_dim[4] = { 0 };
   GLenum multipleRT[] = {
     GL_COLOR_ATTACHMENT0,
     GL_COLOR_ATTACHMENT1,
@@ -1913,7 +1885,6 @@ _do_view_convert_draw (GstGLContext * context, GstGLViewConvert * viewconvert)
 
   gst_gl_framebuffer_get_effective_dimensions (viewconvert->fbo, &out_width,
       &out_height);
-  gl->GetIntegerv (GL_VIEWPORT, viewport_dim);
   gl->Viewport (0, 0, out_width, out_height);
 
   gst_gl_shader_use (viewconvert->shader);
@@ -1948,17 +1919,19 @@ _do_view_convert_draw (GstGLContext * context, GstGLViewConvert * viewconvert)
   gl->ActiveTexture (GL_TEXTURE0);
   gl->BindTexture (from_gl_target, priv->in_tex[0]->tex_id);
 
+  gl->ClearColor (0.0, 0.0, 0.0, 1.0);
+  gl->Clear (GL_COLOR_BUFFER_BIT);
+
   gl->DrawElements (GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, NULL);
 
   if (gl->BindVertexArray)
     gl->BindVertexArray (0);
-  _unbind_buffer (viewconvert);
+  else
+    _unbind_buffer (viewconvert);
   if (gl->DrawBuffer)
     gl->DrawBuffer (GL_COLOR_ATTACHMENT0);
   /* we are done with the shader */
   gst_gl_context_clear_shader (context);
-  gl->Viewport (viewport_dim[0], viewport_dim[1], viewport_dim[2],
-      viewport_dim[3]);
   gst_gl_context_clear_framebuffer (context);
 
   return TRUE;
@@ -2417,3 +2390,15 @@ done:
   *outbuf_ptr = outbuf;
   return ret;
 }
+
+#ifndef GST_REMOVE_DEPRECATED
+#ifdef GST_DISABLE_DEPRECATED
+GST_GL_API GType gst_gl_stereo_downmix_mode_get_type (void);
+#endif
+
+GType
+gst_gl_stereo_downmix_mode_get_type (void)
+{
+  return gst_gl_stereo_downmix_get_type ();
+}
+#endif

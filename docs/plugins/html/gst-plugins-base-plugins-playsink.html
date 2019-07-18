@@ -128,6 +128,11 @@
 <td class="property_name"><a class="link" href="gst-plugins-base-plugins-playsink.html#GstPlaySink--video-filter" title="The “video-filter” property">video-filter</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
+<tr>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a></td>
+<td class="property_name"><a class="link" href="gst-plugins-base-plugins-playsink.html#GstPlaySink--text-offset" title="The “text-offset” property">text-offset</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -188,7 +193,7 @@ GstPlaySink implements
 <div class="refsynopsisdiv">
 <h2>Synopsis</h2>
 <div class="refsect2">
-<a name="id-1.2.78.9.2.1"></a><h3>Element Information</h3>
+<a name="id-1.2.85.9.2.1"></a><h3>Element Information</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -214,7 +219,7 @@ GstPlaySink implements
 </div>
 <hr>
 <div class="refsect2">
-<a name="id-1.2.78.9.2.2"></a><h3>Element Pads</h3>
+<a name="id-1.2.85.9.2.2"></a><h3>Element Pads</h3>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
 <col align="left" valign="top">
@@ -474,6 +479,16 @@ unless GST_PLAY_FLAG_FORCE_FILTERS is set. playsink must be in
 unless GST_PLAY_FLAG_FORCE_FILTERS is set. playsink must be in
 <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a></p>
 <p>Flags: Read / Write</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstPlaySink--text-offset"></a><h3>The <code class="literal">“text-offset”</code> property</h3>
+<pre class="programlisting">  “text-offset”              <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a></pre>
+<p>Control the synchronisation offset between the text and video streams.
+Positive values make the text ahead of the video and negative values make
+the text go behind the video.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: 0</p>
 </div>
 </div>
 <div class="refsect1">

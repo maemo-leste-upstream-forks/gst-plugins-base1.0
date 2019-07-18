@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Base Plugins 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-audio.html" title="Audio Library">
-<link rel="prev" href="gst-plugins-base-libs-GstAudioDownmixMeta.html" title="GstAudioDownmixMeta">
+<link rel="prev" href="gst-plugins-base-libs-GstAudio-meta.html" title="GstAudio meta">
 <link rel="next" href="GstAudioCdSrc.html" title="GstAudioCdSrc">
 <meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -21,7 +21,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-audio.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gst-plugins-base-libs-GstAudioDownmixMeta.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gst-plugins-base-libs-GstAudio-meta.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstAudioCdSrc.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -149,7 +149,7 @@ on its sink pads, based on the format expected downstream: in order
 to enable that behaviour, the GType of the sink pads must either be
 a (subclass of) <a class="link" href="GstAudioAggregator.html#GstAudioAggregatorConvertPad"><span class="type">GstAudioAggregatorConvertPad</span></a> to use the default
 <a class="link" href="gst-plugins-base-libs-GstAudioConverter.html#GstAudioConverter" title="GstAudioConverter"><span class="type">GstAudioConverter</span></a> implementation, or a subclass of <a class="link" href="GstAudioAggregator.html#GstAudioAggregatorPad"><span class="type">GstAudioAggregatorPad</span></a>
-implementing <span class="type">GstAudioAggregatorPad.convert_buffer</span>.</p>
+implementing <a class="link" href="GstAudioAggregator.html#GstAudioAggregatorPadClass.convert-buffer"><span class="type">GstAudioAggregatorPadClass.convert_buffer</span></a>.</p>
 <p>To allow for the output caps to change, the mechanism is the same as
 above, with the GType of the source pad.</p>
 <p>See <a href="/usr/share/gtk-doc/html/gst-plugins-base-plugins-1.0/gst-plugins-base-plugins-audiomixer.html#GstAudioMixer-struct"><span class="type">GstAudioMixer</span></a> for an example.</p>
@@ -179,7 +179,10 @@ gst_audio_aggregator_set_sink_caps (<em class="parameter"><code><a class="link" 
 <a name="GstAudioAggregator.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="GstAudioAggregator-struct"></a><h3>struct GstAudioAggregator</h3>
-<pre class="programlisting">struct GstAudioAggregator;</pre>
+<pre class="programlisting">struct GstAudioAggregator {
+  GstCaps                   *current_caps;
+};
+</pre>
 <p>GstAudioAggregator object</p>
 <div class="refsect3">
 <a name="GstAudioAggregator.members"></a><h4>Members</h4>
@@ -189,7 +192,11 @@ gst_audio_aggregator_set_sink_caps (<em class="parameter"><code><a class="link" 
 <col class="struct_members_description">
 <col width="200px" class="struct_members_annotations">
 </colgroup>
-<tbody></tbody>
+<tbody><tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *<em class="structfield"><code><a name="GstAudioAggregator-struct.current-caps"></a>current_caps</code></em>;</p></td>
+<td class="struct_member_description"><p>The caps set by the subclass</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
 </table></div>
 </div>
 </div>
@@ -235,7 +242,11 @@ any non-silence was added to the buffer</p></td>
 <hr>
 <div class="refsect2">
 <a name="GstAudioAggregatorPad-struct"></a><h3>struct GstAudioAggregatorPad</h3>
-<pre class="programlisting">struct GstAudioAggregatorPad;</pre>
+<pre class="programlisting">struct GstAudioAggregatorPad {
+  /* read-only, with OBJECT_LOCK */
+  GstAudioInfo                      info;
+};
+</pre>
 <p>The default implementation of GstPad used with <a class="link" href="GstAudioAggregator.html" title="GstAudioAggregator"><span class="type">GstAudioAggregator</span></a></p>
 <div class="refsect3">
 <a name="GstAudioAggregatorPad.members"></a><h4>Members</h4>
@@ -245,7 +256,11 @@ any non-silence was added to the buffer</p></td>
 <col class="struct_members_description">
 <col width="200px" class="struct_members_annotations">
 </colgroup>
-<tbody></tbody>
+<tbody><tr>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> <em class="structfield"><code><a name="GstAudioAggregatorPad-struct.info"></a>info</code></em>;</p></td>
+<td class="struct_member_description"><p>The audio info for this pad set from the incoming caps</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
 </table></div>
 </div>
 </div>
@@ -293,17 +308,6 @@ formats have changed.</p></td>
 <pre class="programlisting">struct GstAudioAggregatorConvertPad;</pre>
 <p>An implementation of GstPad that can be used with <a class="link" href="GstAudioAggregator.html" title="GstAudioAggregator"><span class="type">GstAudioAggregator</span></a>.</p>
 <p>See <a class="link" href="GstAudioAggregator.html" title="GstAudioAggregator"><span class="type">GstAudioAggregator</span></a> for more details.</p>
-<div class="refsect3">
-<a name="GstAudioAggregatorConvertPad.members"></a><h4>Members</h4>
-<div class="informaltable"><table class="informaltable" width="100%" border="0">
-<colgroup>
-<col width="300px" class="struct_members_name">
-<col class="struct_members_description">
-<col width="200px" class="struct_members_annotations">
-</colgroup>
-<tbody></tbody>
-</table></div>
-</div>
 </div>
 <hr>
 <div class="refsect2">

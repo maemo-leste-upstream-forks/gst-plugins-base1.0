@@ -348,7 +348,7 @@
 </div>
 <div class="refsect1">
 <a name="GstAudioRingBuffer.includes"></a><h2>Includes</h2>
-<pre class="synopsis">#include &lt;gst/audio/gstaudioringbuffer.h&gt;
+<pre class="synopsis">#include &lt;gst/audio/audio.h&gt;
 </pre>
 </div>
 <div class="refsect1">
@@ -516,7 +516,7 @@ is no longer needed</p></td>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix04.html#api-index-1.12">1.12</a></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.12">1.12</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1465,7 +1465,6 @@ gst_audio_ring_buffer_set_timestamp (<em class="parameter"><code><a class="link"
   gboolean                    acquired;
   guint8                     *memory;
   gsize                       size;
-  GstClockTime               *timestamps;
   GstAudioRingBufferSpec      spec;
   gint                        samples_per_seg;
   guint8                     *empty_seg;
@@ -1510,11 +1509,6 @@ gst_audio_ring_buffer_set_timestamp (<em class="parameter"><code><a class="link"
 <td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstAudioRingBuffer-struct.size"></a>size</code></em>;</p></td>
 <td class="struct_member_description"><p>size of data in the ringbuffer</p></td>
 <td class="struct_member_annotations"> </td>
-</tr>
-<tr>
-<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> *<em class="structfield"><code><a name="GstAudioRingBuffer-struct.timestamps"></a>timestamps</code></em>;</p></td>
-<td> </td>
-<td> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><a class="link" href="GstAudioRingBuffer.html#GstAudioRingBufferSpec" title="struct GstAudioRingBufferSpec"><span class="type">GstAudioRingBufferSpec</span></a> <em class="structfield"><code><a name="GstAudioRingBuffer-struct.spec"></a>spec</code></em>;</p></td>
@@ -1709,8 +1703,8 @@ consumed segments in the device.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a> <em class="structfield"><code><a name="GstAudioRingBufferSpec.info"></a>info</code></em>;</p></td>
-<td class="struct_member_description"><p>the <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo" title="struct GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a> <em class="structfield"><code><a name="GstAudioRingBufferSpec.info"></a>info</code></em>;</p></td>
+<td class="struct_member_description"><p>the <a class="link" href="gst-plugins-base-libs-GstAudio.html#GstAudioInfo"><span class="type">GstAudioInfo</span></a></p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>

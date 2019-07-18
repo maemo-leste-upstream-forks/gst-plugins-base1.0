@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base 1.2.1\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2018-10-02 22:58+0100\n"
+"POT-Creation-Date: 2019-04-19 00:20+0100\n"
 "PO-Revision-Date: 2014-04-20 16:15+0300\n"
 "Last-Translator: Rihards Prieditis <rprieditis@gmail.com>\n"
 "Language-Team: Latvian <translation-team-lv@lists.sourceforge.net>\n"
@@ -233,6 +233,12 @@ msgstr "Sami subtitru formāts"
 
 msgid "TMPlayer subtitle format"
 msgstr "TMPlayer subtitru formāts"
+
+msgid "CEA 608 Closed Caption"
+msgstr ""
+
+msgid "CEA 708 Closed Caption"
+msgstr ""
 
 msgid "Kate subtitle format"
 msgstr "Kate subtitru formāts"
@@ -673,6 +679,11 @@ msgid "Use playbin3 pipeline"
 msgstr ""
 
 msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
+msgstr ""
+
+msgid ""
+"Keep showing the last frame on EOS until quit or playlist change command "
+"(gapless is ignored)"
 msgstr ""
 
 #, c-format

@@ -27,6 +27,7 @@
 #include "gstglmemory.h"
 
 #include "gl.h"
+#include "gstglcontext_private.h"
 #include "gstglfuncs.h"
 
 /**
@@ -123,6 +124,7 @@ static inline void
 _calculate_unpack_length (GstGLMemory * gl_mem, GstGLContext * context)
 {
   guint n_gl_bytes;
+  GstGLFormat tex_format;
   guint tex_type;
 
   gl_mem->tex_scaling[0] = 1.0f;
@@ -130,11 +132,9 @@ _calculate_unpack_length (GstGLMemory * gl_mem, GstGLContext * context)
   gl_mem->unpack_length = 1;
   gl_mem->tex_width = GL_MEM_WIDTH (gl_mem);
 
-  tex_type = GL_UNSIGNED_BYTE;
-  if (gl_mem->tex_format == GST_GL_RGB565)
-    tex_type = GL_UNSIGNED_SHORT_5_6_5;
-
-  n_gl_bytes = gst_gl_format_type_n_bytes (gl_mem->tex_format, tex_type);
+  gst_gl_format_type_from_sized_gl_format (gl_mem->tex_format, &tex_format,
+      &tex_type);
+  n_gl_bytes = gst_gl_format_type_n_bytes (tex_format, tex_type);
   if (n_gl_bytes == 0) {
     GST_ERROR ("Unsupported texture type %d", gl_mem->tex_format);
     return;
@@ -239,17 +239,13 @@ static gboolean
 _gl_tex_create (GstGLMemory * gl_mem, GError ** error)
 {
   GstGLContext *context = gl_mem->mem.context;
-  GLenum internal_format;
-  GLenum tex_format;
+  GstGLFormat internal_format;
+  GstGLFormat tex_format;
   GLenum tex_type;
 
-  tex_format = gl_mem->tex_format;
-  tex_type = GL_UNSIGNED_BYTE;
-  if (gl_mem->tex_format == GST_GL_RGB565) {
-    tex_format = GST_GL_RGB;
-    tex_type = GL_UNSIGNED_SHORT_5_6_5;
-  }
-
+  internal_format = gl_mem->tex_format;
+  gst_gl_format_type_from_sized_gl_format (internal_format, &tex_format,
+      &tex_type);
   internal_format =
       gst_gl_sized_gl_format_from_gl_format_type (context, tex_format,
       tex_type);
@@ -266,6 +262,27 @@ _gl_tex_create (GstGLMemory * gl_mem, GError ** error)
   }
 
   return TRUE;
+}
+
+static void
+_gst_gl_memory_start_log (GstGLMemory * gl_mem, const gchar * func_name)
+{
+  /* debugging is disabled */
+  if (!GST_GL_BASE_MEMORY_CAST (gl_mem)->query)
+    return;
+
+  gst_gl_query_start_log (GST_GL_BASE_MEMORY_CAST (gl_mem)->query,
+      GST_CAT_GL_MEMORY, GST_LEVEL_LOG, NULL, "%s took", func_name);
+}
+
+static void
+_gst_gl_memory_end_log (GstGLMemory * gl_mem)
+{
+  /* debugging is disabled */
+  if (!GST_GL_BASE_MEMORY_CAST (gl_mem)->query)
+    return;
+
+  gst_gl_query_end (GST_GL_BASE_MEMORY_CAST (gl_mem)->query);
 }
 
 /**
@@ -360,13 +377,11 @@ gst_gl_memory_read_pixels (GstGLMemory * gl_mem, gpointer read_pointer)
 {
   GstGLContext *context = gl_mem->mem.context;
   const GstGLFuncs *gl = context->gl_vtable;
-  guint format, type;
+  GstGLFormat format;
+  guint type;
   guint fbo;
 
-  format = gl_mem->tex_format;
-  type = GL_UNSIGNED_BYTE;
-  if (gl_mem->tex_format == GST_GL_RGB565)
-    type = GL_UNSIGNED_SHORT_5_6_5;
+  gst_gl_format_type_from_sized_gl_format (gl_mem->tex_format, &format, &type);
 
   /* FIXME: avoid creating a framebuffer every download/copy */
   gl->GenFramebuffers (1, &fbo);
@@ -402,11 +417,10 @@ gst_gl_memory_read_pixels (GstGLMemory * gl_mem, gpointer read_pointer)
     }
   }
 
-  gst_gl_query_start_log (GST_GL_BASE_MEMORY_CAST (gl_mem)->query,
-      GST_CAT_GL_MEMORY, GST_LEVEL_LOG, NULL, "%s", "glReadPixels took");
+  _gst_gl_memory_start_log (gl_mem, "glReadPixels");
   gl->ReadPixels (0, 0, gl_mem->tex_width, GL_MEM_HEIGHT (gl_mem), format,
       type, read_pointer);
-  gst_gl_query_end (GST_GL_BASE_MEMORY_CAST (gl_mem)->query);
+  _gst_gl_memory_end_log (gl_mem);
 
   gl->BindFramebuffer (GL_FRAMEBUFFER, 0);
   gl->DeleteFramebuffers (1, &fbo);
@@ -435,23 +449,21 @@ _gl_tex_download_get_tex_image (GstGLMemory * gl_mem, GstMapInfo * info,
   if (info->flags & GST_MAP_READ
       && GST_MEMORY_FLAG_IS_SET (gl_mem,
           GST_GL_BASE_MEMORY_TRANSFER_NEED_DOWNLOAD)) {
-    guint format, type;
+    GstGLFormat format;
+    guint type;
     guint target;
 
     GST_CAT_TRACE (GST_CAT_GL_MEMORY, "attempting download of texture %u "
         "using glGetTexImage", gl_mem->tex_id);
 
-    format = gl_mem->tex_format;
-    type = GL_UNSIGNED_BYTE;
-    if (gl_mem->tex_format == GST_GL_RGB565)
-      type = GL_UNSIGNED_SHORT_5_6_5;
+    gst_gl_format_type_from_sized_gl_format (gl_mem->tex_format, &format,
+        &type);
 
     target = gst_gl_texture_target_to_gl (gl_mem->tex_target);
     gl->BindTexture (target, gl_mem->tex_id);
-    gst_gl_query_start_log (GST_GL_BASE_MEMORY_CAST (gl_mem)->query,
-        GST_CAT_GL_MEMORY, GST_LEVEL_LOG, NULL, "%s", "glGetTexImage took");
+    _gst_gl_memory_start_log (gl_mem, "glGetTexImage");
     gl->GetTexImage (target, 0, format, type, gl_mem->mem.data);
-    gst_gl_query_end (GST_GL_BASE_MEMORY_CAST (gl_mem)->query);
+    _gst_gl_memory_end_log (gl_mem);
     gl->BindTexture (target, 0);
   }
 
@@ -515,7 +527,8 @@ gst_gl_memory_texsubimage (GstGLMemory * gl_mem, gpointer read_pointer)
 {
   GstGLContext *context = gl_mem->mem.context;
   const GstGLFuncs *gl;
-  GLenum gl_format, gl_type, gl_target;
+  GstGLFormat gl_format;
+  GLenum gl_type, gl_target;
   gpointer data;
   gsize plane_start;
 
@@ -524,12 +537,8 @@ gst_gl_memory_texsubimage (GstGLMemory * gl_mem, gpointer read_pointer)
 
   gl = context->gl_vtable;
 
-  gl_type = GL_UNSIGNED_BYTE;
-  gl_format = gl_mem->tex_format;
-  if (gl_mem->tex_format == GST_GL_RGB565) {
-    gl_format = GST_GL_RGB;
-    gl_type = GL_UNSIGNED_SHORT_5_6_5;
-  }
+  gst_gl_format_type_from_sized_gl_format (gl_mem->tex_format, &gl_format,
+      &gl_type);
 
   gl_target = gst_gl_texture_target_to_gl (gl_mem->tex_target);
 
@@ -551,11 +560,10 @@ gst_gl_memory_texsubimage (GstGLMemory * gl_mem, gpointer read_pointer)
   data = (gpointer) ((gintptr) plane_start + (gintptr) read_pointer);
 
   gl->BindTexture (gl_target, gl_mem->tex_id);
-  gst_gl_query_start_log (GST_GL_BASE_MEMORY_CAST (gl_mem)->query,
-      GST_CAT_GL_MEMORY, GST_LEVEL_LOG, NULL, "%s", "glTexSubImage took");
+  _gst_gl_memory_start_log (gl_mem, "glTexSubImage");
   gl->TexSubImage2D (gl_target, 0, 0, 0, gl_mem->tex_width,
       GL_MEM_HEIGHT (gl_mem), gl_format, gl_type, data);
-  gst_gl_query_end (GST_GL_BASE_MEMORY_CAST (gl_mem)->query);
+  _gst_gl_memory_end_log (gl_mem);
 
   /* Reset to default values */
   if (USING_OPENGL (context) || USING_GLES3 (context)
@@ -691,11 +699,10 @@ gst_gl_memory_copy_teximage (GstGLMemory * src, guint tex_id,
       goto fbo_error;
 
     gl->BindTexture (out_tex_target, tex_id);
-    gst_gl_query_start_log (GST_GL_BASE_MEMORY_CAST (src)->query,
-        GST_CAT_GL_MEMORY, GST_LEVEL_LOG, NULL, "%s", "CopyTexImage2D took");
+    _gst_gl_memory_start_log (src, "CopyTexImage2D");
     gl->CopyTexImage2D (out_tex_target, 0, out_tex_format, 0, 0, out_width,
         out_height, 0);
-    gst_gl_query_end (GST_GL_BASE_MEMORY_CAST (src)->query);
+    _gst_gl_memory_end_log (src);
 
     gl->BindTexture (out_tex_target, 0);
     gl->BindFramebuffer (GL_FRAMEBUFFER, 0);
@@ -730,8 +737,7 @@ gst_gl_memory_copy_teximage (GstGLMemory * src, guint tex_id,
       goto fbo_error;
 
     gl->BindTexture (out_tex_target, tex_id);
-    gst_gl_query_start_log (GST_GL_BASE_MEMORY_CAST (src)->query,
-        GST_CAT_GL_MEMORY, GST_LEVEL_LOG, NULL, "%s", "BlitFramebuffer took");
+    _gst_gl_memory_start_log (src, "BlitFramebuffer");
     gl->ReadBuffer (GL_COLOR_ATTACHMENT0);
     if (gl->DrawBuffers)
       gl->DrawBuffers (1, multipleRT);
@@ -739,7 +745,7 @@ gst_gl_memory_copy_teximage (GstGLMemory * src, guint tex_id,
       gl->DrawBuffer (GL_COLOR_ATTACHMENT0);
     gl->BlitFramebuffer (0, 0, out_width, out_height,
         0, 0, out_width, out_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    gst_gl_query_end (GST_GL_BASE_MEMORY_CAST (src)->query);
+    _gst_gl_memory_end_log (src);
 
     gl->BindTexture (out_tex_target, 0);
     gl->BindFramebuffer (GL_DRAW_FRAMEBUFFER, 0);
@@ -781,16 +787,13 @@ _gl_tex_copy_thread (GstGLContext * context, gpointer data)
   copy_params = (GstGLMemoryCopyParams *) data;
 
   if (!copy_params->tex_id) {
-    guint internal_format, out_gl_format, out_gl_type, out_tex_target;
+    GstGLFormat internal_format, out_gl_format;
+    guint out_gl_type, out_tex_target;
 
     out_tex_target = gst_gl_texture_target_to_gl (copy_params->tex_target);
-    out_gl_format = copy_params->src->tex_format;
-    out_gl_type = GL_UNSIGNED_BYTE;
-    if (copy_params->out_format == GST_GL_RGB565) {
-      out_gl_format = GST_GL_RGB;
-      out_gl_type = GL_UNSIGNED_SHORT_5_6_5;
-    }
-
+    internal_format = copy_params->src->tex_format;
+    gst_gl_format_type_from_sized_gl_format (internal_format, &out_gl_format,
+        &out_gl_type);
     internal_format =
         gst_gl_sized_gl_format_from_gl_format_type (context, out_gl_format,
         out_gl_type);
@@ -1421,7 +1424,7 @@ gst_gl_video_allocation_params_copy_data (GstGLVideoAllocationParams * src_vid,
 }
 
 /**
- * gst_gl_memory_setup_buffer:
+ * gst_gl_memory_setup_buffer: (skip)
  * @allocator: the @GstGLMemoryAllocator to allocate from
  * @buffer: a #GstBuffer to setup
  * @params: the #GstGLVideoAllocationParams to allocate with
@@ -1458,8 +1461,13 @@ gst_gl_memory_setup_buffer (GstGLMemoryAllocator * allocator,
   else
     views = 1;
 
+  if (n_wrapped_pointers == views)
+    n_mem = 1;
+
+  /* Sanity check for the code below; there should be as many pointers as the
+   * number of memory we are going to create */
   g_return_val_if_fail (!wrapped_data
-      || views * n_mem != n_wrapped_pointers, FALSE);
+      || n_mem * views == n_wrapped_pointers, FALSE);
 
   for (v = 0; v < views; v++) {
     for (i = 0; i < n_mem; i++) {

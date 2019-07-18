@@ -131,22 +131,22 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoMultiviewFlags" title="enum GstVideoMultiviewFlags"><span class="type">GstVideoMultiviewFlags</span></a></td>
+<td class="property_type"><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoMultiviewFlags" title="enum GstVideoMultiviewFlags"><span class="type">GstVideoMultiviewFlags</span></a></td>
 <td class="property_name"><a class="link" href="GstGLViewConvert.html#GstGLViewConvert--input-flags-override" title="The “input-flags-override” property">input-flags-override</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoMultiviewMode" title="enum GstVideoMultiviewMode"><span class="type">GstVideoMultiviewMode</span></a></td>
+<td class="property_type"><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoMultiviewMode" title="enum GstVideoMultiviewMode"><span class="type">GstVideoMultiviewMode</span></a></td>
 <td class="property_name"><a class="link" href="GstGLViewConvert.html#GstGLViewConvert--input-mode-override" title="The “input-mode-override” property">input-mode-override</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoMultiviewFlags" title="enum GstVideoMultiviewFlags"><span class="type">GstVideoMultiviewFlags</span></a></td>
+<td class="property_type"><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoMultiviewFlags" title="enum GstVideoMultiviewFlags"><span class="type">GstVideoMultiviewFlags</span></a></td>
 <td class="property_name"><a class="link" href="GstGLViewConvert.html#GstGLViewConvert--output-flags-override" title="The “output-flags-override” property">output-flags-override</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoMultiviewMode" title="enum GstVideoMultiviewMode"><span class="type">GstVideoMultiviewMode</span></a></td>
+<td class="property_type"><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoMultiviewMode" title="enum GstVideoMultiviewMode"><span class="type">GstVideoMultiviewMode</span></a></td>
 <td class="property_name"><a class="link" href="GstGLViewConvert.html#GstGLViewConvert--output-mode-override" title="The “output-mode-override” property">output-mode-override</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -178,7 +178,9 @@
 </div>
 <div class="refsect1">
 <a name="GstGLViewConvert.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
+    <span class="lineart">╰──</span> GstGLStereoDownmix
+    <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstObject.html#GstObject-struct">GstObject</a>
             <span class="lineart">╰──</span> GstGLViewConvert
@@ -204,7 +206,7 @@ gst_gl_view_convert_new (<em class="parameter"><code><span class="type">void</sp
 <p>a new <a class="link" href="GstGLViewConvert.html" title="GstGLViewConvert"><span class="type">GstGLViewConvert</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -242,7 +244,7 @@ gst_gl_view_convert_set_caps (<em class="parameter"><code><a class="link" href="
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -252,7 +254,7 @@ gst_gl_view_convert_transform_caps (<em class="parameter"><code><a class="link" 
                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstPadDirection"><span class="type">GstPadDirection</span></a> direction</code></em>,
                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *caps</code></em>,
                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *filter</code></em>);</pre>
-<p>Provides an implementation of <code class="function">GstBaseTransformClass::<GTKDOCLINK HREF="transform-caps"><code class="function">transform_caps()</code></code></GTKDOCLINK></p>
+<p>Provides an implementation of <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstBaseTransform.html#GstBaseTransformClass.transform-caps"><code class="function">GstBaseTransformClass.transform_caps()</code></a></p>
 <div class="refsect3">
 <a name="gst-gl-view-convert-transform-caps.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -290,7 +292,7 @@ gst_gl_view_convert_transform_caps (<em class="parameter"><code><a class="link" 
 <p>the converted <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -300,7 +302,7 @@ gst_gl_view_convert_fixate_caps (<em class="parameter"><code><a class="link" hre
                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstPadDirection"><span class="type">GstPadDirection</span></a> direction</code></em>,
                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *caps</code></em>,
                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *othercaps</code></em>);</pre>
-<p>Provides an implementation of <code class="function">GstBaseTransformClass::<GTKDOCLINK HREF="fixate-caps"><code class="function">fixate_caps()</code></code></GTKDOCLINK></p>
+<p>Provides an implementation of <a href="/usr/share/gtk-doc/html/gstreamer-libs-1.0/GstBaseTransform.html#GstBaseTransformClass.fixate-caps"><code class="function">GstBaseTransformClass.fixate_caps()</code></a></p>
 <div class="refsect3">
 <a name="gst-gl-view-convert-fixate-caps.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -339,7 +341,7 @@ gst_gl_view_convert_fixate_caps (<em class="parameter"><code><a class="link" hre
 <p>the fixated <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -383,7 +385,7 @@ gst_gl_view_convert_submit_input_buffer
 <a name="gst-gl-view-convert-submit-input-buffer.returns"></a><h4>Returns</h4>
 <p> a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -419,7 +421,7 @@ gst_gl_view_convert_get_output (<em class="parameter"><code><a class="link" href
 <a name="gst-gl-view-convert-get-output.returns"></a><h4>Returns</h4>
 <p> a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstPad.html#GstFlowReturn"><span class="type">GstFlowReturn</span></a></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -457,7 +459,7 @@ gst_gl_view_convert_perform (<em class="parameter"><code><a class="link" href="G
 <p>a converted <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBuffer.html#GstBuffer-struct"><span class="type">GstBuffer</span></a> or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -482,7 +484,7 @@ setting the caps with <a class="link" href="GstGLViewConvert.html#gst-gl-view-co
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -515,7 +517,7 @@ gst_gl_view_convert_set_context (<em class="parameter"><code><a class="link" hre
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix09.html#api-index-1.6">1.6</a></p>
+<p class="since">Since: <a class="link" href="ix10.html#api-index-1.6">1.6</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -580,19 +582,19 @@ provided api.</p>
 <pre class="programlisting">  “downmix-mode”             <a class="link" href="GstGLViewConvert.html#GstGLStereoDownmix" title="enum GstGLStereoDownmix"><span class="type">GstGLStereoDownmix</span></a></pre>
 <p>Output anaglyph type to generate when downmixing to mono.</p>
 <p>Flags: Read / Write</p>
-<p>Default value: Dubois optimised Green-Magenta anaglyph</p>
+<p>Default value: GST_GL_STEREO_DOWNMIX_ANAGLYPH_GREEN_MAGENTA_DUBOIS</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstGLViewConvert--input-flags-override"></a><h3>The <code class="literal">“input-flags-override”</code> property</h3>
-<pre class="programlisting">  “input-flags-override”     <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoMultiviewFlags" title="enum GstVideoMultiviewFlags"><span class="type">GstVideoMultiviewFlags</span></a></pre>
+<pre class="programlisting">  “input-flags-override”     <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoMultiviewFlags" title="enum GstVideoMultiviewFlags"><span class="type">GstVideoMultiviewFlags</span></a></pre>
 <p>Override any input information about multiview layout flags.</p>
 <p>Flags: Read / Write</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstGLViewConvert--input-mode-override"></a><h3>The <code class="literal">“input-mode-override”</code> property</h3>
-<pre class="programlisting">  “input-mode-override”      <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoMultiviewMode" title="enum GstVideoMultiviewMode"><span class="type">GstVideoMultiviewMode</span></a></pre>
+<pre class="programlisting">  “input-mode-override”      <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoMultiviewMode" title="enum GstVideoMultiviewMode"><span class="type">GstVideoMultiviewMode</span></a></pre>
 <p>Override any input information about multiview layout.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: GST_VIDEO_MULTIVIEW_MODE_NONE</p>
@@ -600,14 +602,14 @@ provided api.</p>
 <hr>
 <div class="refsect2">
 <a name="GstGLViewConvert--output-flags-override"></a><h3>The <code class="literal">“output-flags-override”</code> property</h3>
-<pre class="programlisting">  “output-flags-override”    <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoMultiviewFlags" title="enum GstVideoMultiviewFlags"><span class="type">GstVideoMultiviewFlags</span></a></pre>
+<pre class="programlisting">  “output-flags-override”    <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoMultiviewFlags" title="enum GstVideoMultiviewFlags"><span class="type">GstVideoMultiviewFlags</span></a></pre>
 <p>Override automatic negotiation for output multiview layout flags.</p>
 <p>Flags: Read / Write</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstGLViewConvert--output-mode-override"></a><h3>The <code class="literal">“output-mode-override”</code> property</h3>
-<pre class="programlisting">  “output-mode-override”     <a class="link" href="gst-plugins-base-libs-GstVideoAlignment.html#GstVideoMultiviewMode" title="enum GstVideoMultiviewMode"><span class="type">GstVideoMultiviewMode</span></a></pre>
+<pre class="programlisting">  “output-mode-override”     <a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoMultiviewMode" title="enum GstVideoMultiviewMode"><span class="type">GstVideoMultiviewMode</span></a></pre>
 <p>Override automatic output mode selection for multiview layout.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: GST_VIDEO_MULTIVIEW_MODE_NONE</p>

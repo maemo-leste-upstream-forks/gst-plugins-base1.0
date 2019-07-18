@@ -187,12 +187,6 @@ _context_share_group_is_shared (struct ContextShareGroup *share)
 GST_DEBUG_CATEGORY (GST_CAT_DEFAULT);
 GST_DEBUG_CATEGORY_STATIC (gst_gl_debug);
 
-#define gst_gl_context_parent_class parent_class
-G_DEFINE_ABSTRACT_TYPE (GstGLContext, gst_gl_context, GST_TYPE_OBJECT);
-
-#define GST_GL_CONTEXT_GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE((o), GST_TYPE_GL_CONTEXT, GstGLContextPrivate))
-
 static void _init_debug (void);
 
 static gpointer gst_gl_context_create_thread (GstGLContext * context);
@@ -237,6 +231,10 @@ typedef struct
   GstGLContextClass parent;
 } GstGLWrappedContextClass;
 
+#define gst_gl_context_parent_class parent_class
+G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (GstGLContext, gst_gl_context,
+    GST_TYPE_OBJECT);
+
 #define GST_TYPE_GL_WRAPPED_CONTEXT (gst_gl_wrapped_context_get_type())
 static GType gst_gl_wrapped_context_get_type (void);
 G_DEFINE_TYPE (GstGLWrappedContext, gst_gl_wrapped_context,
@@ -272,7 +270,7 @@ _ensure_window (GstGLContext * context)
 static void
 gst_gl_context_init (GstGLContext * context)
 {
-  context->priv = GST_GL_CONTEXT_GET_PRIVATE (context);
+  context->priv = gst_gl_context_get_instance_private (context);
 
   context->window = NULL;
   context->gl_vtable = g_slice_alloc0 (sizeof (GstGLFuncs));
@@ -289,8 +287,6 @@ gst_gl_context_init (GstGLContext * context)
 static void
 gst_gl_context_class_init (GstGLContextClass * klass)
 {
-  g_type_class_add_private (klass, sizeof (GstGLContextPrivate));
-
   klass->get_proc_address =
       GST_DEBUG_FUNCPTR (gst_gl_context_default_get_proc_address);
   klass->get_gl_platform_version =
@@ -1758,7 +1754,7 @@ gst_gl_context_default_get_gl_platform_version (GstGLContext * context,
  * @minor: (out): return for the minor version
  *
  * Get the version of the OpenGL platform (GLX, EGL, etc) used.  Only valid
- * after a call to gst_gl_context_create_context().
+ * after a call to gst_gl_context_create().
  */
 void
 gst_gl_context_get_gl_platform_version (GstGLContext * context, gint * major,
@@ -1854,4 +1850,23 @@ gst_gl_wrapped_context_class_init (GstGLWrappedContextClass * klass)
 static void
 gst_gl_wrapped_context_init (GstGLWrappedContext * context)
 {
+}
+
+G_GNUC_INTERNAL gboolean
+_gst_gl_context_debug_is_enabled (GstGLContext * context)
+{
+#if !defined(GST_DISABLE_GST_DEBUG)
+  GstDebugLevel level;
+
+  level = gst_debug_category_get_threshold (gst_gl_debug);
+
+  if (level < GST_LEVEL_WARNING) {
+    GST_CAT_INFO_OBJECT (gst_gl_context_debug, context, "Disabling GL context "
+        "debugging (gldebug category debug level < warning)");
+    return FALSE;
+  }
+  return TRUE;
+#else
+  return FALSE;
+#endif
 }

@@ -633,6 +633,11 @@ GST_START_TEST (test_negotiation)
       ("video/x-raw,format=(string)AYUV,width=320,height=240,pixel-aspect-ratio=1/1",
       "video/x-raw,format=(string)AYUV,width=200,height=200,pixel-aspect-ratio=1/2",
       200, 200, 1, 2);
+
+  _test_negotiation
+      ("video/x-raw,format=(string)AYUV,width=854,height=480",
+      "video/x-raw,format=(string)AYUV,width=[2, 512, 2],height=[2, 512, 2],pixel-aspect-ratio=1/1",
+      512, 288, 1, 1);
 }
 
 GST_END_TEST;
@@ -937,7 +942,8 @@ videoscale_suite (void)
   tcase_add_test (tc_chain, test_reverse_negotiation);
 #endif
   tcase_add_test (tc_chain, test_basetransform_negotiation);
-#elif VSCALE_TEST_GROUP == 1
+#else
+#if VSCALE_TEST_GROUP == 1
   tcase_add_test (tc_chain, test_downscale_640x480_320x240_method_0);
   tcase_add_test (tc_chain, test_downscale_640x480_320x240_method_1);
   tcase_add_test (tc_chain, test_downscale_640x480_320x240_method_2);
@@ -992,6 +998,7 @@ videoscale_suite (void)
   tcase_add_test (tc_chain, test_upscale_1x240_640x480_method_2);
   tcase_add_test (tc_chain, test_upscale_1x240_640x480_method_3);
 #endif
+#endif /* VSCALE_TEST_GROUP */
 
   return s;
 }

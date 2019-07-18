@@ -80,6 +80,14 @@
 <a class="link" href="GstGLFilter.html#gst-gl-filter-draw-fullscreen-quad" title="gst_gl_filter_draw_fullscreen_quad ()">gst_gl_filter_draw_fullscreen_quad</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstGLFilter.html#gst-gl-filter-add-rgba-pad-templates" title="gst_gl_filter_add_rgba_pad_templates ()">gst_gl_filter_add_rgba_pad_templates</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -142,7 +150,7 @@ single input and producing a single output with a <a class="link" href="GstGLFra
 <tbody>
 <tr>
 <td class="parameter_name"><p>filter</p></td>
-<td class="parameter_description"><p>the <span class="type">GstGLFIlter</span></p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstGLFilter.html" title="GstGLFilter"><span class="type">GstGLFilter</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -162,7 +170,7 @@ single input and producing a single output with a <a class="link" href="GstGLFra
 <a name="GstGLFilterRenderFunc.returns"></a><h4>Returns</h4>
 <p> whether the render succeeded</p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -223,7 +231,7 @@ into <em class="parameter"><code>output</code></em>
 <p> the return value of <em class="parameter"><code>func</code></em>
 </p>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -271,7 +279,7 @@ gst_gl_filter_render_to_target_with_shader
 </tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -312,7 +320,7 @@ gst_gl_filter_filter_texture (<em class="parameter"><code><a class="link" href="
 <a name="gst-gl-filter-filter-texture.returns"></a><h4>Returns</h4>
 <p> whether the transformation succeeded</p>
 </div>
-<p class="since">Since: <a class="link" href="ix10.html#api-index-1.4">1.4</a></p>
+<p class="since">Since: <a class="link" href="ix11.html#api-index-1.4">1.4</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -338,14 +346,31 @@ any shaders, viewport state, etc must be setup by the caller.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since: <a class="link" href="ix05.html#api-index-1.10">1.10</a></p>
+<p class="since">Since: <a class="link" href="ix06.html#api-index-1.10">1.10</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-gl-filter-add-rgba-pad-templates"></a><h3>gst_gl_filter_add_rgba_pad_templates ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_gl_filter_add_rgba_pad_templates (<em class="parameter"><code><a class="link" href="GstGLFilter.html#GstGLFilterClass" title="GstGLFilterClass"><span class="type">GstGLFilterClass</span></a> *klass</code></em>);</pre>
 </div>
 </div>
 <div class="refsect1">
 <a name="GstGLFilter.other_details"></a><h2>Types and Values</h2>
 <div class="refsect2">
 <a name="GstGLFilter-struct"></a><h3>GstGLFilter</h3>
-<pre class="programlisting">typedef struct _GstGLFilter GstGLFilter;</pre>
+<pre class="programlisting">typedef struct {
+  GstVideoInfo       in_info;
+  GstVideoInfo       out_info;
+  GstGLTextureTarget in_texture_target;
+  GstGLTextureTarget out_texture_target;
+
+  GstCaps           *out_caps;
+
+  /* protected */
+  GstGLFramebuffer  *fbo;
+} GstGLFilter;
+</pre>
 <div class="refsect3">
 <a name="GstGLFilter.members"></a><h4>Members</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -354,7 +379,38 @@ any shaders, viewport state, etc must be setup by the caller.</p>
 <col class="struct_members_description">
 <col width="200px" class="struct_members_annotations">
 </colgroup>
-<tbody></tbody>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoInfo" title="struct GstVideoInfo"><span class="type">GstVideoInfo</span></a> <em class="structfield"><code><a name="GstGLFilter-struct.in-info"></a>in_info</code></em>;</p></td>
+<td class="struct_member_description"><p>the video info for input buffers</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-GstVideo.html#GstVideoInfo" title="struct GstVideoInfo"><span class="type">GstVideoInfo</span></a> <em class="structfield"><code><a name="GstGLFilter-struct.out-info"></a>out_info</code></em>;</p></td>
+<td class="struct_member_description"><p>the video info for output buffers</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-OpenGL-Formats.html#GstGLTextureTarget" title="enum GstGLTextureTarget"><span class="type">GstGLTextureTarget</span></a> <em class="structfield"><code><a name="GstGLFilter-struct.in-texture-target"></a>in_texture_target</code></em>;</p></td>
+<td class="struct_member_description"><p>The texture target of the input buffers (usually 2D)</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="gst-plugins-base-libs-OpenGL-Formats.html#GstGLTextureTarget" title="enum GstGLTextureTarget"><span class="type">GstGLTextureTarget</span></a> <em class="structfield"><code><a name="GstGLFilter-struct.out-texture-target"></a>out_texture_target</code></em>;</p></td>
+<td class="struct_member_description"><p>The texture target of the output buffers (usually 2D)</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a> *<em class="structfield"><code><a name="GstGLFilter-struct.out-caps"></a>out_caps</code></em>;</p></td>
+<td class="struct_member_description"><p>the output <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstCaps.html#GstCaps-struct"><span class="type">GstCaps</span></a></p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GstGLFramebuffer.html" title="GstGLFramebuffer"><span class="type">GstGLFramebuffer</span></a> *<em class="structfield"><code><a name="GstGLFilter-struct.fbo"></a>fbo</code></em>;</p></td>
+<td class="struct_member_description"><p><a class="link" href="GstGLFramebuffer.html" title="GstGLFramebuffer"><span class="type">GstGLFramebuffer</span></a> object used for transformations (only for subclass usage)</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 </div>

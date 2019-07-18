@@ -136,10 +136,11 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libgstgl_wayland_la_LIBADD =
+am__objects_1 = libgstgl_wayland_la-xdg-shell-client-protocol.lo
 am_libgstgl_wayland_la_OBJECTS =  \
 	libgstgl_wayland_la-gstgldisplay_wayland.lo \
 	libgstgl_wayland_la-gstglwindow_wayland_egl.lo \
-	libgstgl_wayland_la-wayland_event_source.lo
+	libgstgl_wayland_la-wayland_event_source.lo $(am__objects_1)
 libgstgl_wayland_la_OBJECTS = $(am_libgstgl_wayland_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -167,7 +168,8 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade =  \
 	./$(DEPDIR)/libgstgl_wayland_la-gstgldisplay_wayland.Plo \
 	./$(DEPDIR)/libgstgl_wayland_la-gstglwindow_wayland_egl.Plo \
-	./$(DEPDIR)/libgstgl_wayland_la-wayland_event_source.Plo
+	./$(DEPDIR)/libgstgl_wayland_la-wayland_event_source.Plo \
+	./$(DEPDIR)/libgstgl_wayland_la-xdg-shell-client-protocol.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -265,12 +267,6 @@ CCDEPMODE = @CCDEPMODE@
 CDPARANOIA_CFLAGS = @CDPARANOIA_CFLAGS@
 CDPARANOIA_LIBS = @CDPARANOIA_LIBS@
 CFLAGS = @CFLAGS@
-CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
-CLUTTER_GLX_CFLAGS = @CLUTTER_GLX_CFLAGS@
-CLUTTER_GLX_LIBS = @CLUTTER_GLX_LIBS@
-CLUTTER_LIBS = @CLUTTER_LIBS@
-CLUTTER_X11_CFLAGS = @CLUTTER_X11_CFLAGS@
-CLUTTER_X11_LIBS = @CLUTTER_X11_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -389,9 +385,6 @@ GTK_X11_LIBS = @GTK_X11_LIBS@
 G_UDEV_CFLAGS = @G_UDEV_CFLAGS@
 G_UDEV_LIBS = @G_UDEV_LIBS@
 HAVE_CDPARANOIA = @HAVE_CDPARANOIA@
-HAVE_CLUTTER = @HAVE_CLUTTER@
-HAVE_CLUTTER_GLX = @HAVE_CLUTTER_GLX@
-HAVE_CLUTTER_X11 = @HAVE_CLUTTER_X11@
 HAVE_EGL = @HAVE_EGL@
 HAVE_GL = @HAVE_GL@
 HAVE_GLES2 = @HAVE_GLES2@
@@ -497,7 +490,6 @@ QT_LIBS = @QT_LIBS@
 QT_MOC = @QT_MOC@
 RANLIB = @RANLIB@
 SDL_CFLAGS = @SDL_CFLAGS@
-SDL_CLUTTER = @SDL_CLUTTER@
 SDL_LIBS = @SDL_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -524,11 +516,11 @@ WARNING_CXXFLAGS = @WARNING_CXXFLAGS@
 WARNING_OBJCFLAGS = @WARNING_OBJCFLAGS@
 WAYLAND_EGL_CFLAGS = @WAYLAND_EGL_CFLAGS@
 WAYLAND_EGL_LIBS = @WAYLAND_EGL_LIBS@
+WAYLAND_PROTOCOLS_DATADIR = @WAYLAND_PROTOCOLS_DATADIR@
+WAYLAND_SCANNER = @WAYLAND_SCANNER@
 WIN32_LIBS = @WIN32_LIBS@
 X11_XCB_CFLAGS = @X11_XCB_CFLAGS@
 X11_XCB_LIBS = @X11_XCB_LIBS@
-XCOMPOSITE_CFLAGS = @XCOMPOSITE_CFLAGS@
-XCOMPOSITE_LIBS = @XCOMPOSITE_LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -606,15 +598,22 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LTLIBRARIES = libgstgl-wayland.la
+xdg_shell_protocol_spec = $(WAYLAND_PROTOCOLS_DATADIR)/stable/xdg-shell/xdg-shell.xml
+built_sources = xdg-shell-client-protocol.c
+built_headers = xdg-shell-client-protocol.h
+BUILT_SOURCES = $(built_sources) $(built_headers)
+CLEANFILES = $(BUILT_SOURCES)
 libgstgl_wayland_la_SOURCES = \
 	gstgldisplay_wayland.c \
 	gstglwindow_wayland_egl.c \
-	wayland_event_source.c
+	wayland_event_source.c \
+	$(built_sources)
 
 noinst_HEADERS = \
-	gstgldisplay_wayland.h \
+	gstgldisplay_wayland_private.h \
 	gstglwindow_wayland_egl.h \
-	wayland_event_source.h
+	wayland_event_source.h \
+	$(built_headers)
 
 libgstgl_waylandincludedir = $(includedir)/gstreamer-@GST_API_VERSION@/gst/gl/wayland
 libgstgl_waylandinclude_HEADERS = \
@@ -623,6 +622,7 @@ libgstgl_waylandinclude_HEADERS = \
 libgstgl_wayland_la_CFLAGS = \
 	-I$(top_srcdir)/gst-libs \
 	-I$(top_builddir)/gst-libs \
+	-DBUILDING_GST_GL \
 	$(GL_CFLAGS) \
 	$(GST_PLUGINS_BASE_CFLAGS) \
 	$(GST_BASE_CFLAGS) \
@@ -632,7 +632,8 @@ libgstgl_wayland_la_LDFLAGS = \
 	$(GST_LIB_LDFLAGS) \
 	$(GST_ALL_LDFLAGS)
 
-all: all-am
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
@@ -689,6 +690,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstgl_wayland_la-gstgldisplay_wayland.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstgl_wayland_la-gstglwindow_wayland_egl.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstgl_wayland_la-wayland_event_source.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgstgl_wayland_la-xdg-shell-client-protocol.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -740,6 +742,13 @@ libgstgl_wayland_la-wayland_event_source.lo: wayland_event_source.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='wayland_event_source.c' object='libgstgl_wayland_la-wayland_event_source.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstgl_wayland_la_CFLAGS) $(CFLAGS) -c -o libgstgl_wayland_la-wayland_event_source.lo `test -f 'wayland_event_source.c' || echo '$(srcdir)/'`wayland_event_source.c
+
+libgstgl_wayland_la-xdg-shell-client-protocol.lo: xdg-shell-client-protocol.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstgl_wayland_la_CFLAGS) $(CFLAGS) -MT libgstgl_wayland_la-xdg-shell-client-protocol.lo -MD -MP -MF $(DEPDIR)/libgstgl_wayland_la-xdg-shell-client-protocol.Tpo -c -o libgstgl_wayland_la-xdg-shell-client-protocol.lo `test -f 'xdg-shell-client-protocol.c' || echo '$(srcdir)/'`xdg-shell-client-protocol.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgstgl_wayland_la-xdg-shell-client-protocol.Tpo $(DEPDIR)/libgstgl_wayland_la-xdg-shell-client-protocol.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='xdg-shell-client-protocol.c' object='libgstgl_wayland_la-xdg-shell-client-protocol.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libgstgl_wayland_la_CFLAGS) $(CFLAGS) -c -o libgstgl_wayland_la-xdg-shell-client-protocol.lo `test -f 'xdg-shell-client-protocol.c' || echo '$(srcdir)/'`xdg-shell-client-protocol.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -854,13 +863,15 @@ distdir-am: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: check-am
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
 	for dir in "$(DESTDIR)$(libgstgl_waylandincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -882,6 +893,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -890,6 +902,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
@@ -899,6 +912,7 @@ distclean: distclean-am
 		-rm -f ./$(DEPDIR)/libgstgl_wayland_la-gstgldisplay_wayland.Plo
 	-rm -f ./$(DEPDIR)/libgstgl_wayland_la-gstglwindow_wayland_egl.Plo
 	-rm -f ./$(DEPDIR)/libgstgl_wayland_la-wayland_event_source.Plo
+	-rm -f ./$(DEPDIR)/libgstgl_wayland_la-xdg-shell-client-protocol.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -947,6 +961,7 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/libgstgl_wayland_la-gstgldisplay_wayland.Plo
 	-rm -f ./$(DEPDIR)/libgstgl_wayland_la-gstglwindow_wayland_egl.Plo
 	-rm -f ./$(DEPDIR)/libgstgl_wayland_la-wayland_event_source.Plo
+	-rm -f ./$(DEPDIR)/libgstgl_wayland_la-xdg-shell-client-protocol.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -965,7 +980,7 @@ ps-am:
 
 uninstall-am: uninstall-libgstgl_waylandincludeHEADERS
 
-.MAKE: install-am install-strip
+.MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles check check-am clean \
 	clean-generic clean-libtool clean-noinstLTLIBRARIES \
@@ -985,6 +1000,10 @@ uninstall-am: uninstall-libgstgl_waylandincludeHEADERS
 
 .PRECIOUS: Makefile
 
+xdg-shell-client-protocol.h: $(xdg_shell_protocol_spec)
+	$(AM_V_GEN) $(WAYLAND_SCANNER) client-header < $< > $@
+xdg-shell-client-protocol.c: $(xdg_shell_protocol_spec)
+	$(AM_V_GEN) $(WAYLAND_SCANNER) private-code < $< > $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

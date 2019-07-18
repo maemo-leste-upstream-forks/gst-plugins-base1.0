@@ -17,6 +17,9 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <poll.h>
 
@@ -47,8 +50,6 @@ static void gst_gl_window_gbm_egl_close (GstGLWindow * window);
 static void gst_gl_window_gbm_egl_draw (GstGLWindow * window);
 
 static gboolean gst_gl_window_gbm_init_surface (GstGLWindowGBMEGL * window_egl);
-static void gst_gl_window_gbm_egl_cleanup (GstGLWindowGBMEGL * window_egl);
-
 
 
 static void
@@ -109,7 +110,31 @@ gst_gl_window_gbm_egl_close (GstGLWindow * window)
 {
   GstGLWindowGBMEGL *window_egl = GST_GL_WINDOW_GBM_EGL (window);
 
-  gst_gl_window_gbm_egl_cleanup (window_egl);
+  if (window_egl->saved_crtc) {
+    GstGLDisplayGBM *display = (GstGLDisplayGBM *) window->display;
+    drmModeCrtc *crtc = window_egl->saved_crtc;
+    gint err;
+
+    err = drmModeSetCrtc (display->drm_fd, crtc->crtc_id, crtc->buffer_id,
+        crtc->x, crtc->y, &(display->drm_mode_connector->connector_id), 1,
+        &crtc->mode);
+    if (err)
+      GST_ERROR_OBJECT (window, "Failed to restore previous CRTC mode: %s",
+          g_strerror (errno));
+
+    drmModeFreeCrtc (crtc);
+    window_egl->saved_crtc = NULL;
+  }
+
+  if (window_egl->gbm_surf != NULL) {
+    if (window_egl->current_bo != NULL) {
+      gbm_surface_release_buffer (window_egl->gbm_surf, window_egl->current_bo);
+      window_egl->current_bo = NULL;
+    }
+
+    gbm_surface_destroy (window_egl->gbm_surf);
+    window_egl->gbm_surf = NULL;
+  }
 
   GST_GL_WINDOW_CLASS (gst_gl_window_gbm_egl_parent_class)->close (window);
 }
@@ -147,6 +172,13 @@ draw_cb (gpointer data)
     .fd = display->drm_fd,
     .events = POLLIN,
     .revents = 0,
+  };
+
+  /* No display connected */
+  if (!display->drm_mode_info) {
+    GST_ERROR ("No display connected");
+    gst_object_unref (context);
+    return;
   };
 
   /* Rendering, page flipping etc. are connect this way:
@@ -189,6 +221,11 @@ draw_cb (gpointer data)
         gbm_surface_lock_front_buffer (window_egl->gbm_surf);
     framebuf = gst_gl_gbm_drm_fb_get_from_bo (window_egl->current_bo);
 
+    /* Save the CRTC state */
+    if (!window_egl->saved_crtc)
+      window_egl->saved_crtc =
+          drmModeGetCrtc (display->drm_fd, display->crtc_id);
+
     /* Configure CRTC to show this first BO. */
     ret = drmModeSetCrtc (display->drm_fd, display->crtc_id, framebuf->fb_id,
         0, 0, &(display->drm_mode_connector->connector_id), 1,
@@ -196,6 +233,7 @@ draw_cb (gpointer data)
 
     if (ret != 0) {
       GST_ERROR ("Could not set DRM CRTC: %s (%d)", g_strerror (errno), errno);
+      gst_object_unref (context);
       /* XXX: it is not possible to communicate the error to the pipeline */
       return;
     }
@@ -295,6 +333,16 @@ gst_gl_window_gbm_init_surface (GstGLWindowGBMEGL * window_egl)
   GstGLContext *context = gst_gl_window_get_context (window);
   GstGLContextEGL *context_egl = GST_GL_CONTEXT_EGL (context);
   EGLint gbm_format;
+  int hdisplay, vdisplay;
+  gboolean ret = TRUE;
+
+  if (drm_mode_info) {
+    vdisplay = drm_mode_info->vdisplay;
+    hdisplay = drm_mode_info->hdisplay;
+  } else {
+    vdisplay = 0;
+    hdisplay = 0;
+  }
 
   /* With GBM-based EGL displays and configs, the native visual ID
    * is a GBM pixel format. */
@@ -302,36 +350,24 @@ gst_gl_window_gbm_init_surface (GstGLWindowGBMEGL * window_egl)
           EGL_NATIVE_VISUAL_ID, &gbm_format)) {
     GST_ERROR ("eglGetConfigAttrib failed: %s",
         gst_egl_get_error_string (eglGetError ()));
-    return FALSE;
+    ret = FALSE;
+    goto cleanup;
   }
 
   /* Create a GBM surface that shall contain the BOs we are
    * going to render into. */
   window_egl->gbm_surf = gbm_surface_create (display->gbm_dev,
-      drm_mode_info->hdisplay, drm_mode_info->vdisplay, gbm_format,
+      hdisplay, vdisplay, gbm_format,
       GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
 
-  gst_gl_window_resize (window, drm_mode_info->hdisplay,
-      drm_mode_info->vdisplay);
+  gst_gl_window_resize (window, hdisplay, vdisplay);
 
   GST_DEBUG ("Successfully created GBM surface");
 
-  return TRUE;
-}
+cleanup:
 
-
-static void
-gst_gl_window_gbm_egl_cleanup (GstGLWindowGBMEGL * window_egl)
-{
-  if (window_egl->gbm_surf != NULL) {
-    if (window_egl->current_bo != NULL) {
-      gbm_surface_release_buffer (window_egl->gbm_surf, window_egl->current_bo);
-      window_egl->current_bo = NULL;
-    }
-
-    gbm_surface_destroy (window_egl->gbm_surf);
-    window_egl->gbm_surf = NULL;
-  }
+  gst_object_unref (context);
+  return ret;
 }
 
 
