@@ -1,3 +1,10 @@
+gst-plugins-base1.0 (1.16.0-4) unstable; urgency=medium
+
+  * debian/libgstreamer-gl.symbols:
+    + Mark gst_egl_image_from_dmabuf_direct() as Linux/kFreeBSD-only (Closes: #933255).
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 02 Sep 2019 10:15:10 +0300
+
 gst-plugins-base1.0 (1.16.0-3) unstable; urgency=medium
 
   * Source-only re-upload
