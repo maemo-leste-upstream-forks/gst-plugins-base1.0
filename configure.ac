@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
 dnl initialize autoconf
 dnl releases only do -Wall, git and prerelease does -Werror too
 dnl use a three digit version number for releases, and four for git/prerelease
-AC_INIT([GStreamer Base Plug-ins],[1.16.0],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
+AC_INIT([GStreamer Base Plug-ins],[1.16.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer],[gst-plugins-base])
 
 AG_GST_INIT
 
@@ -56,10 +56,10 @@ dnl      1.2.5 => 205
 dnl      1.10.9 (who knows) => 1009
 dnl
 dnl sets GST_LT_LDFLAGS
-AS_LIBTOOL(GST, 1600, 0, 1600)
+AS_LIBTOOL(GST, 1601, 0, 1601)
 
 dnl *** required versions of GStreamer stuff ***
-GST_REQ=1.16.0
+GST_REQ=1.16.1
 
 dnl *** autotools stuff ****
 
@@ -225,7 +225,7 @@ AC_MSG_CHECKING(for ARM NEON support in current arch/CFLAGS)
 AC_LINK_IFELSE([
 AC_LANG_PROGRAM([[
   #include <arm_neon.h>
-  int32x4_t testfunc(int16_t *a, int16_t *b) {
+  int32x4_t __attribute__((used)) testfunc(int16_t *a, int16_t *b) {
       asm volatile ("vmull.s16 q0, d0, d0" : : : "q0");
       return vmull_s16(vld1_s16(a), vld1_s16(b));
   }

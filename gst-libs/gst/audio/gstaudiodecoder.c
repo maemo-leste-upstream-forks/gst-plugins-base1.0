@@ -2195,11 +2195,11 @@ gst_audio_decoder_negotiate_default_caps (GstAudioDecoder * dec)
 
   GST_OBJECT_LOCK (dec);
   dec->priv->ctx.info = info;
+  dec->priv->ctx.caps = caps;
   GST_OBJECT_UNLOCK (dec);
 
   GST_INFO_OBJECT (dec,
       "Chose default caps %" GST_PTR_FORMAT " for initial gap", caps);
-  gst_caps_unref (caps);
 
   return TRUE;
 
@@ -2225,6 +2225,7 @@ gst_audio_decoder_handle_gap (GstAudioDecoder * dec, GstEvent * event)
       GST_AUDIO_DECODER_STREAM_UNLOCK (dec);
       GST_ELEMENT_ERROR (dec, STREAM, FORMAT, (NULL),
           ("Decoder output not negotiated before GAP event."));
+      gst_event_unref (event);
       return FALSE;
     }
     needs_reconfigure = TRUE;
@@ -2273,6 +2274,7 @@ gst_audio_decoder_handle_gap (GstAudioDecoder * dec, GstEvent * event)
       ret = gst_audio_decoder_push_event (dec, event);
     } else {
       ret = FALSE;
+      gst_event_unref (event);
     }
   }
   return ret;

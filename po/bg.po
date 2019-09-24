@@ -1,23 +1,24 @@
 # Bulgarian translation of gst-plugins-base.
 # Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
-# Copyright (C) 2011, 2016 Free Software Foundation, Inc.
+# Copyright (C) 2011, 2016, 2019 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gst-plugins-base package.
 # Alexander Shopov <ash@kambanaria.org>, 2005, 2006, 2007, 2008, 2009, 2010.
-# Alexander Shopov <ash@kambanaria.org>, 2011, 2016.
+# Alexander Shopov <ash@kambanaria.org>, 2011, 2016, 2019.
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.7.2\n"
+"Project-Id-Version: gst-plugins-base 1.16.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2019-04-19 00:20+0100\n"
-"PO-Revision-Date: 2016-02-21 21:03+0200\n"
+"POT-Creation-Date: 2019-09-23 11:06+0100\n"
+"PO-Revision-Date: 2019-09-04 10:08+0200\n"
 "Last-Translator: Alexander Shopov <ash@kambanaria.org>\n"
 "Language-Team: Bulgarian <dict@ludost.net>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 msgid "Could not open device for playback in mono mode."
@@ -76,13 +77,13 @@ msgid "Could not read CD."
 msgstr "CD-то не може да бъде прочетено."
 
 msgid "failed to draw pattern"
-msgstr ""
+msgstr "шарката не може да се начертае"
 
 msgid "A GL error occurred"
-msgstr ""
+msgstr "Грешка от графичната система GL"
 
 msgid "format wasn't negotiated before get function"
-msgstr ""
+msgstr "форматът не е бил уточнен преди извикването на функцията за получаване"
 
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
@@ -97,9 +98,8 @@ msgstr "Това изглежда е текстов файл"
 msgid "Could not create \"uridecodebin\" element."
 msgstr "Не може да се създаде елемент „uridecodebin“."
 
-#, fuzzy
 msgid "Could not create \"uridecodebin3\" element."
-msgstr "Не може да се създаде елемент „uridecodebin“."
+msgstr "Не може да се създаде елемент „uridecodebin3“."
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
@@ -232,17 +232,16 @@ msgid "TMPlayer subtitle format"
 msgstr "Субтитри, формат TMPlayer"
 
 msgid "CEA 608 Closed Caption"
-msgstr ""
+msgstr "Субтитри, формат CEA 608"
 
 msgid "CEA 708 Closed Caption"
-msgstr ""
+msgstr "Субтитри, формат CEA 708"
 
 msgid "Kate subtitle format"
 msgstr "Субтитри, формат Kate"
 
-#, fuzzy
 msgid "WebVTT subtitle format"
-msgstr "Субтитри, формат Kate"
+msgstr "Субтитри, формат WebVTT"
 
 msgid "Uncompressed video"
 msgstr "Некомпресирано видео"
@@ -279,7 +278,7 @@ msgstr "Некомпресирано аудио"
 
 #, c-format
 msgid "Raw %d-bit %s audio"
-msgstr "Аудио, необработен %d-битов %s"
+msgstr "Аудио, необработено %d-битово %s"
 
 msgid "Audio CD source"
 msgstr "Елемент-източник — CD"
@@ -410,14 +409,13 @@ msgstr "фокусно разстояние"
 msgid "Focal length of the lens used capturing the image, in mm"
 msgstr "Фокусно разстояние на обектива при заснемане в милиметри"
 
-#, fuzzy
 msgid "capturing 35 mm equivalent focal length"
-msgstr "фокусно разстояние"
+msgstr "приравнено към 35mm фокусно разстояние "
 
-#, fuzzy
 msgid ""
 "35 mm equivalent focal length of the lens used capturing the image, in mm"
-msgstr "Фокусно разстояние на обектива при заснемане в милиметри"
+msgstr ""
+"Приравнено към 35mm фокусно разстояние на обектива при заснемане в милиметри"
 
 msgid "capturing digital zoom ratio"
 msgstr "цифрово увеличение"
@@ -589,13 +587,13 @@ msgid "quit"
 msgstr "спиране"
 
 msgid "> or n"
-msgstr ""
+msgstr "„>“ или „n“"
 
 msgid "play next"
 msgstr "следващо"
 
 msgid "< or b"
-msgstr ""
+msgstr "„<“ или „b“"
 
 msgid "play previous"
 msgstr "предишно"
@@ -675,15 +673,18 @@ msgid "Do not print any output (apart from errors)"
 msgstr "Без извеждане на информация (освен грешките)"
 
 msgid "Use playbin3 pipeline"
-msgstr ""
+msgstr "Конвейер с „playbin3“"
 
 msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
-msgstr ""
+msgstr "(стандартният вариант зависи от променливата на средата „USE_PLAYBIN“)"
 
 msgid ""
 "Keep showing the last frame on EOS until quit or playlist change command "
 "(gapless is ignored)"
 msgstr ""
+"Последният кадър в края на поток да се показва до получаването на команда за "
+"спиране или смяна на списъка за изпълнение (в този случай настройката за "
+"изпълнение без прекъсвания се пренебрегва)"
 
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."
@@ -694,14 +695,3 @@ msgstr "Трябва да укажете поне един файл или ад�
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr "Натиснете „k“, за да видите списъка с клавишни комбинации.\n"
-
-#, fuzzy
-#~ msgid "Could not create \"decodebin3\" element."
-#~ msgstr "Не може да се създаде елемент „uridecodebin“."
-
-#, fuzzy
-#~ msgid "Could not create \"urisourcebin\" element."
-#~ msgstr "Не може да се създаде елемент „uridecodebin“."
-
-#~ msgid "Internal data stream error."
-#~ msgstr "Вътрешна грешка на потока от данни."

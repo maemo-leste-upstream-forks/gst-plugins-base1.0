@@ -2,14 +2,14 @@
 # This file is put in the public domain.
 #
 # Kjartan Maraas <kmaraas@gnome.org>, 2004-2010.
-# Johnny A. Solbu <johnny@solbu.net>, 2012-2017
+# Johnny A. Solbu <johnny@solbu.net>, 2012-2019
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.10.0\n"
+"Project-Id-Version: gst-plugins-base 1.16.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2019-04-19 00:20+0100\n"
-"PO-Revision-Date: 2017-01-05 01:29+0100\n"
+"POT-Creation-Date: 2019-09-23 11:06+0100\n"
+"PO-Revision-Date: 2019-09-03 09:24+0200\n"
 "Last-Translator: Johnny A. Solbu <johnny@solbu.net>\n"
 "Language-Team: Norwegian Bokmaal <i18n-nb@lister.ping.uio.no>\n"
 "Language: nb_NO\n"
@@ -75,13 +75,13 @@ msgid "Could not read CD."
 msgstr "Kunne ikke lese CD."
 
 msgid "failed to draw pattern"
-msgstr ""
+msgstr "Kunne ikke tegne mønster"
 
 msgid "A GL error occurred"
-msgstr ""
+msgstr "En GL-feil oppsto"
 
 msgid "format wasn't negotiated before get function"
-msgstr ""
+msgstr "formatet ble ikke forhandlet før get-funksjon"
 
 #, c-format
 msgid "Missing element '%s' - check your GStreamer installation."
@@ -96,9 +96,8 @@ msgstr "Dette ser ut som en tekstfil"
 msgid "Could not create \"uridecodebin\" element."
 msgstr "Kunne ikke opprette elementet «uridecodebin»"
 
-#, fuzzy
 msgid "Could not create \"uridecodebin3\" element."
-msgstr "Kunne ikke opprette elementet «uridecodebin»"
+msgstr "Kunne ikke opprette elementet «uridecodebin3»"
 
 #, c-format
 msgid "Both autovideosink and %s elements are missing."
@@ -231,10 +230,10 @@ msgid "TMPlayer subtitle format"
 msgstr "TMPlayer undertekstformat"
 
 msgid "CEA 608 Closed Caption"
-msgstr ""
+msgstr "CEA 608 teksting"
 
 msgid "CEA 708 Closed Caption"
-msgstr ""
+msgstr "CEA 708 teksting"
 
 msgid "Kate subtitle format"
 msgstr "Kate undertekstformat"
@@ -671,15 +670,17 @@ msgid "Do not print any output (apart from errors)"
 msgstr "Ikke skriv noe utdata (bortsett fra feil)"
 
 msgid "Use playbin3 pipeline"
-msgstr ""
+msgstr "Bruk playbin3-datakanal"
 
 msgid "(default varies depending on 'USE_PLAYBIN' env variable)"
-msgstr ""
+msgstr "(standard varierer avhengig av miljøvariabelen «USE_PLAYBIN»"
 
 msgid ""
 "Keep showing the last frame on EOS until quit or playlist change command "
 "(gapless is ignored)"
 msgstr ""
+"Fortsett å vise den siste rammen på EOS til du avslutter eller endrer "
+"kommandoen for spillelisten (gapless ignoreres)"
 
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."

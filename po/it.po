@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base-1.15.1\n"
+"Project-Id-Version: gst-plugins-base-1.16.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2019-04-19 00:20+0100\n"
-"PO-Revision-Date: 2019-01-29 17:52+0100\n"
+"POT-Creation-Date: 2019-09-23 11:06+0100\n"
+"PO-Revision-Date: 2019-09-03 10:01+0200\n"
 "Last-Translator: Milo Casagrande <milo@milo.name>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 
 msgid "Could not open device for playback in mono mode."
 msgstr ""
@@ -717,6 +717,8 @@ msgid ""
 "Keep showing the last frame on EOS until quit or playlist change command "
 "(gapless is ignored)"
 msgstr ""
+"Continua a mostrare l'ultimo fotogramma su EOS fino all'uscita o al comando "
+"di modifica della playlist (gapless viene ignorato)"
 
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."
@@ -727,147 +729,3 @@ msgstr "È necessario fornire almeno un nome file o un URI da riprodurre."
 
 msgid "Press 'k' to see a list of keyboard shortcuts.\n"
 msgstr "Premere «k» per consultare le scorciatoie da tastiera.\n"
-
-#~ msgid "Master"
-#~ msgstr "Principale"
-
-#~ msgid "Bass"
-#~ msgstr "Bassi"
-
-#~ msgid "Treble"
-#~ msgstr "Acuti"
-
-#~ msgid "PCM"
-#~ msgstr "PCM"
-
-#~ msgid "Synth"
-#~ msgstr "Sintetiz"
-
-#~ msgid "Line-in"
-#~ msgstr "Linea in"
-
-#~ msgid "CD"
-#~ msgstr "CD"
-
-#~ msgid "Microphone"
-#~ msgstr "Microfono"
-
-#~ msgid "PC Speaker"
-#~ msgstr "Altoparlanti PC"
-
-#~ msgid "Playback"
-#~ msgstr "Riproduzione"
-
-#~ msgid "Capture"
-#~ msgstr "Cattura"
-
-#~ msgid "Could not open vfs file \"%s\" for writing: %s."
-#~ msgstr "Impossibile aprire il file vfs «%s» in scrittura: %s."
-
-#~ msgid "No filename given"
-#~ msgstr "Nessun nome di file fornito"
-
-#~ msgid "Could not close vfs file \"%s\"."
-#~ msgstr "Impossibile chiudere il file vfs «%s»."
-
-#~ msgid "Error while writing to file \"%s\"."
-#~ msgstr "Errore durante la scrittura sul file «%s»."
-
-#~ msgid "Internal data stream error."
-#~ msgstr "Errore interno nel flusso di dati."
-
-#~ msgid "A %s plugin is required to play this stream, but not installed."
-#~ msgstr ""
-#~ "Per riprodurre questo stream è richiesto un plugin %s, che però non "
-#~ "risulta installato. "
-
-#~ msgid "Invalid subtitle URI \"%s\", subtitles disabled."
-#~ msgstr "URI dei sottotitoli «%s» non valido, sottotitoli disabilitati."
-
-#~ msgid "RTSP streams cannot be played yet."
-#~ msgstr "Non è ancora possibile riprodurre gli stream RTSP."
-
-#~ msgid ""
-#~ "Only a subtitle stream was detected. Either you are loading a subtitle "
-#~ "file or some other type of text file, or the media file was not "
-#~ "recognized."
-#~ msgstr ""
-#~ "È stato rilevato unicamente uno stream di sottotitoli. Ciò significa che "
-#~ "si sta caricando un file di sottotitoli o un altro tipo di file di testo, "
-#~ "oppure che il file multimediale non è stato riconosciuto."
-
-#~ msgid ""
-#~ "You do not have a decoder installed to handle this file. You might need "
-#~ "to install the necessary plugins."
-#~ msgstr ""
-#~ "Non risulta installato alcun decoder in grado di gestire questo file. "
-#~ "Potrebbe essere necessario installare gli opportuni plugin."
-
-#~ msgid "This is not a media file"
-#~ msgstr "Questo non è un file multimediale"
-
-#~ msgid "A subtitle stream was detected, but no video stream."
-#~ msgstr ""
-#~ "È stato rilevato uno stream di sottotitoli, ma nessuno stream video."
-
-#~ msgid "Both autovideosink and xvimagesink elements are missing."
-#~ msgstr ""
-#~ "Risultano mancanti entrambi gli elementi «autovideosink» e «xvimagesink»."
-
-#~ msgid "Both autoaudiosink and alsasink elements are missing."
-#~ msgstr ""
-#~ "Risultano mancanti entrambi gli elementi «autoaudiosink» e «alsasink»."
-
-#~ msgid "Error while sending gdp header data to \"%s:%d\"."
-#~ msgstr "Errore durante l'invio di dati header gdp a \"%s:%d\"."
-
-#~ msgid "Error while sending gdp payload data to \"%s:%d\"."
-#~ msgstr "Errore durante l'invio di dati payload gdp a \"%s:%d\"."
-
-#~ msgid "Connection to %s:%d refused."
-#~ msgstr "Connessione a %s:%d rifiutata."
-
-#~ msgid "Uncompressed planar YVU 4:2:0"
-#~ msgstr "YVU 4:2:0 planare non compresso"
-
-#~ msgid "Uncompressed packed YUV 4:1:0"
-#~ msgstr "YUV 4:1:0 packed non compresso"
-
-#~ msgid "Uncompressed packed YVU 4:1:0"
-#~ msgstr "YVU 4:1:0 packed non compresso"
-
-#~ msgid "Uncompressed packed YUV 4:1:1"
-#~ msgstr "YUV 4:1:1 packed non compresso"
-
-#~ msgid "Uncompressed packed YUV 4:4:4"
-#~ msgstr "YUV 4:4:4 packed non compresso"
-
-#~ msgid "Uncompressed planar YUV 4:2:2"
-#~ msgstr "YUV 4:2:2 planare non compresso"
-
-#~ msgid "Uncompressed planar YUV 4:1:1"
-#~ msgstr "YUV 4:1:1 planare non compresso"
-
-#~ msgid "Uncompressed black and white Y-plane"
-#~ msgstr "Bianco e nero Y-plane non compresso"
-
-#~ msgid "Raw PCM audio"
-#~ msgstr "Audio raw PCM"
-
-#~ msgid "Raw %d-bit floating-point audio"
-#~ msgstr "Audio raw floating-point %d-bit"
-
-#~ msgid "Raw floating-point audio"
-#~ msgstr "Audio raw floating-point"
-
-#~ msgid "No device specified."
-#~ msgstr "Nessun device specificato."
-
-#~ msgid "Device \"%s\" does not exist."
-#~ msgstr "Il device «%s» non esiste."
-
-#~ msgid "Device \"%s\" is already being used."
-#~ msgstr "Il device «%s» è già in uso."
-
-#~ msgid "Could not open device \"%s\" for reading and writing."
-#~ msgstr "Impossibile aprire il device «%s» in lettura e scrittura."
