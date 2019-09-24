@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.16.0\n"
+"Project-Id-Version: gst-plugins-base 1.16.1\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2019-04-19 00:20+0100\n"
+"POT-Creation-Date: 2019-09-23 11:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Could not open audio device for recording."
 msgstr ""
 
-#: ext/alsa/gstalsasrc.c:992
+#: ext/alsa/gstalsasrc.c:996
 msgid "Error recording from audio device. The device has been disconnected."
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 #: gst/playback/gstplaysink.c:2788 gst/playback/gstplaysink.c:3166
 #: gst/playback/gstplaysink.c:3175 gst/playback/gstplaysink.c:3184
 #: gst/playback/gstplaysink.c:3193 gst/playback/gstplaysink.c:3606
-#: gst/playback/gstplaysink.c:4526 gst/playback/gstplaysinkconvertbin.c:97
+#: gst/playback/gstplaysink.c:4531 gst/playback/gstplaysinkconvertbin.c:97
 #: gst/playback/gstplaysinkconvertbin.c:117 gst/playback/gsturidecodebin.c:1472
 #: gst/playback/gsturisourcebin.c:1597
 #, c-format

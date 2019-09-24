@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.15.1\n"
+"Project-Id-Version: gst-plugins-base 1.16.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2019-04-19 00:20+0100\n"
-"PO-Revision-Date: 2019-01-25 05:30+0100\n"
+"POT-Creation-Date: 2019-09-23 11:06+0100\n"
+"PO-Revision-Date: 2019-09-03 15:57+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "Language: pl\n"
@@ -689,6 +689,8 @@ msgid ""
 "Keep showing the last frame on EOS until quit or playlist change command "
 "(gapless is ignored)"
 msgstr ""
+"Pokazywanie ostatniej klatki po EOS aż do polecenia zakończenia lub zmiany "
+"listy odtwarzania (brak przerw jest ignorowany)"
 
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."

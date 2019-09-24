@@ -84,8 +84,10 @@ const gchar *gst_gl_shader_string_fragment_default =
     MEDIUMP_PRECISION
     DEFAULT_FRAGMENT_BODY;
 
+#define EXTERNAL_FRAGMENT_HEADER \
+    "#extension GL_OES_EGL_image_external : require\n"
+
 #define EXTERNAL_FRAGMENT_BODY \
-    "#extension GL_OES_EGL_image_external : require\n" \
     "varying vec2 v_texcoord;\n" \
     "uniform samplerExternalOES tex;\n" \
     "void main()\n" \
@@ -93,6 +95,7 @@ const gchar *gst_gl_shader_string_fragment_default =
     "  gl_FragColor = texture2D(tex, v_texcoord);\n" \
     "}"
 const gchar *gst_gl_shader_string_fragment_external_oes_default =
+    EXTERNAL_FRAGMENT_HEADER
     MEDIUMP_PRECISION
     EXTERNAL_FRAGMENT_BODY;
 /* *INDENT-ON* */
@@ -113,6 +116,8 @@ const gchar *gst_gl_shader_string_fragment_external_oes_default =
  *
  * Returns: a shader string defining the precision of float types based on
  *      @context, @version and @profile
+ *
+ * Since: 1.16
  */
 const gchar *
 gst_gl_shader_string_get_highest_precision (GstGLContext * context,
@@ -135,6 +140,8 @@ gst_gl_shader_string_get_highest_precision (GstGLContext * context,
  *
  * Returns: a passthrough shader string for copying an input texture to
  *          the output
+ *
+ * Since: 1.16
  */
 gchar *
 gst_gl_shader_string_fragment_get_default (GstGLContext * context,
@@ -154,6 +161,8 @@ gst_gl_shader_string_fragment_get_default (GstGLContext * context,
  *
  * Returns: a passthrough shader string for copying an input external-oes
  *          texture to the output
+ *
+ * Since: 1.16
  */
 gchar *
 gst_gl_shader_string_fragment_external_oes_get_default (GstGLContext * context,
@@ -162,5 +171,6 @@ gst_gl_shader_string_fragment_external_oes_get_default (GstGLContext * context,
   const gchar *precision =
       gst_gl_shader_string_get_highest_precision (context, version, profile);
 
-  return g_strdup_printf ("%s%s", precision, EXTERNAL_FRAGMENT_BODY);
+  return g_strdup_printf ("%s%s%s", EXTERNAL_FRAGMENT_HEADER, precision,
+      EXTERNAL_FRAGMENT_BODY);
 }

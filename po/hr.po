@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base-1.15.1\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2019-04-19 00:20+0100\n"
-"PO-Revision-Date: 2019-03-03 13:33-0800\n"
+"POT-Creation-Date: 2019-09-23 11:06+0100\n"
+"PO-Revision-Date: 2019-05-31 17:42-0700\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -23,14 +23,14 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 
 msgid "Could not open device for playback in mono mode."
-msgstr "Uređaj za reprodukciju nije moguće otvoriti u mono mȏdu."
+msgstr "Uređaj za reprodukciju nije moguće otvoriti u mono načinu."
 
 msgid "Could not open device for playback in stereo mode."
-msgstr "Uređaj za reprodukciju nije moguće otvoriti u stereo mȏdu."
+msgstr "Uređaj za reprodukciju nije moguće otvoriti u stereo načinu."
 
 #, c-format
 msgid "Could not open device for playback in %d-channel mode."
-msgstr "Uređaj za reprodukciju nije moguće otvoriti u %d-kanalnom mȏdu."
+msgstr "Uređaj za reprodukciju nije moguće otvoriti u %d-kanalnom načinu."
 
 msgid ""
 "Could not open audio device for playback. Device is being used by another "
@@ -46,14 +46,14 @@ msgid "Error outputting to audio device. The device has been disconnected."
 msgstr "Greška na ulazu audiouređaja. Uređaj nije spojen."
 
 msgid "Could not open device for recording in mono mode."
-msgstr "Uređaj za snimanje nije moguće otvoriti u mono mȏdu."
+msgstr "Uređaj za snimanje nije moguće otvoriti u mono načinu."
 
 msgid "Could not open device for recording in stereo mode."
-msgstr "Uređaj za snimanje nije moguće otvoriti u stereo mȏdu."
+msgstr "Uređaj za snimanje nije moguće otvoriti u stereo načinu."
 
 #, c-format
 msgid "Could not open device for recording in %d-channel mode"
-msgstr "Uređaj za snimanje nije moguće otvoriti u %d-kanalnom mȏdu"
+msgstr "Uređaj za snimanje nije moguće otvoriti u %d-kanalnom načinu"
 
 msgid ""
 "Could not open audio device for recording. Device is being used by another "
@@ -348,9 +348,8 @@ msgstr "Element GStreamera %s"
 msgid "Unknown source element"
 msgstr "Nepoznati element-izvor"
 
-#, fuzzy
 msgid "Unknown sink element"
-msgstr "Nepoznati element"
+msgstr "Nepoznati element-ponor"
 
 msgid "Unknown element"
 msgstr "Nepoznati element"
@@ -441,10 +440,10 @@ msgid "The exposure program used when capturing an image"
 msgstr "Primijenjeni program ekspozicije pri snimanju slike"
 
 msgid "capturing exposure mode"
-msgstr "mȏd ekspozicije"
+msgstr "način ekspozicije"
 
 msgid "The exposure mode used when capturing an image"
-msgstr "Primijenjeni mȏd ekspozicije pri snimanju"
+msgstr "Primijenjeni način ekspozicije pri snimanju"
 
 msgid "capturing exposure compensation"
 msgstr "korektura ekspozicije"
@@ -495,18 +494,18 @@ msgid "If the flash fired while capturing an image"
 msgstr "Je li se bljeskalica aktivirala pri snimanju slike"
 
 msgid "capturing flash mode"
-msgstr "mȏd bljeskalice"
+msgstr "način bljeskalice"
 
 msgid "The selected flash mode while capturing an image"
-msgstr "Odabrani mȏd bljeskalice pri snimanju slike"
+msgstr "Odabrani način bljeskalice pri snimanju slike"
 
 msgid "capturing metering mode"
-msgstr "mȏd mjerenja"
+msgstr "način mjerenja"
 
 msgid ""
 "The metering mode used while determining exposure for capturing an image"
 msgstr ""
-"Primijenjeni mȏd mjerenja za određivanje ekspozicije pri snimanju slike"
+"Primijenjeni način mjerenja za određivanje ekspozicije pri snimanju slike"
 
 msgid "capturing source"
 msgstr "izvor za snimanje"
@@ -648,7 +647,7 @@ msgid "show keyboard shortcuts"
 msgstr "tipkovnički prečaci"
 
 msgid "Interactive mode - keyboard controls:"
-msgstr "Interaktivni mȏd - tipkovničko upravljanje:"
+msgstr "Interaktivni način - tipkovničko upravljanje:"
 
 msgid "Output status information and property notifications"
 msgstr "ispiše status i obavijesti o svojstvima"

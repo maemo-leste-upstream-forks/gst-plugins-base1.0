@@ -5,10 +5,10 @@
 # Tianze Wang <zwpwjwtz@126.com>, 2015.
 msgid ""
 msgstr ""
-"Project-Id-Version: gst-plugins-base 1.15.1\n"
+"Project-Id-Version: gst-plugins-base 1.16.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2019-04-19 00:20+0100\n"
-"PO-Revision-Date: 2019-03-05 16:30+0100\n"
+"POT-Creation-Date: 2019-09-23 11:06+0100\n"
+"PO-Revision-Date: 2019-09-22 08:34+0200\n"
 "Last-Translator: Tianze Wang <zwpwjwtz@126.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -670,6 +670,8 @@ msgid ""
 "Keep showing the last frame on EOS until quit or playlist change command "
 "(gapless is ignored)"
 msgstr ""
+"播放结束后，在 EOS 上维持最后一帧，直到用户手动退出或者切换播放列表（忽略“无"
+"缝切换”选项）"
 
 #, c-format
 msgid "Usage: %s FILE1|URI1 [FILE2|URI2] [FILE3|URI3] ..."

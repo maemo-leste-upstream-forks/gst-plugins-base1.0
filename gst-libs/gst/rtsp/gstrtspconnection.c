@@ -360,7 +360,8 @@ gst_rtsp_connection_create (const GstRTSPUrl * url, GstRTSPConnection ** conn)
   newconn->url = gst_rtsp_url_copy (url);
   newconn->timer = g_timer_new ();
   newconn->timeout = 60;
-  newconn->cseq = 0;            /* RFC 7826: "it is RECOMMENDED to start at 0." */
+  newconn->cseq = 1;            /* RFC 7826: "it is RECOMMENDED to start at 0.",
+                                   but some servers don't copy values <1 due to bugs. */
 
   newconn->remember_session_id = TRUE;
 
@@ -963,7 +964,7 @@ remote_address_failed:
  *
  * Returns: #GST_RTSP_OK when a connection could be made.
  *
- * Since 1.8
+ * Since: 1.8
  */
 GstRTSPResult
 gst_rtsp_connection_connect_with_response (GstRTSPConnection * conn,
@@ -3870,7 +3871,7 @@ gst_rtsp_source_dispatch_write (GPollableOutputStream * stream,
           GstMemory *mem = gst_buffer_peek_memory (msg->body_buffer, m);
 
           /* Skip all memories we already wrote */
-          if (offset + mem->size < msg->body_offset) {
+          if (offset + mem->size <= msg->body_offset) {
             offset += mem->size;
             continue;
           }
@@ -4006,7 +4007,7 @@ gst_rtsp_source_dispatch_write (GPollableOutputStream * stream,
           }
         } else {
           /* Need to continue sending from the data of this message */
-          msg->data_offset = bytes_written;
+          msg->data_offset += bytes_written;
           bytes_written = 0;
         }
       }
