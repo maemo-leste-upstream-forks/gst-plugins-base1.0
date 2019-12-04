@@ -1755,26 +1755,49 @@ chain_convert (GstVideoConverter * convert, GstLineCache * prev, gint idx)
   if (!same_primaries) {
     const GstVideoColorPrimariesInfo *pi;
 
+    /* Convert from RGB_input to RGB_output via XYZ
+     *    res = XYZ_to_RGB_output ( RGB_to_XYZ_input ( input ) )
+     * or in matricial form:
+     *    RGB_output = XYZ_to_RGB_output_matrix * RGB_TO_XYZ_input_matrix * RGB_input
+     *
+     * The RGB_input is the pre-existing convert_matrix
+     * The convert_matrix will become the RGB_output
+     */
+
+    /* Convert input RGB to XYZ */
     pi = gst_video_color_primaries_get_info (convert->in_info.colorimetry.
         primaries);
+    /* Get the RGB_TO_XYZ_input_matrix */
     color_matrix_RGB_to_XYZ (&p1, pi->Rx, pi->Ry, pi->Gx, pi->Gy, pi->Bx,
         pi->By, pi->Wx, pi->Wy);
     GST_DEBUG ("to XYZ matrix");
     color_matrix_debug (&p1);
     GST_DEBUG ("current matrix");
+    /* convert_matrix = RGB_TO_XYZ_input_matrix * input_RGB */
     color_matrix_multiply (&convert->convert_matrix, &convert->convert_matrix,
         &p1);
     color_matrix_debug (&convert->convert_matrix);
 
+    /* Convert XYZ to output RGB */
     pi = gst_video_color_primaries_get_info (convert->out_info.colorimetry.
         primaries);
+    /* Calculate the XYZ_to_RGB_output_matrix
+     *  * Get the RGB_TO_XYZ_output_matrix
+     *  * invert it
+     *  * store in p2
+     */
     color_matrix_RGB_to_XYZ (&p2, pi->Rx, pi->Ry, pi->Gx, pi->Gy, pi->Bx,
         pi->By, pi->Wx, pi->Wy);
     color_matrix_invert (&p2, &p2);
     GST_DEBUG ("to RGB matrix");
     color_matrix_debug (&p2);
-    color_matrix_multiply (&convert->convert_matrix, &convert->convert_matrix,
-        &p2);
+    /* Finally:
+     * convert_matrix = XYZ_to_RGB_output_matrix * RGB_TO_XYZ_input_matrix * RGB_input
+     *                = XYZ_to_RGB_output_matrix * convert_matrix
+     *                = p2 * convert_matrix
+     */
+    color_matrix_multiply (&convert->convert_matrix, &p2,
+        &convert->convert_matrix);
     GST_DEBUG ("current matrix");
     color_matrix_debug (&convert->convert_matrix);
   }
@@ -5930,6 +5953,7 @@ setup_scale (GstVideoConverter * convert)
   GstVideoInfo *in_info, *out_info;
   const GstVideoFormatInfo *in_finfo, *out_finfo;
   GstVideoFormat in_format, out_format;
+  gboolean interlaced;
   guint n_threads = convert->conversion_runner->n_threads;
 
   in_info = &convert->in_info;
@@ -5939,6 +5963,8 @@ setup_scale (GstVideoConverter * convert)
   out_finfo = out_info->finfo;
 
   n_planes = GST_VIDEO_INFO_N_PLANES (out_info);
+
+  interlaced = GST_VIDEO_INFO_IS_INTERLACED (&convert->in_info);
 
   method = GET_OPT_RESAMPLER_METHOD (convert);
   if (method == GST_VIDEO_RESAMPLER_METHOD_NEAREST)
@@ -6034,7 +6060,9 @@ setup_scale (GstVideoConverter * convert)
 
       for (j = 0; j < n_threads; j++) {
         convert->fv_scaler[0].scaler[j] =
-            gst_video_scaler_new (method, GST_VIDEO_SCALER_FLAG_NONE, taps,
+            gst_video_scaler_new (method,
+            interlaced ?
+            GST_VIDEO_SCALER_FLAG_INTERLACED : GST_VIDEO_SCALER_FLAG_NONE, taps,
             in_height, out_height, convert->config);
       }
     } else {
@@ -6124,14 +6152,14 @@ setup_scale (GstVideoConverter * convert)
       need_v_scaler = FALSE;
       need_h_scaler = FALSE;
       if (iw == ow) {
-        if (ih == oh) {
+        if (!interlaced && ih == oh) {
           convert->fconvert[i] = convert_plane_hv;
           GST_DEBUG ("plane %d: copy", i);
-        } else if (ih == 2 * oh && pstride == 1
+        } else if (!interlaced && ih == 2 * oh && pstride == 1
             && resample_method == GST_VIDEO_RESAMPLER_METHOD_LINEAR) {
           convert->fconvert[i] = convert_plane_v_halve;
           GST_DEBUG ("plane %d: vertical halve", i);
-        } else if (2 * ih == oh && pstride == 1
+        } else if (!interlaced && 2 * ih == oh && pstride == 1
             && resample_method == GST_VIDEO_RESAMPLER_METHOD_NEAREST) {
           convert->fconvert[i] = convert_plane_v_double;
           GST_DEBUG ("plane %d: vertical double", i);
@@ -6141,11 +6169,11 @@ setup_scale (GstVideoConverter * convert)
           need_v_scaler = TRUE;
         }
       } else if (ih == oh) {
-        if (iw == 2 * ow && pstride == 1
+        if (!interlaced && iw == 2 * ow && pstride == 1
             && resample_method == GST_VIDEO_RESAMPLER_METHOD_LINEAR) {
           convert->fconvert[i] = convert_plane_h_halve;
           GST_DEBUG ("plane %d: horizontal halve", i);
-        } else if (2 * iw == ow && pstride == 1
+        } else if (!interlaced && 2 * iw == ow && pstride == 1
             && resample_method == GST_VIDEO_RESAMPLER_METHOD_NEAREST) {
           convert->fconvert[i] = convert_plane_h_double;
           GST_DEBUG ("plane %d: horizontal double", i);
@@ -6155,11 +6183,11 @@ setup_scale (GstVideoConverter * convert)
           need_h_scaler = TRUE;
         }
       } else {
-        if (iw == 2 * ow && ih == 2 * oh && pstride == 1
+        if (!interlaced && iw == 2 * ow && ih == 2 * oh && pstride == 1
             && resample_method == GST_VIDEO_RESAMPLER_METHOD_LINEAR) {
           convert->fconvert[i] = convert_plane_hv_halve;
           GST_DEBUG ("plane %d: horizontal/vertical halve", i);
-        } else if (2 * iw == ow && 2 * ih == oh && pstride == 1
+        } else if (!interlaced && 2 * iw == ow && 2 * ih == oh && pstride == 1
             && resample_method == GST_VIDEO_RESAMPLER_METHOD_NEAREST) {
           convert->fconvert[i] = convert_plane_hv_double;
           GST_DEBUG ("plane %d: horizontal/vertical double", i);
@@ -6188,7 +6216,9 @@ setup_scale (GstVideoConverter * convert)
 
         for (j = 0; j < n_threads; j++) {
           convert->fv_scaler[i].scaler[j] =
-              gst_video_scaler_new (resample_method, GST_VIDEO_SCALER_FLAG_NONE,
+              gst_video_scaler_new (resample_method,
+              interlaced ?
+              GST_VIDEO_SCALER_FLAG_INTERLACED : GST_VIDEO_SCALER_FLAG_NONE,
               taps, ih, oh, config);
         }
       } else {
@@ -6305,9 +6335,9 @@ static const VideoTransform transforms[] = {
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_AYUV_Y444},
 
   /* planar -> planar */
-  {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_I420, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_I420, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_YV12, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_YV12, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_Y41B, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
@@ -6324,9 +6354,9 @@ static const VideoTransform transforms[] = {
   {GST_VIDEO_FORMAT_I420, GST_VIDEO_FORMAT_YVU9, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
 
-  {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_I420, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_I420, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_YV12, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_YV12, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_YV12, GST_VIDEO_FORMAT_Y41B, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
@@ -6347,7 +6377,7 @@ static const VideoTransform transforms[] = {
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_Y41B, GST_VIDEO_FORMAT_YV12, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_Y41B, GST_VIDEO_FORMAT_Y41B, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_Y41B, GST_VIDEO_FORMAT_Y41B, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_Y41B, GST_VIDEO_FORMAT_Y42B, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
@@ -6368,7 +6398,7 @@ static const VideoTransform transforms[] = {
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_Y42B, GST_VIDEO_FORMAT_Y41B, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_Y42B, GST_VIDEO_FORMAT_Y42B, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_Y42B, GST_VIDEO_FORMAT_Y42B, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_Y42B, GST_VIDEO_FORMAT_Y444, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
@@ -6389,7 +6419,7 @@ static const VideoTransform transforms[] = {
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_Y444, GST_VIDEO_FORMAT_Y42B, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_Y444, GST_VIDEO_FORMAT_Y444, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_Y444, GST_VIDEO_FORMAT_Y444, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_Y444, GST_VIDEO_FORMAT_GRAY8, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
@@ -6410,7 +6440,7 @@ static const VideoTransform transforms[] = {
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_GRAY8, GST_VIDEO_FORMAT_Y444, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_GRAY8, GST_VIDEO_FORMAT_GRAY8, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_GRAY8, GST_VIDEO_FORMAT_GRAY8, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_GRAY8, GST_VIDEO_FORMAT_A420, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, TRUE, FALSE, 0, 0, convert_scale_planes},
@@ -6431,7 +6461,7 @@ static const VideoTransform transforms[] = {
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_A420, GST_VIDEO_FORMAT_GRAY8, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_A420, GST_VIDEO_FORMAT_A420, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_A420, GST_VIDEO_FORMAT_A420, TRUE, FALSE, FALSE, TRUE,
       TRUE, TRUE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_A420, GST_VIDEO_FORMAT_YUV9, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
@@ -6452,9 +6482,9 @@ static const VideoTransform transforms[] = {
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_A420, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, TRUE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_YUV9, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_YUV9, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_YVU9, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_YUV9, GST_VIDEO_FORMAT_YVU9, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
 
   {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_I420, FALSE, FALSE, FALSE, TRUE,
@@ -6471,9 +6501,9 @@ static const VideoTransform transforms[] = {
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
   {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_A420, FALSE, FALSE, FALSE, TRUE,
       TRUE, FALSE, TRUE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_YUV9, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_YUV9, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
-  {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_YVU9, FALSE, FALSE, FALSE, TRUE,
+  {GST_VIDEO_FORMAT_YVU9, GST_VIDEO_FORMAT_YVU9, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
 
   /* sempiplanar -> semiplanar */
@@ -6700,7 +6730,7 @@ video_converter_lookup_fastpath (GstVideoConverter * convert)
       || convert->out_width < convert->out_maxwidth
       || convert->out_height < convert->out_maxheight;
 
-  for (i = 0; i < sizeof (transforms) / sizeof (transforms[0]); i++) {
+  for (i = 0; i < G_N_ELEMENTS (transforms); i++) {
     if (transforms[i].in_format == in_format &&
         transforms[i].out_format == out_format &&
         (transforms[i].keeps_interlaced || !interlaced) &&
