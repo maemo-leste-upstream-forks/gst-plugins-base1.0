@@ -87,6 +87,7 @@ Depends: ${misc:Depends},
          libgl1-mesa-dev,
          libegl1-mesa-dev,
          libgles2-mesa-dev,
+         libx11-xcb-dev,
          gir1.2-gst-plugins-base-@GST_ABI@ (= ${binary:Version})
 Breaks: libgstreamer-plugins-bad1.0-dev (<< 1.15.1)
 Conflicts: libgstreamer-plugins-bad1.0-dev (<< 1.15.1)
