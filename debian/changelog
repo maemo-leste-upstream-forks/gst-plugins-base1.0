@@ -1,10 +1,15 @@
-gst-plugins-base1.0 (1.16.2-3) UNRELEASED; urgency=medium
+gst-plugins-base1.0 (1.16.2-4) unstable; urgency=medium
 
+  [ Iain Lane ]
   * build-deps, control: Add libx11-xcb-dev to BDs and -dev Depends. We used
     to get this via mesa, but it's dropped that dependency now, so we need to
     provide it ourselves, since we include Xlib-xcb.h.
+    (Closes: #948143, #948867).
 
- -- Iain Lane <laney@debian.org>  Tue, 14 Jan 2020 12:15:03 +0000
+  [ Sebastian Dröge ]
+  * Upload to unstable.
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 24 Mar 2020 10:58:30 +0200
 
 gst-plugins-base1.0 (1.16.2-2) unstable; urgency=medium
 
