@@ -30,6 +30,7 @@
 
 #if GST_GL_HAVE_PLATFORM_EGL
 #include "egl/gsteglimage.h"
+#include "egl/gsteglimage_private.h"
 #include "egl/gstglmemoryegl.h"
 #include "egl/gstglcontext_egl.h"
 #endif
@@ -494,8 +495,9 @@ struct DmabufUpload
   guint n_mem;
 
   gboolean direct;
+  GstGLTextureTarget target;
   GstVideoInfo out_info;
-  /* only used for pointer comparision */
+  /* only used for pointer comparison */
   gpointer out_caps;
 };
 
@@ -510,6 +512,7 @@ _dma_buf_upload_new (GstGLUpload * upload)
 {
   struct DmabufUpload *dmabuf = g_new0 (struct DmabufUpload, 1);
   dmabuf->upload = upload;
+  dmabuf->target = GST_GL_TEXTURE_TARGET_2D;
   return dmabuf;
 }
 
@@ -631,6 +634,11 @@ _dma_buf_upload_accept (gpointer impl, GstBuffer * buffer, GstCaps * in_caps,
           "EGL_KHR_image_base"))
     return FALSE;
 
+  if (dmabuf->target == GST_GL_TEXTURE_TARGET_EXTERNAL_OES &&
+      !gst_gl_context_check_feature (dmabuf->upload->context,
+          "GL_OES_EGL_image_external"))
+    return FALSE;
+
   /* This will eliminate most non-dmabuf out there */
   if (!gst_is_dmabuf_memory (gst_buffer_peek_memory (buffer, 0)))
     return FALSE;
@@ -660,8 +668,8 @@ _dma_buf_upload_accept (gpointer impl, GstBuffer * buffer, GstCaps * in_caps,
     gst_gl_allocation_params_free ((GstGLAllocationParams *) dmabuf->params);
   if (!(dmabuf->params =
           gst_gl_video_allocation_params_new_wrapped_gl_handle (dmabuf->
-              upload->context, NULL, out_info, -1, NULL,
-              GST_GL_TEXTURE_TARGET_2D, 0, NULL, NULL, NULL)))
+              upload->context, NULL, out_info, -1, NULL, dmabuf->target, 0,
+              NULL, NULL, NULL)))
     return FALSE;
 
   /* Find and validate all memories */
@@ -691,9 +699,13 @@ _dma_buf_upload_accept (gpointer impl, GstBuffer * buffer, GstCaps * in_caps,
     fd[i] = gst_dmabuf_memory_get_fd (mems[i]);
   }
 
-  if (dmabuf->direct)
+  if (dmabuf->direct) {
+    /* Check if this format is supported by the driver */
     dmabuf->n_mem = 1;
-  else
+    if (!gst_egl_image_check_dmabuf_direct (dmabuf->upload->context, in_info,
+            dmabuf->target))
+      return FALSE;
+  } else
     dmabuf->n_mem = n_planes;
 
   /* Now create an EGLImage for each dmabufs */
@@ -710,8 +722,8 @@ _dma_buf_upload_accept (gpointer impl, GstBuffer * buffer, GstCaps * in_caps,
     /* otherwise create one and cache it */
     if (dmabuf->direct)
       dmabuf->eglimage[i] =
-          gst_egl_image_from_dmabuf_direct (dmabuf->upload->context, fd, offset,
-          in_info);
+          gst_egl_image_from_dmabuf_direct_target (dmabuf->upload->context, fd,
+          offset, in_info, dmabuf->target);
     else
       dmabuf->eglimage[i] = gst_egl_image_from_dmabuf (dmabuf->upload->context,
           fd[i], in_info, i, offset[i]);
@@ -755,6 +767,15 @@ _dma_buf_upload_perform (gpointer impl, GstBuffer * buffer, GstBuffer ** outbuf)
 {
   struct DmabufUpload *dmabuf = impl;
 
+  /* The direct path sets sinkpad caps to RGBA but this may be incorrect for
+   * the non-direct path, if that path fails to accept. In that case, we need
+   * to reconfigure.
+   */
+  if (!dmabuf->direct &&
+      GST_VIDEO_INFO_FORMAT (&dmabuf->upload->priv->in_info) !=
+      GST_VIDEO_INFO_FORMAT (&dmabuf->out_info))
+    return GST_GL_UPLOAD_RECONFIGURE;
+
   gst_gl_context_thread_add (dmabuf->upload->context,
       (GstGLContextThreadFunc) _dma_buf_upload_perform_gl_thread, dmabuf);
 
@@ -792,7 +813,7 @@ static const UploadMethod _dma_buf_upload = {
   &_dma_buf_upload_free
 };
 
-/* a variant of the DMABuf uploader that relies on HW color convertion instead
+/* a variant of the DMABuf uploader that relies on HW color conversion instead
  * of shaders */
 
 static gpointer
@@ -809,14 +830,26 @@ _direct_dma_buf_upload_transform_caps (gpointer impl, GstGLContext * context,
     GstPadDirection direction, GstCaps * caps)
 {
   struct DmabufUpload *dmabuf = impl;
-  GstCapsFeatures *passthrough =
-      gst_caps_features_from_string
-      (GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION);
+  GstCapsFeatures *passthrough;
   GstCaps *ret;
+
+  if (context) {
+    /* Don't propose direct DMABuf caps feature unless it can be supported */
+    if (gst_gl_context_get_gl_platform (context) != GST_GL_PLATFORM_EGL)
+      return NULL;
+
+    if (dmabuf->target == GST_GL_TEXTURE_TARGET_EXTERNAL_OES &&
+        !gst_gl_context_check_feature (context, "GL_OES_EGL_image_external"))
+      return NULL;
+  }
+
+  passthrough = gst_caps_features_from_string
+      (GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION);
 
   if (direction == GST_PAD_SINK) {
     gint i, n;
     GstCaps *tmp;
+    GstGLTextureTarget target_mask;
 
     ret =
         _set_caps_features_with_passthrough (caps,
@@ -831,7 +864,9 @@ _direct_dma_buf_upload_transform_caps (gpointer impl, GstGLContext * context,
       gst_structure_remove_fields (s, "chroma-site", NULL);
       gst_structure_remove_fields (s, "colorimetry", NULL);
     }
-    tmp = _caps_intersect_texture_target (ret, 1 << GST_GL_TEXTURE_TARGET_2D);
+
+    target_mask = 1 << dmabuf->target;
+    tmp = _caps_intersect_texture_target (ret, target_mask);
     gst_caps_unref (ret);
     ret = tmp;
   } else {
@@ -877,6 +912,28 @@ static const UploadMethod _direct_dma_buf_upload = {
   0,
   &_dma_buf_upload_caps,
   &_direct_dma_buf_upload_new,
+  &_direct_dma_buf_upload_transform_caps,
+  &_dma_buf_upload_accept,
+  &_dma_buf_upload_propose_allocation,
+  &_dma_buf_upload_perform,
+  &_dma_buf_upload_free
+};
+
+/* a variant of the direct DMABuf uploader that uses external OES textures */
+
+static gpointer
+_direct_dma_buf_external_upload_new (GstGLUpload * upload)
+{
+  struct DmabufUpload *dmabuf = _direct_dma_buf_upload_new (upload);
+  dmabuf->target = GST_GL_TEXTURE_TARGET_EXTERNAL_OES;
+  return dmabuf;
+}
+
+static const UploadMethod _direct_dma_buf_external_upload = {
+  "DirectDmabufExternal",
+  0,
+  &_dma_buf_upload_caps,
+  &_direct_dma_buf_external_upload_new,
   &_direct_dma_buf_upload_transform_caps,
   &_dma_buf_upload_accept,
   &_dma_buf_upload_propose_allocation,
@@ -1304,6 +1361,7 @@ _raw_data_upload_perform (gpointer impl, GstBuffer * buffer,
   } else {
     GST_ERROR_OBJECT (raw->upload, "Failed to allocate wrapped texture");
     gst_buffer_unref (*outbuf);
+    gst_object_unref (allocator);
     return GST_GL_UPLOAD_ERROR;
   }
   gst_object_unref (allocator);
@@ -1661,6 +1719,7 @@ static const UploadMethod _directviv_upload = {
 static const UploadMethod *upload_methods[] = { &_gl_memory_upload,
 #if GST_GL_HAVE_DMABUF
   &_direct_dma_buf_upload,
+  &_direct_dma_buf_external_upload,
   &_dma_buf_upload,
 #endif
 #if GST_GL_HAVE_VIV_DIRECTVIV
@@ -1789,16 +1848,19 @@ gst_gl_upload_transform_caps (GstGLUpload * upload, GstGLContext * context,
   if (upload->priv->method) {
     tmp = upload->priv->method->transform_caps (upload->priv->method_impl,
         context, direction, caps);
-    if (filter) {
-      result = gst_caps_intersect_full (filter, tmp, GST_CAPS_INTERSECT_FIRST);
-      gst_caps_unref (tmp);
-    } else {
-      result = tmp;
+    if (tmp) {
+      if (filter) {
+        result =
+            gst_caps_intersect_full (filter, tmp, GST_CAPS_INTERSECT_FIRST);
+        gst_caps_unref (tmp);
+      } else {
+        result = tmp;
+      }
+      if (!gst_caps_is_empty (result))
+        return result;
+      else
+        gst_caps_unref (result);
     }
-    if (!gst_caps_is_empty (result))
-      return result;
-    else
-      gst_caps_unref (result);
   }
 
   tmp = gst_caps_new_empty ();
@@ -1962,7 +2024,7 @@ gst_gl_upload_perform_with_buffer (GstGLUpload * upload, GstBuffer * buffer,
     GstBuffer ** outbuf_ptr)
 {
   GstGLUploadReturn ret = GST_GL_UPLOAD_ERROR;
-  GstBuffer *outbuf;
+  GstBuffer *outbuf = NULL;
   gpointer last_impl = upload->priv->method_impl;
 
   g_return_val_if_fail (GST_IS_GL_UPLOAD (upload), FALSE);
@@ -2003,6 +2065,8 @@ restart:
         break;
       }
     }
+
+    gst_buffer_replace (&outbuf, NULL);
     goto restart;
   } else if (ret == GST_GL_UPLOAD_DONE || ret == GST_GL_UPLOAD_RECONFIGURE) {
     if (last_impl != upload->priv->method_impl) {
@@ -2017,6 +2081,7 @@ restart:
     /* we are done */
   } else {
     upload->priv->method_impl = NULL;
+    gst_buffer_replace (&outbuf, NULL);
     NEXT_METHOD;
   }
 

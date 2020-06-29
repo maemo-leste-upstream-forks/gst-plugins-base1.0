@@ -197,7 +197,7 @@ static const gchar *chroma_key_frag =
   "void main () {\n"
   "  vec4 yuva;\n"
   /* operations translated from alpha and tested with glvideomixer
-   * with one pad's paremeters blend-equation-rgb={subtract,reverse-subtract},
+   * with one pad's parameters blend-equation-rgb={subtract,reverse-subtract},
    * blend-function-src-rgb=src-color and blend-function-dst-rgb=dst-color */
   "  vec4 rgba = texture2D (tex, v_texcoord);\n"
   "  yuva.xyz = rgb_to_yuv (rgba.rgb);\n"
@@ -545,6 +545,8 @@ gst_gl_alpha_class_init (GstGLAlphaClass * klass)
 
   filter_class->filter_texture =
       GST_DEBUG_FUNCPTR (gst_gl_alpha_filter_texture);
+
+  gst_type_mark_as_plugin_api (GST_TYPE_GL_ALPHA_METHOD, 0);
 }
 
 static void

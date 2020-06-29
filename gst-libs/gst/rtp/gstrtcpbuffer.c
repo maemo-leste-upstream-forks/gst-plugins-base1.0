@@ -121,7 +121,7 @@ gst_rtcp_buffer_validate_data_internal (guint8 * data, guint len,
     if (data_len < header_len)
       goto wrong_length;
 
-    /* move to next compount packet */
+    /* move to next compound packet */
     data += header_len;
     data_len -= header_len;
 
@@ -561,7 +561,7 @@ gst_rtcp_buffer_add_packet (GstRTCPBuffer * rtcp, GstRTCPType type,
   maxsize = rtcp->map.maxsize;
 
   /* packet->offset is now pointing to the next free offset in the buffer to
-   * start a compount packet. Next we figure out if we have enough free space in
+   * start a compound packet. Next we figure out if we have enough free space in
    * the buffer to continue. */
   len = rtcp_packet_min_length (type);
   if (len == -1)
@@ -1068,6 +1068,8 @@ gst_rtcp_packet_set_rb (GstRTCPPacket * packet, guint nth, guint32 ssrc,
  * extension.
  *
  * Returns: %TRUE if the profile specific extension data was added.
+ *
+ * Since: 1.10
  */
 gboolean
 gst_rtcp_packet_add_profile_specific_ext (GstRTCPPacket * packet,
@@ -1108,6 +1110,8 @@ gst_rtcp_packet_add_profile_specific_ext (GstRTCPPacket * packet,
  *
  * Returns: The number of 32-bit words containing profile-specific extension
  *          data from @packet.
+ *
+ * Since: 1.10
  */
 guint16
 gst_rtcp_packet_get_profile_specific_ext_length (GstRTCPPacket * packet)
@@ -1138,6 +1142,8 @@ gst_rtcp_packet_get_profile_specific_ext_length (GstRTCPPacket * packet)
  * @len: (out): result length of the profile-specific data
  *
  * Returns: %TRUE if there was valid data.
+ *
+ * Since: 1.10
  */
 gboolean
 gst_rtcp_packet_get_profile_specific_ext (GstRTCPPacket * packet,
@@ -1177,6 +1183,8 @@ gst_rtcp_packet_get_profile_specific_ext (GstRTCPPacket * packet,
  * memory area @data. This must be freed with g_free() after usage.
  *
  * Returns: %TRUE if there was valid data.
+ *
+ * Since: 1.10
  */
 gboolean
 gst_rtcp_packet_copy_profile_specific_ext (GstRTCPPacket * packet,

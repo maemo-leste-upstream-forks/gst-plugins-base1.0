@@ -9,6 +9,7 @@ gl_sources = [
   'gstglapi.c',
   'gstglbasefilter.c',
   'gstglbasememory.c',
+  'gstglbasesrc.c',
   'gstglcolorconvert.c',
   'gstglbuffer.c',
   'gstglbufferpool.c',
@@ -45,6 +46,7 @@ gir_gl_headers = [
   'gstglapi.h',
   'gstglbasefilter.h',
   'gstglbasememory.h',
+  'gstglbasesrc.h',
   'gstglbuffer.h',
   'gstglbufferpool.h',
   'gstglcolorconvert.h',
@@ -110,6 +112,7 @@ glconf_options = [
     'GST_GL_HAVE_WINDOW_X11',
     'GST_GL_HAVE_WINDOW_COCOA',
     'GST_GL_HAVE_WINDOW_WIN32',
+    'GST_GL_HAVE_WINDOW_WINRT',
     'GST_GL_HAVE_WINDOW_WAYLAND',
     'GST_GL_HAVE_WINDOW_ANDROID',
     'GST_GL_HAVE_WINDOW_DISPMANX',
@@ -230,7 +233,9 @@ if gl_winsys.contains('auto')
   need_win_x11 = 'auto'
   need_win_wayland = 'auto'
   need_win_win32 = 'auto'
+  need_win_winrt = 'auto'
   need_win_cocoa = 'auto'
+  need_win_egl = 'auto'
   need_win_eagl = 'auto'
   need_win_dispmanx = 'auto'
   need_win_viv_fb = 'auto'
@@ -240,7 +245,9 @@ else
   need_win_x11 = 'no'
   need_win_wayland = 'no'
   need_win_win32 = 'no'
+  need_win_winrt = 'no'
   need_win_cocoa = 'no'
+  need_win_egl = 'no'
   need_win_eagl = 'no'
   need_win_dispmanx = 'no'
   need_win_viv_fb = 'no'
@@ -253,8 +260,12 @@ else
       need_win_wayland = 'yes'
     elif winsys == 'win32'
       need_win_win32 = 'yes'
+    elif winsys == 'winrt'
+      need_win_winrt = 'yes'
     elif winsys == 'cocoa'
       need_win_cocoa = 'yes'
+    elif winsys == 'egl'
+      need_win_egl = 'yes'
     elif winsys == 'eagl'
       need_win_eagl = 'yes'
     elif winsys == 'dispmanx'
@@ -486,12 +497,14 @@ if need_platform_egl != 'no'
       'egl/gstglcontext_egl.c',
       'egl/gstgldisplay_egl.c',
       'egl/gstglmemoryegl.c',
+      'egl/gstgldisplay_egl_device.c',
     ]
     gl_egl_headers += [
       'egl/gstegl.h',
       'egl/gsteglimage.h',
       'egl/gstgldisplay_egl.h',
       'egl/gstglmemoryegl.h',
+      'egl/gstgldisplay_egl_device.h',
     ]
     gl_platform_deps += egl_dep
     glconf.set10('GST_GL_HAVE_PLATFORM_EGL', 1)
@@ -508,6 +521,17 @@ if need_platform_egl != 'no'
     enabled_gl_platforms += 'egl'
   elif need_platform_egl == 'yes'
     error ('Could not find requested EGL library')
+  endif
+endif
+
+# winsys_egl checks
+if need_win_egl == 'yes'
+  if need_platform_egl == 'no'
+    error('Impossible situation requested: Cannot use Winsys egl without EGL support')
+  elif not egl_dep.found()
+    error ('Could not find EGL libraries for Winsys egl')
+  else
+    enabled_gl_winsys += 'egl'
   endif
 endif
 
@@ -528,7 +552,7 @@ if need_win_wayland != 'no'
       message ('Could not find EGL libraries for wayland')
     endif
   else
-    wayland_client_dep = dependency('wayland-client', version : '>= 1.0', required : false)
+    wayland_client_dep = dependency('wayland-client', version : '>= 1.11', required : false)
     wayland_cursor_dep = dependency('wayland-cursor', version : '>= 1.0', required : false)
     wayland_egl_dep = dependency('wayland-egl', version : '>= 1.0', required : false)
     wayland_protocols_dep = dependency('wayland-protocols', version : '>= 1.15', required : false)
@@ -649,27 +673,65 @@ if need_platform_wgl == 'yes'
   endif
 endif
 
-if need_platform_wgl != 'no' and need_win_win32 != 'no'
+if host_system == 'windows' and need_win_win32 != 'no'
   gdi_dep = cc.find_library('gdi32', required : false)
-  # FIXME: Revert back to has_header once it gains prefix support
-  wglext_h = cc.has_header('GL/wglext.h',
-                           prefix : '''#include <windows.h>
-                                       #include <GL/gl.h>''',
-                           include_directories : compat_includes)
+  if gdi_dep.found()
+    have_wgl = false
+    have_egl_win32 = false
+    if need_platform_wgl != 'no'
+      wglext_h = cc.has_header('GL/wglext.h',
+                               prefix : '''#include <windows.h>
+                                           #include <GL/gl.h>''',
+                               include_directories : compat_includes)
+      have_wgl = wglext_h and gl_dep.found()
+    endif
 
-  if wglext_h and gdi_dep.found() and gl_dep.found()
-    gl_includes += [compat_includes]
-    gl_platform_deps += gdi_dep
-    gl_sources += [
-      'win32/gstglwindow_win32.c',
-      'win32/gstglwindow_win32.c',
-      'win32/gstglcontext_wgl.c',
-    ]
-    enabled_gl_winsys += 'win32'
-    gl_winsys_deps += gdi_dep
-    enabled_gl_platforms += 'wgl'
-    glconf.set('GST_GL_HAVE_WINDOW_WIN32', 1)
-    glconf.set('GST_GL_HAVE_PLATFORM_WGL', 1)
+    have_egl_win32 = enabled_gl_platforms.contains('egl') and gles2_dep.found()
+    if have_wgl or have_egl_win32
+      gl_includes += [compat_includes]
+      gl_platform_deps += gdi_dep
+      gl_sources += [
+        'win32/gstglwindow_win32.c',
+        'win32/gstglwindow_win32.c',
+      ]
+      enabled_gl_winsys += 'win32'
+      gl_winsys_deps += gdi_dep
+      glconf.set('GST_GL_HAVE_WINDOW_WIN32', 1)
+    endif
+
+    if have_wgl
+      gl_sources += [
+        'wgl/gstglcontext_wgl.c',
+      ]
+      enabled_gl_platforms += 'wgl'
+      glconf.set('GST_GL_HAVE_PLATFORM_WGL', 1)
+    endif
+  endif
+endif
+
+# WinRT ANGLE checks
+if need_win_winrt != 'no' and host_system == 'windows'
+  if need_win_winrt == 'yes' and not enabled_gl_platforms.contains('egl')
+    error('Impossible situation requested: Cannot use WinRT ANGLE without EGL support')
+  endif
+
+  if egl_dep.found()
+    windows_graphics_h = cc.has_header('windows.graphics.h')
+    windows_app_dep = cc.find_library('WindowsApp', required: false)
+
+    if windows_graphics_h and windows_app_dep.found()
+      enabled_gl_winsys += 'winrt'
+      glconf.set10('GST_GL_HAVE_WINDOW_WINRT', 1)
+      gl_sources += [
+        'winrt/gstglwindow_winrt_egl.c'
+      ]
+    elif need_win_winrt == 'yes'
+      error('WinRT is enabled, but headers/libraries were not found')
+    endif
+  elif need_win_winrt == 'yes'
+    error('WinRT ANGLE is enabled, but EGL was not found')
+  else
+    message('WinRT ANGLE disabled because EGL was not found')
   endif
 endif
 
@@ -747,13 +809,15 @@ if host_system == 'ios' and need_platform_eagl != 'no' and need_win_eagl != 'no'
   foundation_dep = dependency('appleframeworks', modules : ['Foundation'], required : false)
   corefoundation_dep = dependency('appleframeworks', modules : ['CoreFoundation'], required : false)
   coregraphics_dep = dependency('appleframeworks', modules : ['CoreGraphics'], required : false)
+  quartzcore_dep = dependency('appleframeworks', modules : ['QuartzCore'], required : false)
   uikit_dep = dependency('appleframeworks', modules : ['UIkit'], required : false)
 
-  if foundation_dep.found() and corefoundation_dep.found() and coregraphics_dep.found() and uikit_dep.found()
+  if foundation_dep.found() and corefoundation_dep.found() and coregraphics_dep.found() and quartzcore_dep.found() and uikit_dep.found()
     gl_platform_deps += [
       corefoundation_dep,
       foundation_dep,
       coregraphics_dep,
+      quartzcore_dep,
       uikit_dep,
     ]
     gl_sources += [
@@ -942,7 +1006,7 @@ if build_gstgl
   gstgl_dep = declare_dependency(link_with : gstgl,
     include_directories : [libsinc, compat_includes],
     sources: gen_sources,
-    dependencies : [video_dep, gst_base_dep] + gl_winsys_deps)
+    dependencies : [video_dep, gst_base_dep] + gl_lib_deps + gl_winsys_deps)
 
 elif get_option('gl').enabled()
   error('GStreamer OpenGL integration required via options, but needed dependencies not found.')

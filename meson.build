@@ -1,6 +1,6 @@
 project('gst-plugins-base', 'c',
-  version : '1.16.2',
-  meson_version : '>= 0.47',
+  version : '1.17.1',
+  meson_version : '>= 0.48',
   default_options : [ 'warning_level=1',
                       'buildtype=debugoptimized' ])
 
@@ -16,10 +16,10 @@ else
 endif
 gst_version_is_dev = gst_version_minor % 2 == 1 and gst_version_micro < 90
 
-have_cxx = add_languages('cpp', required : false)
-have_objc = add_languages('objc', required : false)
+have_cxx = add_languages('cpp', native: false, required: false)
+have_objc = add_languages('objc', native: false, required: false)
 
-glib_req = '>= 2.40.0'
+glib_req = '>= 2.44.0'
 orc_req = '>= 0.4.24'
 gst_req = '>= @0@.@1@.0'.format(gst_version_major, gst_version_minor)
 
@@ -32,6 +32,7 @@ libversion = '@0@.@1@.0'.format(soversion, curversion)
 osxversion = curversion + 1
 
 plugins_install_dir = join_paths(get_option('libdir'), 'gstreamer-1.0')
+plugins = []
 
 cc = meson.get_compiler('c')
 host_system = host_machine.system()
@@ -66,6 +67,9 @@ if cc.get_id() == 'msvc'
   export_define = '__declspec(dllexport) extern'
 elif cc.has_argument('-fvisibility=hidden')
   add_project_arguments('-fvisibility=hidden', language: 'c')
+  if have_objc
+    add_project_arguments('-fvisibility=hidden', language: 'objc')
+  endif
   export_define = 'extern __attribute__ ((visibility ("default")))'
 else
   export_define = 'extern'
@@ -108,10 +112,11 @@ check_headers = [
   ['HAVE_EMMINTRIN_H', 'emmintrin.h'],
   ['HAVE_INTTYPES_H', 'inttypes.h'],
   ['HAVE_MEMORY_H', 'memory.h'],
+  ['HAVE_NETINET_IN_H', 'netinet/in.h'],
+  ['HAVE_NETINET_TCP_H', 'netinet/tcp.h'],
   ['HAVE_PROCESS_H', 'process.h'],
   ['HAVE_SMMINTRIN_H', 'smmintrin.h'],
   ['HAVE_STDINT_H', 'stdint.h'],
-  ['HAVE_STDLIB_H', 'stdlib.h'],
   ['HAVE_STRINGS_H', 'strings.h'],
   ['HAVE_STRING_H', 'string.h'],
   ['HAVE_SYS_SOCKET_H', 'sys/socket.h'],
@@ -132,6 +137,7 @@ endforeach
 check_functions = [
   ['HAVE_DCGETTEXT', 'dcgettext', '#include<libintl.h>'],
   ['HAVE_GMTIME_R', 'gmtime_r', '#include<time.h>'],
+  ['HAVE_LOCALTIME_R', 'localtime_r', '#include<time.h>'],
   ['HAVE_LRINTF', 'lrintf', '#include<math.h>'],
   ['HAVE_MMAP', 'mmap', '#include<sys/mman.h>'],
   ['HAVE_LOG2', 'log2', '#include<math.h>'],
@@ -274,7 +280,7 @@ else
   gtk_quartz_dep = dependency('', required : false)
 endif
 
-core_conf.set('HAVE_X', x11_dep.found())
+core_conf.set('HAVE_X11', x11_dep.found())
 core_conf.set('HAVE_GIO_UNIX_2_0', giounix_dep.found())
 
 if gio_dep.type_name() == 'pkgconfig'
@@ -369,9 +375,17 @@ else
     endif
 endif
 
+if cc.has_member('struct tcp_info', '__tcpi_reordering', prefix: '#include <netinet/tcp.h>')
+  core_conf.set('HAVE_BSD_TCP_INFO', true)
+endif
+
+if cc.has_member('struct tcp_info', 'tcpi_reordering', prefix: '#include <netinet/tcp.h>')
+  core_conf.set('HAVE_LINUX_TCP_INFO', true)
+endif
+
 gir = find_program('g-ir-scanner', required : get_option('introspection'))
 gnome = import('gnome')
-build_gir = gir.found() and not meson.is_cross_build()
+build_gir = gir.found() and (not meson.is_cross_build() or get_option('introspection').enabled())
 gir_init_section = [ '--add-init-section=extern void gst_init(gint*,gchar**);' + \
     'g_setenv("GST_REGISTRY_DISABLE", "yes", TRUE);' + \
     'g_setenv("GST_REGISTRY_1.0", "@0@", TRUE);'.format(meson.current_build_dir() + '/gir_empty_registry.reg') + \
@@ -386,6 +400,7 @@ if get_option('default_library') == 'shared'
   plugins_pkgconfig_install_dir = disabler()
 endif
 
+python3 = import('python').find_installation()
 subdir('gst-libs')
 subdir('gst')
 subdir('ext')
@@ -395,25 +410,14 @@ if not get_option('tools').disabled()
 endif
 subdir('tests')
 subdir('pkgconfig')
-
 # xgettext is optional (on Windows for instance)
 if find_program('xgettext', required : get_option('nls')).found()
   core_conf.set('ENABLE_NLS', 1)
   subdir('po')
 endif
-
-if build_machine.system() == 'windows'
-  message('Disabling gtk-doc while building on Windows')
-else
-  if find_program('gtkdoc-scan', required : get_option('gtk_doc')).found()
-    subdir('docs')
-  else
-    message('Not building documentation as gtk-doc was not found')
-  endif
-endif
+subdir('docs')
 
 # Use core_conf after all subdirs have set values
 configure_file(output : 'config.h', configuration : core_conf)
 
-python3 = import('python').find_installation()
 run_command(python3, '-c', 'import shutil; shutil.copy("hooks/pre-commit.hook", ".git/hooks/pre-commit")')

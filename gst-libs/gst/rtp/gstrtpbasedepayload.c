@@ -42,6 +42,7 @@ struct _GstRTPBaseDepayloadPrivate
   gdouble play_speed;
   gdouble play_scale;
   guint clock_base;
+  gboolean onvif_mode;
 
   gboolean discont;
   GstClockTime pts;
@@ -52,6 +53,7 @@ struct _GstRTPBaseDepayloadPrivate
   guint32 last_seqnum;
   guint32 last_rtptime;
   guint32 next_seqnum;
+  gint max_reorder;
 
   gboolean negotiated;
 
@@ -61,6 +63,8 @@ struct _GstRTPBaseDepayloadPrivate
 
   gboolean source_info;
   GstBuffer *input_buffer;
+
+  GstFlowReturn process_flow_ret;
 };
 
 /* Filter signals and args */
@@ -71,12 +75,14 @@ enum
 };
 
 #define DEFAULT_SOURCE_INFO FALSE
+#define DEFAULT_MAX_REORDER 100
 
 enum
 {
   PROP_0,
   PROP_STATS,
   PROP_SOURCE_INFO,
+  PROP_MAX_REORDER,
   PROP_LAST
 };
 
@@ -202,6 +208,21 @@ gst_rtp_base_depayload_class_init (GstRTPBaseDepayloadClass * klass)
           "Add RTP source information as buffer meta",
           DEFAULT_SOURCE_INFO, G_PARAM_READWRITE));
 
+  /**
+   * GstRTPBaseDepayload:max-reorder:
+   *
+   * Max seqnum reorder before the sender is assumed to have restarted.
+   *
+   * When max-reorder is set to 0 all reordered/duplicate packets are
+   * considered coming from a restarted sender.
+   *
+   * Since: 1.18
+   **/
+  g_object_class_install_property (gobject_class, PROP_MAX_REORDER,
+      g_param_spec_int ("max-reorder", "Max Reorder",
+          "Max seqnum reorder before assuming sender has restarted",
+          0, G_MAXINT, DEFAULT_MAX_REORDER, G_PARAM_READWRITE));
+
   gstelement_class->change_state = gst_rtp_base_depayload_change_state;
 
   klass->packet_lost = gst_rtp_base_depayload_packet_lost;
@@ -247,10 +268,12 @@ gst_rtp_base_depayload_init (GstRTPBaseDepayload * filter,
   priv->play_speed = 1.0;
   priv->play_scale = 1.0;
   priv->clock_base = -1;
+  priv->onvif_mode = FALSE;
   priv->dts = -1;
   priv->pts = -1;
   priv->duration = -1;
   priv->source_info = DEFAULT_SOURCE_INFO;
+  priv->max_reorder = DEFAULT_MAX_REORDER;
 
   gst_segment_init (&filter->segment, GST_FORMAT_UNDEFINED);
 }
@@ -287,6 +310,16 @@ gst_rtp_base_depayload_setcaps (GstRTPBaseDepayload * filter, GstCaps * caps)
   }
 
   caps_struct = gst_caps_get_structure (caps, 0);
+
+  value = gst_structure_get_value (caps_struct, "onvif-mode");
+  if (value && G_VALUE_HOLDS_BOOLEAN (value))
+    priv->onvif_mode = g_value_get_boolean (value);
+  else
+    priv->onvif_mode = FALSE;
+  GST_DEBUG_OBJECT (filter, "Onvif mode: %d", priv->onvif_mode);
+
+  if (priv->onvif_mode)
+    filter->need_newsegment = FALSE;
 
   /* get other values for newsegment */
   value = gst_structure_get_value (caps_struct, "npt-start");
@@ -355,7 +388,6 @@ gst_rtp_base_depayload_handle_buffer (GstRTPBaseDepayload * filter,
       GstRTPBuffer * rtp_buffer);
   GstBuffer *(*process_func) (GstRTPBaseDepayload * base, GstBuffer * in);
   GstRTPBaseDepayloadPrivate *priv;
-  GstFlowReturn ret = GST_FLOW_OK;
   GstBuffer *out_buf;
   guint32 ssrc;
   guint16 seqnum;
@@ -365,6 +397,7 @@ gst_rtp_base_depayload_handle_buffer (GstRTPBaseDepayload * filter,
   GstRTPBuffer rtp = { NULL };
 
   priv = filter->priv;
+  priv->process_flow_ret = GST_FLOW_OK;
 
   process_func = bclass->process;
   process_rtp_packet_func = bclass->process_rtp_packet;
@@ -417,15 +450,19 @@ gst_rtp_base_depayload_handle_buffer (GstRTPBaseDepayload * filter,
           GST_LOG_OBJECT (filter, "%d missing packets", gap);
           discont = TRUE;
         } else {
-          /* seqnum < next_seqnum, we have seen this packet before or the sender
-           * could be restarted. If the packet is not too old, we throw it away as
-           * a duplicate, otherwise we mark discont and continue. 100 misordered
-           * packets is a good threshold. See also RFC 4737. */
-          if (gap < 100)
+          /* seqnum < next_seqnum, we have seen this packet before, have a
+           * reordered packet or the sender could be restarted. If the packet
+           * is not too old, we throw it away as a duplicate. Otherwise we
+           * mark discont and continue assuming the sender has restarted. See
+           * also RFC 4737. */
+          GST_WARNING ("gap %d <= priv->max_reorder %d -> dropping %d",
+              gap, priv->max_reorder, gap <= priv->max_reorder);
+          if (gap <= priv->max_reorder)
             goto dropping;
 
           GST_LOG_OBJECT (filter,
-              "%d > 100, packet too old, sender likely restarted", gap);
+              "%d > %d, packet too old, sender likely restarted", gap,
+              priv->max_reorder);
           discont = TRUE;
         }
       }
@@ -476,13 +513,16 @@ gst_rtp_base_depayload_handle_buffer (GstRTPBaseDepayload * filter,
 
   /* let's send it out to processing */
   if (out_buf) {
-    ret = gst_rtp_base_depayload_push (filter, out_buf);
+    if (priv->process_flow_ret == GST_FLOW_OK)
+      priv->process_flow_ret = gst_rtp_base_depayload_push (filter, out_buf);
+    else
+      gst_buffer_unref (out_buf);
   }
 
   gst_buffer_unref (in);
   priv->input_buffer = NULL;
 
-  return ret;
+  return priv->process_flow_ret;
 
   /* ERRORS */
 not_negotiated:
@@ -510,7 +550,8 @@ invalid_buffer:
 dropping:
   {
     gst_rtp_buffer_unmap (&rtp);
-    GST_WARNING_OBJECT (filter, "%d <= 100, dropping old packet", gap);
+    GST_WARNING_OBJECT (filter, "%d <= %d, dropping old packet", gap,
+        priv->max_reorder);
     gst_buffer_unref (in);
     return GST_FLOW_OK;
   }
@@ -598,7 +639,7 @@ gst_rtp_base_depayload_handle_event (GstRTPBaseDepayload * filter,
       gst_segment_init (&filter->segment, GST_FORMAT_UNDEFINED);
       GST_OBJECT_UNLOCK (filter);
 
-      filter->need_newsegment = TRUE;
+      filter->need_newsegment = !filter->priv->onvif_mode;
       filter->priv->next_seqnum = -1;
       gst_event_replace (&filter->priv->segment_event, NULL);
       break;
@@ -627,9 +668,12 @@ gst_rtp_base_depayload_handle_event (GstRTPBaseDepayload * filter,
       filter->segment = segment;
       GST_OBJECT_UNLOCK (filter);
 
-      /* don't pass the event downstream, we generate our own segment including
-       * the NTP time and other things we receive in caps */
-      forward = FALSE;
+      /* In ONVIF mode, upstream is expected to send us the correct segment */
+      if (!filter->priv->onvif_mode) {
+        /* don't pass the event downstream, we generate our own segment including
+         * the NTP time and other things we receive in caps */
+        forward = FALSE;
+      }
       break;
     }
     case GST_EVENT_CUSTOM_DOWNSTREAM:
@@ -750,17 +794,35 @@ create_segment_event (GstRTPBaseDepayload * filter, guint rtptime,
   return event;
 }
 
+static gboolean
+foreach_metadata_drop (GstBuffer * buffer, GstMeta ** meta, gpointer user_data)
+{
+  GType drop_api_type = (GType) user_data;
+  const GstMetaInfo *info = (*meta)->info;
+
+  if (info->api == drop_api_type)
+    *meta = NULL;
+
+  return TRUE;
+}
+
 static void
 add_rtp_source_meta (GstBuffer * outbuf, GstBuffer * rtpbuf)
 {
   GstRTPBuffer rtp = GST_RTP_BUFFER_INIT;
   GstRTPSourceMeta *meta;
   guint32 ssrc;
+  GType source_meta_api = gst_rtp_source_meta_api_get_type ();
 
   if (!gst_rtp_buffer_map (rtpbuf, GST_MAP_READ, &rtp))
     return;
 
   ssrc = gst_rtp_buffer_get_ssrc (&rtp);
+
+  /* remove any pre-existing source-meta */
+  gst_buffer_foreach_meta (outbuf, foreach_metadata_drop,
+      (gpointer) source_meta_api);
+
   meta = gst_buffer_add_rtp_source_meta (outbuf, &ssrc, NULL, 0);
   if (meta != NULL) {
     gint i;
@@ -786,7 +848,7 @@ set_headers (GstBuffer ** buffer, guint idx, GstRTPBaseDepayload * depayload)
   dts = GST_BUFFER_DTS (*buffer);
   duration = GST_BUFFER_DURATION (*buffer);
 
-  /* apply last incomming timestamp and duration to outgoing buffer if
+  /* apply last incoming timestamp and duration to outgoing buffer if
    * not otherwise set. */
   if (!GST_CLOCK_TIME_IS_VALID (pts))
     GST_BUFFER_PTS (*buffer) = priv->pts;
@@ -842,7 +904,7 @@ gst_rtp_base_depayload_prepare_push (GstRTPBaseDepayload * filter,
  * Push @out_buf to the peer of @filter. This function takes ownership of
  * @out_buf.
  *
- * This function will by default apply the last incomming timestamp on
+ * This function will by default apply the last incoming timestamp on
  * the outgoing buffer when it didn't have a timestamp already.
  *
  * Returns: a #GstFlowReturn.
@@ -858,6 +920,9 @@ gst_rtp_base_depayload_push (GstRTPBaseDepayload * filter, GstBuffer * out_buf)
     res = gst_pad_push (filter->srcpad, out_buf);
   else
     gst_buffer_unref (out_buf);
+
+  if (res != GST_FLOW_OK)
+    filter->priv->process_flow_ret = res;
 
   return res;
 }
@@ -884,6 +949,9 @@ gst_rtp_base_depayload_push_list (GstRTPBaseDepayload * filter,
     res = gst_pad_push_list (filter->srcpad, out_list);
   else
     gst_buffer_list_unref (out_list);
+
+  if (res != GST_FLOW_OK)
+    filter->priv->process_flow_ret = res;
 
   return res;
 }
@@ -953,6 +1021,7 @@ gst_rtp_base_depayload_change_state (GstElement * element,
       priv->play_speed = 1.0;
       priv->play_scale = 1.0;
       priv->clock_base = -1;
+      priv->onvif_mode = FALSE;
       priv->next_seqnum = -1;
       priv->negotiated = FALSE;
       priv->discont = FALSE;
@@ -1019,13 +1088,18 @@ gst_rtp_base_depayload_set_property (GObject * object, guint prop_id,
     const GValue * value, GParamSpec * pspec)
 {
   GstRTPBaseDepayload *depayload;
+  GstRTPBaseDepayloadPrivate *priv;
 
   depayload = GST_RTP_BASE_DEPAYLOAD (object);
+  priv = depayload->priv;
 
   switch (prop_id) {
     case PROP_SOURCE_INFO:
       gst_rtp_base_depayload_set_source_info_enabled (depayload,
           g_value_get_boolean (value));
+      break;
+    case PROP_MAX_REORDER:
+      priv->max_reorder = g_value_get_int (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1038,8 +1112,10 @@ gst_rtp_base_depayload_get_property (GObject * object, guint prop_id,
     GValue * value, GParamSpec * pspec)
 {
   GstRTPBaseDepayload *depayload;
+  GstRTPBaseDepayloadPrivate *priv;
 
   depayload = GST_RTP_BASE_DEPAYLOAD (object);
+  priv = depayload->priv;
 
   switch (prop_id) {
     case PROP_STATS:
@@ -1049,6 +1125,9 @@ gst_rtp_base_depayload_get_property (GObject * object, guint prop_id,
     case PROP_SOURCE_INFO:
       g_value_set_boolean (value,
           gst_rtp_base_depayload_is_source_info_enabled (depayload));
+      break;
+    case PROP_MAX_REORDER:
+      g_value_set_int (value, priv->max_reorder);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

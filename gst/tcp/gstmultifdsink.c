@@ -119,10 +119,6 @@
 #include <sys/stat.h>
 #include <netinet/in.h>
 
-#ifdef HAVE_FIONREAD_IN_SYS_FILIO
-#include <sys/filio.h>
-#endif
-
 #include "gstmultifdsink.h"
 
 #define NOT_IMPLEMENTED 0
@@ -236,7 +232,7 @@ gst_multi_fd_sink_class_init (GstMultiFdSinkClass * klass)
       g_signal_new ("add", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
       G_STRUCT_OFFSET (GstMultiFdSinkClass, add), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, G_TYPE_INT);
+      NULL, G_TYPE_NONE, 1, G_TYPE_INT);
   /**
    * GstMultiFdSink::add-full:
    * @gstmultifdsink:  the multifdsink element to emit this signal on
@@ -256,9 +252,8 @@ gst_multi_fd_sink_class_init (GstMultiFdSinkClass * klass)
       g_signal_new ("add-full", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
       G_STRUCT_OFFSET (GstMultiFdSinkClass, add_full), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 6,
-      G_TYPE_INT, GST_TYPE_SYNC_METHOD, GST_TYPE_FORMAT, G_TYPE_UINT64,
-      GST_TYPE_FORMAT, G_TYPE_UINT64);
+      NULL, G_TYPE_NONE, 6, G_TYPE_INT, GST_TYPE_SYNC_METHOD, GST_TYPE_FORMAT,
+      G_TYPE_UINT64, GST_TYPE_FORMAT, G_TYPE_UINT64);
   /**
    * GstMultiFdSink::remove:
    * @gstmultifdsink: the multifdsink element to emit this signal on
@@ -270,7 +265,7 @@ gst_multi_fd_sink_class_init (GstMultiFdSinkClass * klass)
       g_signal_new ("remove", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
       G_STRUCT_OFFSET (GstMultiFdSinkClass, remove), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, G_TYPE_INT);
+      NULL, G_TYPE_NONE, 1, G_TYPE_INT);
   /**
    * GstMultiFdSink::remove-flush:
    * @gstmultifdsink: the multifdsink element to emit this signal on
@@ -283,7 +278,7 @@ gst_multi_fd_sink_class_init (GstMultiFdSinkClass * klass)
       g_signal_new ("remove-flush", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
       G_STRUCT_OFFSET (GstMultiFdSinkClass, remove_flush), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, G_TYPE_INT);
+      NULL, G_TYPE_NONE, 1, G_TYPE_INT);
 
   /**
    * GstMultiFdSink::get-stats:
@@ -309,7 +304,7 @@ gst_multi_fd_sink_class_init (GstMultiFdSinkClass * klass)
       g_signal_new ("get-stats", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
       G_STRUCT_OFFSET (GstMultiFdSinkClass, get_stats), NULL, NULL,
-      g_cclosure_marshal_generic, GST_TYPE_STRUCTURE, 1, G_TYPE_INT);
+      NULL, GST_TYPE_STRUCTURE, 1, G_TYPE_INT);
 
   /**
    * GstMultiFdSink::client-added:
@@ -322,8 +317,7 @@ gst_multi_fd_sink_class_init (GstMultiFdSinkClass * klass)
    */
   gst_multi_fd_sink_signals[SIGNAL_CLIENT_ADDED] =
       g_signal_new ("client-added", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic, G_TYPE_NONE,
-      1, G_TYPE_INT);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 1, G_TYPE_INT);
   /**
    * GstMultiFdSink::client-removed:
    * @gstmultifdsink: the multifdsink element that emitted this signal
@@ -336,12 +330,12 @@ gst_multi_fd_sink_class_init (GstMultiFdSinkClass * klass)
    *
    * @gstmultifdsink still holds a handle to @fd so it is possible to call
    * the get-stats signal from this callback. For the same reason it is
-   * not safe to close() and reuse @fd in this callback.
+   * not safe to `close()` and reuse @fd in this callback.
    */
   gst_multi_fd_sink_signals[SIGNAL_CLIENT_REMOVED] =
       g_signal_new ("client-removed", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic,
-      G_TYPE_NONE, 2, G_TYPE_INT, GST_TYPE_CLIENT_STATUS);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 2, G_TYPE_INT,
+      GST_TYPE_CLIENT_STATUS);
   /**
    * GstMultiFdSink::client-fd-removed:
    * @gstmultifdsink: the multifdsink element that emitted this signal
@@ -353,12 +347,11 @@ gst_multi_fd_sink_class_init (GstMultiFdSinkClass * klass)
    *
    * In this callback, @gstmultifdsink has removed all the information
    * associated with @fd and it is therefore not possible to call get-stats
-   * with @fd. It is however safe to close() and reuse @fd in the callback.
+   * with @fd. It is however safe to `close()` and reuse @fd in the callback.
    */
   gst_multi_fd_sink_signals[SIGNAL_CLIENT_FD_REMOVED] =
       g_signal_new ("client-fd-removed", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic,
-      G_TYPE_NONE, 1, G_TYPE_INT);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 1, G_TYPE_INT);
 
   gst_element_class_set_static_metadata (gstelement_class,
       "Multi filedescriptor sink", "Sink/Network",
@@ -574,7 +567,7 @@ gst_multi_fd_sink_hash_changed (GstMultiHandleSink * mhsink)
 
 /* handle a read on a client fd,
  * which either indicates a close or should be ignored
- * returns FALSE if some error occured or the client closed. */
+ * returns FALSE if some error occurred or the client closed. */
 static gboolean
 gst_multi_fd_sink_handle_client_read (GstMultiFdSink * sink,
     GstTCPClient * client)
@@ -667,7 +660,7 @@ ioctl_failed:
  * When the sending returns a partial buffer we stop sending more data as
  * the next send operation could block.
  *
- * This functions returns FALSE if some error occured.
+ * This functions returns FALSE if some error occurred.
  */
 static gboolean
 gst_multi_fd_sink_handle_client_write (GstMultiFdSink * sink,
@@ -676,7 +669,6 @@ gst_multi_fd_sink_handle_client_write (GstMultiFdSink * sink,
   gboolean more;
   gboolean flushing;
   GstClockTime now;
-  GTimeVal nowtv;
   GstMultiHandleSink *mhsink = GST_MULTI_HANDLE_SINK (sink);
   GstMultiHandleSinkClass *mhsinkclass =
       GST_MULTI_HANDLE_SINK_GET_CLASS (mhsink);
@@ -689,8 +681,7 @@ gst_multi_fd_sink_handle_client_write (GstMultiFdSink * sink,
   do {
     gint maxsize;
 
-    g_get_current_time (&nowtv);
-    now = GST_TIMEVAL_TO_TIME (nowtv);
+    now = g_get_real_time () * GST_USECOND;
 
     if (!mhclient->sending) {
       /* client is not working on a buffer */
@@ -908,10 +899,8 @@ gst_multi_fd_sink_handle_clients (GstMultiFdSink * sink)
      * and will not disconnect inactive client in the streaming thread. */
     if (G_UNLIKELY (result == 0)) {
       GstClockTime now;
-      GTimeVal nowtv;
 
-      g_get_current_time (&nowtv);
-      now = GST_TIMEVAL_TO_TIME (nowtv);
+      now = g_get_real_time () * GST_USECOND;
 
       CLIENTS_LOCK (mhsink);
       for (clients = mhsink->clients; clients; clients = next) {

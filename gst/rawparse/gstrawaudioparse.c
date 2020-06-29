@@ -29,11 +29,6 @@
  * (= 408 bytes) and keep the remaining 3 bytes. These will then be prepended to
  * the next input data.
  *
- * The element implements the properties and sink caps configuration as specified
- * in the #GstRawBaseParse documentation. The properties configuration can be
- * modified by using the sample-rate, num-channels, channel-positions, format,
- * and pcm-format properties.
- *
  * Currently, this parser supports raw data in a-law, mu-law, or linear PCM format.
  *
  * To facilitate operation with the unalignedaudioparse element, rawaudioparse
@@ -230,7 +225,7 @@ gst_raw_audio_parse_class_init (GstRawAudioParseClass * klass)
       g_param_spec_enum ("format",
           "Format",
           "Format of the raw audio stream",
-          gst_raw_audio_parse_format_get_type (),
+          GST_TYPE_RAW_AUDIO_PARSE_FORMAT,
           GST_RAW_AUDIO_PARSE_FORMAT_PCM,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)
       );
@@ -285,6 +280,8 @@ gst_raw_audio_parse_class_init (GstRawAudioParseClass * klass)
       "Codec/Parser/Audio",
       "Converts unformatted data streams into timestamped raw audio frames",
       "Carlos Rafael Giani <dv@pseudoterminal.org>");
+
+  gst_type_mark_as_plugin_api (GST_TYPE_RAW_AUDIO_PARSE_FORMAT, 0);
 }
 
 static void

@@ -30,8 +30,8 @@
  *
  * The main configuration is via the #GstURISourceBin:uri property.
  *
- * <emphasis>urisourcebin is still experimental API and a technology preview.
- * Its behaviour and exposed API is subject to change.</emphasis>
+ * > urisourcebin is still experimental API and a technology preview.
+ * > Its behaviour and exposed API is subject to change.
  */
 
 /* FIXME 0.11: suppress warnings for deprecated API such as GValueArray
@@ -413,8 +413,8 @@ gst_uri_source_bin_class_init (GstURISourceBinClass * klass)
   gst_uri_source_bin_signals[SIGNAL_DRAINED] =
       g_signal_new ("drained", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      G_STRUCT_OFFSET (GstURISourceBinClass, drained), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
+      G_STRUCT_OFFSET (GstURISourceBinClass, drained), NULL, NULL, NULL,
+      G_TYPE_NONE, 0, G_TYPE_NONE);
 
     /**
    * GstURISourceBin::about-to-finish:
@@ -424,8 +424,8 @@ gst_uri_source_bin_class_init (GstURISourceBinClass * klass)
   gst_uri_source_bin_signals[SIGNAL_ABOUT_TO_FINISH] =
       g_signal_new ("about-to-finish", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      G_STRUCT_OFFSET (GstURISourceBinClass, about_to_finish), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
+      G_STRUCT_OFFSET (GstURISourceBinClass, about_to_finish), NULL, NULL, NULL,
+      G_TYPE_NONE, 0, G_TYPE_NONE);
 
   /**
    * GstURISourceBin::source-setup:
@@ -442,8 +442,7 @@ gst_uri_source_bin_class_init (GstURISourceBinClass * klass)
    */
   gst_uri_source_bin_signals[SIGNAL_SOURCE_SETUP] =
       g_signal_new ("source-setup", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
 
   gst_element_class_add_pad_template (gstelement_class,
       gst_static_pad_template_get (&srctemplate));
@@ -1203,7 +1202,7 @@ source_pad_event_probe (GstPad * pad, GstPadProbeInfo * info,
 
       if (slot->linked_info) {
         if (slot->is_eos) {
-          /* linked_info is old input which is stil linked without removal */
+          /* linked_info is old input which is still linked without removal */
           GST_DEBUG_OBJECT (pad, "push actual EOS");
           seqnum = gst_event_get_seqnum (event);
           eos = gst_event_new_eos ();
@@ -1429,12 +1428,14 @@ gen_source_element (GstURISourceBin * urisrc)
 
   GST_LOG_OBJECT (urisrc, "found source type %s", G_OBJECT_TYPE_NAME (source));
 
+  urisrc->is_stream = IS_STREAM_URI (urisrc->uri);
+
   query = gst_query_new_scheduling ();
   if (gst_element_query (source, query)) {
     gst_query_parse_scheduling (query, &flags, NULL, NULL, NULL);
-    urisrc->is_stream = flags & GST_SCHEDULING_FLAG_BANDWIDTH_LIMITED;
-  } else
-    urisrc->is_stream = IS_STREAM_URI (urisrc->uri);
+    if ((flags & GST_SCHEDULING_FLAG_BANDWIDTH_LIMITED))
+      urisrc->is_stream = TRUE;
+  }
   gst_query_unref (query);
 
   GST_LOG_OBJECT (urisrc, "source is stream: %d", urisrc->is_stream);
@@ -1617,7 +1618,7 @@ post_missing_plugin_error (GstElement * urisrc, const gchar * element_name)
  * @is_dynamic: TRUE if the element will create (more) pads dynamically later
  * on.
  *
- * Returns: FALSE if a fatal error occured while scanning.
+ * Returns: FALSE if a fatal error occurred while scanning.
  */
 static gboolean
 analyse_source (GstURISourceBin * urisrc, gboolean * is_raw,
@@ -1639,7 +1640,7 @@ analyse_source (GstURISourceBin * urisrc, gboolean * is_raw,
     switch (gst_iterator_next (pads_iter, &item)) {
       case GST_ITERATOR_ERROR:
         res = FALSE;
-        /* FALLTROUGH */
+        /* FALLTHROUGH */
       case GST_ITERATOR_DONE:
         done = TRUE;
         break;
@@ -1652,7 +1653,7 @@ analyse_source (GstURISourceBin * urisrc, gboolean * is_raw,
         break;
       case GST_ITERATOR_OK:
         pad = g_value_dup_object (&item);
-        /* we now officially have an ouput pad */
+        /* we now officially have an output pad */
         *have_out = TRUE;
 
         /* if FALSE, this pad has no caps and we continue with the next pad. */
@@ -2193,7 +2194,7 @@ setup_source (GstURISourceBin * urisrc)
           case GST_ITERATOR_ERROR:
             GST_WARNING_OBJECT (urisrc,
                 "Error iterating pads on source element");
-            /* FALLTROUGH */
+            /* FALLTHROUGH */
           case GST_ITERATOR_DONE:
             done = TRUE;
             break;

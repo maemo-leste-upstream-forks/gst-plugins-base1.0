@@ -25,8 +25,9 @@
  *
  * This element overlays the current clock time on top of a video
  * stream. You can position the text and configure the font details
- * using the properties of the #GstBaseTextOverlay class. By default, the
- * time is displayed in the top left corner of the picture, with some
+ * using its properties.
+ *
+ * By default, the time is displayed in the top left corner of the picture, with some
  * padding to the left and to the top.
  *
  * ## Example launch lines
@@ -74,19 +75,18 @@ static void gst_clock_overlay_get_property (GObject * object, guint prop_id,
 static gchar *
 gst_clock_overlay_render_time (GstClockOverlay * overlay)
 {
-  struct tm *t;
-  time_t now;
-  gchar buf[256];
-
 #ifdef HAVE_LOCALTIME_R
   struct tm dummy;
 #endif
+  struct tm *t;
+  time_t now;
+  gchar buf[256];
 
   now = time (NULL);
 
 #ifdef HAVE_LOCALTIME_R
   /* Need to call tzset explicitly when calling localtime_r for changes
-     to the timezone between calls to be visible.  */
+   * to the timezone between calls to be visible.  */
   tzset ();
   t = localtime_r (&now, &dummy);
 #else

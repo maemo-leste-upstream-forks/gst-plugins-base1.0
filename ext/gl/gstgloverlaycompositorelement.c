@@ -156,16 +156,13 @@ _oce_transform_internal_caps (GstGLFilter * filter,
     for (i = 0; i < n; i++) {
       GstCapsFeatures *feat = gst_caps_get_features (removed, i);
 
-      if (feat) {
+      if (feat && gst_caps_features_contains (feat,
+              GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION)) {
         feat = gst_caps_features_copy (feat);
-
-        if (gst_caps_features_contains (feat,
-                GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION)) {
-          /* prefer the passthrough case */
-          gst_caps_features_remove (feat,
-              GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION);
-          gst_caps_set_features (removed, i, feat);
-        }
+        /* prefer the passthrough case */
+        gst_caps_features_remove (feat,
+            GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION);
+        gst_caps_set_features (removed, i, feat);
       }
     }
 
@@ -188,7 +185,7 @@ gst_gl_overlay_compositor_element_propose_allocation (GstBaseTransform * trans,
           decide_query, query))
     return FALSE;
 
-  if ((width == 0 || height == 0) && decide_query) {
+  if (decide_query) {
     GstCaps *decide_caps;
     gst_query_parse_allocation (decide_query, &decide_caps, NULL);
 
@@ -204,7 +201,7 @@ gst_gl_overlay_compositor_element_propose_allocation (GstBaseTransform * trans,
 
   if ((width == 0 || height == 0) && query) {
     GstCaps *caps;
-    gst_query_parse_allocation (decide_query, &caps, NULL);
+    gst_query_parse_allocation (query, &caps, NULL);
 
     if (caps) {
       GstVideoInfo vinfo;
@@ -224,9 +221,12 @@ gst_gl_overlay_compositor_element_propose_allocation (GstBaseTransform * trans,
 
   GST_DEBUG_OBJECT (trans, "Adding overlay composition meta with size %ux%u",
       width, height);
-  gst_query_add_allocation_meta (query,
-      GST_VIDEO_OVERLAY_COMPOSITION_META_API_TYPE, allocation_meta);
-
+  if (allocation_meta) {
+    if (query)
+      gst_query_add_allocation_meta (query,
+          GST_VIDEO_OVERLAY_COMPOSITION_META_API_TYPE, allocation_meta);
+    gst_structure_free (allocation_meta);
+  }
   return TRUE;
 }
 

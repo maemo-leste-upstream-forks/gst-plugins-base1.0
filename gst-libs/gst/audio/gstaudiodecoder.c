@@ -214,6 +214,10 @@ struct _GstAudioDecoderPrivate
   gboolean force;
   /* input_segment are output_segment identical */
   gboolean in_out_segment_sync;
+  /* TRUE if we have an active set of instant rate flags */
+  gboolean decode_flags_override;
+  GstSegmentFlags decode_flags;
+
   /* expecting the buffer with DISCONT flag */
   gboolean expecting_discont_buf;
 
@@ -519,6 +523,7 @@ gst_audio_decoder_reset (GstAudioDecoder * dec, gboolean full)
       gst_object_unref (dec->priv->ctx.allocator);
 
     GST_OBJECT_LOCK (dec);
+    dec->priv->decode_flags_override = FALSE;
     gst_caps_replace (&dec->priv->ctx.input_caps, NULL);
     gst_caps_replace (&dec->priv->ctx.caps, NULL);
     gst_caps_replace (&dec->priv->ctx.allocation_caps, NULL);
@@ -1234,7 +1239,7 @@ foreach_metadata (GstBuffer * inbuf, GstMeta ** meta, gpointer user_data)
 /**
  * gst_audio_decoder_finish_subframe:
  * @dec: a #GstAudioDecoder
- * @buf: decoded data
+ * @buf: (transfer full) (allow-none): decoded data
  *
  * Collects decoded data and pushes it downstream. This function may be called
  * multiple times for a given input frame.
@@ -1268,7 +1273,7 @@ gst_audio_decoder_finish_subframe (GstAudioDecoder * dec, GstBuffer * buf)
 /**
  * gst_audio_decoder_finish_frame:
  * @dec: a #GstAudioDecoder
- * @buf: decoded data
+ * @buf: (transfer full) (allow-none): decoded data
  * @frames: number of decoded frames represented by decoded data
  *
  * Collects decoded data and pushes it downstream.
@@ -1350,7 +1355,7 @@ gst_audio_decoder_finish_frame_or_subframe (GstAudioDecoder * dec,
   /* sanity checking */
   if (G_LIKELY (buf && ctx->info.bpf)) {
     if (!meta || meta->info.layout == GST_AUDIO_LAYOUT_INTERLEAVED) {
-      /* output shoud be whole number of sample frames */
+      /* output should be whole number of sample frames */
       if (size % ctx->info.bpf)
         goto wrong_buffer;
       /* output should have no additional padding */
@@ -1844,7 +1849,7 @@ gst_audio_decoder_clear_queues (GstAudioDecoder * dec)
  * arrives out of order.
  *
  * we first gather buffers in the gather queue until we get a DISCONT. We
- * prepend each incomming buffer so that they are in reversed order.
+ * prepend each incoming buffer so that they are in reversed order.
  *
  *    gather queue:    9  8  7
  *    decode queue:
@@ -2373,14 +2378,45 @@ gst_audio_decoder_sink_eventfunc (GstAudioDecoder * dec, GstEvent * event)
         dec->priv->samples = 0;
       }
 
+      /* Update the decode flags in the segment if we have an instant-rate
+       * override active */
+      GST_OBJECT_LOCK (dec);
+      if (dec->priv->decode_flags_override) {
+        seg.flags &= ~GST_SEGMENT_INSTANT_FLAGS;
+        seg.flags |= dec->priv->decode_flags & GST_SEGMENT_INSTANT_FLAGS;
+      }
+
       /* and follow along with segment */
       dec->priv->in_out_segment_sync = FALSE;
       dec->input_segment = seg;
+      GST_OBJECT_UNLOCK (dec);
+
       dec->priv->pending_events =
           g_list_append (dec->priv->pending_events, event);
       GST_AUDIO_DECODER_STREAM_UNLOCK (dec);
 
       ret = TRUE;
+      break;
+    }
+    case GST_EVENT_INSTANT_RATE_CHANGE:
+    {
+      GstSegmentFlags flags;
+      GstSegment *seg;
+
+      gst_event_parse_instant_rate_change (event, NULL, &flags);
+
+      GST_OBJECT_LOCK (dec);
+      dec->priv->decode_flags_override = TRUE;
+      dec->priv->decode_flags = flags;
+
+      /* Update the input segment flags */
+      seg = &dec->input_segment;
+      seg->flags &= ~GST_SEGMENT_INSTANT_FLAGS;
+      seg->flags |= dec->priv->decode_flags & GST_SEGMENT_INSTANT_FLAGS;
+      GST_OBJECT_UNLOCK (dec);
+
+      /* Forward downstream */
+      ret = gst_pad_event_default (dec->sinkpad, GST_OBJECT_CAST (dec), event);
       break;
     }
     case GST_EVENT_GAP:

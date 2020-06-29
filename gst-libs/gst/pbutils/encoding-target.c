@@ -17,6 +17,64 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+/**
+ * SECTION:encoding-target
+ *
+ * On top of the notion of profiles, we implement the notion of EncodingTarget.
+ * Encoding Targets are basically a higher level of abstraction to define formats
+ * for specific target types. Those can define several GstEncodingProfiles with
+ * different names, for example one for transcoding in full HD, another one for
+ * low res, etc.. which are defined in the same encoding target.
+ *
+ * Basically if you want to encode a stream to send it to, say, youtube you should
+ * have a Youtube encoding target defined in the "online-service" category.
+ *
+ * ## Encoding target serialization format
+ *
+ * Encoding targets are serialized in a KeyFile like files.
+ *
+ * |[
+ * [GStreamer Encoding Target]
+ * name : <name>
+ * category : <category>
+ * \description : <description> #translatable
+ *
+ * [profile-<profile1name>]
+ * name : <name>
+ * \description : <description> #optional
+ * format : <format>
+ * preset : <preset>
+ *
+ * [streamprofile-<id>]
+ * parent : <encodingprofile.name>[,<encodingprofile.name>..]
+ * \type : <type> # "audio", "video", "text"
+ * format : <format>
+ * preset : <preset>
+ * restriction : <restriction>
+ * presence : <presence>
+ * pass : <pass>
+ * variableframerate : <variableframerate>
+ * ]|
+ *
+ * ## Location of encoding target files
+ *
+ * $GST_DATADIR/gstreamer-GST_API_VERSION/encoding-profile
+ * $HOME/gstreamer-GST_API_VERSION/encoding-profile
+ *
+ * There also is a GST_ENCODING_TARGET_PATH environment variable
+ * defining a list of folder containing encoding target files.
+ *
+ * ## Naming convention
+ *
+ * |[
+ *   $(target.category)/$(target.name).gep
+ * ]|
+ *
+ * ## Naming restrictions:
+ *
+ *  * lowercase ASCII letter for the first character
+ *  * Same for all other characters + numerics + hyphens
+ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -208,9 +266,9 @@ validate_name (const gchar * name)
  * first character, followed by either lowercase ASCII letters, digits or
  * hyphens ('-').
  *
- * The @category <emphasis>should</emphasis> be one of the existing
+ * The @category *should* be one of the existing
  * well-defined categories, like #GST_ENCODING_CATEGORY_DEVICE, but it
- * <emphasis>can</emphasis> be a application or user specific category if
+ * *can* be a application or user specific category if
  * needed.
  *
  * Returns: (transfer full): The newly created #GstEncodingTarget or %NULL if
@@ -700,7 +758,7 @@ empty_name:
 /**
  * gst_encoding_target_load_from_file:
  * @filepath: (type filename): The file location to load the #GstEncodingTarget from
- * @error: If an error occured, this field will be filled in.
+ * @error: If an error occurred, this field will be filled in.
  *
  * Opens the provided file and returns the contained #GstEncodingTarget.
  *
@@ -804,7 +862,7 @@ gst_encoding_target_subload (gchar * path, const gchar * category,
  * valid for target names).
  * @category: (allow-none): the name of the target category, like
  * #GST_ENCODING_CATEGORY_DEVICE. Can be %NULL
- * @error: If an error occured, this field will be filled in.
+ * @error: If an error occurred, this field will be filled in.
  *
  * Searches for the #GstEncodingTarget with the given name, loads it
  * and returns it.
@@ -917,7 +975,7 @@ invalid_category:
  * gst_encoding_target_save_to_file:
  * @target: a #GstEncodingTarget
  * @filepath: (type filename): the location to store the @target at.
- * @error: If an error occured, this field will be filled in.
+ * @error: If an error occurred, this field will be filled in.
  *
  * Saves the @target to the provided file location.
  *
@@ -984,7 +1042,7 @@ write_failed:
 /**
  * gst_encoding_target_save:
  * @target: a #GstEncodingTarget
- * @error: If an error occured, this field will be filled in.
+ * @error: If an error occurred, this field will be filled in.
  *
  * Saves the @target to a default user-local directory.
  *

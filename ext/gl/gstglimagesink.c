@@ -290,13 +290,15 @@ gst_gl_image_sink_bin_class_init (GstGLImageSinkBinClass * klass)
 
   gst_gl_image_sink_bin_signals[SIGNAL_BIN_CLIENT_DRAW] =
       g_signal_new ("client-draw", G_TYPE_FROM_CLASS (klass), G_SIGNAL_RUN_LAST,
-      0, NULL, NULL, g_cclosure_marshal_generic, G_TYPE_BOOLEAN, 2,
-      GST_TYPE_GL_CONTEXT, GST_TYPE_SAMPLE);
+      0, NULL, NULL, NULL, G_TYPE_BOOLEAN, 2, GST_TYPE_GL_CONTEXT,
+      GST_TYPE_SAMPLE);
 
   gst_gl_image_sink_bin_signals[SIGNAL_BIN_CLIENT_RESHAPE] =
       g_signal_new ("client-reshape", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic,
-      G_TYPE_BOOLEAN, 3, GST_TYPE_GL_CONTEXT, G_TYPE_UINT, G_TYPE_UINT);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_BOOLEAN, 3,
+      GST_TYPE_GL_CONTEXT, G_TYPE_UINT, G_TYPE_UINT);
+
+  gst_type_mark_as_plugin_api (GST_TYPE_GL_ROTATE_METHOD, 0);
 }
 
 #define GST_GLIMAGE_SINK_GET_LOCK(glsink) \
@@ -444,6 +446,30 @@ _display_size_to_stream_size (GstGLImageSink * gl_sink, gdouble x,
   GST_TRACE ("transform %fx%f into %fx%f", x, y, *stream_x, *stream_y);
 }
 
+static void
+_display_scroll_value_to_stream_scroll_value (GstGLImageSink * gl_sink,
+    gdouble delta_x, gdouble delta_y, gdouble * stream_delta_x,
+    gdouble * stream_delta_y)
+{
+  gdouble stream_width, stream_height;
+
+  stream_width = (gdouble) GST_VIDEO_INFO_WIDTH (&gl_sink->out_info);
+  stream_height = (gdouble) GST_VIDEO_INFO_HEIGHT (&gl_sink->out_info);
+
+  if (delta_x != 0 && gl_sink->display_rect.w > 0)
+    *stream_delta_x = delta_x * (stream_width / gl_sink->display_rect.w);
+  else
+    *stream_delta_x = delta_x;
+
+  if (delta_y != 0 && gl_sink->display_rect.h > 0)
+    *stream_delta_y = delta_y * (stream_height / gl_sink->display_rect.h);
+  else
+    *stream_delta_y = delta_y;
+
+  GST_TRACE_OBJECT (gl_sink, "transform %fx%f into %fx%f", delta_x, delta_y,
+      *stream_delta_x, *stream_delta_y);
+}
+
 /* rotate 90 */
 static const gfloat clockwise_matrix[] = {
   0.0f, -1.0f, 0.0f, 0.0f,
@@ -486,16 +512,16 @@ static const gfloat vertical_flip_matrix[] = {
 
 /* upper-left-diagonal */
 static const gfloat upper_left_matrix[] = {
-  0.0f, 1.0f, 0.0f, 0.0f,
-  1.0f, 0.0f, 0.0f, 0.0f,
+  0.0f, -1.0f, 0.0f, 0.0f,
+  -1.0f, 0.0f, 0.0f, 0.0f,
   0.0f, 0.0f, 1.0f, 0.0f,
   0.0f, 0.0f, 0.0f, 1.0f,
 };
 
 /* upper-right-diagonal */
 static const gfloat upper_right_matrix[] = {
-  0.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 0.0f, 0.0f, 0.0f,
+  0.0f, 1.0f, 0.0f, 0.0f,
+  1.0f, 0.0f, 0.0f, 0.0f,
   0.0f, 0.0f, 1.0f, 0.0f,
   0.0f, 0.0f, 0.0f, 1.0f,
 };
@@ -596,6 +622,19 @@ gst_glimage_sink_navigation_send_event (GstNavigation * navigation, GstStructure
 
     gst_structure_set (structure, "pointer_x", G_TYPE_DOUBLE,
         stream_x, "pointer_y", G_TYPE_DOUBLE, stream_y, NULL);
+  }
+
+  /* Converting pointer scroll coordinates to the non scaled geometry */
+  if (width != 0 && gst_structure_get_double (structure, "delta_pointer_x", &x)
+      && height != 0
+      && gst_structure_get_double (structure, "delta_pointer_y", &y)) {
+    gdouble stream_x, stream_y;
+
+    _display_scroll_value_to_stream_scroll_value (sink, x, y, &stream_x,
+        &stream_y);
+
+    gst_structure_set (structure, "delta_pointer_x", G_TYPE_DOUBLE,
+        stream_x, "delta_pointer_y", G_TYPE_DOUBLE, stream_y, NULL);
   }
 
   event = gst_event_new_navigation (structure);
@@ -706,25 +745,24 @@ gst_glimage_sink_class_init (GstGLImageSinkClass * klass)
   /**
    * GstGLImageSink::client-draw:
    * @object: the #GstGLImageSink
-   * @texture: the #guint id of the texture.
-   * @width: the #guint width of the texture.
-   * @height: the #guint height of the texture.
+   * @context: the #GstGLContext
+   * @sample: the #GstSample
    *
    * Will be emitted before actually drawing the texture.  The client should
-   * redraw the surface/contents with the @texture, @width and @height and
-   * and return %TRUE.
+   * redraw the surface/contents of @sample and return %TRUE.
    *
    * Returns: whether the texture was redrawn by the signal.  If not, a
    *          default redraw will occur.
    */
   gst_glimage_sink_signals[CLIENT_DRAW_SIGNAL] =
       g_signal_new ("client-draw", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic,
-      G_TYPE_BOOLEAN, 2, GST_TYPE_GL_CONTEXT, GST_TYPE_SAMPLE);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_BOOLEAN, 2,
+      GST_TYPE_GL_CONTEXT, GST_TYPE_SAMPLE);
 
   /**
    * GstGLImageSink::client-reshape:
    * @object: the #GstGLImageSink
+   * @context: the #GstGLContext
    * @width: the #guint width of the texture.
    * @height: the #guint height of the texture.
    *
@@ -736,8 +774,8 @@ gst_glimage_sink_class_init (GstGLImageSinkClass * klass)
    */
   gst_glimage_sink_signals[CLIENT_RESHAPE_SIGNAL] =
       g_signal_new ("client-reshape", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic,
-      G_TYPE_BOOLEAN, 3, GST_TYPE_GL_CONTEXT, G_TYPE_UINT, G_TYPE_UINT);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_BOOLEAN, 3,
+      GST_TYPE_GL_CONTEXT, G_TYPE_UINT, G_TYPE_UINT);
 
   gst_element_class_add_static_pad_template (element_class,
       &gst_glimage_sink_template);
@@ -916,6 +954,17 @@ gst_glimage_sink_mouse_event_cb (GstGLWindow * window, char *event_name,
       event_name, button, posx, posy);
 }
 
+
+static void
+gst_glimage_sink_mouse_scroll_event_cb (GstGLWindow * window,
+    double posx, double posy, double delta_x, double delta_y,
+    GstGLImageSink * gl_sink)
+{
+  GST_DEBUG_OBJECT (gl_sink, "event scroll at %g, %g", posx, posy);
+  gst_navigation_send_mouse_scroll_event (GST_NAVIGATION (gl_sink),
+      posx, posy, delta_x, delta_y);
+}
+
 static gboolean
 _ensure_gl_setup (GstGLImageSink * gl_sink)
 {
@@ -991,6 +1040,9 @@ _ensure_gl_setup (GstGLImageSink * gl_sink)
       gl_sink->mouse_sig_id =
           g_signal_connect (window, "mouse-event",
           G_CALLBACK (gst_glimage_sink_mouse_event_cb), gl_sink);
+      gl_sink->mouse_scroll_sig_id =
+          g_signal_connect (window, "scroll-event",
+          G_CALLBACK (gst_glimage_sink_mouse_scroll_event_cb), gl_sink);
 
       gst_gl_window_set_render_rectangle (window, gl_sink->x, gl_sink->y,
           gl_sink->width, gl_sink->height);
@@ -1241,6 +1293,10 @@ gst_glimage_sink_change_state (GstElement * element, GstStateChange transition)
         if (glimage_sink->mouse_sig_id)
           g_signal_handler_disconnect (window, glimage_sink->mouse_sig_id);
         glimage_sink->mouse_sig_id = 0;
+        if (glimage_sink->mouse_scroll_sig_id)
+          g_signal_handler_disconnect (window,
+              glimage_sink->mouse_scroll_sig_id);
+        glimage_sink->mouse_scroll_sig_id = 0;
 
         gst_object_unref (window);
         gst_object_unref (glimage_sink->context);
@@ -2029,7 +2085,7 @@ gst_glimage_sink_thread_init_redisplay (GstGLImageSink * gl_sink)
     frag_stage = gst_glsl_stage_new_default_fragment (gl_sink->context);
   }
   if (!vert_stage || !frag_stage) {
-    GST_ERROR_OBJECT (gl_sink, "Failed to retreive fragment shader for "
+    GST_ERROR_OBJECT (gl_sink, "Failed to retrieve fragment shader for "
         "texture target");
     if (vert_stage)
       gst_object_unref (vert_stage);
@@ -2240,7 +2296,7 @@ gst_glimage_sink_on_draw (GstGLImageSink * gl_sink)
     gst_gl_sync_meta_wait (gl_sink->stored_sync_meta,
         gst_gl_context_get_current ());
 
-  /* make sure that the environnement is clean */
+  /* make sure that the environment is clean */
   gst_gl_context_clear_shader (gl_sink->context);
   gl->BindTexture (gl_target, 0);
 
@@ -2353,6 +2409,9 @@ gst_glimage_sink_on_close (GstGLImageSink * gl_sink)
   if (gl_sink->mouse_sig_id)
     g_signal_handler_disconnect (window, gl_sink->mouse_sig_id);
   gl_sink->mouse_sig_id = 0;
+  if (gl_sink->mouse_scroll_sig_id)
+    g_signal_handler_disconnect (window, gl_sink->mouse_scroll_sig_id);
+  gl_sink->mouse_scroll_sig_id = 0;
 
   g_atomic_int_set (&gl_sink->to_quit, 1);
 

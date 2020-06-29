@@ -28,7 +28,7 @@
  * @see_also: #GstContext, #GstGLContext, #GstGLWindow
  *
  * #GstGLDisplay represents a connection to the underlying windowing system.
- * Elements are required to make use of #GstContext to share and propogate
+ * Elements are required to make use of #GstContext to share and propagate
  * a #GstGLDisplay.
  *
  * There are a number of environment variables that influence the choice of
@@ -67,6 +67,7 @@
 #endif
 #if GST_GL_HAVE_PLATFORM_EGL
 #include <gst/gl/egl/gstgldisplay_egl.h>
+#include <gst/gl/egl/gstgldisplay_egl_device.h>
 #include <gst/gl/egl/gsteglimage.h>
 #include <gst/gl/egl/gstglmemoryegl.h>
 #endif
@@ -94,6 +95,8 @@ static guint gst_gl_display_signals[LAST_SIGNAL] = { 0 };
 static void gst_gl_display_dispose (GObject * object);
 static void gst_gl_display_finalize (GObject * object);
 static guintptr gst_gl_display_default_get_handle (GstGLDisplay * display);
+static gboolean gst_gl_display_default_get_foreign_display (GstGLDisplay *
+    display);
 static GstGLWindow *gst_gl_display_default_create_window (GstGLDisplay *
     display);
 
@@ -107,6 +110,8 @@ struct _GstGLDisplayPrivate
 
   GMutex thread_lock;
   GCond thread_cond;
+
+  GMutex window_lock;
 };
 
 #define DEBUG_INIT \
@@ -169,10 +174,11 @@ gst_gl_display_class_init (GstGLDisplayClass * klass)
    */
   gst_gl_display_signals[CREATE_CONTEXT] =
       g_signal_new ("create-context", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic,
-      GST_TYPE_GL_CONTEXT, 1, GST_TYPE_GL_CONTEXT);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, GST_TYPE_GL_CONTEXT, 1,
+      GST_TYPE_GL_CONTEXT);
 
   klass->get_handle = gst_gl_display_default_get_handle;
+  klass->get_foreign_display = gst_gl_display_default_get_foreign_display;
   klass->create_window = gst_gl_display_default_create_window;
 
   G_OBJECT_CLASS (klass)->finalize = gst_gl_display_finalize;
@@ -189,6 +195,8 @@ gst_gl_display_init (GstGLDisplay * display)
 
   g_mutex_init (&display->priv->thread_lock);
   g_cond_init (&display->priv->thread_cond);
+
+  g_mutex_init (&display->priv->window_lock);
 
   display->priv->event_thread = g_thread_new ("gldisplay-event",
       (GThreadFunc) _event_thread_main, display);
@@ -255,6 +263,7 @@ gst_gl_display_finalize (GObject * object)
 
   g_cond_clear (&display->priv->thread_cond);
   g_mutex_clear (&display->priv->thread_lock);
+  g_mutex_clear (&display->priv->window_lock);
 
   G_OBJECT_CLASS (gst_gl_display_parent_class)->finalize (object);
 }
@@ -318,9 +327,14 @@ gst_gl_display_new (void)
   }
 #endif
 #if GST_GL_HAVE_PLATFORM_EGL
+  if (!display && (user_choice && g_strstr_len (user_choice, 10, "egl-device"))) {
+    display = GST_GL_DISPLAY (gst_gl_display_egl_device_new (0));
+  }
+
   if (!display && (!platform_choice
-          || g_strstr_len (platform_choice, 3, "egl")))
+          || g_strstr_len (platform_choice, 3, "egl"))) {
     display = GST_GL_DISPLAY (gst_gl_display_egl_new ());
+  }
 #endif
   if (!display) {
     GST_INFO ("Could not create platform/winsys display. user specified %s "
@@ -361,13 +375,39 @@ gst_gl_display_default_get_handle (GstGLDisplay * display)
 }
 
 /**
+ * gst_gl_display_get_foreign_display:
+ * @display: a #GstGLDisplay
+ *
+ * Returns: whether the context belongs to a foreign display
+ *
+ * Since: 1.18
+ */
+gboolean
+gst_gl_display_get_foreign_display (GstGLDisplay * display)
+{
+  GstGLDisplayClass *klass;
+
+  g_return_val_if_fail (GST_IS_GL_DISPLAY (display), FALSE);
+  klass = GST_GL_DISPLAY_GET_CLASS (display);
+  g_return_val_if_fail (klass->get_foreign_display != NULL, 0);
+
+  return klass->get_foreign_display (display);
+}
+
+static gboolean
+gst_gl_display_default_get_foreign_display (GstGLDisplay * display)
+{
+  return FALSE;
+}
+
+/**
  * gst_gl_display_filter_gl_api:
  * @display: a #GstGLDisplay
  * @gl_api: a #GstGLAPI to filter with
  *
  * limit the use of OpenGL to the requested @gl_api.  This is intended to allow
  * application and elements to request a specific set of OpenGL API's based on
- * what they support.  See gst_gl_context_get_gl_api() for the retreiving the
+ * what they support.  See gst_gl_context_get_gl_api() for the retrieving the
  * API supported by a #GstGLContext.
  */
 void
@@ -533,6 +573,8 @@ gst_gl_display_create_context (GstGLDisplay * display,
 
   if (ret)
     *p_context = context;
+  else
+    gst_object_unref (context);
 
   return ret;
 }
@@ -541,10 +583,10 @@ gst_gl_display_create_context (GstGLDisplay * display,
  * gst_gl_display_create_window:
  * @display: a #GstGLDisplay
  *
- * It requires the display's object lock to be held.
- *
  * Returns: (transfer full): a new #GstGLWindow for @display or %NULL.
  */
+/* XXX: previous versions had documentation requiring the OBJECT lock to be
+ * held when this fuction is called so that needs to always work. */
 GstGLWindow *
 gst_gl_display_create_window (GstGLDisplay * display)
 {
@@ -555,10 +597,15 @@ gst_gl_display_create_window (GstGLDisplay * display)
   klass = GST_GL_DISPLAY_GET_CLASS (display);
   g_return_val_if_fail (klass->create_window != NULL, NULL);
 
+  g_mutex_lock (&display->priv->window_lock);
   window = klass->create_window (display);
 
-  if (window)
+  if (window) {
     display->windows = g_list_prepend (display->windows, window);
+  }
+  g_mutex_unlock (&display->priv->window_lock);
+  GST_DEBUG_OBJECT (display, "Adding window %" GST_PTR_FORMAT
+      " (%p) to internal list", window, window);
 
   return window;
 }
@@ -584,13 +631,15 @@ gst_gl_display_remove_window (GstGLDisplay * display, GstGLWindow * window)
   gboolean ret = FALSE;
   GList *l;
 
-  GST_OBJECT_LOCK (display);
+  g_mutex_lock (&display->priv->window_lock);
   l = g_list_find (display->windows, window);
   if (l) {
     display->windows = g_list_delete_link (display->windows, l);
     ret = TRUE;
   }
-  GST_OBJECT_UNLOCK (display);
+  GST_DEBUG_OBJECT (display, "Removing window %" GST_PTR_FORMAT
+      " (%p) from internal list", window, window);
+  g_mutex_unlock (&display->priv->window_lock);
 
   return ret;
 }
@@ -601,8 +650,10 @@ gst_gl_display_remove_window (GstGLDisplay * display, GstGLWindow * window)
  * @data: (closure): some data to pass to @compare_func
  * @compare_func: (scope call): a comparison function to run
  *
+ * Deprecated for gst_gl_display_retrieve_window().
+ *
  * Execute @compare_func over the list of windows stored by @display.  The
- * first argment to @compare_func is the #GstGLWindow being checked and the
+ * first argument to @compare_func is the #GstGLWindow being checked and the
  * second argument is @data.
  *
  * Returns: (transfer none): The first #GstGLWindow that causes a match
@@ -614,14 +665,45 @@ GstGLWindow *
 gst_gl_display_find_window (GstGLDisplay * display, gpointer data,
     GCompareFunc compare_func)
 {
+  GstGLWindow *ret;
+
+  ret = gst_gl_display_retrieve_window (display, data, compare_func);
+  if (ret)
+    gst_object_unref (ret);
+
+  return ret;
+}
+
+/**
+ * gst_gl_display_retrieve_window:
+ * @display: a #GstGLDisplay
+ * @data: (closure): some data to pass to @compare_func
+ * @compare_func: (scope call): a comparison function to run
+ *
+ * Execute @compare_func over the list of windows stored by @display.  The
+ * first argument to @compare_func is the #GstGLWindow being checked and the
+ * second argument is @data.
+ *
+ * Returns: (transfer full): The first #GstGLWindow that causes a match
+ *          from @compare_func
+ *
+ * Since: 1.18
+ */
+GstGLWindow *
+gst_gl_display_retrieve_window (GstGLDisplay * display, gpointer data,
+    GCompareFunc compare_func)
+{
   GstGLWindow *ret = NULL;
   GList *l;
 
-  GST_OBJECT_LOCK (display);
+  g_mutex_lock (&display->priv->window_lock);
   l = g_list_find_custom (display->windows, data, compare_func);
   if (l)
-    ret = l->data;
-  GST_OBJECT_UNLOCK (display);
+    ret = gst_object_ref (l->data);
+
+  GST_DEBUG_OBJECT (display, "Found window %" GST_PTR_FORMAT
+      " (%p) in internal list", ret, ret);
+  g_mutex_unlock (&display->priv->window_lock);
 
   return ret;
 }
@@ -793,4 +875,50 @@ out:
       ret ? "" : "un", context);
 
   return ret;
+}
+
+/**
+ * gst_gl_display_remove_context:
+ * @display: a #GstGLDisplay
+ * @context: (transfer none): the #GstGLContext to remove
+ *
+ * Must be called with the object lock held.
+ *
+ * Since: 1.18
+ */
+void
+gst_gl_display_remove_context (GstGLDisplay * display, GstGLContext * needle)
+{
+  GstGLContext *context;
+  GList *prev = NULL, *l;
+
+  g_return_if_fail (GST_IS_GL_DISPLAY (display));
+  g_return_if_fail (GST_IS_GL_CONTEXT (needle));
+
+  l = display->priv->contexts;
+
+  while (l) {
+    GWeakRef *ref = l->data;
+
+    context = g_weak_ref_get (ref);
+    if (!context || context == needle) {
+      /* remove dead contexts */
+      g_weak_ref_clear (l->data);
+      g_free (l->data);
+      display->priv->contexts = g_list_delete_link (display->priv->contexts, l);
+      if (context) {
+        GST_INFO_OBJECT (display, "removed context %" GST_PTR_FORMAT
+            " from internal list", context);
+        gst_object_unref (context);
+        return;
+      }
+      l = prev ? prev->next : display->priv->contexts;
+      continue;
+    }
+    prev = l;
+    l = l->next;
+  }
+
+  GST_WARNING_OBJECT (display, "%" GST_PTR_FORMAT " was not found in this "
+      "display", needle);
 }

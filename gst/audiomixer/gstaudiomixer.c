@@ -40,7 +40,7 @@
  * its output while playing.
  *
  * If you want to control the manner in which incoming data gets converted,
- * see the #GstAudioAggregatorPad:converter-config property, which will let
+ * see the #GstAudioAggregatorConvertPad:converter-config property, which will let
  * you for example change the way in which channels may get remapped.
  *
  * The input pads are from a GstPad subclass and have additional
@@ -238,6 +238,8 @@ gst_audiomixer_class_init (GstAudioMixerClass * klass)
       GST_DEBUG_FUNCPTR (gst_audiomixer_release_pad);
 
   aagg_class->aggregate_one_buffer = gst_audiomixer_aggregate_one_buffer;
+
+  gst_type_mark_as_plugin_api (GST_TYPE_AUDIO_MIXER_PAD, 0);
 }
 
 static void
@@ -455,7 +457,7 @@ gst_audiomixer_child_proxy_init (gpointer g_iface, gpointer iface_data)
 {
   GstChildProxyInterface *iface = g_iface;
 
-  GST_INFO ("intializing child proxy interface");
+  GST_INFO ("initializing child proxy interface");
   iface->get_child_by_index = gst_audiomixer_child_proxy_get_child_by_index;
   iface->get_children_count = gst_audiomixer_child_proxy_get_children_count;
 }

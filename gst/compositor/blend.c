@@ -38,7 +38,7 @@ GST_DEBUG_CATEGORY_STATIC (gst_compositor_blend_debug);
 
 /* Below are the implementations of everything */
 
-/* A32 is for AYUV, ARGB and BGRA */
+/* A32 is for AYUV, VUYA, ARGB and BGRA */
 #define BLEND_A32(name, method, LOOP)		\
 static void \
 method##_ ##name (GstVideoFrame * srcframe, gint xpos, gint ypos, \
@@ -101,17 +101,26 @@ _overlay_loop_##name (guint8 * dest, const guint8 * src, gint src_height, \
   s_alpha = MIN (255, s_alpha); \
   switch (mode) { \
     case COMPOSITOR_BLEND_MODE_SOURCE:\
-      compositor_orc_source_##name (dest, dest_stride, src, src_stride, \
-        s_alpha, src_width, src_height); \
-        break;\
+      if (s_alpha == 255) { \
+        guint y; \
+        for (y = 0; y < src_height; y++) { \
+          memcpy (dest, src, 4 * src_width); \
+          dest += dest_stride; \
+          src += src_stride; \
+        } \
+      } else { \
+        compositor_orc_source_##name (dest, dest_stride, src, src_stride, \
+          s_alpha, src_width, src_height); \
+      } \
+      break;\
     case COMPOSITOR_BLEND_MODE_OVER:\
       compositor_orc_overlay_##name (dest, dest_stride, src, src_stride, \
         s_alpha, src_width, src_height); \
-        break;\
+      break;\
     case COMPOSITOR_BLEND_MODE_ADD:\
       compositor_orc_overlay_##name##_addition (dest, dest_stride, src, src_stride, \
         s_alpha, src_width, src_height); \
-        break;\
+      break;\
   }\
 }
 
@@ -124,15 +133,24 @@ _blend_loop_##name (guint8 * dest, const guint8 * src, gint src_height, \
   s_alpha = MIN (255, s_alpha); \
   switch (mode) { \
     case COMPOSITOR_BLEND_MODE_SOURCE:\
-      compositor_orc_source_##name (dest, dest_stride, src, src_stride, \
-        s_alpha, src_width, src_height); \
-        break;\
+      if (s_alpha == 255) { \
+        guint y; \
+        for (y = 0; y < src_height; y++) { \
+          memcpy (dest, src, 4 * src_width); \
+          dest += dest_stride; \
+          src += src_stride; \
+        } \
+      } else { \
+        compositor_orc_source_##name (dest, dest_stride, src, src_stride, \
+          s_alpha, src_width, src_height); \
+      } \
+      break;\
     case COMPOSITOR_BLEND_MODE_OVER:\
     case COMPOSITOR_BLEND_MODE_ADD:\
       /* both modes are the same for opaque background */ \
       compositor_orc_blend_##name (dest, dest_stride, src, src_stride, \
         s_alpha, src_width, src_height); \
-        break;\
+      break;\
   }\
 }
 
@@ -194,6 +212,7 @@ fill_checker_##name##_c (GstVideoFrame * frame) \
 A32_CHECKER_C (argb, TRUE, 0, 1, 2, 3);
 A32_CHECKER_C (bgra, TRUE, 3, 2, 1, 0);
 A32_CHECKER_C (ayuv, FALSE, 0, 1, 2, 3);
+A32_CHECKER_C (vuya, FALSE, 3, 2, 1, 0);
 
 #define YUV_TO_R(Y,U,V) (CLAMP (1.164 * (Y - 16) + 1.596 * (V - 128), 0, 255))
 #define YUV_TO_G(Y,U,V) (CLAMP (1.164 * (Y - 16) - 0.813 * (V - 128) - 0.391 * (U - 128), 0, 255))
@@ -231,6 +250,7 @@ A32_COLOR (bgra, TRUE, 0, 8, 16, 24);
 A32_COLOR (abgr, TRUE, 24, 0, 8, 16);
 A32_COLOR (rgba, TRUE, 0, 24, 16, 8);
 A32_COLOR (ayuv, FALSE, 24, 16, 8, 0);
+A32_COLOR (vuya, FALSE, 0, 8, 16, 24);
 
 /* Y444, Y42B, I420, YV12, Y41B */
 #define PLANAR_YUV_BLEND(format_name,format_enum,x_round,y_round,MEMCPY,BLENDLOOP) \
@@ -853,6 +873,7 @@ RGB_FILL_COLOR (xrgb, 4, _memset_xrgb);
 MEMSET_XRGB (xbgr, 0, 16, 24);
 RGB_FILL_COLOR (xbgr, 4, _memset_xbgr);
 
+RGB_FILL_CHECKER_C (rgbx, 4, 0, 1, 2);
 MEMSET_XRGB (rgbx, 24, 16, 8);
 RGB_FILL_COLOR (rgbx, 4, _memset_rgbx);
 
@@ -955,8 +976,8 @@ fill_checker_##name##_c (GstVideoFrame * frame) \
   \
   for (i = 0; i < height; i++) { \
     for (j = 0; j < width; j++) { \
-      dest[Y1] = tab[((i & 0x8) >> 3) + ((j & 0x8) >> 3)]; \
-      dest[Y2] = tab[((i & 0x8) >> 3) + ((j & 0x8) >> 3)]; \
+      dest[Y1] = tab[((i & 0x8) >> 3) + (((2 * j + 0) & 0x8) >> 3)]; \
+      dest[Y2] = tab[((i & 0x8) >> 3) + (((2 * j + 1) & 0x8) >> 3)]; \
       dest[U] = 128; \
       dest[V] = 128; \
       dest += 4; \
@@ -1022,6 +1043,7 @@ FillCheckerFunction gst_compositor_fill_checker_argb;
 FillCheckerFunction gst_compositor_fill_checker_bgra;
 /* ABGR is equal to ARGB, RGBA is equal to BGRA */
 FillCheckerFunction gst_compositor_fill_checker_ayuv;
+FillCheckerFunction gst_compositor_fill_checker_vuya;
 FillCheckerFunction gst_compositor_fill_checker_y444;
 FillCheckerFunction gst_compositor_fill_checker_y42b;
 FillCheckerFunction gst_compositor_fill_checker_i420;
@@ -1032,6 +1054,7 @@ FillCheckerFunction gst_compositor_fill_checker_y41b;
 FillCheckerFunction gst_compositor_fill_checker_rgb;
 /* BGR is equal to RGB */
 FillCheckerFunction gst_compositor_fill_checker_xrgb;
+FillCheckerFunction gst_compositor_fill_checker_rgbx;
 /* BGRx, xRGB, xBGR are equal to RGBx */
 FillCheckerFunction gst_compositor_fill_checker_yuy2;
 /* YVYU is equal to YUY2 */
@@ -1042,6 +1065,7 @@ FillColorFunction gst_compositor_fill_color_bgra;
 FillColorFunction gst_compositor_fill_color_abgr;
 FillColorFunction gst_compositor_fill_color_rgba;
 FillColorFunction gst_compositor_fill_color_ayuv;
+FillColorFunction gst_compositor_fill_color_vuya;
 FillColorFunction gst_compositor_fill_color_y444;
 FillColorFunction gst_compositor_fill_color_y42b;
 FillColorFunction gst_compositor_fill_color_i420;
@@ -1082,6 +1106,7 @@ gst_compositor_init_blend (void)
   gst_compositor_fill_checker_argb = GST_DEBUG_FUNCPTR (fill_checker_argb_c);
   gst_compositor_fill_checker_bgra = GST_DEBUG_FUNCPTR (fill_checker_bgra_c);
   gst_compositor_fill_checker_ayuv = GST_DEBUG_FUNCPTR (fill_checker_ayuv_c);
+  gst_compositor_fill_checker_vuya = GST_DEBUG_FUNCPTR (fill_checker_vuya_c);
   gst_compositor_fill_checker_i420 = GST_DEBUG_FUNCPTR (fill_checker_i420);
   gst_compositor_fill_checker_nv12 = GST_DEBUG_FUNCPTR (fill_checker_nv12);
   gst_compositor_fill_checker_nv21 = GST_DEBUG_FUNCPTR (fill_checker_nv21);
@@ -1090,6 +1115,7 @@ gst_compositor_init_blend (void)
   gst_compositor_fill_checker_y41b = GST_DEBUG_FUNCPTR (fill_checker_y41b);
   gst_compositor_fill_checker_rgb = GST_DEBUG_FUNCPTR (fill_checker_rgb_c);
   gst_compositor_fill_checker_xrgb = GST_DEBUG_FUNCPTR (fill_checker_xrgb_c);
+  gst_compositor_fill_checker_rgbx = GST_DEBUG_FUNCPTR (fill_checker_rgbx_c);
   gst_compositor_fill_checker_yuy2 = GST_DEBUG_FUNCPTR (fill_checker_yuy2_c);
   gst_compositor_fill_checker_uyvy = GST_DEBUG_FUNCPTR (fill_checker_uyvy_c);
 
@@ -1098,6 +1124,7 @@ gst_compositor_init_blend (void)
   gst_compositor_fill_color_abgr = GST_DEBUG_FUNCPTR (fill_color_abgr);
   gst_compositor_fill_color_rgba = GST_DEBUG_FUNCPTR (fill_color_rgba);
   gst_compositor_fill_color_ayuv = GST_DEBUG_FUNCPTR (fill_color_ayuv);
+  gst_compositor_fill_color_vuya = GST_DEBUG_FUNCPTR (fill_color_vuya);
   gst_compositor_fill_color_i420 = GST_DEBUG_FUNCPTR (fill_color_i420);
   gst_compositor_fill_color_yv12 = GST_DEBUG_FUNCPTR (fill_color_yv12);
   gst_compositor_fill_color_nv12 = GST_DEBUG_FUNCPTR (fill_color_nv12);

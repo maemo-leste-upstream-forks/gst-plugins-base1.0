@@ -270,7 +270,7 @@ gst_gl_context_egl_dump_config (GstGLContextEGL * egl, EGLConfig config)
     g_assert (i < MAX_SURFACE);
 
     surface_str = g_strjoinv ("|", (char **) surface_values);
-    GST_DEBUG_OBJECT (egl, "Surface for %s", surface_str);
+    GST_DEBUG_OBJECT (egl, "Surface for (0x%x) %s", surface, surface_str);
     g_free (surface_str);
 #undef MAX_RENDERABLE
   }
@@ -405,9 +405,23 @@ gst_gl_context_egl_choose_config (GstGLContextEGL * egl, GstGLAPI gl_api,
 {
   gboolean create_context;
   EGLint numConfigs;
-  gint i = 0;
+  gint i;
   EGLint config_attrib[20];
   EGLint egl_api = 0;
+  EGLBoolean ret = EGL_FALSE;
+  EGLint surface_type = EGL_WINDOW_BIT;
+  GstGLWindow *window;
+
+  window = gst_gl_context_get_window (GST_GL_CONTEXT (egl));
+
+  if (!window || !gst_gl_window_has_output_surface (window)) {
+    GST_INFO_OBJECT (egl,
+        "gl window has no output surface, use pixel buffer surfaces");
+    surface_type = EGL_PBUFFER_BIT;
+  }
+
+  if (window)
+    gst_object_unref (window);
 
   create_context =
       gst_gl_check_extension ("EGL_KHR_create_context", egl->egl_exts);
@@ -430,8 +444,10 @@ gst_gl_context_egl_choose_config (GstGLContextEGL * egl, GstGLAPI gl_api,
   } else
     egl_api = EGL_OPENGL_BIT;
 
+try_again:
+  i = 0;
   config_attrib[i++] = EGL_SURFACE_TYPE;
-  config_attrib[i++] = EGL_WINDOW_BIT;
+  config_attrib[i++] = surface_type;
   config_attrib[i++] = EGL_RENDERABLE_TYPE;
   config_attrib[i++] = egl_api;
 #if defined(USE_EGL_RPI) && GST_GL_HAVE_WINDOW_WAYLAND
@@ -450,18 +466,36 @@ gst_gl_context_egl_choose_config (GstGLContextEGL * egl, GstGLAPI gl_api,
   config_attrib[i++] = 1;
   config_attrib[i++] = EGL_NONE;
 
-  if (eglChooseConfig (egl->egl_display, config_attrib,
-          &egl->egl_config, 1, &numConfigs)) {
+  ret = eglChooseConfig (egl->egl_display, config_attrib,
+      &egl->egl_config, 1, &numConfigs);
+
+  if (ret && numConfigs == 0) {
+    if (surface_type == EGL_PBUFFER_BIT) {
+      surface_type = EGL_WINDOW_BIT;
+      GST_TRACE_OBJECT (egl, "Retrying config with window bit");
+      goto try_again;
+    }
+  }
+
+  if (ret && numConfigs == 1) {
     GST_INFO ("config set: %" G_GUINTPTR_FORMAT ", %u",
         (guintptr) egl->egl_config, (unsigned int) numConfigs);
   } else {
-    g_set_error (error, GST_GL_CONTEXT_ERROR, GST_GL_CONTEXT_ERROR_WRONG_CONFIG,
-        "Failed to set window configuration: %s",
-        gst_egl_get_error_string (eglGetError ()));
+    if (!ret) {
+      g_set_error (error, GST_GL_CONTEXT_ERROR,
+          GST_GL_CONTEXT_ERROR_WRONG_CONFIG, "Failed to choose EGLConfig: %s",
+          gst_egl_get_error_string (eglGetError ()));
+    } else if (numConfigs <= 1) {
+      g_set_error_literal (error, GST_GL_CONTEXT_ERROR,
+          GST_GL_CONTEXT_ERROR_WRONG_CONFIG,
+          "Could not find a compatible EGLConfig:");
+    } else {
+      g_warn_if_reached ();
+    }
     goto failure;
   }
 
-  GST_DEBUG_OBJECT (egl, "chosen EGLConfig");
+  GST_DEBUG_OBJECT (egl, "chosen EGLConfig:");
   gst_gl_context_egl_dump_config (egl, egl->egl_config);
 
   return TRUE;
@@ -599,6 +633,7 @@ gst_gl_context_egl_create_context (GstGLContext * context,
   }
 
   egl->egl_exts = eglQueryString (egl->egl_display, EGL_EXTENSIONS);
+  GST_DEBUG_OBJECT (egl, "Have EGL extensions: %s", egl->egl_exts);
 
   gst_gl_context_egl_dump_all_configs (egl);
 
@@ -770,7 +805,8 @@ gst_gl_context_egl_create_context (GstGLContext * context,
 #endif
 #if GST_GL_HAVE_WINDOW_WIN32
     if (GST_IS_GL_WINDOW_WIN32 (context->window)) {
-      gst_gl_window_win32_create_window ((GstGLWindowWin32 *) context->window);
+      gst_gl_window_win32_create_window ((GstGLWindowWin32 *) context->window,
+          NULL);
     }
 #endif
 #if GST_GL_HAVE_WINDOW_DISPMANX
@@ -791,12 +827,23 @@ gst_gl_context_egl_create_context (GstGLContext * context,
     window_handle = gst_gl_window_get_window_handle (window);
 
   if (window_handle) {
+#if GST_GL_HAVE_WINDOW_WINRT && defined (EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER)
+    const EGLint attrs[] = {
+      /* EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER is an optimization that can
+       * have large performance benefits on mobile devices. */
+      EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER, EGL_TRUE,
+      EGL_NONE
+    };
+#else
+    const EGLint *attrs = NULL;
+#endif
+
     GST_DEBUG ("Creating EGLSurface from window_handle %p",
         (void *) window_handle);
     egl->egl_surface =
         eglCreateWindowSurface (egl->egl_display, egl->egl_config,
-        (EGLNativeWindowType) window_handle, NULL);
-    /* Store window handle for later comparision */
+        (EGLNativeWindowType) window_handle, attrs);
+    /* Store window handle for later comparison */
     egl->window_handle = window_handle;
   } else if (!gst_gl_check_extension ("EGL_KHR_surfaceless_context",
           egl->egl_exts)) {
@@ -893,6 +940,16 @@ gst_gl_context_egl_activate (GstGLContext * context, gboolean activate)
       gst_object_unref (window);
     }
     if (handle && handle != egl->window_handle) {
+#if GST_GL_HAVE_WINDOW_WINRT && defined (EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER)
+      const EGLint attrs[] = {
+        /* EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER is an optimization that can
+         * have large performance benefits on mobile devices. */
+        EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER, EGL_TRUE,
+        EGL_NONE
+      };
+#else
+      const EGLint *attrs = NULL;
+#endif
       GST_DEBUG_OBJECT (context,
           "Handle changed (have:%p, now:%p), switching surface",
           (void *) egl->window_handle, (void *) handle);
@@ -907,7 +964,7 @@ gst_gl_context_egl_activate (GstGLContext * context, gboolean activate)
       }
       egl->egl_surface =
           eglCreateWindowSurface (egl->egl_display, egl->egl_config,
-          (EGLNativeWindowType) handle, NULL);
+          (EGLNativeWindowType) handle, attrs);
       egl->window_handle = handle;
 
       if (egl->egl_surface == EGL_NO_SURFACE) {

@@ -18,6 +18,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
+/**
+ * SECTION:gstgldisplay_x11
+ * @short_description: X11 Display connection
+ * @title: GstGLDisplayX11
+ * @see_also: #GstGLDisplay
+ *
+ * #GstGLDisplayX11 represents a connection to an X11 `Display` handle created
+ * internally (gst_gl_display_x11_new()) or wrapped by the application
+ * (gst_gl_display_x11_new_with_display())
+ */
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -33,6 +44,7 @@ G_DEFINE_TYPE (GstGLDisplayX11, gst_gl_display_x11, GST_TYPE_GL_DISPLAY);
 
 static void gst_gl_display_x11_finalize (GObject * object);
 static guintptr gst_gl_display_x11_get_handle (GstGLDisplay * display);
+static gboolean gst_gl_display_x11_get_foreign_display (GstGLDisplay * display);
 
 G_GNUC_INTERNAL
     gboolean gst_gl_display_x11_handle_event (GstGLDisplayX11 * display_x11);
@@ -45,6 +57,8 @@ gst_gl_display_x11_class_init (GstGLDisplayX11Class * klass)
 {
   GST_GL_DISPLAY_CLASS (klass)->get_handle =
       GST_DEBUG_FUNCPTR (gst_gl_display_x11_get_handle);
+  GST_GL_DISPLAY_CLASS (klass)->get_foreign_display =
+      GST_DEBUG_FUNCPTR (gst_gl_display_x11_get_foreign_display);
 
   G_OBJECT_CLASS (klass)->finalize = gst_gl_display_x11_finalize;
 }
@@ -77,7 +91,7 @@ gst_gl_display_x11_finalize (GObject * object)
  * gst_gl_display_x11_new:
  * @name: (allow-none): a display name
  *
- * Create a new #GstGLDisplayX11 from the x11 display name.  See XOpenDisplay()
+ * Create a new #GstGLDisplayX11 from the x11 display name.  See `XOpenDisplay`()
  * for details on what is a valid name.
  *
  * Returns: (transfer full): a new #GstGLDisplayX11 or %NULL
@@ -102,7 +116,7 @@ gst_gl_display_x11_new (const gchar * name)
 
   ret->xcb_connection = XGetXCBConnection (ret->display);
   if (!ret->xcb_connection) {
-    GST_ERROR ("Failed to open retieve XCB connection from X11 Display");
+    GST_ERROR ("Failed to retrieve XCB connection from X11 Display");
     gst_object_unref (ret);
     return NULL;
   }
@@ -117,7 +131,7 @@ gst_gl_display_x11_new (const gchar * name)
 }
 
 /**
- * gst_gl_display_x11_new_with_display:
+ * gst_gl_display_x11_new_with_display: (skip)
  * @display: an existing, x11 display
  *
  * Creates a new display connection from a X11 Display.
@@ -141,7 +155,7 @@ gst_gl_display_x11_new_with_display (Display * display)
 
   ret->xcb_connection = XGetXCBConnection (ret->display);
   if (!ret->xcb_connection) {
-    GST_ERROR ("Failed to open retieve XCB connection from X11 Display");
+    GST_ERROR ("Failed to retrieve XCB connection from X11 Display");
     gst_object_unref (ret);
     return NULL;
   }
@@ -157,6 +171,12 @@ gst_gl_display_x11_get_handle (GstGLDisplay * display)
   return (guintptr) GST_GL_DISPLAY_X11 (display)->display;
 }
 
+static gboolean
+gst_gl_display_x11_get_foreign_display (GstGLDisplay * display)
+{
+  return GST_GL_DISPLAY_X11 (display)->foreign_display;
+}
+
 static int
 _compare_xcb_window (GstGLWindowX11 * window_x11, xcb_window_t * window_id)
 {
@@ -168,20 +188,15 @@ _find_window_from_xcb_window (GstGLDisplayX11 * display_x11,
     xcb_window_t window_id)
 {
   GstGLDisplay *display = GST_GL_DISPLAY (display_x11);
-  GstGLWindowX11 *ret = NULL;
-  GList *l;
+  GstGLWindow *window = NULL;
 
   if (!window_id)
     return NULL;
 
-  GST_OBJECT_LOCK (display);
-  l = g_list_find_custom (display->windows, &window_id,
+  window = gst_gl_display_retrieve_window (display, &window_id,
       (GCompareFunc) _compare_xcb_window);
-  if (l)
-    ret = gst_object_ref (l->data);
-  GST_OBJECT_UNLOCK (display);
 
-  return ret;
+  return (GstGLWindowX11 *) window;
 }
 
 static GstGLWindowX11 *

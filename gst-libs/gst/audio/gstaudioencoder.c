@@ -717,7 +717,7 @@ foreach_metadata (GstBuffer * inbuf, GstMeta ** meta, gpointer user_data)
 /**
  * gst_audio_encoder_finish_frame:
  * @enc: a #GstAudioEncoder
- * @buffer: encoded data
+ * @buffer: (transfer full) (allow-none): encoded data
  * @samples: number of samples (per channel) represented by encoded data
  *
  * Collects encoded data and pushes encoded data downstream.
@@ -1224,7 +1224,7 @@ gst_audio_encoder_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
       GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buffer)),
       GST_TIME_ARGS (GST_BUFFER_DURATION (buffer)));
 
-  /* input shoud be whole number of sample frames */
+  /* input should be whole number of sample frames */
   if (size % ctx->info.bpf)
     goto wrong_buffer;
 
@@ -1551,6 +1551,7 @@ gst_audio_encoder_sink_event_default (GstAudioEncoder * enc, GstEvent * event)
         GST_DEBUG_OBJECT (enc, "received SEGMENT %" GST_SEGMENT_FORMAT, &seg);
         GST_DEBUG_OBJECT (enc, "unsupported format; ignoring");
         res = TRUE;
+        gst_event_unref (event);
         break;
       }
 

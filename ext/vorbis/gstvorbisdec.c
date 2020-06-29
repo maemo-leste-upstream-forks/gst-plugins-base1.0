@@ -23,10 +23,9 @@
  * @see_also: vorbisenc, oggdemux
  *
  * This element decodes a Vorbis stream to raw float audio.
- * <ulink url="http://www.vorbis.com/">Vorbis</ulink> is a royalty-free
- * audio codec maintained by the <ulink url="http://www.xiph.org/">Xiph.org
- * Foundation</ulink>. As it outputs raw float audio you will often need to
- * put an audioconvert element after it.
+ * [Vorbis](http://www.vorbis.com/) is a royalty-free audio codec maintained
+ * by the [Xiph.org Foundation](http://www.xiph.org/). As it outputs raw float
+ * audio you will often need to put an audioconvert element after it.
  *
  * ## Example pipelines
  * |[
@@ -761,11 +760,9 @@ empty_header:
 static void
 vorbis_dec_flush (GstAudioDecoder * dec, gboolean hard)
 {
-#ifdef HAVE_VORBIS_SYNTHESIS_RESTART
   GstVorbisDec *vd = GST_VORBIS_DEC (dec);
 
   vorbis_synthesis_restart (&vd->vd);
-#endif
 }
 
 static void
