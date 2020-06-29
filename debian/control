@@ -195,31 +195,6 @@ Description: GStreamer plugins from the "base" set
  This package contains the GStreamer plugins from the "base" set, an
  essential exemplary set of elements.
 
-Package: gstreamer1.0-plugins-base-dbg
-Architecture: any
-Multi-Arch: same
-Section: debug
-Priority: optional
-Depends: gstreamer1.0-alsa (= ${binary:Version}) [linux-any],
-         gstreamer1.0-plugins-base (= ${binary:Version}),
-         gstreamer1.0-x (= ${binary:Version}),
-         libgstreamer-plugins-base1.0-0 (= ${binary:Version}),
-         ${misc:Depends}
-Breaks: gstreamer1.0-plugins-bad-dbg (<< 1.15.1)
-Replaces: gstreamer1.0-plugins-bad-dbg (<< 1.15.1)
-Description: GStreamer plugins from the "base" set
- GStreamer is a streaming media framework, based on graphs of filters
- which operate on media data.  Applications using this library can do
- anything from real-time sound processing to playing videos, and just
- about anything else media-related.  Its plugin-based architecture means
- that new data types or processing capabilities can be added simply by
- installing new plug-ins.
- .
- This package contains unstripped shared libraries. It is provided primarily
- to provide a backtrace with names in a debugger, this makes it somewhat
- easier to interpret core dumps. The libraries are installed in
- /usr/lib/debug and are automatically used by gdb.
-
 Package: gstreamer1.0-x
 Architecture: any
 Multi-Arch: same
