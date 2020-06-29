@@ -69,6 +69,9 @@ static const ColorimetryInfo colorimetry[] = {
   MAKE_COLORIMETRY (SMPTE240M, _16_235, SMPTE240M, SMPTE240M, SMPTE240M),
   MAKE_COLORIMETRY (SRGB, _0_255, RGB, SRGB, BT709),
   MAKE_COLORIMETRY (BT2020, _16_235, BT2020, BT2020_12, BT2020),
+  MAKE_COLORIMETRY (BT2020_10, _16_235, BT2020, BT2020_10, BT2020),
+  MAKE_COLORIMETRY (BT2100_PQ, _16_235, BT2020, SMPTE2084, BT2020),
+  MAKE_COLORIMETRY (BT2100_HLG, _16_235, BT2020, ARIB_STD_B67, BT2020),
   MAKE_COLORIMETRY (NONAME, _0_255, BT601, UNKNOWN, UNKNOWN),
   MAKE_COLORIMETRY (NONAME, _UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN),       /* Keep last! */
 };
@@ -139,7 +142,8 @@ gst_video_colorimetry_from_string (GstVideoColorimetry * cinfo,
  *
  * Make a string representation of @cinfo.
  *
- * Returns: a string representation of @cinfo.
+ * Returns: (transfer full) (nullable): a string representation of @cinfo
+ * or %NULL if all the entries of @cinfo are unknown values.
  */
 gchar *
 gst_video_colorimetry_to_string (const GstVideoColorimetry * cinfo)
@@ -432,6 +436,7 @@ gst_video_color_transfer_encode (GstVideoTransferFunction func, gdouble val)
       res = pow (val, 1.0 / 2.2);
       break;
     case GST_VIDEO_TRANSFER_BT709:
+    case GST_VIDEO_TRANSFER_BT2020_10:
       if (val < 0.018)
         res = 4.5 * val;
       else
@@ -473,6 +478,34 @@ gst_video_color_transfer_encode (GstVideoTransferFunction func, gdouble val)
     case GST_VIDEO_TRANSFER_ADOBERGB:
       res = pow (val, 1.0 / 2.19921875);
       break;
+    case GST_VIDEO_TRANSFER_SMPTE2084:
+    {
+      gdouble c1 = 3424.0 / 4096.0;     /* c3 - c2 + 1 */
+      gdouble c2 = 32 * 2413 / 4096.0;
+      gdouble c3 = 32 * 2392 / 4096.0;
+      gdouble m = 128 * 2523 / 4096.0;
+      gdouble n = 0.25 * 2610 / 4096.0;
+      gdouble Ln = pow (val, n);
+
+      /* val equal to 1 for peak white is ordinarily intended to
+       * correspond to a reference output luminance level of 10000 cd/m^2  */
+      res = pow ((c1 + c2 * Ln) / (1.0 + c3 * Ln), m);
+      break;
+    }
+    case GST_VIDEO_TRANSFER_ARIB_STD_B67:
+    {
+      gdouble a = 0.17883277;
+      gdouble b = 0.28466892;
+      gdouble c = 0.55991073;
+
+      /* For [0, 1] normalized source as defined by HEVC specification */
+      if (val > (1.0 / 12.0))
+        res = a * log (12.0 * val - b) + c;
+      else
+        res = sqrt (3.0 * val);
+
+      break;
+    }
   }
   return res;
 }
@@ -520,6 +553,7 @@ gst_video_color_transfer_decode (GstVideoTransferFunction func, gdouble val)
       res = pow (val, 2.2);
       break;
     case GST_VIDEO_TRANSFER_BT709:
+    case GST_VIDEO_TRANSFER_BT2020_10:
       if (val < 0.081)
         res = val / 4.5;
       else
@@ -561,6 +595,300 @@ gst_video_color_transfer_decode (GstVideoTransferFunction func, gdouble val)
     case GST_VIDEO_TRANSFER_ADOBERGB:
       res = pow (val, 2.19921875);
       break;
+    case GST_VIDEO_TRANSFER_SMPTE2084:
+    {
+      gdouble c1 = 3424.0 / 4096.0;     /* c3 - c2 + 1 */
+      gdouble c2 = 32 * 2413 / 4096.0;
+      gdouble c3 = 32 * 2392 / 4096.0;
+      gdouble mi = 1 / (128 * 2523 / 4096.0);
+      gdouble ni = 1 / (0.25 * 2610 / 4096.0);
+      gdouble nm = pow (val, mi);
+
+      res = pow ((nm - c1) / (c2 - c3 * nm), ni);
+      break;
+    }
+    case GST_VIDEO_TRANSFER_ARIB_STD_B67:
+    {
+      gdouble a = 0.17883277;
+      gdouble b = 0.28466892;
+      gdouble c = 0.55991073;
+
+      if (val > 0.5)
+        res = (exp ((val - c) / a) + b) / 12.0;
+      else
+        res = val * val / 3.0;
+
+      break;
+    }
   }
   return res;
+}
+
+/* conversion between GStreamer color{matrix,transfer,primaries} enum
+ * and indices defined by ITU-T H.273 and ISO/IEC 230001-8 specification */
+
+/* FIXME 2.0: Define color{matrix,transfer,primaries} with explicit numbering
+ * to be matched with specification
+ */
+
+/**
+ * gst_video_color_matrix_to_iso:
+ * @matrix: a #GstVideoColorMatrix
+ *
+ * Converts #GstVideoColorMatrix to the "matrix coefficients"
+ * (MatrixCoefficients) value defined by "ISO/IEC 23001-8 Section 7.3 Table 4"
+ * and "ITU-T H.273 Table 4".
+ * "H.264 Table E-5" and "H.265 Table E.5" share the identical values.
+ *
+ * Returns: The value of ISO/IEC 23001-8 matrix coefficients.
+ *
+ * Since: 1.18
+ */
+guint
+gst_video_color_matrix_to_iso (GstVideoColorMatrix matrix)
+{
+  switch (matrix) {
+    case GST_VIDEO_COLOR_MATRIX_RGB:
+      return 0;
+    case GST_VIDEO_COLOR_MATRIX_BT709:
+      return 1;
+    case GST_VIDEO_COLOR_MATRIX_FCC:
+      return 4;
+    case GST_VIDEO_COLOR_MATRIX_BT601:
+      return 6;
+    case GST_VIDEO_COLOR_MATRIX_SMPTE240M:
+      return 7;
+    case GST_VIDEO_COLOR_MATRIX_BT2020:
+      return 9;
+    case GST_VIDEO_COLOR_MATRIX_UNKNOWN:
+    default:
+      return 2;
+  }
+}
+
+/**
+ * gst_video_color_transfer_to_iso:
+ * @func: a #GstVideoTransferFunction
+ *
+ * Converts #GstVideoTransferFunction to the "transfer characteristics"
+ * (TransferCharacteristics) value defined by "ISO/IEC 23001-8 Section 7.2 Table 3"
+ * and "ITU-T H.273 Table 3".
+ * "H.264 Table E-4" and "H.265 Table E.4" share the identical values.
+ *
+ * Returns: The value of ISO/IEC 23001-8 transfer characteristics.
+ *
+ * Since: 1.18
+ */
+guint
+gst_video_color_transfer_to_iso (GstVideoTransferFunction func)
+{
+  switch (func) {
+    case GST_VIDEO_TRANSFER_BT709:
+      return 1;
+    case GST_VIDEO_TRANSFER_GAMMA22:
+      return 4;
+    case GST_VIDEO_TRANSFER_GAMMA28:
+      return 5;
+    case GST_VIDEO_TRANSFER_SMPTE240M:
+      return 7;
+    case GST_VIDEO_TRANSFER_GAMMA10:
+      return 8;
+    case GST_VIDEO_TRANSFER_LOG100:
+      return 9;
+    case GST_VIDEO_TRANSFER_LOG316:
+      return 10;
+    case GST_VIDEO_TRANSFER_SRGB:
+      return 13;
+    case GST_VIDEO_TRANSFER_BT2020_10:
+      return 14;
+    case GST_VIDEO_TRANSFER_BT2020_12:
+      return 15;
+    case GST_VIDEO_TRANSFER_SMPTE2084:
+      return 16;
+    case GST_VIDEO_TRANSFER_ARIB_STD_B67:
+      return 18;
+    case GST_VIDEO_TRANSFER_GAMMA18:
+    case GST_VIDEO_TRANSFER_GAMMA20:
+    case GST_VIDEO_TRANSFER_ADOBERGB:
+    case GST_VIDEO_TRANSFER_UNKNOWN:
+    default:
+      return 2;
+  }
+}
+
+/**
+ * gst_video_color_primaries_to_iso:
+ * @primaries: a #GstVideoColorPrimaries
+ *
+ * Converts #GstVideoColorPrimaries to the "colour primaries" (ColourPrimaries)
+ * value defined by "ISO/IEC 23001-8 Section 7.1 Table 2"
+ * and "ITU-T H.273 Table 2".
+ * "H.264 Table E-3" and "H.265 Table E.3" share the identical values.
+ *
+ * Returns: The value of ISO/IEC 23001-8 colour primaries.
+ *
+ * Since: 1.18
+ */
+guint
+gst_video_color_primaries_to_iso (GstVideoColorPrimaries primaries)
+{
+  switch (primaries) {
+    case GST_VIDEO_COLOR_PRIMARIES_BT709:
+      return 1;
+    case GST_VIDEO_COLOR_PRIMARIES_BT470M:
+      return 4;
+    case GST_VIDEO_COLOR_PRIMARIES_BT470BG:
+      return 5;
+    case GST_VIDEO_COLOR_PRIMARIES_SMPTE170M:
+      return 6;
+    case GST_VIDEO_COLOR_PRIMARIES_SMPTE240M:
+      return 7;
+    case GST_VIDEO_COLOR_PRIMARIES_FILM:
+      return 8;
+    case GST_VIDEO_COLOR_PRIMARIES_BT2020:
+      return 9;
+    case GST_VIDEO_COLOR_PRIMARIES_SMPTEST428:
+      return 10;
+    case GST_VIDEO_COLOR_PRIMARIES_SMPTERP431:
+      return 11;
+    case GST_VIDEO_COLOR_PRIMARIES_SMPTEEG432:
+      return 12;
+    case GST_VIDEO_COLOR_PRIMARIES_EBU3213:
+      return 22;
+    case GST_VIDEO_COLOR_PRIMARIES_ADOBERGB:
+    case GST_VIDEO_COLOR_PRIMARIES_UNKNOWN:
+    default:
+      return 2;
+  }
+}
+
+/**
+ * gst_video_color_matrix_from_iso:
+ * @value: a ITU-T H.273 matrix coefficients value
+ *
+ * Converts the @value to the #GstVideoColorMatrix
+ * The matrix coefficients (MatrixCoefficients) value is
+ * defined by "ISO/IEC 23001-8 Section 7.3 Table 4"
+ * and "ITU-T H.273 Table 4".
+ * "H.264 Table E-5" and "H.265 Table E.5" share the identical values.
+ *
+ * Returns: the matched #GstVideoColorMatrix
+ *
+ * Since: 1.18
+ */
+GstVideoColorMatrix
+gst_video_color_matrix_from_iso (guint value)
+{
+  switch (value) {
+    case 0:
+      return GST_VIDEO_COLOR_MATRIX_RGB;
+    case 1:
+      return GST_VIDEO_COLOR_MATRIX_BT709;
+    case 4:
+      return GST_VIDEO_COLOR_MATRIX_FCC;
+    case 5:
+    case 6:
+      return GST_VIDEO_COLOR_MATRIX_BT601;
+    case 7:
+      return GST_VIDEO_COLOR_MATRIX_SMPTE240M;
+    case 9:
+      return GST_VIDEO_COLOR_MATRIX_BT2020;
+    case 2:
+    default:
+      return GST_VIDEO_COLOR_MATRIX_UNKNOWN;
+  }
+}
+
+/**
+ * gst_video_color_transfer_from_iso:
+ * @value: a ITU-T H.273 transfer characteristics value
+ *
+ * Converts the @value to the #GstVideoTransferFunction
+ * The transfer characteristics (TransferCharacteristics) value is
+ * defined by "ISO/IEC 23001-8 Section 7.2 Table 3"
+ * and "ITU-T H.273 Table 3".
+ * "H.264 Table E-4" and "H.265 Table E.4" share the identical values.
+ *
+ * Returns: the matched #GstVideoTransferFunction
+ *
+ * Since: 1.18
+ */
+GstVideoTransferFunction
+gst_video_color_transfer_from_iso (guint value)
+{
+  switch (value) {
+    case 1:
+    case 6:
+      return GST_VIDEO_TRANSFER_BT709;
+    case 4:
+      return GST_VIDEO_TRANSFER_GAMMA22;
+    case 5:
+      return GST_VIDEO_TRANSFER_GAMMA28;
+    case 7:
+      return GST_VIDEO_TRANSFER_SMPTE240M;
+    case 8:
+      return GST_VIDEO_TRANSFER_GAMMA10;
+    case 9:
+      return GST_VIDEO_TRANSFER_LOG100;
+    case 10:
+      return GST_VIDEO_TRANSFER_LOG316;
+    case 13:
+      return GST_VIDEO_TRANSFER_SRGB;
+    case 14:
+      return GST_VIDEO_TRANSFER_BT2020_10;
+    case 15:
+      return GST_VIDEO_TRANSFER_BT2020_12;
+    case 16:
+      return GST_VIDEO_TRANSFER_SMPTE2084;
+    case 18:
+      return GST_VIDEO_TRANSFER_ARIB_STD_B67;
+    case 2:
+    default:
+      return GST_VIDEO_TRANSFER_UNKNOWN;
+  }
+}
+
+/**
+ * gst_video_color_primaries_from_iso:
+ * @value: a ITU-T H.273 colour primaries value
+ *
+ * Converts the @value to the #GstVideoColorPrimaries
+ * The colour primaries (ColourPrimaries) value is
+ * defined by "ISO/IEC 23001-8 Section 7.1 Table 2" and "ITU-T H.273 Table 2".
+ * "H.264 Table E-3" and "H.265 Table E.3" share the identical values.
+ *
+ * Returns: the matched #GstVideoColorPrimaries
+ *
+ * Since: 1.18
+ */
+GstVideoColorPrimaries
+gst_video_color_primaries_from_iso (guint value)
+{
+  switch (value) {
+    case 1:
+      return GST_VIDEO_COLOR_PRIMARIES_BT709;
+    case 4:
+      return GST_VIDEO_COLOR_PRIMARIES_BT470M;
+    case 5:
+      return GST_VIDEO_COLOR_PRIMARIES_BT470BG;
+    case 6:
+      return GST_VIDEO_COLOR_PRIMARIES_SMPTE170M;
+    case 7:
+      return GST_VIDEO_COLOR_PRIMARIES_SMPTE240M;
+    case 8:
+      return GST_VIDEO_COLOR_PRIMARIES_FILM;
+    case 9:
+      return GST_VIDEO_COLOR_PRIMARIES_BT2020;
+    case 10:
+      return GST_VIDEO_COLOR_PRIMARIES_SMPTEST428;
+    case 11:
+      return GST_VIDEO_COLOR_PRIMARIES_SMPTERP431;
+    case 12:
+      return GST_VIDEO_COLOR_PRIMARIES_SMPTEEG432;
+    case 22:
+      return GST_VIDEO_COLOR_PRIMARIES_EBU3213;
+    case 2:
+    default:
+      return GST_VIDEO_COLOR_PRIMARIES_UNKNOWN;
+  }
 }

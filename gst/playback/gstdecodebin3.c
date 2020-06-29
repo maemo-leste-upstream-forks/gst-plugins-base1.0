@@ -45,7 +45,7 @@
  * decodebin3 differs from the previous decodebin (decodebin2) in important ways:
  *
  * * supports publication and selection of stream information via
- * GstStreamCollection messages and #GST_EVENT_SELECT_STREAM events.
+ * GstStreamCollection messages and #GST_EVENT_SELECT_STREAMS events.
  *
  * * dynamically switches stream connections internally, and
  * reuses decoder elements when stream selections change, so that in
@@ -53,18 +53,18 @@
  * and only creates new elements when streams change and an existing decoder
  * is not capable of handling the new format.
  *
- * * supports multiple input pads for the parallel decoding of auxilliary streams
+ * * supports multiple input pads for the parallel decoding of auxiliary streams
  * not muxed with the primary stream.
  *
  * * does not handle network stream buffering. decodebin3 expects that network stream
  * buffering is handled upstream, before data is passed to it.
  *
- * <emphasis>decodebin3 is still experimental API and a technology preview.
- * Its behaviour and exposed API is subject to change.</emphasis>
+ * > decodebin3 is still experimental API and a technology preview.
+ * > Its behaviour and exposed API is subject to change.
  *
  */
 
-/**
+/*
  * Global design
  *
  * 1) From sink pad to elementary streams (GstParseBin)
@@ -216,7 +216,7 @@ struct _GstDecodebin3
   /* counter for input */
   guint32 input_counter;
   /* Current stream group_id (default : GST_GROUP_ID_INVALID) */
-  /* FIXME : Needs to be resetted appropriately (when upstream changes ?) */
+  /* FIXME : Needs to be reset appropriately (when upstream changes ?) */
   guint32 current_group_id;
   /* End of variables protected by input_lock */
 
@@ -265,6 +265,7 @@ struct _GstDecodebin3
 
   /* Properties */
   GstCaps *caps;
+  gboolean force_sw_decoders;
 };
 
 struct _GstDecodebin3Class
@@ -371,7 +372,8 @@ typedef struct _PendingPad
 enum
 {
   PROP_0,
-  PROP_CAPS
+  PROP_CAPS,
+  PROP_FORCE_SW_DECODERS,
 };
 
 /* signals */
@@ -422,6 +424,8 @@ GType gst_decodebin3_get_type (void);
 G_DEFINE_TYPE (GstDecodebin3, gst_decodebin3, GST_TYPE_BIN);
 
 static GstStaticCaps default_raw_caps = GST_STATIC_CAPS (DEFAULT_RAW_CAPS);
+
+#define DEFAULT_FORCE_SW_DECODERS FALSE
 
 static GstStaticPadTemplate sink_template = GST_STATIC_PAD_TEMPLATE ("sink",
     GST_PAD_SINK,
@@ -551,6 +555,20 @@ gst_decodebin3_class_init (GstDecodebin3Class * klass)
           "The caps on which to stop decoding. (NULL = default)",
           GST_TYPE_CAPS, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * GstDecodeBin::force-sw-decoders:
+   *
+   * While auto-plugging, if set to %TRUE, those decoders within
+   * "Hardware" klass will be ignored. Otherwise they will be tried.
+   *
+   * Since: 1.18
+   */
+  g_object_class_install_property (gobject_klass, PROP_FORCE_SW_DECODERS,
+      g_param_spec_boolean ("force-sw-decoders", "Software Decoders Only",
+          "Use only sofware decoders to process streams",
+          DEFAULT_FORCE_SW_DECODERS,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
   /* FIXME : ADD SIGNALS ! */
   /**
    * GstDecodebin3::select-stream
@@ -567,19 +585,18 @@ gst_decodebin3_class_init (GstDecodebin3Class * klass)
   gst_decodebin3_signals[SIGNAL_SELECT_STREAM] =
       g_signal_new ("select-stream", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstDecodebin3Class, select_stream),
-      _gst_int_accumulator, NULL, g_cclosure_marshal_generic,
+      _gst_int_accumulator, NULL, NULL,
       G_TYPE_INT, 2, GST_TYPE_STREAM_COLLECTION, GST_TYPE_STREAM);
 
   /**
    * GstDecodebin3::about-to-finish:
    *
    * This signal is emitted when the data for the selected URI is
-   * entirely buffered and it is safe to specify anothe URI.
+   * entirely buffered and it is safe to specify another URI.
    */
   gst_decodebin3_signals[SIGNAL_ABOUT_TO_FINISH] =
       g_signal_new ("about-to-finish", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic, G_TYPE_NONE,
-      0, G_TYPE_NONE);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0, G_TYPE_NONE);
 
 
   element_class->request_new_pad =
@@ -628,6 +645,7 @@ gst_decodebin3_init (GstDecodebin3 * dbin)
   g_mutex_init (&dbin->input_lock);
 
   dbin->caps = gst_static_caps_get (&default_raw_caps);
+  dbin->force_sw_decoders = DEFAULT_FORCE_SW_DECODERS;
 
   GST_OBJECT_FLAG_SET (dbin, GST_BIN_FLAG_STREAMS_AWARE);
 }
@@ -679,6 +697,9 @@ gst_decodebin3_set_property (GObject * object, guint prop_id,
       dbin->caps = g_value_dup_boxed (value);
       GST_OBJECT_UNLOCK (dbin);
       break;
+    case PROP_FORCE_SW_DECODERS:
+      dbin->force_sw_decoders = g_value_get_boolean (value);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -697,6 +718,9 @@ gst_decodebin3_get_property (GObject * object, guint prop_id, GValue * value,
       GST_OBJECT_LOCK (dbin);
       g_value_set_boxed (value, dbin->caps);
       GST_OBJECT_UNLOCK (dbin);
+      break;
+    case PROP_FORCE_SW_DECODERS:
+      g_value_set_boolean (value, dbin->force_sw_decoders);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -753,7 +777,7 @@ parsebin_drained_cb (GstElement * parsebin, DecodebinInput * input)
   gboolean all_drained;
   GList *tmp;
 
-  GST_WARNING_OBJECT (dbin, "input %p drained", input);
+  GST_INFO_OBJECT (dbin, "input %p drained", input);
   input->drained = TRUE;
 
   all_drained = dbin->main_input->drained;
@@ -764,7 +788,7 @@ parsebin_drained_cb (GstElement * parsebin, DecodebinInput * input)
   }
 
   if (all_drained) {
-    GST_WARNING_OBJECT (dbin, "All inputs drained. Posting about-to-finish");
+    GST_INFO_OBJECT (dbin, "All inputs drained. Posting about-to-finish");
     g_signal_emit (dbin, gst_decodebin3_signals[SIGNAL_ABOUT_TO_FINISH], 0,
         NULL);
   }
@@ -1038,12 +1062,19 @@ gst_decode_bin_update_factories_list (GstDecodebin3 * dbin)
     dbin->decodable_factories = NULL;
     for (tmp = dbin->factories; tmp; tmp = tmp->next) {
       GstElementFactory *fact = (GstElementFactory *) tmp->data;
+
       if (gst_element_factory_list_is_type (fact,
-              GST_ELEMENT_FACTORY_TYPE_DECODER))
-        dbin->decoder_factories = g_list_append (dbin->decoder_factories, fact);
-      else
+              GST_ELEMENT_FACTORY_TYPE_DECODER)) {
+        if (!(dbin->force_sw_decoders
+                && gst_element_factory_list_is_type (fact,
+                    GST_ELEMENT_FACTORY_TYPE_HARDWARE))) {
+          dbin->decoder_factories =
+              g_list_append (dbin->decoder_factories, fact);
+        }
+      } else {
         dbin->decodable_factories =
             g_list_append (dbin->decodable_factories, fact);
+      }
     }
   }
 }
@@ -1075,6 +1106,7 @@ update_requested_selection (GstDecodebin3 * dbin)
 {
   guint i, nb;
   GList *tmp = NULL;
+  gboolean all_user_selected = TRUE;
   GstStreamType used_types = 0;
   GstStreamCollection *collection;
 
@@ -1109,6 +1141,9 @@ update_requested_selection (GstDecodebin3 * dbin)
         gst_decodebin3_signals[SIGNAL_SELECT_STREAM], 0, collection, stream,
         &request);
     GST_DEBUG_OBJECT (dbin, "stream %s , request:%d", sid, request);
+
+    if (request == -1)
+      all_user_selected = FALSE;
     if (request == 1 || (request == -1
             && (stream_in_list (dbin->requested_selection, sid)
                 || stream_in_list (dbin->active_selection, sid)))) {
@@ -1125,16 +1160,18 @@ update_requested_selection (GstDecodebin3 * dbin)
     }
   }
 
-  /* 4. If not, match one stream of each type */
-  for (i = 0; i < nb; i++) {
-    GstStream *stream = gst_stream_collection_get_stream (collection, i);
-    GstStreamType curtype = gst_stream_get_stream_type (stream);
-    if (!(used_types & curtype)) {
-      const gchar *sid = gst_stream_get_stream_id (stream);
-      GST_DEBUG_OBJECT (dbin, "Selecting stream '%s' of type %s",
-          sid, gst_stream_type_get_name (curtype));
-      tmp = g_list_append (tmp, (gchar *) sid);
-      used_types |= curtype;
+  /* 4. If the user didn't explicitly selected all streams, match one stream of each type */
+  if (!all_user_selected && !dbin->requested_selection) {
+    for (i = 0; i < nb; i++) {
+      GstStream *stream = gst_stream_collection_get_stream (collection, i);
+      GstStreamType curtype = gst_stream_get_stream_type (stream);
+      if (!(used_types & curtype)) {
+        const gchar *sid = gst_stream_get_stream_id (stream);
+        GST_DEBUG_OBJECT (dbin, "Selecting stream '%s' of type %s",
+            sid, gst_stream_type_get_name (curtype));
+        tmp = g_list_append (tmp, (gchar *) sid);
+        used_types |= curtype;
+      }
     }
   }
 
@@ -2898,6 +2935,8 @@ gst_decodebin3_change_state (GstElement * element, GstStateChange transition)
       dbin->slots = NULL;
       dbin->current_group_id = GST_GROUP_ID_INVALID;
       /* Free inputs */
+      /* Reset the main input group id since it will get a new id on a new stream */
+      dbin->main_input->group_id = GST_GROUP_ID_INVALID;
     }
       break;
     default:

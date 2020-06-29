@@ -34,10 +34,19 @@
 #include "gstglapi.h"
 
 /**
+ * GstGLFuncs:
+ *
+ * Structure containing function pointers to OpenGL functions.
+ *
+ * Each field is named exactly the same as the OpenGL function without the
+ * `gl` prefix.
+ */
+
+/**
  * gst_gl_api_to_string:
  * @api: a #GstGLAPI to stringify
  *
- * Returns: A space seperated string of the OpenGL api's enabled in @api
+ * Returns: A space separated string of the OpenGL api's enabled in @api
  */
 gchar *
 gst_gl_api_to_string (GstGLAPI api)
@@ -88,7 +97,7 @@ out:
 
 /**
  * gst_gl_api_from_string:
- * @api_s: a space seperated string of OpenGL apis
+ * @api_s: a space separated string of OpenGL apis
  *
  * Returns: The #GstGLAPI represented by @api_s
  */
@@ -132,7 +141,7 @@ gst_gl_api_from_string (const gchar * apis_s)
  * gst_gl_platform_to_string:
  * @platform: a #GstGLPlatform to stringify
  *
- * Returns: A space seperated string of the OpenGL platforms enabled in @platform
+ * Returns: A space separated string of the OpenGL platforms enabled in @platform
  */
 gchar *
 gst_gl_platform_to_string (GstGLPlatform platform)
@@ -173,7 +182,7 @@ out:
 
 /**
  * gst_gl_platform_from_string:
- * @platform_s: a space seperated string of OpenGL platformss
+ * @platform_s: a space separated string of OpenGL platformss
  *
  * Returns: The #GstGLPlatform represented by @platform_s
  */

@@ -124,6 +124,8 @@ gst_opus_enc_audio_type_get_type (void)
   static const GEnumValue values[] = {
     {OPUS_APPLICATION_AUDIO, "Generic audio", "generic"},
     {OPUS_APPLICATION_VOIP, "Voice", "voice"},
+    {OPUS_APPLICATION_RESTRICTED_LOWDELAY, "Restricted low delay",
+        "restricted-lowdelay"},
     {0, NULL, NULL}
   };
   static volatile GType id = 0;
@@ -342,6 +344,11 @@ gst_opus_enc_class_init (GstOpusEncClass * klass)
   gobject_class->finalize = GST_DEBUG_FUNCPTR (gst_opus_enc_finalize);
 
   GST_DEBUG_CATEGORY_INIT (opusenc_debug, "opusenc", 0, "Opus encoder");
+
+  gst_type_mark_as_plugin_api (GST_OPUS_ENC_TYPE_AUDIO_TYPE, 0);
+  gst_type_mark_as_plugin_api (GST_OPUS_ENC_TYPE_BANDWIDTH, 0);
+  gst_type_mark_as_plugin_api (GST_OPUS_ENC_TYPE_BITRATE_TYPE, 0);
+  gst_type_mark_as_plugin_api (GST_OPUS_ENC_TYPE_FRAME_SIZE, 0);
 }
 
 static void

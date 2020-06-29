@@ -485,8 +485,13 @@ gst_xv_image_sink_handle_xevents (GstXvImageSink * xvimagesink)
         /* Key pressed/released over our window. We send upstream
            events for interactivity/navigation */
         g_mutex_lock (&xvimagesink->context->lock);
-        keysym = XkbKeycodeToKeysym (xvimagesink->context->disp,
-            e.xkey.keycode, 0, 0);
+        if (xvimagesink->context->use_xkb) {
+          keysym = XkbKeycodeToKeysym (xvimagesink->context->disp,
+              e.xkey.keycode, 0, 0);
+        } else {
+          keysym = XKeycodeToKeysym (xvimagesink->context->disp,
+              e.xkey.keycode, 0);
+        }
         if (keysym != NoSymbol) {
           key_str = XKeysymToString (keysym);
         } else {
@@ -1589,7 +1594,7 @@ gst_xv_image_sink_set_property (GObject * object, guint prop_id,
       break;
     case PROP_DISPLAY:
       g_free (xvimagesink->config.display_name);
-      xvimagesink->config.display_name = g_strdup (g_value_get_string (value));
+      xvimagesink->config.display_name = g_value_dup_string (value);
       break;
     case PROP_SYNCHRONOUS:
       xvimagesink->synchronous = g_value_get_boolean (value);

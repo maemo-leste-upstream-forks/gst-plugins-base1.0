@@ -31,7 +31,7 @@
  * ]|
  * FBO (Frame Buffer Object) and GLSL (OpenGL Shading Language) are required.
  * Depending on the exact OpenGL version chosen and the exact requirements of
- * the OpenGL implementation, a #version header may be required.
+ * the OpenGL implementation, a `#version` header may be required.
  *
  * The following is a simple OpenGL ES (also usable with OpenGL 3 core contexts)
  * passthrough shader with the required inputs.
@@ -158,8 +158,7 @@ gst_gl_filtershader_class_init (GstGLFilterShaderClass * klass)
    */
   gst_gl_shader_signals[SIGNAL_CREATE_SHADER] =
       g_signal_new ("create-shader", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic,
-      GST_TYPE_GL_SHADER, 0);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, GST_TYPE_GL_SHADER, 0);
 
   gst_element_class_set_metadata (element_class,
       "OpenGL fragment shader filter", "Filter/Effect",
@@ -388,7 +387,7 @@ _set_uniform (GQuark field_id, const GValue * value, gpointer user_data)
 #endif
   } else {
     /* FIXME: Add support for unsigned ints, non 4x4 matrices, etc */
-    GST_FIXME ("Don't know how to set the \'%s\' paramater.  Unknown type",
+    GST_FIXME ("Don't know how to set the \'%s\' parameter.  Unknown type",
         field_name);
     return TRUE;
   }
@@ -531,7 +530,7 @@ gst_gl_filtershader_hcallback (GstGLFilter * filter, GstGLMemory * in_tex,
 
   gst_gl_shader_use (shader);
 
-  /* FIXME: propertise these */
+  /* FIXME: turn these into properties */
   gst_gl_shader_set_uniform_1i (shader, "tex", 0);
   gst_gl_shader_set_uniform_1f (shader, "width",
       GST_VIDEO_INFO_WIDTH (&filter->out_info));
@@ -539,7 +538,7 @@ gst_gl_filtershader_hcallback (GstGLFilter * filter, GstGLMemory * in_tex,
       GST_VIDEO_INFO_HEIGHT (&filter->out_info));
   gst_gl_shader_set_uniform_1f (shader, "time", filtershader->time);
 
-  /* FIXME: propertise these */
+  /* FIXME: turn these into properties */
   filter->draw_attr_position_loc =
       gst_gl_shader_get_attribute_location (shader, "a_position");
   filter->draw_attr_texture_loc =

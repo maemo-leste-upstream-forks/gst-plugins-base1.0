@@ -455,7 +455,7 @@ gst_multi_handle_sink_class_init (GstMultiHandleSinkClass * klass)
       g_signal_new ("clear", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
       G_STRUCT_OFFSET (GstMultiHandleSinkClass, clear), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 0);
+      NULL, G_TYPE_NONE, 0);
 
   gst_element_class_add_static_pad_template (gstelement_class, &sinktemplate);
 
@@ -484,6 +484,10 @@ gst_multi_handle_sink_class_init (GstMultiHandleSinkClass * klass)
 
   GST_DEBUG_CATEGORY_INIT (multihandlesink_debug, "multihandlesink", 0,
       "Multi socket sink");
+
+  gst_type_mark_as_plugin_api (GST_TYPE_RECOVER_POLICY, 0);
+  gst_type_mark_as_plugin_api (GST_TYPE_SYNC_METHOD, 0);
+  gst_type_mark_as_plugin_api (GST_TYPE_CLIENT_STATUS, 0);
 }
 
 static void
@@ -599,8 +603,6 @@ void
 gst_multi_handle_sink_client_init (GstMultiHandleClient * client,
     GstSyncMethod sync_method)
 {
-  GTimeVal now;
-
   client->status = GST_CLIENT_STATUS_OK;
   client->bufpos = -1;
   client->flushcount = -1;
@@ -616,8 +618,7 @@ gst_multi_handle_sink_client_init (GstMultiHandleClient * client,
   client->currently_removing = FALSE;
 
   /* update start time */
-  g_get_current_time (&now);
-  client->connect_time = GST_TIMEVAL_TO_TIME (now);
+  client->connect_time = g_get_real_time () * GST_USECOND;
   client->disconnect_time = 0;
   /* set last activity time to connect time */
   client->last_activity_time = client->connect_time;
@@ -883,11 +884,7 @@ gst_multi_handle_sink_get_stats (GstMultiHandleSink * sink,
     result = gst_structure_new_empty ("multihandlesink-stats");
 
     if (mhclient->disconnect_time == 0) {
-      GTimeVal nowtv;
-
-      g_get_current_time (&nowtv);
-
-      interval = GST_TIMEVAL_TO_TIME (nowtv) - mhclient->connect_time;
+      interval = (g_get_real_time () * GST_USECOND) - mhclient->connect_time;
     } else {
       interval = mhclient->disconnect_time - mhclient->connect_time;
     }
@@ -924,7 +921,6 @@ void
 gst_multi_handle_sink_remove_client_link (GstMultiHandleSink * sink,
     GList * link)
 {
-  GTimeVal now;
   GstMultiHandleClient *mhclient = (GstMultiHandleClient *) link->data;
   GstMultiHandleSinkClass *mhsinkclass = GST_MULTI_HANDLE_SINK_GET_CLASS (sink);
 
@@ -970,8 +966,7 @@ gst_multi_handle_sink_remove_client_link (GstMultiHandleSink * sink,
 
   mhsinkclass->hash_removing (sink, mhclient);
 
-  g_get_current_time (&now);
-  mhclient->disconnect_time = GST_TIMEVAL_TO_TIME (now);
+  mhclient->disconnect_time = g_get_real_time () * GST_USECOND;
 
   /* free client buffers */
   g_slist_foreach (mhclient->sending, (GFunc) gst_mini_object_unref, NULL);
@@ -1183,7 +1178,7 @@ find_syncframe (GstMultiHandleSink * sink, gint idx, gint direction)
 /* Get the number of buffers from the buffer queue needed to satisfy
  * the maximum max in the configured units.
  * If units are not BUFFERS, and there are insufficient buffers in the
- * queue to satify the limit, return len(queue) + 1 */
+ * queue to satisfy the limit, return len(queue) + 1 */
 gint
 get_buffers_max (GstMultiHandleSink * sink, gint64 max)
 {
@@ -1241,7 +1236,7 @@ get_buffers_max (GstMultiHandleSink * sink, gint64 max)
  * is satisfied
  */
 /* count the amount of data in the buffers and return the index
- * that satifies the given limits.
+ * that satisfies the given limits.
  *
  * Returns: index @idx in the buffer queue so that the given limits are
  * satisfied. TRUE if all the limits could be satisfied, FALSE if not
@@ -1681,7 +1676,6 @@ gst_multi_handle_sink_queue_buffer (GstMultiHandleSink * mhsink,
   gboolean hash_changed = FALSE;
   gint max_buffer_usage;
   gint i;
-  GTimeVal nowtv;
   GstClockTime now;
   gint max_buffers, soft_max_buffers;
   guint cookie;
@@ -1734,8 +1728,7 @@ gst_multi_handle_sink_queue_buffer (GstMultiHandleSink * mhsink,
   }
 
   max_buffer_usage = 0;
-  g_get_current_time (&nowtv);
-  now = GST_TIMEVAL_TO_TIME (nowtv);
+  now = g_get_real_time () * GST_USECOND;
 
   /* now check for new or slow clients */
 restart:

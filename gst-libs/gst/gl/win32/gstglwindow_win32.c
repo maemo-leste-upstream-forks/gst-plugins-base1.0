@@ -54,6 +54,7 @@ G_DEFINE_TYPE_WITH_CODE (GstGLWindowWin32, gst_gl_window_win32,
 static void gst_gl_window_win32_set_window_handle (GstGLWindow * window,
     guintptr handle);
 static guintptr gst_gl_window_win32_get_display (GstGLWindow * window);
+static guintptr gst_gl_window_win32_get_window_handle (GstGLWindow * window);
 static void gst_gl_window_win32_set_preferred_size (GstGLWindow * window,
     gint width, gint height);
 static void gst_gl_window_win32_show (GstGLWindow * window);
@@ -74,6 +75,8 @@ gst_gl_window_win32_class_init (GstGLWindowWin32Class * klass)
   window_class->draw = GST_DEBUG_FUNCPTR (gst_gl_window_win32_draw);
   window_class->get_display =
       GST_DEBUG_FUNCPTR (gst_gl_window_win32_get_display);
+  window_class->get_window_handle =
+      GST_DEBUG_FUNCPTR (gst_gl_window_win32_get_window_handle);
   window_class->set_preferred_size =
       GST_DEBUG_FUNCPTR (gst_gl_window_win32_set_preferred_size);
   window_class->show = GST_DEBUG_FUNCPTR (gst_gl_window_win32_show);
@@ -94,8 +97,8 @@ gst_gl_window_win32_new (GstGLDisplay * display)
 {
   GstGLWindowWin32 *window;
 
-  if ((gst_gl_display_get_handle_type (display) & GST_GL_DISPLAY_TYPE_WIN32) ==
-      0)
+  if ((gst_gl_display_get_handle_type (display) &
+          (GST_GL_DISPLAY_TYPE_WIN32 | GST_GL_DISPLAY_TYPE_EGL)) == 0)
     /* we require an win32 display to create win32 windows */
     return NULL;
 
@@ -324,6 +327,16 @@ gst_gl_window_win32_get_display (GstGLWindow * window)
   return (guintptr) window_win32->device;
 }
 
+static guintptr
+gst_gl_window_win32_get_window_handle (GstGLWindow * window)
+{
+  GstGLWindowWin32 *window_win32;
+
+  window_win32 = GST_GL_WINDOW_WIN32 (window);
+
+  return (guintptr) window_win32->internal_win_id;
+}
+
 static void
 gst_gl_window_win32_set_window_handle (GstGLWindow * window, guintptr id)
 {
@@ -392,6 +405,72 @@ gst_gl_window_win32_draw (GstGLWindow * window)
 
   RedrawWindow (window_win32->internal_win_id, NULL, NULL,
       RDW_NOERASE | RDW_INTERNALPAINT | RDW_INVALIDATE);
+}
+
+static void
+gst_gl_window_win32_handle_key_event (GstGLWindow * window, UINT uMsg,
+    LPARAM lParam)
+{
+  gunichar2 wcrep[128];
+  const gchar *event;
+
+  if (GetKeyNameTextW (lParam, (LPWSTR) wcrep, 128)) {
+    gchar *utfrep = g_utf16_to_utf8 (wcrep, 128, NULL, NULL, NULL);
+    if (utfrep) {
+      if (uMsg == WM_KEYDOWN)
+        event = "key-press";
+      else
+        event = "key-release";
+
+      gst_gl_window_send_key_event (window, event, utfrep);
+      g_free (utfrep);
+    }
+  }
+}
+
+static void
+gst_gl_window_win32_handle_mouse_event (GstGLWindow * window, UINT uMsg,
+    LPARAM lParam)
+{
+  gint button;
+  const gchar *event = NULL;
+
+  switch (uMsg) {
+    case WM_MOUSEMOVE:
+      button = 0;
+      event = "mouse-move";
+      break;
+    case WM_LBUTTONDOWN:
+      button = 1;
+      event = "mouse-button-press";
+      break;
+    case WM_LBUTTONUP:
+      button = 1;
+      event = "mouse-button-release";
+      break;
+    case WM_RBUTTONDOWN:
+      button = 2;
+      event = "mouse-button-press";
+      break;
+    case WM_RBUTTONUP:
+      button = 2;
+      event = "mouse-button-release";
+      break;
+    case WM_MBUTTONDOWN:
+      button = 3;
+      event = "mouse-button-press";
+      break;
+    case WM_MBUTTONUP:
+      button = 3;
+      event = "mouse-button-release";
+      break;
+    default:
+      break;
+  }
+
+  if (event)
+    gst_gl_window_send_mouse_event (window, event, button,
+        (double) LOWORD (lParam), (double) HIWORD (lParam));
 }
 
 /* PRIVATE */
@@ -474,12 +553,23 @@ window_proc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         ret = TRUE;
         break;
       }
+      case WM_KEYDOWN:
+      case WM_KEYUP:
+        gst_gl_window_win32_handle_key_event (window, uMsg, lParam);
+        ret = DefWindowProc (hWnd, uMsg, wParam, lParam);
+        break;
+      case WM_LBUTTONDOWN:
+      case WM_LBUTTONUP:
+      case WM_RBUTTONDOWN:
+      case WM_RBUTTONUP:
+      case WM_MBUTTONDOWN:
+      case WM_MBUTTONUP:
+      case WM_MOUSEMOVE:
+        gst_gl_window_win32_handle_mouse_event (window, uMsg, lParam);
+        ret = DefWindowProc (hWnd, uMsg, wParam, lParam);
+        break;
       default:
       {
-        /* transmit messages to the parrent (ex: mouse/keyboard input) */
-        HWND parent_id = window_win32->parent_win_id;
-        if (parent_id)
-          PostMessage (parent_id, uMsg, wParam, lParam);
         ret = DefWindowProc (hWnd, uMsg, wParam, lParam);
       }
     }

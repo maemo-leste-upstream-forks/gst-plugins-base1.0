@@ -24,6 +24,7 @@ video_sources = [
   'video-event.c',
   'video-format.c',
   'video-frame.c',
+  'video-hdr.c',
   'video-info.c',
   'video-multiview.c',
   'video-resampler.c',
@@ -57,6 +58,7 @@ video_headers = [
   'video-color.h',
   'video-converter.h',
   'video-dither.h',
+  'video-hdr.h',
   'video-info.h',
   'video-frame.h',
   'video-prelude.h',
@@ -86,6 +88,7 @@ video_mkenum_headers = [
   'video-resampler.h',
   'video-scaler.h',
   'video-tile.h',
+  'gstvideotimecode.h',
   'colorbalance.h',
   'navigation.h',
 ]
@@ -135,7 +138,7 @@ gstvideo = library('gstvideo-@0@'.format(api_version),
 
 if build_gir
   gst_gir_extra_args = gir_init_section + [ '--c-include=gst/video/video.h' ]
-  video_gen_sources += [gnome.generate_gir(gstvideo,
+  video_gir = gnome.generate_gir(gstvideo,
     sources : video_sources + video_headers + [gstvideo_c] + [gstvideo_h],
     namespace : 'GstVideo',
     nsversion : api_version,
@@ -146,7 +149,8 @@ if build_gir
     install : true,
     extra_args : gst_gir_extra_args,
     dependencies : gstvideo_deps
-  )]
+  )
+  video_gen_sources += [video_gir]
 endif
 
 video_dep = declare_dependency(link_with : gstvideo,

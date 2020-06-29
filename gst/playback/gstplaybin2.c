@@ -55,12 +55,12 @@
  * Playback can be initiated by setting the element to PLAYING state using
  * gst_element_set_state(). Note that the state change will take place in
  * the background in a separate thread, when the function returns playback
- * is probably not happening yet and any errors might not have occured yet.
+ * is probably not happening yet and any errors might not have occurred yet.
  * Applications using playbin should ideally be written to deal with things
  * completely asynchroneous.
  *
  * When playback has finished (an EOS message has been received on the bus)
- * or an error has occured (an ERROR message has been received on the bus) or
+ * or an error has occurred (an ERROR message has been received on the bus) or
  * the user wants to play a different track, playbin should be set back to
  * READY or NULL state, then the #GstPlayBin:uri property should be set to the
  * new location and then playbin be set to PLAYING state again.
@@ -169,6 +169,10 @@
  * a structure named 'redirect' along with a 'new-location' field of string
  * type. The new location may be a relative or an absolute URI. Examples
  * for such redirects can be found in many quicktime movie trailers.
+ *
+ * NOTE: playbin will internally handle the redirect messages in the case
+ * that the redirecting stream doesn't contain any tracks and thus
+ * needs to report an error message on the bus.
  *
  * ## Examples
  * |[
@@ -632,6 +636,8 @@ static void pad_removed_cb (GstElement * decodebin, GstPad * pad,
 static void gst_play_bin_suburidecodebin_block (GstSourceGroup * group,
     GstElement * suburidecodebin, gboolean block);
 static void gst_play_bin_suburidecodebin_seek_to_start (GstSourceGroup * group);
+static void
+gst_play_bin_update_context (GstPlayBin * playbin, GstContext * context);
 
 static GstElementClass *parent_class;
 
@@ -970,7 +976,7 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * GstPlayBin:ring-buffer-max-size
+   * GstPlayBin:ring-buffer-max-size:
    *
    * The maximum size of the ring buffer in bytes. If set to 0, the ring
    * buffer is disabled. Default 0.
@@ -1039,11 +1045,11 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_ABOUT_TO_FINISH] =
       g_signal_new ("about-to-finish", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      G_STRUCT_OFFSET (GstPlayBinClass, about_to_finish), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
+      G_STRUCT_OFFSET (GstPlayBinClass, about_to_finish), NULL, NULL, NULL,
+      G_TYPE_NONE, 0, G_TYPE_NONE);
 
   /**
-   * GstPlayBin::video-changed
+   * GstPlayBin::video-changed:
    * @playbin: a #GstPlayBin
    *
    * This signal is emitted whenever the number or order of the video
@@ -1058,8 +1064,8 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_VIDEO_CHANGED] =
       g_signal_new ("video-changed", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      G_STRUCT_OFFSET (GstPlayBinClass, video_changed), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
+      G_STRUCT_OFFSET (GstPlayBinClass, video_changed), NULL, NULL, NULL,
+      G_TYPE_NONE, 0, G_TYPE_NONE);
   /**
    * GstPlayBin::audio-changed
    * @playbin: a #GstPlayBin
@@ -1076,10 +1082,10 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_AUDIO_CHANGED] =
       g_signal_new ("audio-changed", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      G_STRUCT_OFFSET (GstPlayBinClass, audio_changed), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
+      G_STRUCT_OFFSET (GstPlayBinClass, audio_changed), NULL, NULL, NULL,
+      G_TYPE_NONE, 0, G_TYPE_NONE);
   /**
-   * GstPlayBin::text-changed
+   * GstPlayBin::text-changed:
    * @playbin: a #GstPlayBin
    *
    * This signal is emitted whenever the number or order of the text
@@ -1094,11 +1100,11 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_TEXT_CHANGED] =
       g_signal_new ("text-changed", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      G_STRUCT_OFFSET (GstPlayBinClass, text_changed), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
+      G_STRUCT_OFFSET (GstPlayBinClass, text_changed), NULL, NULL, NULL,
+      G_TYPE_NONE, 0, G_TYPE_NONE);
 
   /**
-   * GstPlayBin::video-tags-changed
+   * GstPlayBin::video-tags-changed:
    * @playbin: a #GstPlayBin
    * @stream: stream index with changed tags
    *
@@ -1112,11 +1118,11 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_VIDEO_TAGS_CHANGED] =
       g_signal_new ("video-tags-changed", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      G_STRUCT_OFFSET (GstPlayBinClass, video_tags_changed), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, G_TYPE_INT);
+      G_STRUCT_OFFSET (GstPlayBinClass, video_tags_changed), NULL, NULL, NULL,
+      G_TYPE_NONE, 1, G_TYPE_INT);
 
   /**
-   * GstPlayBin::audio-tags-changed
+   * GstPlayBin::audio-tags-changed:
    * @playbin: a #GstPlayBin
    * @stream: stream index with changed tags
    *
@@ -1130,11 +1136,11 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_AUDIO_TAGS_CHANGED] =
       g_signal_new ("audio-tags-changed", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      G_STRUCT_OFFSET (GstPlayBinClass, audio_tags_changed), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, G_TYPE_INT);
+      G_STRUCT_OFFSET (GstPlayBinClass, audio_tags_changed), NULL, NULL, NULL,
+      G_TYPE_NONE, 1, G_TYPE_INT);
 
   /**
-   * GstPlayBin::text-tags-changed
+   * GstPlayBin::text-tags-changed:
    * @playbin: a #GstPlayBin
    * @stream: stream index with changed tags
    *
@@ -1148,8 +1154,8 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_TEXT_TAGS_CHANGED] =
       g_signal_new ("text-tags-changed", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST,
-      G_STRUCT_OFFSET (GstPlayBinClass, text_tags_changed), NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, G_TYPE_INT);
+      G_STRUCT_OFFSET (GstPlayBinClass, text_tags_changed), NULL, NULL, NULL,
+      G_TYPE_NONE, 1, G_TYPE_INT);
 
   /**
    * GstPlayBin::source-setup:
@@ -1167,8 +1173,7 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
    */
   gst_play_bin_signals[SIGNAL_SOURCE_SETUP] =
       g_signal_new ("source-setup", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
 
   /**
    * GstPlayBin::element-setup:
@@ -1188,11 +1193,10 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
    */
   gst_play_bin_signals[SIGNAL_ELEMENT_SETUP] =
       g_signal_new ("element-setup", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
 
   /**
-   * GstPlayBin::get-video-tags
+   * GstPlayBin::get-video-tags:
    * @playbin: a #GstPlayBin
    * @stream: a video stream number
    *
@@ -1205,10 +1209,10 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_GET_VIDEO_TAGS] =
       g_signal_new ("get-video-tags", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-      G_STRUCT_OFFSET (GstPlayBinClass, get_video_tags), NULL, NULL,
-      g_cclosure_marshal_generic, GST_TYPE_TAG_LIST, 1, G_TYPE_INT);
+      G_STRUCT_OFFSET (GstPlayBinClass, get_video_tags), NULL, NULL, NULL,
+      GST_TYPE_TAG_LIST, 1, G_TYPE_INT);
   /**
-   * GstPlayBin::get-audio-tags
+   * GstPlayBin::get-audio-tags:
    * @playbin: a #GstPlayBin
    * @stream: an audio stream number
    *
@@ -1221,10 +1225,10 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_GET_AUDIO_TAGS] =
       g_signal_new ("get-audio-tags", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-      G_STRUCT_OFFSET (GstPlayBinClass, get_audio_tags), NULL, NULL,
-      g_cclosure_marshal_generic, GST_TYPE_TAG_LIST, 1, G_TYPE_INT);
+      G_STRUCT_OFFSET (GstPlayBinClass, get_audio_tags), NULL, NULL, NULL,
+      GST_TYPE_TAG_LIST, 1, G_TYPE_INT);
   /**
-   * GstPlayBin::get-text-tags
+   * GstPlayBin::get-text-tags:
    * @playbin: a #GstPlayBin
    * @stream: a text stream number
    *
@@ -1237,17 +1241,17 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_GET_TEXT_TAGS] =
       g_signal_new ("get-text-tags", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-      G_STRUCT_OFFSET (GstPlayBinClass, get_text_tags), NULL, NULL,
-      g_cclosure_marshal_generic, GST_TYPE_TAG_LIST, 1, G_TYPE_INT);
+      G_STRUCT_OFFSET (GstPlayBinClass, get_text_tags), NULL, NULL, NULL,
+      GST_TYPE_TAG_LIST, 1, G_TYPE_INT);
   /**
-   * GstPlayBin::convert-sample
+   * GstPlayBin::convert-sample:
    * @playbin: a #GstPlayBin
    * @caps: the target format of the frame
    *
    * Action signal to retrieve the currently playing video frame in the format
    * specified by @caps.
    * If @caps is %NULL, no conversion will be performed and this function is
-   * equivalent to the #GstPlayBin::sample property.
+   * equivalent to the #GstPlayBin:sample property.
    *
    * Returns: a #GstSample of the current video frame converted to #caps.
    * The caps on the sample will describe the final layout of the buffer data.
@@ -1257,11 +1261,11 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_CONVERT_SAMPLE] =
       g_signal_new ("convert-sample", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-      G_STRUCT_OFFSET (GstPlayBinClass, convert_sample), NULL, NULL,
-      g_cclosure_marshal_generic, GST_TYPE_SAMPLE, 1, GST_TYPE_CAPS);
+      G_STRUCT_OFFSET (GstPlayBinClass, convert_sample), NULL, NULL, NULL,
+      GST_TYPE_SAMPLE, 1, GST_TYPE_CAPS);
 
   /**
-   * GstPlayBin::get-video-pad
+   * GstPlayBin::get-video-pad:
    * @playbin: a #GstPlayBin
    * @stream: a video stream number
    *
@@ -1275,10 +1279,10 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_GET_VIDEO_PAD] =
       g_signal_new ("get-video-pad", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-      G_STRUCT_OFFSET (GstPlayBinClass, get_video_pad), NULL, NULL,
-      g_cclosure_marshal_generic, GST_TYPE_PAD, 1, G_TYPE_INT);
+      G_STRUCT_OFFSET (GstPlayBinClass, get_video_pad), NULL, NULL, NULL,
+      GST_TYPE_PAD, 1, G_TYPE_INT);
   /**
-   * GstPlayBin::get-audio-pad
+   * GstPlayBin::get-audio-pad:
    * @playbin: a #GstPlayBin
    * @stream: an audio stream number
    *
@@ -1292,10 +1296,10 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_GET_AUDIO_PAD] =
       g_signal_new ("get-audio-pad", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-      G_STRUCT_OFFSET (GstPlayBinClass, get_audio_pad), NULL, NULL,
-      g_cclosure_marshal_generic, GST_TYPE_PAD, 1, G_TYPE_INT);
+      G_STRUCT_OFFSET (GstPlayBinClass, get_audio_pad), NULL, NULL, NULL,
+      GST_TYPE_PAD, 1, G_TYPE_INT);
   /**
-   * GstPlayBin::get-text-pad
+   * GstPlayBin::get-text-pad:
    * @playbin: a #GstPlayBin
    * @stream: a text stream number
    *
@@ -1309,8 +1313,8 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
   gst_play_bin_signals[SIGNAL_GET_TEXT_PAD] =
       g_signal_new ("get-text-pad", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-      G_STRUCT_OFFSET (GstPlayBinClass, get_text_pad), NULL, NULL,
-      g_cclosure_marshal_generic, GST_TYPE_PAD, 1, G_TYPE_INT);
+      G_STRUCT_OFFSET (GstPlayBinClass, get_text_pad), NULL, NULL, NULL,
+      GST_TYPE_PAD, 1, G_TYPE_INT);
 
   klass->get_video_tags = gst_play_bin_get_video_tags;
   klass->get_audio_tags = gst_play_bin_get_audio_tags;
@@ -1337,6 +1341,8 @@ gst_play_bin_class_init (GstPlayBinClass * klass)
       GST_DEBUG_FUNCPTR (gst_play_bin_handle_message);
   gstbin_klass->deep_element_added =
       GST_DEBUG_FUNCPTR (gst_play_bin_deep_element_added);
+
+  gst_type_mark_as_plugin_api (GST_TYPE_PLAY_FLAGS, 0);
 }
 
 static void
@@ -2400,8 +2406,11 @@ gst_play_bin_set_property (GObject * object, guint prop_id,
       if (playbin->curr_group) {
         GST_SOURCE_GROUP_LOCK (playbin->curr_group);
         if (playbin->curr_group->uridecodebin) {
-          g_object_set (playbin->curr_group->uridecodebin, "download",
-              (g_value_get_flags (value) & GST_PLAY_FLAG_DOWNLOAD) != 0, NULL);
+          guint flags = g_value_get_flags (value);
+          g_object_set (playbin->curr_group->uridecodebin,
+              "download", (flags & GST_PLAY_FLAG_DOWNLOAD) != 0,
+              "force-sw-decoders",
+              (flags & GST_PLAY_FLAG_FORCE_SW_DECODERS) != 0, NULL);
         }
         GST_SOURCE_GROUP_UNLOCK (playbin->curr_group);
       }
@@ -3027,7 +3036,71 @@ gst_play_bin_handle_message (GstBin * bin, GstMessage * msg)
           no_more_pads_cb (NULL, group);
         }
       }
+    } else {
+      const GstStructure *details = NULL;
+
+      gst_message_parse_error_details (msg, &details);
+      if (details && gst_structure_has_field (details, "redirect-location")) {
+        gchar *uri = NULL;
+        const gchar *location =
+            gst_structure_get_string ((GstStructure *) details,
+            "redirect-location");
+
+        if (gst_uri_is_valid (location)) {
+          uri = g_strdup (location);
+        } else {
+          uri = gst_uri_join_strings (group->uri, location);
+        }
+
+        if (g_strcmp0 (uri, group->uri)) {
+          GST_PLAY_BIN_LOCK (playbin);
+          if (playbin->next_group && playbin->next_group->valid) {
+            GST_DEBUG_OBJECT (playbin,
+                "User already setup next uri %s, using it",
+                playbin->next_group->uri);
+          } else {
+            GST_DEBUG_OBJECT (playbin,
+                "Using newly configured redirect URI: %s", uri);
+            gst_play_bin_set_uri (playbin, uri);
+          }
+          GST_PLAY_BIN_UNLOCK (playbin);
+
+          setup_next_source (playbin, GST_STATE_PAUSED);
+          gst_message_unref (msg);
+          msg = NULL;
+        }
+
+        g_free (uri);
+      }
     }
+  } else if (GST_MESSAGE_TYPE (msg) == GST_MESSAGE_NEED_CONTEXT) {
+    const gchar *context_type;
+    GList *iter;
+
+    gst_message_parse_context_type (msg, &context_type);
+    GST_OBJECT_LOCK (playbin);
+    for (iter = playbin->contexts; iter; iter = g_list_next (iter)) {
+      GstContext *tmp = iter->data;
+      const gchar *tmp_type = gst_context_get_context_type (tmp);
+
+      if (strcmp (context_type, tmp_type) == 0) {
+        gst_element_set_context (GST_ELEMENT (GST_MESSAGE_SRC (msg)), tmp);
+        break;
+      }
+    }
+    GST_OBJECT_UNLOCK (playbin);
+
+    /* don't need to post upward this if it's answered by us */
+    if (iter) {
+      gst_message_unref (msg);
+      msg = NULL;
+    }
+  } else if (GST_MESSAGE_TYPE (msg) == GST_MESSAGE_HAVE_CONTEXT) {
+    GstContext *context;
+
+    gst_message_parse_have_context (msg, &context);
+    gst_play_bin_update_context (playbin, context);
+    gst_context_unref (context);
   }
 
   if (msg)
@@ -3072,7 +3145,6 @@ combiner_active_pad_changed (GObject * combiner, GParamSpec * pspec,
 
   switch (combine->type) {
     case GST_PLAY_SINK_TYPE_VIDEO:
-    case GST_PLAY_SINK_TYPE_VIDEO_RAW:
       property = "current-video";
       playbin->current_video = get_current_stream_number (playbin,
           combine, group->video_channels);
@@ -3086,7 +3158,6 @@ combiner_active_pad_changed (GObject * combiner, GParamSpec * pspec,
       }
       break;
     case GST_PLAY_SINK_TYPE_AUDIO:
-    case GST_PLAY_SINK_TYPE_AUDIO_RAW:
       property = "current-audio";
       playbin->current_audio = get_current_stream_number (playbin,
           combine, group->audio_channels);
@@ -3292,11 +3363,9 @@ notify_tags_cb (GObject * object, GParamSpec * pspec, gpointer user_data)
 
   switch (ntdata->type) {
     case GST_PLAY_SINK_TYPE_VIDEO:
-    case GST_PLAY_SINK_TYPE_VIDEO_RAW:
       signal = SIGNAL_VIDEO_TAGS_CHANGED;
       break;
     case GST_PLAY_SINK_TYPE_AUDIO:
-    case GST_PLAY_SINK_TYPE_AUDIO_RAW:
       signal = SIGNAL_AUDIO_TAGS_CHANGED;
       break;
     case GST_PLAY_SINK_TYPE_TEXT:
@@ -3522,11 +3591,9 @@ pad_added_cb (GstElement * decodebin, GstPad * pad, GstSourceGroup * group)
 
     switch (combine->type) {
       case GST_PLAY_SINK_TYPE_VIDEO:
-      case GST_PLAY_SINK_TYPE_VIDEO_RAW:
         signal = SIGNAL_VIDEO_CHANGED;
         break;
       case GST_PLAY_SINK_TYPE_AUDIO:
-      case GST_PLAY_SINK_TYPE_AUDIO_RAW:
         signal = SIGNAL_AUDIO_CHANGED;
         break;
       case GST_PLAY_SINK_TYPE_TEXT:
@@ -3646,11 +3713,9 @@ pad_removed_cb (GstElement * decodebin, GstPad * pad, GstSourceGroup * group)
     /* get the correct type-changed signal */
     switch (combine->type) {
       case GST_PLAY_SINK_TYPE_VIDEO:
-      case GST_PLAY_SINK_TYPE_VIDEO_RAW:
         signal = SIGNAL_VIDEO_CHANGED;
         break;
       case GST_PLAY_SINK_TYPE_AUDIO:
-      case GST_PLAY_SINK_TYPE_AUDIO_RAW:
         signal = SIGNAL_AUDIO_CHANGED;
         break;
       case GST_PLAY_SINK_TYPE_TEXT:
@@ -3958,10 +4023,10 @@ avelement_compare (gconstpointer p1, gconstpointer p2)
   if (v1->sink && v2->sink) {
     fs1 = (GstPluginFeature *) v1->sink;
     fs2 = (GstPluginFeature *) v2->sink;
-    v1_rank =
-        gst_plugin_feature_get_rank (fd1) * gst_plugin_feature_get_rank (fs1);
-    v2_rank =
-        gst_plugin_feature_get_rank (fd2) * gst_plugin_feature_get_rank (fs2);
+    v1_rank = (gint64) gst_plugin_feature_get_rank (fd1) *
+        gst_plugin_feature_get_rank (fs1);
+    v2_rank = (gint64) gst_plugin_feature_get_rank (fd2) *
+        gst_plugin_feature_get_rank (fs2);
   } else {
     v1_rank = gst_plugin_feature_get_rank (fd1);
     v2_rank = gst_plugin_feature_get_rank (fd2);
@@ -4071,7 +4136,8 @@ avelement_iter_is_equal (GSequenceIter * iter, GstElementFactory * factory)
 }
 
 static GList *
-create_decoders_list (GList * factory_list, GSequence * avelements)
+create_decoders_list (GList * factory_list, GSequence * avelements,
+    GstPlayFlags flags)
 {
   GList *dec_list = NULL, *tmp;
   GList *ave_list = NULL;
@@ -4090,7 +4156,9 @@ create_decoders_list (GList * factory_list, GSequence * avelements)
         gst_element_factory_list_is_type (factory,
             GST_ELEMENT_FACTORY_TYPE_SINK)) {
       dec_list = g_list_prepend (dec_list, gst_object_ref (factory));
-    } else {
+    } else if (!(((flags & GST_PLAY_FLAG_FORCE_SW_DECODERS) != 0)
+            && gst_element_factory_list_is_type (factory,
+                GST_ELEMENT_FACTORY_TYPE_HARDWARE))) {
       GSequenceIter *seq_iter;
 
       seq_iter =
@@ -4212,14 +4280,18 @@ autoplug_factories_cb (GstElement * decodebin, GstPad * pad,
 
   if (isaudiodeclist || isvideodeclist) {
     GSequence **ave_list;
+    GstPlayFlags flags;
+
     if (isaudiodeclist)
       ave_list = &playbin->aelements;
     else
       ave_list = &playbin->velements;
 
+    flags = gst_play_bin_get_flags (playbin);
+
     g_mutex_lock (&playbin->elements_lock);
     /* sort factory_list based on the GstAVElement list priority */
-    factory_list = create_decoders_list (factory_list, *ave_list);
+    factory_list = create_decoders_list (factory_list, *ave_list, flags);
     g_mutex_unlock (&playbin->elements_lock);
   }
 
@@ -5306,6 +5378,8 @@ activate_group (GstPlayBin * playbin, GstSourceGroup * group, GstState target)
       "download", ((flags & GST_PLAY_FLAG_DOWNLOAD) != 0),
       /* configure buffering of demuxed/parsed data */
       "use-buffering", ((flags & GST_PLAY_FLAG_BUFFERING) != 0),
+      /* enable hardware-based elements */
+      "force-sw-decoders", ((flags & GST_PLAY_FLAG_FORCE_SW_DECODERS) != 0),
       /* configure buffering parameters */
       "buffer-duration", playbin->buffer_duration,
       "buffer-size", playbin->buffer_size,
@@ -5800,7 +5874,7 @@ gst_play_bin_change_state (GstElement * element, GstStateChange transition)
       /* also do missed state change down to READY */
       if (do_save)
         save_current_group (playbin);
-      /* Deactive the groups, set the uridecodebins to NULL
+      /* Deactivate the groups, set the uridecodebins to NULL
        * and unref them.
        */
       for (i = 0; i < 2; i++) {

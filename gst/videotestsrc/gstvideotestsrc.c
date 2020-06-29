@@ -286,7 +286,7 @@ gst_video_test_src_class_init (GstVideoTestSrcClass * klass)
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_KY,
       g_param_spec_int ("ky", "Zoneplate 1st order y phase",
-          "Zoneplate 1st order y phase, for generating contant vertical frequencies",
+          "Zoneplate 1st order y phase, for generating content vertical frequencies",
           G_MININT32, G_MAXINT32, 0,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_KT,
@@ -376,6 +376,10 @@ gst_video_test_src_class_init (GstVideoTestSrcClass * klass)
   gstbasesrc_class->decide_allocation = gst_video_test_src_decide_allocation;
 
   gstpushsrc_class->fill = gst_video_test_src_fill;
+
+  gst_type_mark_as_plugin_api (GST_TYPE_VIDEO_TEST_SRC_ANIMATION_MODE, 0);
+  gst_type_mark_as_plugin_api (GST_TYPE_VIDEO_TEST_SRC_MOTION_TYPE, 0);
+  gst_type_mark_as_plugin_api (GST_TYPE_VIDEO_TEST_SRC_PATTERN, 0);
 }
 
 static void
@@ -1025,10 +1029,12 @@ gst_video_test_src_query (GstBaseSrc * bsrc, GstQuery * query)
             gint64 dur;
 
             GST_OBJECT_LOCK (src);
-            dur = gst_util_uint64_scale_int_round (bsrc->num_buffers
-                * GST_SECOND, src->info.fps_d, src->info.fps_n);
-            res = TRUE;
-            gst_query_set_duration (query, GST_FORMAT_TIME, dur);
+            if (src->info.fps_n) {
+              dur = gst_util_uint64_scale_int_round (bsrc->num_buffers
+                  * GST_SECOND, src->info.fps_d, src->info.fps_n);
+              res = TRUE;
+              gst_query_set_duration (query, GST_FORMAT_TIME, dur);
+            }
             GST_OBJECT_UNLOCK (src);
             goto done;
           }
@@ -1179,7 +1185,11 @@ gst_video_test_src_fill (GstPushSrc * psrc, GstBuffer * buffer)
     next_time = gst_util_uint64_scale (src->n_frames,
         src->info.fps_d * GST_SECOND, src->info.fps_n);
     if (src->reverse) {
-      GST_BUFFER_DURATION (buffer) = src->running_time - next_time;
+      /* We already decremented to next frame */
+      GstClockTime prev_pts = gst_util_uint64_scale (src->n_frames + 2,
+          src->info.fps_d * GST_SECOND, src->info.fps_n);
+
+      GST_BUFFER_DURATION (buffer) = prev_pts - GST_BUFFER_PTS (buffer);
     } else {
       GST_BUFFER_DURATION (buffer) = next_time - src->running_time;
     }

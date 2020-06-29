@@ -169,7 +169,7 @@ struct _OutputPad
   /* Downstream event probe id */
   gulong probe_id;
 
-  /* TRUE if the pad saw EOS. Resetted to FALSE on STREAM_START */
+  /* TRUE if the pad saw EOS. Reset to FALSE on STREAM_START */
   gboolean is_eos;
 
   /* The last seen (i.e. current) group_id
@@ -196,6 +196,7 @@ struct _GstURIDecodeBin3
   guint buffer_size;            /* When buffering, buffer size (bytes) */
   gboolean download;
   gboolean use_buffering;
+  gboolean force_sw_decoders;
   guint64 ring_buffer_max_size;
 
   GList *play_items;            /* List of GstPlayItem ordered by time of
@@ -236,6 +237,15 @@ struct _GstURIDecodeBin3
   gboolean posted_about_to_finish;
 };
 
+static gint
+gst_uridecodebin3_select_stream (GstURIDecodeBin3 * dbin,
+    GstStreamCollection * collection, GstStream * stream)
+{
+  GST_LOG_OBJECT (dbin, "default select-stream, returning -1");
+
+  return -1;
+}
+
 struct _GstURIDecodeBin3Class
 {
   GstBinClass parent_class;
@@ -264,13 +274,13 @@ static GstStaticCaps raw_video_caps = GST_STATIC_CAPS ("video/x-raw(ANY)");
 /* properties */
 #define DEFAULT_PROP_URI            NULL
 #define DEFAULT_PROP_SUBURI            NULL
-#define DEFAULT_PROP_SOURCE         NULL
 #define DEFAULT_CONNECTION_SPEED    0
 #define DEFAULT_CAPS                (gst_static_caps_get (&default_raw_caps))
 #define DEFAULT_BUFFER_DURATION     -1
 #define DEFAULT_BUFFER_SIZE         -1
 #define DEFAULT_DOWNLOAD            FALSE
 #define DEFAULT_USE_BUFFERING       FALSE
+#define DEFAULT_FORCE_SW_DECODERS   FALSE
 #define DEFAULT_RING_BUFFER_MAX_SIZE 0
 
 enum
@@ -286,6 +296,7 @@ enum
   PROP_BUFFER_DURATION,
   PROP_DOWNLOAD,
   PROP_USE_BUFFERING,
+  PROP_FORCE_SW_DECODERS,
   PROP_RING_BUFFER_MAX_SIZE,
   PROP_CAPS
 };
@@ -332,6 +343,8 @@ static void gst_uri_decode_bin3_set_property (GObject * object, guint prop_id,
 static void gst_uri_decode_bin3_get_property (GObject * object, guint prop_id,
     GValue * value, GParamSpec * pspec);
 static void gst_uri_decode_bin3_finalize (GObject * obj);
+static GstSourceHandler *new_source_handler (GstURIDecodeBin3 * uridecodebin,
+    gboolean is_main);
 
 static GstStateChangeReturn gst_uri_decode_bin3_change_state (GstElement *
     element, GstStateChange transition);
@@ -429,6 +442,21 @@ gst_uri_decode_bin3_class_init (GstURIDecodeBin3Class * klass)
           DEFAULT_USE_BUFFERING, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
+   * GstURIDecodeBin3::force-sw-decoders:
+   *
+   * While auto-plugging, if set to %TRUE, those decoders within
+   * "Hardware" klass will by tried. Otherwise they will be ignored.
+   *
+   * Since: 1.18
+   */
+  g_object_class_install_property (gobject_class, PROP_FORCE_SW_DECODERS,
+      g_param_spec_boolean ("force-sw-decoders", "Software Decoders Only",
+          "Use only sofware decoders to process streams",
+          DEFAULT_FORCE_SW_DECODERS,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+
+  /**
    * GstURIDecodeBin3::ring-buffer-max-size
    *
    * The maximum size of the ring buffer in kilobytes. If set to 0, the ring
@@ -461,8 +489,8 @@ gst_uri_decode_bin3_class_init (GstURIDecodeBin3Class * klass)
   gst_uri_decode_bin3_signals[SIGNAL_SELECT_STREAM] =
       g_signal_new ("select-stream", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstURIDecodeBin3Class, select_stream),
-      _gst_int_accumulator, NULL, g_cclosure_marshal_generic,
-      G_TYPE_INT, 2, GST_TYPE_STREAM_COLLECTION, GST_TYPE_STREAM);
+      _gst_int_accumulator, NULL, NULL, G_TYPE_INT, 2,
+      GST_TYPE_STREAM_COLLECTION, GST_TYPE_STREAM);
 
   /**
    * GstURIDecodeBin3::source-setup:
@@ -476,18 +504,16 @@ gst_uri_decode_bin3_class_init (GstURIDecodeBin3Class * klass)
    */
   gst_uri_decode_bin3_signals[SIGNAL_SOURCE_SETUP] =
       g_signal_new ("source-setup", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL,
-      g_cclosure_marshal_generic, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 1, GST_TYPE_ELEMENT);
   /**
    * GstURIDecodeBin3::about-to-finish:
    *
    * This signal is emitted when the data for the selected URI is
-   * entirely buffered and it is safe to specify anothe URI.
+   * entirely buffered and it is safe to specify another URI.
    */
   gst_uri_decode_bin3_signals[SIGNAL_ABOUT_TO_FINISH] =
       g_signal_new ("about-to-finish", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic, G_TYPE_NONE,
-      0, G_TYPE_NONE);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0, G_TYPE_NONE);
 
 
   gst_element_class_add_static_pad_template (gstelement_class,
@@ -504,6 +530,7 @@ gst_uri_decode_bin3_class_init (GstURIDecodeBin3Class * klass)
 
   gstelement_class->change_state = gst_uri_decode_bin3_change_state;
 
+  klass->select_stream = gst_uridecodebin3_select_stream;
 }
 
 static GstPadProbeReturn
@@ -624,7 +651,15 @@ gst_uri_decode_bin3_init (GstURIDecodeBin3 * dec)
 {
   g_mutex_init (&dec->lock);
 
-  dec->caps = gst_static_caps_get (&default_raw_caps);
+  dec->uri = DEFAULT_PROP_URI;
+  dec->suburi = DEFAULT_PROP_SUBURI;
+  dec->connection_speed = DEFAULT_CONNECTION_SPEED;
+  dec->caps = DEFAULT_CAPS;
+  dec->buffer_duration = DEFAULT_BUFFER_DURATION;
+  dec->buffer_size = DEFAULT_BUFFER_SIZE;
+  dec->download = DEFAULT_DOWNLOAD;
+  dec->use_buffering = DEFAULT_USE_BUFFERING;
+  dec->ring_buffer_max_size = DEFAULT_RING_BUFFER_MAX_SIZE;
 
   dec->decodebin = gst_element_factory_make ("decodebin3", NULL);
   gst_bin_add (GST_BIN_CAST (dec), dec->decodebin);
@@ -686,8 +721,11 @@ src_pad_added_cb (GstElement * element, GstPad * pad,
   GstURIDecodeBin3 *uridecodebin;
   GstPad *sinkpad = NULL;
   GstPadLinkReturn res;
+  GstPlayItem *current_play_item;
+  GstStateChangeReturn ret = GST_STATE_CHANGE_SUCCESS;
 
   uridecodebin = handler->uridecodebin;
+  current_play_item = uridecodebin->current;
 
   GST_DEBUG_OBJECT (uridecodebin,
       "New pad %" GST_PTR_FORMAT " from source %" GST_PTR_FORMAT, pad, element);
@@ -714,6 +752,17 @@ src_pad_added_cb (GstElement * element, GstPad * pad,
     if (GST_PAD_LINK_FAILED (res))
       goto link_failed;
   }
+
+  /* Activate sub_item after the main source activation was finished */
+  if (handler->is_main_source && current_play_item->sub_item
+      && !current_play_item->sub_item->handler) {
+    current_play_item->sub_item->handler =
+        new_source_handler (uridecodebin, FALSE);
+    ret = activate_source_item (current_play_item->sub_item);
+    if (ret == GST_STATE_CHANGE_FAILURE)
+      goto sub_item_activation_failed;
+  }
+
   return;
 
 link_failed:
@@ -721,6 +770,12 @@ link_failed:
     GST_ERROR_OBJECT (uridecodebin,
         "failed to link pad %s:%s to decodebin, reason %s (%d)",
         GST_DEBUG_PAD_NAME (pad), gst_pad_link_get_name (res), res);
+    return;
+  }
+sub_item_activation_failed:
+  {
+    GST_ERROR_OBJECT (uridecodebin,
+        "failed to activate subtitle playback item");
     return;
   }
 }
@@ -823,6 +878,12 @@ gst_uri_decode_bin3_set_property (GObject * object, guint prop_id,
     case PROP_USE_BUFFERING:
       dec->use_buffering = g_value_get_boolean (value);
       break;
+    case PROP_FORCE_SW_DECODERS:
+      if (dec->decodebin) {
+        g_object_set_property (G_OBJECT (dec->decodebin), "force-sw-decoders",
+            value);
+      }
+      break;
     case PROP_RING_BUFFER_MAX_SIZE:
       dec->ring_buffer_max_size = g_value_get_uint64 (value);
       break;
@@ -853,19 +914,25 @@ gst_uri_decode_bin3_get_property (GObject * object, guint prop_id,
     }
     case PROP_CURRENT_URI:
     {
-      g_value_set_string (value, dec->suburi);
+      if (dec->current && dec->current->main_item) {
+        g_value_set_string (value, dec->current->main_item->uri);
+      } else {
+        g_value_set_string (value, NULL);
+      }
       break;
     }
     case PROP_SUBURI:
     {
-      /* FIXME : Return current uri */
-      g_value_set_string (value, dec->uri);
+      g_value_set_string (value, dec->suburi);
       break;
     }
     case PROP_CURRENT_SUBURI:
     {
-      /* FIXME : Return current suburi */
-      g_value_set_string (value, dec->suburi);
+      if (dec->current && dec->current->sub_item) {
+        g_value_set_string (value, dec->current->sub_item->uri);
+      } else {
+        g_value_set_string (value, NULL);
+      }
       break;
     }
     case PROP_SOURCE:
@@ -895,6 +962,12 @@ gst_uri_decode_bin3_get_property (GObject * object, guint prop_id,
       break;
     case PROP_USE_BUFFERING:
       g_value_set_boolean (value, dec->use_buffering);
+      break;
+    case PROP_FORCE_SW_DECODERS:
+      if (dec->decodebin) {
+        g_object_get_property (G_OBJECT (dec->decodebin), "force-sw-decoders",
+            value);
+      }
       break;
     case PROP_RING_BUFFER_MAX_SIZE:
       g_value_set_uint64 (value, dec->ring_buffer_max_size);
@@ -989,11 +1062,6 @@ assign_handlers_to_item (GstURIDecodeBin3 * dec, GstPlayItem * item)
       return ret;
   }
 
-  if (item->sub_item && item->sub_item->handler) {
-    item->sub_item->handler = new_source_handler (dec, FALSE);
-    ret = activate_source_item (item->sub_item);
-  }
-
   return ret;
 }
 
@@ -1015,6 +1083,7 @@ activate_next_play_item (GstURIDecodeBin3 * dec)
   }
 
   dec->play_items = g_list_append (dec->play_items, item);
+  dec->current = dec->play_items->data;
 
   return ret;
 }

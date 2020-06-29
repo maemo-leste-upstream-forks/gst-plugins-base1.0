@@ -41,6 +41,7 @@ typedef enum
   GST_GL_MIXER_BIN_START_TIME_SELECTION_SET
 } GstGLMixerBinStartTimeSelection;
 
+#define GST_TYPE_GL_MIXER_BIN_START_TIME_SELECTION (gst_gl_mixer_bin_start_time_selection_get_type())
 static GType
 gst_gl_mixer_bin_start_time_selection_get_type (void)
 {
@@ -121,6 +122,7 @@ enum
   PROP_LATENCY,
   PROP_START_TIME_SELECTION,
   PROP_START_TIME,
+  PROP_CONTEXT,
 };
 
 enum
@@ -194,7 +196,7 @@ gst_gl_mixer_bin_class_init (GstGLMixerBinClass * klass)
   g_object_class_install_property (gobject_class, PROP_START_TIME_SELECTION,
       g_param_spec_enum ("start-time-selection", "Start Time Selection",
           "Decides which start time is output",
-          gst_gl_mixer_bin_start_time_selection_get_type (),
+          GST_TYPE_GL_MIXER_BIN_START_TIME_SELECTION,
           DEFAULT_START_TIME_SELECTION,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
@@ -203,6 +205,12 @@ gst_gl_mixer_bin_class_init (GstGLMixerBinClass * klass)
           "Start time to use if start-time-selection=set", 0,
           G_MAXUINT64,
           DEFAULT_START_TIME, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class, PROP_CONTEXT,
+      g_param_spec_object ("context",
+          "OpenGL context",
+          "Get OpenGL context",
+          GST_TYPE_GL_CONTEXT, G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 
   /**
    * GstMixerBin::create-element:
@@ -214,8 +222,7 @@ gst_gl_mixer_bin_class_init (GstGLMixerBinClass * klass)
    */
   gst_gl_mixer_bin_signals[SIGNAL_CREATE_ELEMENT] =
       g_signal_new ("create-element", G_TYPE_FROM_CLASS (klass),
-      G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_generic,
-      GST_TYPE_ELEMENT, 0);
+      G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, GST_TYPE_ELEMENT, 0);
 
   gst_element_class_add_static_pad_template (element_class, &src_factory);
 
@@ -228,6 +235,8 @@ gst_gl_mixer_bin_class_init (GstGLMixerBinClass * klass)
   gst_element_class_set_metadata (element_class, "OpenGL video_mixer empty bin",
       "Bin/Filter/Effect/Video/Mixer", "OpenGL video_mixer empty bin",
       "Matthew Waters <matthew@centricular.com>");
+
+  gst_type_mark_as_plugin_api (GST_TYPE_GL_MIXER_BIN_START_TIME_SELECTION, 0);
 }
 
 static void

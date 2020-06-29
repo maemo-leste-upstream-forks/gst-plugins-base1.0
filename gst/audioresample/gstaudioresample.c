@@ -127,6 +127,9 @@ static gboolean gst_audio_resample_stop (GstBaseTransform * base);
 static gboolean gst_audio_resample_query (GstPad * pad, GstObject * parent,
     GstQuery * query);
 
+static void gst_audio_resample_push_drain (GstAudioResample * resample,
+    guint history_len);
+
 #define gst_audio_resample_parent_class parent_class
 G_DEFINE_TYPE (GstAudioResample, gst_audio_resample, GST_TYPE_BASE_TRANSFORM);
 
@@ -207,6 +210,11 @@ gst_audio_resample_class_init (GstAudioResampleClass * klass)
       GST_DEBUG_FUNCPTR (gst_audio_resample_submit_input_buffer);
 
   GST_BASE_TRANSFORM_CLASS (klass)->passthrough_on_same_caps = TRUE;
+
+  gst_type_mark_as_plugin_api (GST_TYPE_AUDIO_RESAMPLER_METHOD, 0);
+  gst_type_mark_as_plugin_api (GST_TYPE_AUDIO_RESAMPLER_FILTER_INTERPOLATION,
+      0);
+  gst_type_mark_as_plugin_api (GST_TYPE_AUDIO_RESAMPLER_FILTER_MODE, 0);
 }
 
 static void
@@ -287,7 +295,7 @@ gst_audio_resample_transform_caps (GstBaseTransform * base,
 
   /* transform single caps into input_caps + input_caps with the rate
    * field set to our supported range. This ensures that upstream knows
-   * about downstream's prefered rate(s) and can negotiate accordingly. */
+   * about downstream's preferred rate(s) and can negotiate accordingly. */
   res = gst_caps_new_empty ();
   n = gst_caps_get_size (caps);
   for (i = 0; i < n; i++) {
@@ -497,7 +505,27 @@ gst_audio_resample_set_caps (GstBaseTransform * base, GstCaps * incaps,
   if (!gst_audio_info_from_caps (&out, outcaps))
     goto invalid_outcaps;
 
-  /* FIXME do some checks */
+  /* Reset timestamp tracking and drain the resampler if the audio format is
+   * changing. Especially when changing the sample rate our timestamp tracking
+   * will be completely off, but even otherwise we would usually lose the last
+   * few samples if we don't drain here */
+  if (!gst_audio_info_is_equal (&in, &resample->in) ||
+      !gst_audio_info_is_equal (&out, &resample->out)) {
+    if (resample->converter) {
+      gsize latency = gst_audio_converter_get_max_latency (resample->converter);
+      gst_audio_resample_push_drain (resample, latency);
+    }
+    gst_audio_resample_reset_state (resample);
+    resample->num_gap_samples = 0;
+    resample->num_nongap_samples = 0;
+    resample->t0 = GST_CLOCK_TIME_NONE;
+    resample->in_offset0 = GST_BUFFER_OFFSET_NONE;
+    resample->out_offset0 = GST_BUFFER_OFFSET_NONE;
+    resample->samples_in = 0;
+    resample->samples_out = 0;
+    resample->need_discont = TRUE;
+  }
+
   gst_audio_resample_update_state (resample, &in, &out);
 
   resample->in = in;
@@ -629,7 +657,9 @@ gst_audio_resample_sink_event (GstBaseTransform * base, GstEvent * event)
       resample->samples_out = 0;
       resample->need_discont = TRUE;
       break;
+    case GST_EVENT_STREAM_START:
     case GST_EVENT_SEGMENT:
+    case GST_EVENT_EOS:
       if (resample->converter) {
         gsize latency =
             gst_audio_converter_get_max_latency (resample->converter);
@@ -644,14 +674,6 @@ gst_audio_resample_sink_event (GstBaseTransform * base, GstEvent * event)
       resample->samples_in = 0;
       resample->samples_out = 0;
       resample->need_discont = TRUE;
-      break;
-    case GST_EVENT_EOS:
-      if (resample->converter) {
-        gsize latency =
-            gst_audio_converter_get_max_latency (resample->converter);
-        gst_audio_resample_push_drain (resample, latency);
-      }
-      gst_audio_resample_reset_state (resample);
       break;
     default:
       break;
@@ -854,6 +876,11 @@ gst_audio_resample_transform (GstBaseTransform * base, GstBuffer * inbuf,
    * flag to resync timestamp and offset counters and send event
    * downstream */
   if (G_UNLIKELY (gst_audio_resample_check_discont (resample, inbuf))) {
+    if (resample->converter) {
+      gsize latency = gst_audio_converter_get_max_latency (resample->converter);
+      gst_audio_resample_push_drain (resample, latency);
+    }
+
     gst_audio_resample_reset_state (resample);
     resample->need_discont = TRUE;
   }

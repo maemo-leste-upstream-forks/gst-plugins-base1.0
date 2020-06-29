@@ -66,7 +66,7 @@
 #include "cocoa/gstglcontext_cocoa.h"
 #endif
 #if GST_GL_HAVE_PLATFORM_WGL
-#include "win32/gstglcontext_wgl.h"
+#include "wgl/gstglcontext_wgl.h"
 #endif
 #if GST_GL_HAVE_PLATFORM_EAGL
 #include "eagl/gstglcontext_eagl.h"
@@ -146,7 +146,7 @@ load_self_module (gpointer user_data)
  * can share GL resources, this is the next best thing.
  *
  * XXX: we may need a way to associate two wrapped GstGLContext's as being
- * shared however I have not come across a use case that requries this yet.
+ * shared however I have not come across a use case that requires this yet.
  */
 struct ContextShareGroup
 {
@@ -246,6 +246,11 @@ G_DEFINE_TYPE (GstGLWrappedContext, gst_gl_wrapped_context,
 #define GST_IS_GL_WRAPPED_CONTEXT_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE((k), GST_TYPE_GL_WRAPPED_CONTEXT))
 #define GST_GL_WRAPPED_CONTEXT_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), GST_TYPE_GL_WRAPPED_CONTEXT, GstGLWrappedContextClass))
 
+/**
+ * gst_gl_context_error_quark:
+ *
+ * Returns: the quark used for #GstGLContext in #GError's
+ */
 GQuark
 gst_gl_context_error_quark (void)
 {
@@ -382,6 +387,10 @@ gst_gl_context_new (GstGLDisplay * display)
  * represented by @handle stays alive while the returned #GstGLContext is
  * active.
  *
+ * @context_type must not be %GST_GL_PLATFORM_NONE or %GST_GL_PLATFORM_ANY
+ *
+ * @available_apis must not be %GST_GL_API_NONE or %GST_GL_API_ANY
+ *
  * Returns: (transfer full): a #GstGLContext wrapping @handle
  *
  * Since: 1.4
@@ -396,6 +405,13 @@ gst_gl_context_new_wrapped (GstGLDisplay * display, guintptr handle,
   GstGLAPI display_api;
 
   _init_debug ();
+
+  g_return_val_if_fail (GST_IS_GL_DISPLAY (display), NULL);
+  g_return_val_if_fail (handle != 0, NULL);
+  g_return_val_if_fail (available_apis != GST_GL_API_ANY, NULL);
+  g_return_val_if_fail (available_apis != GST_GL_API_NONE, NULL);
+  g_return_val_if_fail (context_type != GST_GL_PLATFORM_NONE, NULL);
+  g_return_val_if_fail (context_type != GST_GL_PLATFORM_ANY, NULL);
 
   display_api = gst_gl_display_get_gl_api (display);
   g_return_val_if_fail ((display_api & available_apis) != GST_GL_API_NONE,
@@ -512,7 +528,7 @@ gst_gl_context_get_current_gl_context (GstGLPlatform context_type)
  * @name: the name of the function to retrieve
  *
  * Attempts to use the @context_type specific GetProcAddress implementations
- * to retreive @name.
+ * to retrieve @name.
  *
  * See also gst_gl_context_get_proc_address().
  *
@@ -785,6 +801,8 @@ gst_gl_context_get_thread (GstGLContext * context)
 {
   GThread *ret;
 
+  g_return_val_if_fail (GST_IS_GL_CONTEXT (context), NULL);
+
   GST_OBJECT_LOCK (context);
   ret = context->priv->active_thread;
   if (ret)
@@ -827,7 +845,7 @@ gst_gl_context_get_gl_api (GstGLContext * context)
  * Get a function pointer to a specified opengl function, @name.  If the the
  * specific function does not exist, NULL is returned instead.
  *
- * Platform specfic functions (names starting 'egl', 'glX', 'wgl', etc) can also
+ * Platform specific functions (names starting 'egl', 'glX', 'wgl', etc) can also
  * be retrieved using this method.
  *
  * Note: This function may return valid function pointers that may not be valid
@@ -837,7 +855,7 @@ gst_gl_context_get_gl_api (GstGLContext * context)
  *
  * Note: On success, you need to cast the returned function pointer to the
  * correct type to be able to call it correctly.  On 32-bit Windows, this will
- * include the %GSTGLAPI identifier to use the correct calling convention.
+ * include the `GSTGLAPI` identifier to use the correct calling convention.
  * e.g.
  *
  * |[<!-- language="C" -->
@@ -1090,8 +1108,7 @@ _create_context_info (GstGLContext * context, GstGLAPI gl_api, gint * gl_major,
   }
 
   opengl_version = (const gchar *) gl->GetString (GL_VERSION);
-  if (opengl_version && gl_api & GST_GL_API_GLES2)
-    /* gles starts with "OpenGL ES " */
+  if (opengl_version && g_str_has_prefix (opengl_version, "OpenGL ES "))
     opengl_version = &opengl_version[10];
 
   if (opengl_version)
@@ -1589,7 +1606,7 @@ gst_gl_context_thread_add (GstGLContext * context,
  * @min: (out): resulting minor version
  *
  * Returns the OpenGL version implemented by @context.  See
- * gst_gl_context_get_gl_api() for retreiving the OpenGL api implemented by
+ * gst_gl_context_get_gl_api() for retrieving the OpenGL api implemented by
  * @context.
  *
  * Since: 1.4

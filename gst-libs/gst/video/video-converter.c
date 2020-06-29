@@ -2335,8 +2335,17 @@ gst_video_converter_new (GstVideoInfo * in_info, GstVideoInfo * out_info,
 
   convert->in_width =
       MIN (convert->in_width, convert->in_maxwidth - convert->in_x);
+  if (convert->in_width + convert->in_x < 0 ||
+      convert->in_width + convert->in_x > convert->in_maxwidth) {
+    convert->in_width = 0;
+  }
+
   convert->in_height =
       MIN (convert->in_height, convert->in_maxheight - convert->in_y);
+  if (convert->in_height + convert->in_y < 0 ||
+      convert->in_height + convert->in_y > convert->in_maxheight) {
+    convert->in_height = 0;
+  }
 
   convert->out_x = get_opt_int (convert, GST_VIDEO_CONVERTER_OPT_DEST_X, 0);
   convert->out_y = get_opt_int (convert, GST_VIDEO_CONVERTER_OPT_DEST_Y, 0);
@@ -2350,10 +2359,25 @@ gst_video_converter_new (GstVideoInfo * in_info, GstVideoInfo * out_info,
       get_opt_int (convert, GST_VIDEO_CONVERTER_OPT_DEST_HEIGHT,
       convert->out_maxheight - convert->out_y);
 
-  convert->out_width =
-      MIN (convert->out_width, convert->out_maxwidth - convert->out_x);
-  convert->out_height =
-      MIN (convert->out_height, convert->out_maxheight - convert->out_y);
+  if (convert->out_width > convert->out_maxwidth - convert->out_x)
+    convert->out_width = convert->out_maxwidth - convert->out_x;
+  convert->out_width = CLAMP (convert->out_width, 0, convert->out_maxwidth);
+
+  /* Check if completely outside the framebuffer */
+  if (convert->out_width + convert->out_x < 0 ||
+      convert->out_width + convert->out_x > convert->out_maxwidth) {
+    convert->out_width = 0;
+  }
+
+  /* Same for height */
+  if (convert->out_height > convert->out_maxheight - convert->out_y)
+    convert->out_height = convert->out_maxheight - convert->out_y;
+  convert->out_height = CLAMP (convert->out_height, 0, convert->out_maxheight);
+
+  if (convert->out_height + convert->out_y < 0 ||
+      convert->out_height + convert->out_y > convert->out_maxheight) {
+    convert->out_height = 0;
+  }
 
   convert->fill_border = GET_OPT_FILL_BORDER (convert);
   convert->border_argb = get_opt_uint (convert,
@@ -2396,6 +2420,9 @@ gst_video_converter_new (GstVideoInfo * in_info, GstVideoInfo * out_info,
   /* Magic number of 200 lines */
   if (MAX (convert->out_height, convert->in_height) / n_threads < 200)
     n_threads = (MAX (convert->out_height, convert->in_height) + 199) / 200;
+  if (n_threads < 1)
+    n_threads = 1;
+
   convert->conversion_runner = gst_parallelized_task_runner_new (n_threads);
 
   if (video_converter_lookup_fastpath (convert))
@@ -2429,33 +2456,36 @@ gst_video_converter_new (GstVideoInfo * in_info, GstVideoInfo * out_info,
   convert->dither_lines = g_new0 (GstLineCache *, n_threads);
   convert->dither = g_new0 (GstVideoDither *, n_threads);
 
-  for (i = 0; i < n_threads; i++) {
-    convert->current_format = GST_VIDEO_INFO_FORMAT (in_info);
-    convert->current_width = convert->in_width;
-    convert->current_height = convert->in_height;
+  if (convert->in_width > 0 && convert->out_width > 0 && convert->in_height > 0
+      && convert->out_height > 0) {
+    for (i = 0; i < n_threads; i++) {
+      convert->current_format = GST_VIDEO_INFO_FORMAT (in_info);
+      convert->current_width = convert->in_width;
+      convert->current_height = convert->in_height;
 
-    /* unpack */
-    prev = chain_unpack_line (convert, i);
-    /* upsample chroma */
-    prev = chain_upsample (convert, prev, i);
-    /* convert to gamma decoded RGB */
-    prev = chain_convert_to_RGB (convert, prev, i);
-    /* do all downscaling */
-    prev = chain_scale (convert, prev, FALSE, i);
-    /* do conversion between color spaces */
-    prev = chain_convert (convert, prev, i);
-    /* do alpha channels */
-    prev = chain_alpha (convert, prev, i);
-    /* do all remaining (up)scaling */
-    prev = chain_scale (convert, prev, TRUE, i);
-    /* convert to gamma encoded Y'Cb'Cr' */
-    prev = chain_convert_to_YUV (convert, prev, i);
-    /* downsample chroma */
-    prev = chain_downsample (convert, prev, i);
-    /* dither */
-    prev = chain_dither (convert, prev, i);
-    /* pack into final format */
-    convert->pack_lines[i] = chain_pack (convert, prev, i);
+      /* unpack */
+      prev = chain_unpack_line (convert, i);
+      /* upsample chroma */
+      prev = chain_upsample (convert, prev, i);
+      /* convert to gamma decoded RGB */
+      prev = chain_convert_to_RGB (convert, prev, i);
+      /* do all downscaling */
+      prev = chain_scale (convert, prev, FALSE, i);
+      /* do conversion between color spaces */
+      prev = chain_convert (convert, prev, i);
+      /* do alpha channels */
+      prev = chain_alpha (convert, prev, i);
+      /* do all remaining (up)scaling */
+      prev = chain_scale (convert, prev, TRUE, i);
+      /* convert to gamma encoded Y'Cb'Cr' */
+      prev = chain_convert_to_YUV (convert, prev, i);
+      /* downsample chroma */
+      prev = chain_downsample (convert, prev, i);
+      /* dither */
+      prev = chain_dither (convert, prev, i);
+      /* pack into final format */
+      convert->pack_lines[i] = chain_pack (convert, prev, i);
+    }
   }
 
   setup_borderline (convert);
@@ -2613,13 +2643,13 @@ copy_config (GQuark field_id, const GValue * value, gpointer user_data)
  * @convert: a #GstVideoConverter
  * @config: (transfer full): a #GstStructure
  *
- * Set @config as extra configuraion for @convert.
+ * Set @config as extra configuration for @convert.
  *
  * If the parameters in @config can not be set exactly, this function returns
  * %FALSE and will try to update as much state as possible. The new state can
  * then be retrieved and refined with gst_video_converter_get_config().
  *
- * Look at the #GST_VIDEO_CONVERTER_OPT_* fields to check valid configuration
+ * Look at the `GST_VIDEO_CONVERTER_OPT_*` fields to check valid configuration
  * option and values.
  *
  * Returns: %TRUE when @config could be set.
@@ -2673,6 +2703,31 @@ gst_video_converter_frame (GstVideoConverter * convert,
   g_return_if_fail (convert != NULL);
   g_return_if_fail (src != NULL);
   g_return_if_fail (dest != NULL);
+
+  /* Check the frames we've been passed match the layout
+   * we were configured for or we might go out of bounds */
+  if (G_UNLIKELY (GST_VIDEO_INFO_FORMAT (&convert->in_info) !=
+          GST_VIDEO_FRAME_FORMAT (src)
+          || GST_VIDEO_INFO_WIDTH (&convert->in_info) !=
+          GST_VIDEO_FRAME_WIDTH (src)
+          || GST_VIDEO_INFO_HEIGHT (&convert->in_info) !=
+          GST_VIDEO_FRAME_HEIGHT (src))) {
+    g_critical ("Input video frame does not match configuration");
+    return;
+  }
+  if (G_UNLIKELY (GST_VIDEO_INFO_FORMAT (&convert->out_info) !=
+          GST_VIDEO_FRAME_FORMAT (dest)
+          || GST_VIDEO_INFO_WIDTH (&convert->out_info) !=
+          GST_VIDEO_FRAME_WIDTH (dest)
+          || GST_VIDEO_INFO_HEIGHT (&convert->out_info) !=
+          GST_VIDEO_FRAME_HEIGHT (dest))) {
+    g_critical ("Output video frame does not match configuration");
+    return;
+  }
+
+  if (G_UNLIKELY (convert->in_width == 0 || convert->in_height == 0 ||
+          convert->out_width == 0 || convert->out_height == 0))
+    return;
 
   convert->convert (convert, src, dest);
 }
@@ -5923,6 +5978,17 @@ get_scale_format (GstVideoFormat format, gint plane)
     case GST_VIDEO_FORMAT_NV16_10LE32:
     case GST_VIDEO_FORMAT_NV12_10LE40:
     case GST_VIDEO_FORMAT_BGR10A2_LE:
+    case GST_VIDEO_FORMAT_RGB10A2_LE:
+    case GST_VIDEO_FORMAT_Y444_16BE:
+    case GST_VIDEO_FORMAT_Y444_16LE:
+    case GST_VIDEO_FORMAT_P016_BE:
+    case GST_VIDEO_FORMAT_P016_LE:
+    case GST_VIDEO_FORMAT_P012_BE:
+    case GST_VIDEO_FORMAT_P012_LE:
+    case GST_VIDEO_FORMAT_Y212_BE:
+    case GST_VIDEO_FORMAT_Y212_LE:
+    case GST_VIDEO_FORMAT_Y412_BE:
+    case GST_VIDEO_FORMAT_Y412_LE:
       res = format;
       g_assert_not_reached ();
       break;

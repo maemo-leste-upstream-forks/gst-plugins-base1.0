@@ -24,7 +24,7 @@
  * SECTION:element-compositor
  * @title: compositor
  *
- * Compositor can accept AYUV, ARGB and BGRA video streams. For each of the requested
+ * Compositor can accept AYUV, VUYA, ARGB and BGRA video streams. For each of the requested
  * sink pads it will compare the incoming geometry and framerate to define the
  * output parameters. Indeed output video frames will have the geometry of the
  * biggest incoming video stream and the framerate of the fastest incoming one.
@@ -65,7 +65,7 @@
  *   compositor name=comp ! videoconvert ! ximagesink \
  *   videotestsrc !  \
  *   video/x-raw, framerate=\(fraction\)5/1, width=320, height=240 ! comp.
- * ]| A pipeline to demostrate bgra comping. (This does not demonstrate alpha blending).
+ * ]| A pipeline to demonstrate bgra comping. (This does not demonstrate alpha blending).
  * |[
  * gst-launch-1.0 videotestsrc pattern=1 ! \
  *   video/x-raw,format =I420, framerate=\(fraction\)10/1, width=100, height=100 ! \
@@ -103,7 +103,7 @@
 GST_DEBUG_CATEGORY_STATIC (gst_compositor_debug);
 #define GST_CAT_DEFAULT gst_compositor_debug
 
-#define FORMATS " { AYUV, BGRA, ARGB, RGBA, ABGR, Y444, Y42B, YUY2, UYVY, "\
+#define FORMATS " { AYUV, VUYA, BGRA, ARGB, RGBA, ABGR, Y444, Y42B, YUY2, UYVY, "\
                 "   YVYU, I420, YV12, NV12, NV21, Y41B, RGB, BGR, xRGB, xBGR, "\
                 "   RGBx, BGRx } "
 
@@ -140,6 +140,29 @@ gst_compositor_operator_get_type (void)
         g_enum_register_static ("GstCompositorOperator", compositor_operator);
   }
   return compositor_operator_type;
+}
+
+#define GST_TYPE_COMPOSITOR_BACKGROUND (gst_compositor_background_get_type())
+static GType
+gst_compositor_background_get_type (void)
+{
+  static GType compositor_background_type = 0;
+
+  static const GEnumValue compositor_background[] = {
+    {COMPOSITOR_BACKGROUND_CHECKER, "Checker pattern", "checker"},
+    {COMPOSITOR_BACKGROUND_BLACK, "Black", "black"},
+    {COMPOSITOR_BACKGROUND_WHITE, "White", "white"},
+    {COMPOSITOR_BACKGROUND_TRANSPARENT,
+        "Transparent Background to enable further compositing", "transparent"},
+    {0, NULL, NULL},
+  };
+
+  if (!compositor_background_type) {
+    compositor_background_type =
+        g_enum_register_static ("GstCompositorBackground",
+        compositor_background);
+  }
+  return compositor_background_type;
 }
 
 #define DEFAULT_PAD_XPOS   0
@@ -324,11 +347,12 @@ _pad_obscures_rectangle (GstVideoAggregator * vagg, GstVideoAggregatorPad * pad,
   if (!gst_video_aggregator_pad_has_current_buffer (pad))
     return FALSE;
 
-  /* Can't obscure if it's transparent and if the format has an alpha component
-   * we'd have to inspect every pixel to know if the frame is opaque, so assume
-   * it doesn't obscure. As a bonus, if the rectangle is fully transparent, we
-   * can also obscure it if we have alpha components on the pad */
-  if (!rect_transparent &&
+  /* Can't obscure if it's transparent and if the format has an alpha
+   * component we'd have to inspect every pixel to know if the frame is
+   * opaque, so assume it doesn't obscure unless it uses the SOURCE operator.
+   * As a bonus, if the rectangle is fully transparent, we can also obscure it
+   * if we have alpha components on the pad */
+  if (cpad->op != COMPOSITOR_OPERATOR_SOURCE && !rect_transparent &&
       (cpad->alpha != 1.0 || GST_VIDEO_INFO_HAS_ALPHA (&pad->info)))
     return FALSE;
 
@@ -521,29 +545,6 @@ enum
   PROP_BACKGROUND,
 };
 
-#define GST_TYPE_COMPOSITOR_BACKGROUND (gst_compositor_background_get_type())
-static GType
-gst_compositor_background_get_type (void)
-{
-  static GType compositor_background_type = 0;
-
-  static const GEnumValue compositor_background[] = {
-    {COMPOSITOR_BACKGROUND_CHECKER, "Checker pattern", "checker"},
-    {COMPOSITOR_BACKGROUND_BLACK, "Black", "black"},
-    {COMPOSITOR_BACKGROUND_WHITE, "White", "white"},
-    {COMPOSITOR_BACKGROUND_TRANSPARENT,
-        "Transparent Background to enable further compositing", "transparent"},
-    {0, NULL, NULL},
-  };
-
-  if (!compositor_background_type) {
-    compositor_background_type =
-        g_enum_register_static ("GstCompositorBackground",
-        compositor_background);
-  }
-  return compositor_background_type;
-}
-
 static void
 gst_compositor_get_property (GObject * object,
     guint prop_id, GValue * value, GParamSpec * pspec)
@@ -597,6 +598,13 @@ set_functions (GstCompositor * self, GstVideoInfo * info)
       self->overlay = gst_compositor_overlay_ayuv;
       self->fill_checker = gst_compositor_fill_checker_ayuv;
       self->fill_color = gst_compositor_fill_color_ayuv;
+      ret = TRUE;
+      break;
+    case GST_VIDEO_FORMAT_VUYA:
+      self->blend = gst_compositor_blend_vuya;
+      self->overlay = gst_compositor_overlay_vuya;
+      self->fill_checker = gst_compositor_fill_checker_vuya;
+      self->fill_color = gst_compositor_fill_color_vuya;
       ret = TRUE;
       break;
     case GST_VIDEO_FORMAT_ARGB:
@@ -1108,6 +1116,10 @@ gst_compositor_class_init (GstCompositorClass * klass)
       "Filter/Editor/Video/Compositor",
       "Composite multiple video streams", "Wim Taymans <wim@fluendo.com>, "
       "Sebastian Dröge <sebastian.droege@collabora.co.uk>");
+
+  gst_type_mark_as_plugin_api (GST_TYPE_COMPOSITOR_PAD, 0);
+  gst_type_mark_as_plugin_api (GST_TYPE_COMPOSITOR_OPERATOR, 0);
+  gst_type_mark_as_plugin_api (GST_TYPE_COMPOSITOR_BACKGROUND, 0);
 }
 
 static void

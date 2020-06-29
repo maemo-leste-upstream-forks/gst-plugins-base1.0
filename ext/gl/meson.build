@@ -52,6 +52,7 @@ if get_option('gl').disabled() or not gstgl_dep.found()
 endif
 
 optional_deps = []
+gl_objc_args = []
 
 if gl_dep.found() # have desktop GL
   opengl_sources += [
@@ -60,7 +61,12 @@ if gl_dep.found() # have desktop GL
   ]
 endif
 
-graphene_dep = dependency('graphene-1.0', version : '>=1.4.0', required : get_option('gl-graphene'))
+graphene_dep = dependency('graphene-gobject-1.0',
+  version : '>=1.4.0',
+  required : get_option('gl-graphene'),
+  fallback: ['graphene', 'graphene_gobject_dep'],
+  default_options: ['introspection=false', 'installed_tests=false', 'tests=false'])
+
 if graphene_dep.found()
   optional_deps += graphene_dep
   core_conf.set('HAVE_GRAPHENE', true)
@@ -112,9 +118,23 @@ if egl_dep.found() and cc.has_header('libdrm/drm_fourcc.h')
   optional_deps += allocators_dep
 endif
 
+if ['darwin', 'ios'].contains(host_system)
+  if not have_objc
+    error('No ObjC compiler found')
+  endif
+
+  objc = meson.get_compiler('objc')
+  if not objc.has_argument('-fobjc-arc')
+    error('ARC is required for building')
+  endif
+
+  gl_objc_args += ['-fobjc-arc']
+endif
+
 gstopengl = library('gstopengl',
   opengl_sources,
   c_args : gst_plugins_base_args,
+  objc_args : gst_plugins_base_args + gl_objc_args,
   link_args : noseh_link_args,
   include_directories : [configinc],
   dependencies : [gstgl_dep, video_dep,
@@ -123,3 +143,4 @@ gstopengl = library('gstopengl',
   install_dir : plugins_install_dir)
 
 pkgconfig.generate(gstopengl, install_dir : plugins_pkgconfig_install_dir)
+plugins += [gstopengl]

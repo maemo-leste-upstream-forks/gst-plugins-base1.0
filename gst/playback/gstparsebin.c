@@ -38,8 +38,8 @@
  * produce packetised encoded data with timestamps where possible,
  * or send missing-element messages where not.
  *
- * <emphasis>parsebin is still experimental API and a technology preview.
- * Its behaviour and exposed API is subject to change.</emphasis>
+ * > parsebin is still experimental API and a technology preview.
+ * > Its behaviour and exposed API is subject to change.
  */
 
 /* Implementation notes:
@@ -174,7 +174,7 @@ struct _GstParseBin
   gboolean shutdown;            /* if we are shutting down */
   GList *blocked_pads;          /* pads that have set to block */
 
-  gboolean expose_allstreams;   /* Whether to expose unknow type streams or not */
+  gboolean expose_allstreams;   /* Whether to expose unknown type streams or not */
 
   GList *filtered;              /* elements for which error messages are filtered */
   GList *filtered_errors;       /* filtered error messages */
@@ -638,8 +638,7 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
   gst_parse_bin_signals[SIGNAL_UNKNOWN_TYPE] =
       g_signal_new ("unknown-type", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstParseBinClass, unknown_type),
-      NULL, NULL, g_cclosure_marshal_generic, G_TYPE_NONE, 2,
-      GST_TYPE_PAD, GST_TYPE_CAPS);
+      NULL, NULL, NULL, G_TYPE_NONE, 2, GST_TYPE_PAD, GST_TYPE_CAPS);
 
   /**
    * GstParseBin::autoplug-continue:
@@ -662,8 +661,8 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
   gst_parse_bin_signals[SIGNAL_AUTOPLUG_CONTINUE] =
       g_signal_new ("autoplug-continue", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstParseBinClass, autoplug_continue),
-      _gst_boolean_accumulator, NULL, g_cclosure_marshal_generic,
-      G_TYPE_BOOLEAN, 2, GST_TYPE_PAD, GST_TYPE_CAPS);
+      _gst_boolean_accumulator, NULL, NULL, G_TYPE_BOOLEAN, 2, GST_TYPE_PAD,
+      GST_TYPE_CAPS);
 
   /**
    * GstParseBin::autoplug-factories:
@@ -692,8 +691,7 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
       g_signal_new ("autoplug-factories", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstParseBinClass,
           autoplug_factories), _gst_array_accumulator, NULL,
-      g_cclosure_marshal_generic, G_TYPE_VALUE_ARRAY, 2,
-      GST_TYPE_PAD, GST_TYPE_CAPS);
+      NULL, G_TYPE_VALUE_ARRAY, 2, GST_TYPE_PAD, GST_TYPE_CAPS);
 
   /**
    * GstParseBin::autoplug-sort:
@@ -722,8 +720,8 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
       g_signal_new ("autoplug-sort", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstParseBinClass, autoplug_sort),
       _gst_array_hasvalue_accumulator, NULL,
-      g_cclosure_marshal_generic, G_TYPE_VALUE_ARRAY, 3, GST_TYPE_PAD,
-      GST_TYPE_CAPS, G_TYPE_VALUE_ARRAY | G_SIGNAL_TYPE_STATIC_SCOPE);
+      NULL, G_TYPE_VALUE_ARRAY, 3, GST_TYPE_PAD, GST_TYPE_CAPS,
+      G_TYPE_VALUE_ARRAY | G_SIGNAL_TYPE_STATIC_SCOPE);
 
   /**
    * GstParseBin::autoplug-select:
@@ -736,16 +734,16 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
    * #GstElementFactory that can be used to handle the given @caps. For each of
    * those factories, this signal is emitted.
    *
-   * The signal handler should return a #GST_TYPE_AUTOPLUG_SELECT_RESULT enum
+   * The signal handler should return a #GstAutoplugSelectResult enum
    * value indicating what ParseBin should do next.
    *
-   * A value of #GST_AUTOPLUG_SELECT_TRY will try to autoplug an element from
+   * A value of #GstAutoplugSelectResult::try will try to autoplug an element from
    * @factory.
    *
-   * A value of #GST_AUTOPLUG_SELECT_EXPOSE will expose @pad without plugging
+   * A value of #GstAutoplugSelectResult::expose will expose @pad without plugging
    * any element to it.
    *
-   * A value of #GST_AUTOPLUG_SELECT_SKIP will skip @factory and move to the
+   * A value of #GstAutoplugSelectResult::skip will skip @factory and move to the
    * next factory.
    *
    * >   The signal handler will not be invoked if any of the previously
@@ -754,17 +752,15 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
    * >   GST_AUTOPLUG_SELECT_TRY from one signal handler, handlers that get
    * >   registered next (again, if any) can override that decision.
    *
-   * Returns: a #GST_TYPE_AUTOPLUG_SELECT_RESULT that indicates the required
+   * Returns: a #GstAutoplugSelectResult that indicates the required
    * operation. the default handler will always return
-   * #GST_AUTOPLUG_SELECT_TRY.
+   * #GstAutoplugSelectResult::try.
    */
   gst_parse_bin_signals[SIGNAL_AUTOPLUG_SELECT] =
       g_signal_new ("autoplug-select", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstParseBinClass, autoplug_select),
-      _gst_select_accumulator, NULL,
-      g_cclosure_marshal_generic,
-      GST_TYPE_AUTOPLUG_SELECT_RESULT, 3, GST_TYPE_PAD, GST_TYPE_CAPS,
-      GST_TYPE_ELEMENT_FACTORY);
+      _gst_select_accumulator, NULL, NULL, GST_TYPE_AUTOPLUG_SELECT_RESULT, 3,
+      GST_TYPE_PAD, GST_TYPE_CAPS, GST_TYPE_ELEMENT_FACTORY);
 
   /**
    * GstParseBin::autoplug-query:
@@ -784,12 +780,11 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
   gst_parse_bin_signals[SIGNAL_AUTOPLUG_QUERY] =
       g_signal_new ("autoplug-query", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstParseBinClass, autoplug_query),
-      _gst_boolean_or_accumulator, NULL, g_cclosure_marshal_generic,
-      G_TYPE_BOOLEAN, 3, GST_TYPE_PAD, GST_TYPE_ELEMENT,
-      GST_TYPE_QUERY | G_SIGNAL_TYPE_STATIC_SCOPE);
+      _gst_boolean_or_accumulator, NULL, NULL, G_TYPE_BOOLEAN, 3, GST_TYPE_PAD,
+      GST_TYPE_ELEMENT, GST_TYPE_QUERY | G_SIGNAL_TYPE_STATIC_SCOPE);
 
   /**
-   * GstParseBin::drained
+   * GstParseBin::drained:
    * @bin: The ParseBin
    *
    * This signal is emitted once ParseBin has finished parsing all the data.
@@ -797,7 +792,7 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
   gst_parse_bin_signals[SIGNAL_DRAINED] =
       g_signal_new ("drained", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (GstParseBinClass, drained),
-      NULL, NULL, g_cclosure_marshal_generic, G_TYPE_NONE, 0, G_TYPE_NONE);
+      NULL, NULL, NULL, G_TYPE_NONE, 0, G_TYPE_NONE);
 
   g_object_class_install_property (gobject_klass, PROP_SUBTITLE_ENCODING,
       g_param_spec_string ("subtitle-encoding", "subtitle encoding",
@@ -813,7 +808,7 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
           GST_TYPE_CAPS, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * GstParseBin::expose-all-streams
+   * GstParseBin::expose-all-streams:
    *
    * Expose streams of unknown type.
    *
@@ -829,7 +824,7 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
-   * GstParseBin2::connection-speed
+   * GstParseBin2::connection-speed:
    *
    * Network connection speed in kbps (0 = unknownw)
    */
@@ -838,8 +833,6 @@ gst_parse_bin_class_init (GstParseBinClass * klass)
           "Network connection speed in kbps (0 = unknown)",
           0, G_MAXUINT64 / 1000, DEFAULT_CONNECTION_SPEED,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
-
 
   klass->autoplug_continue =
       GST_DEBUG_FUNCPTR (gst_parse_bin_autoplug_continue);
@@ -2051,7 +2044,7 @@ connect_pad (GstParseBin * parsebin, GstElement * src, GstParsePad * parsepad,
         } else {
           GST_WARNING_OBJECT (parsebin,
               "The connection speed property %" G_GUINT64_FORMAT " of type %s"
-              " is not usefull not setting it", speed,
+              " is not useful not setting it", speed,
               g_type_name (G_PARAM_SPEC_TYPE (pspec)));
           wrong_type = TRUE;
         }

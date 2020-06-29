@@ -22,6 +22,7 @@
 #include "config.h"
 #endif
 
+#include <gst/video/video.h>
 #include "gststreamcombiner.h"
 #include "gststreamcombinerpad.h"
 
@@ -87,7 +88,7 @@ gst_stream_combiner_class_init (GstStreamCombinerClass * klass)
 
   gst_element_class_set_static_metadata (gstelement_klass,
       "streamcombiner", "Generic",
-      "Recombines streams splitted by the streamsplitter element",
+      "Recombines streams split by the streamsplitter element",
       "Edward Hervey <edward.hervey@collabora.co.uk>");
 }
 
@@ -174,6 +175,10 @@ gst_stream_combiner_src_event (GstPad * pad, GstObject * parent,
 {
   GstStreamCombiner *stream_combiner = (GstStreamCombiner *) parent;
   GstPad *sinkpad = NULL;
+
+  /* Forward force-key-unit event to all sinkpads */
+  if (gst_video_event_is_force_key_unit (event))
+    return gst_pad_event_default (pad, parent, event);
 
   STREAMS_LOCK (stream_combiner);
   if (stream_combiner->current)

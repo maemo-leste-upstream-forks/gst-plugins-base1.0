@@ -60,7 +60,7 @@ static GstAllocator *_gl_memory_allocator;
 GST_DEBUG_CATEGORY_STATIC (GST_CAT_GL_MEMORY);
 #define GST_CAT_DEFAULT GST_CAT_GL_MEMORY
 
-/* compatability definitions... */
+/* compatibility definitions... */
 #ifndef GL_UNPACK_ROW_LENGTH
 #define GL_UNPACK_ROW_LENGTH 0x0CF2
 #endif
@@ -363,8 +363,8 @@ gst_gl_memory_init (GstGLMemory * mem, GstAllocator * allocator,
  * @read_pointer: the data pointer to pass to glReadPixels
  *
  * Reads the texture in #GstGLMemory into @read_pointer if no buffer is bound
- * to %GL_PIXEL_PACK_BUFFER.  Otherwise @read_pointer is the byte offset into
- * the currently bound %GL_PIXEL_PACK_BUFFER buffer to store the result of
+ * to `GL_PIXEL_PACK_BUFFER`.  Otherwise @read_pointer is the byte offset into
+ * the currently bound `GL_PIXEL_PACK_BUFFER` buffer to store the result of
  * glReadPixels.  See the OpenGL specification for glReadPixels for more
  * details.
  *
@@ -985,7 +985,7 @@ gst_gl_memory_allocator_init (GstGLMemoryAllocator * allocator)
  * Copies @gl_mem into the texture specfified by @tex_id.  The format of @tex_id
  * is specified by @tex_format, @width and @height.
  *
- * Returns: Whether the copy suceeded
+ * Returns: Whether the copy succeeded
  *
  * Since: 1.8
  */
@@ -1470,6 +1470,8 @@ gst_gl_memory_setup_buffer (GstGLMemoryAllocator * allocator,
       || n_mem * views == n_wrapped_pointers, FALSE);
 
   for (v = 0; v < views; v++) {
+    GstVideoMeta *meta;
+
     for (i = 0; i < n_mem; i++) {
       GstGLMemory *gl_mem;
 
@@ -1498,11 +1500,14 @@ gst_gl_memory_setup_buffer (GstGLMemoryAllocator * allocator,
       gst_buffer_append_memory (buffer, (GstMemory *) gl_mem);
     }
 
-    gst_buffer_add_video_meta_full (buffer, v,
+    meta = gst_buffer_add_video_meta_full (buffer, v,
         GST_VIDEO_INFO_FORMAT (params->v_info),
         GST_VIDEO_INFO_WIDTH (params->v_info),
         GST_VIDEO_INFO_HEIGHT (params->v_info), n_mem, params->v_info->offset,
         params->v_info->stride);
+
+    if (params->valign)
+      gst_video_meta_set_alignment (meta, *params->valign);
   }
 
   return TRUE;

@@ -47,11 +47,13 @@ struct _GstRTPBasePayloadPrivate
 
   gboolean source_info;
   GstBuffer *input_meta_buffer;
+  guint8 twcc_ext_id;
 
   guint64 base_offset;
   gint64 base_rtime;
   guint64 base_rtime_hz;
   guint64 running_time;
+  gboolean scale_rtptime;
 
   gint64 prop_max_ptime;
   gint64 caps_max_ptime;
@@ -92,6 +94,8 @@ enum
 #define DEFAULT_RUNNING_TIME            GST_CLOCK_TIME_NONE
 #define DEFAULT_SOURCE_INFO             FALSE
 #define DEFAULT_ONVIF_NO_RATE_CONTROL   FALSE
+#define DEFAULT_TWCC_EXT_ID             0
+#define DEFAULT_SCALE_RTPTIME           TRUE
 
 enum
 {
@@ -110,6 +114,8 @@ enum
   PROP_STATS,
   PROP_SOURCE_INFO,
   PROP_ONVIF_NO_RATE_CONTROL,
+  PROP_TWCC_EXT_ID,
+  PROP_SCALE_RTPTIME,
   PROP_LAST
 };
 
@@ -337,6 +343,46 @@ gst_rtp_base_payload_class_init (GstRTPBasePayloadClass * klass)
           DEFAULT_ONVIF_NO_RATE_CONTROL,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * GstRTPBasePayload:twcc-ext-id:
+   *
+   * The RTP header-extension ID used for tagging buffers with Transport-Wide
+   * Congestion Control sequence-numbers.
+   * 
+   * To use this across multiple bundled streams (transport wide), the
+   * GstRTPFunnel can mux TWCC sequence-numbers together.
+   * 
+   * This is experimental, as it is still a draft and not yet a standard.
+   *
+   * Since: 1.18
+   */
+  g_object_class_install_property (gobject_class, PROP_TWCC_EXT_ID,
+      g_param_spec_uint ("twcc-ext-id",
+          "Transport-wide Congestion Control Extension ID (experimental)",
+          "The RTP header-extension ID to use for tagging buffers with "
+          "Transport-wide Congestion Control sequencenumbers (0 = disable)",
+          0, 15, DEFAULT_TWCC_EXT_ID,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  /**
+   * GstRTPBasePayload:scale-rtptime:
+   *
+   * Make the RTP packets' timestamps be scaled with the segment's rate
+   * (corresponding to RTSP speed parameter). Disabling this property means
+   * the timestamps will not be affected by the set delivery speed (RTSP speed).
+   * 
+   * Example: A server wants to allow streaming a recorded video in double 
+   * speed but still have the timestamps correspond to the position in the 
+   * video. This is achieved by the client setting RTSP Speed to 2 while the 
+   * server has this property disabled.
+   * 
+   * Since: 1.18
+   */
+  g_object_class_install_property (G_OBJECT_CLASS (klass), PROP_SCALE_RTPTIME,
+      g_param_spec_boolean ("scale-rtptime", "Scale RTP time",
+          "Whether the RTP timestamp should be scaled with the rate (speed)",
+          DEFAULT_SCALE_RTPTIME, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
   gstelement_class->change_state = gst_rtp_base_payload_change_state;
 
   klass->get_caps = gst_rtp_base_payload_getcaps_default;
@@ -398,6 +444,7 @@ gst_rtp_base_payload_init (GstRTPBasePayload * rtpbasepayload, gpointer g_class)
   rtpbasepayload->priv->base_offset = GST_BUFFER_OFFSET_NONE;
   rtpbasepayload->priv->base_rtime_hz = GST_BUFFER_OFFSET_NONE;
   rtpbasepayload->priv->onvif_no_rate_control = DEFAULT_ONVIF_NO_RATE_CONTROL;
+  rtpbasepayload->priv->scale_rtptime = DEFAULT_SCALE_RTPTIME;
 
   rtpbasepayload->media = NULL;
   rtpbasepayload->encoding_name = NULL;
@@ -1115,6 +1162,16 @@ gst_rtp_base_payload_negotiate (GstRTPBasePayload * payload)
 
   update_max_ptime (payload);
 
+
+  if (payload->priv->twcc_ext_id > 0) {
+    /* TODO: put this as a separate utility-function for RTP extensions */
+    gchar *name = g_strdup_printf ("extmap-%u", payload->priv->twcc_ext_id);
+    gst_caps_set_simple (srccaps, name, G_TYPE_STRING,
+        "http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01",
+        NULL);
+    g_free (name);
+  }
+
   res = gst_pad_set_caps (GST_RTP_BASE_PAYLOAD_SRCPAD (payload), srccaps);
   gst_caps_unref (srccaps);
   gst_caps_unref (templ);
@@ -1162,6 +1219,7 @@ typedef struct
   GstClockTime pts;
   guint64 offset;
   guint32 rtptime;
+  guint8 twcc_ext_id;
 } HeaderData;
 
 static gboolean
@@ -1180,6 +1238,16 @@ find_timestamp (GstBuffer ** buffer, guint idx, gpointer user_data)
     return TRUE;
 }
 
+static void
+_set_twcc_seq (GstRTPBuffer * rtp, guint16 seq, guint8 ext_id)
+{
+  guint16 data;
+  if (ext_id == 0 || ext_id > 14)
+    return;
+  GST_WRITE_UINT16_BE (&data, seq);
+  gst_rtp_buffer_add_extension_onebyte_header (rtp, ext_id, &data, 2);
+}
+
 static gboolean
 set_headers (GstBuffer ** buffer, guint idx, gpointer user_data)
 {
@@ -1193,6 +1261,7 @@ set_headers (GstBuffer ** buffer, guint idx, gpointer user_data)
   gst_rtp_buffer_set_payload_type (&rtp, data->pt);
   gst_rtp_buffer_set_seq (&rtp, data->seqnum);
   gst_rtp_buffer_set_timestamp (&rtp, data->rtptime);
+  _set_twcc_seq (&rtp, data->seqnum, data->twcc_ext_id);
   gst_rtp_buffer_unmap (&rtp);
 
   /* increment the seqnum for each buffer */
@@ -1210,7 +1279,7 @@ map_failed:
 static gboolean
 foreach_metadata_drop (GstBuffer * buffer, GstMeta ** meta, gpointer user_data)
 {
-  GType drop_api_type = (GType) GPOINTER_TO_INT (user_data);
+  GType drop_api_type = (GType) user_data;
   const GstMetaInfo *info = (*meta)->info;
 
   if (info->api == drop_api_type)
@@ -1223,7 +1292,7 @@ static gboolean
 filter_meta (GstBuffer ** buffer, guint idx, gpointer user_data)
 {
   return gst_buffer_foreach_meta (*buffer, foreach_metadata_drop,
-      GINT_TO_POINTER (GST_RTP_SOURCE_META_API_TYPE));
+      (gpointer) GST_RTP_SOURCE_META_API_TYPE);
 }
 
 /* Updates the SSRC, payload type, seqnum and timestamp of the RTP buffer
@@ -1249,6 +1318,7 @@ gst_rtp_base_payload_prepare_push (GstRTPBasePayload * payload,
   data.seqnum = payload->seqnum;
   data.ssrc = payload->current_ssrc;
   data.pt = payload->pt;
+  data.twcc_ext_id = priv->twcc_ext_id;
 
   /* find the first buffer with a timestamp */
   if (is_list) {
@@ -1284,8 +1354,9 @@ gst_rtp_base_payload_prepare_push (GstRTPBasePayload * payload,
     guint64 rtime_hz;
 
     /* no offset, use the gstreamer pts */
-    if (priv->onvif_no_rate_control)
-      rtime_ns = data.pts;
+    if (priv->onvif_no_rate_control || !priv->scale_rtptime)
+      rtime_ns = gst_segment_to_stream_time (&payload->segment,
+          GST_FORMAT_TIME, data.pts);
     else
       rtime_ns =
           gst_segment_to_running_time (&payload->segment, GST_FORMAT_TIME,
@@ -1565,6 +1636,12 @@ gst_rtp_base_payload_set_property (GObject * object, guint prop_id,
     case PROP_ONVIF_NO_RATE_CONTROL:
       priv->onvif_no_rate_control = g_value_get_boolean (value);
       break;
+    case PROP_TWCC_EXT_ID:
+      priv->twcc_ext_id = g_value_get_uint (value);
+      break;
+    case PROP_SCALE_RTPTIME:
+      priv->scale_rtptime = g_value_get_boolean (value);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -1634,6 +1711,12 @@ gst_rtp_base_payload_get_property (GObject * object, guint prop_id,
       break;
     case PROP_ONVIF_NO_RATE_CONTROL:
       g_value_set_boolean (value, priv->onvif_no_rate_control);
+      break;
+    case PROP_TWCC_EXT_ID:
+      g_value_set_uint (value, priv->twcc_ext_id);
+      break;
+    case PROP_SCALE_RTPTIME:
+      g_value_set_boolean (value, priv->scale_rtptime);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

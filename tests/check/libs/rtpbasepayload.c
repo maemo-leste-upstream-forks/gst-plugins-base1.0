@@ -239,12 +239,12 @@ validate_event (guint index, const gchar * name, const gchar * field, ...)
       gdouble expected = va_arg (var_args, gdouble);
       const GstSegment *segment;
       gst_event_parse_segment (event, &segment);
-      fail_unless_equals_uint64 (segment->applied_rate, expected);
+      fail_unless_equals_float (segment->applied_rate, expected);
     } else if (!g_strcmp0 (field, "rate")) {
       gdouble expected = va_arg (var_args, gdouble);
       const GstSegment *segment;
       gst_event_parse_segment (event, &segment);
-      fail_unless_equals_uint64 (segment->rate, expected);
+      fail_unless_equals_float (segment->rate, expected);
     } else if (!g_strcmp0 (field, "media-type")) {
       const gchar *expected = va_arg (var_args, const gchar *);
       GstCaps *caps;
@@ -330,7 +330,7 @@ push_buffer_full (State * state, GstFlowReturn expected,
     const gchar * field, ...)
 {
   GstBuffer *buf = gst_rtp_buffer_new_allocate (0, 0, 0);
-  GstRTPBuffer rtp = { NULL };
+  GstRTPBuffer rtp = GST_RTP_BUFFER_INIT;
   gboolean mapped = FALSE;
   va_list var_args;
 
@@ -385,7 +385,7 @@ static void
 push_buffer_list (State * state, const gchar * field, ...)
 {
   GstBuffer *buf = gst_rtp_buffer_new_allocate (0, 0, 0);
-  GstRTPBuffer rtp = { NULL };
+  GstRTPBuffer rtp = GST_RTP_BUFFER_INIT;
   gboolean mapped = FALSE;
   GstBufferList *list;
   va_list var_args;
@@ -448,7 +448,7 @@ validate_buffers_received (guint received_buffers)
 static void
 validate_buffer_valist (GstBuffer * buf, const gchar * field, va_list var_args)
 {
-  GstRTPBuffer rtp = { NULL };
+  GstRTPBuffer rtp = GST_RTP_BUFFER_INIT;
   gboolean mapped = FALSE;
 
   while (field) {
@@ -533,7 +533,7 @@ static void
 get_buffer_field (guint index, const gchar * field, ...)
 {
   GstBuffer *buf;
-  GstRTPBuffer rtp = { NULL };
+  GstRTPBuffer rtp = GST_RTP_BUFFER_INIT;
   gboolean mapped = FALSE;
   va_list var_args;
 
@@ -701,7 +701,7 @@ destroy_payloader (State * state)
 /* push two buffers to the payloader which should successfully payload them
  * into RTP packets. the first packet will have a random rtptime and sequence
  * number, but the last packet should have an rtptime incremented by
- * DEFAULT_CLOCK_RATE and a sequence number incremented by one becuase the
+ * DEFAULT_CLOCK_RATE and a sequence number incremented by one because the
  * packets are sequential. besides the two payloaded RTP packets there should
  * be the three events initial events: stream-start, caps and segment.
  */
@@ -1022,7 +1022,7 @@ GST_START_TEST (rtp_base_payload_ssrc_collision_test)
 
 GST_END_TEST;
 
-/* validate that an upstream event different from GstRTPCollision is succesfully
+/* validate that an upstream event different from GstRTPCollision is successfully
  * forwarded to upstream elements. in this test a caps reconfiguration event is
  * pushed upstream to validate the behaviour.
  */
@@ -1322,8 +1322,7 @@ GST_START_TEST (rtp_base_payload_property_timestamp_offset_test)
       "pts", 5 * GST_SECOND, "rtptime", 0 + 5 * DEFAULT_CLOCK_RATE, NULL);
 
   validate_buffer (6,
-      "pts", 6 * GST_SECOND,
-      "rtptime", G_MAXUINT32 + 6 * DEFAULT_CLOCK_RATE, NULL);
+      "pts", 6 * GST_SECOND, "rtptime", 6 * DEFAULT_CLOCK_RATE - 1, NULL);
 
   validate_buffer (7,
       "pts", 7 * GST_SECOND, "rtptime", 7 * DEFAULT_CLOCK_RATE - 1, NULL);
@@ -1477,9 +1476,9 @@ GST_START_TEST (rtp_base_payload_property_max_ptime_test)
   validate_would_be_filled (state, mtu + 1, GST_SECOND - 1);
   validate_would_be_filled (state, mtu + 1, GST_SECOND);
 
-  g_object_set (state->element, "max-ptime", G_GUINT64_CONSTANT (-1), NULL);
+  g_object_set (state->element, "max-ptime", G_MAXUINT64, NULL);
   g_object_get (state->element, "max-ptime", &max_ptime, NULL);
-  fail_unless_equals_int64 (max_ptime, G_GUINT64_CONSTANT (-1));
+  fail_unless_equals_int64 (max_ptime, G_MAXUINT64);
   validate_would_not_be_filled (state, mtu, G_MAXINT64 - 1);
   validate_would_be_filled (state, mtu + 1, G_MAXINT64 - 1);
 
@@ -1748,7 +1747,7 @@ GST_END_TEST;
  * timestamp updates that are not based on input buffer offsets as expected.
  * lastly two buffers are pushed and the stats property retrieved after each
  * time. here it is expected that the sequence numbers values are restarted at
- * the inital value while the timestamps and running-time reflect the input
+ * the initial value while the timestamps and running-time reflect the input
  * buffers.
  */
 GST_START_TEST (rtp_base_payload_property_stats_test)
@@ -1925,6 +1924,98 @@ GST_START_TEST (rtp_base_payload_max_framerate_attribute)
 
 GST_END_TEST;
 
+GST_START_TEST (rtp_base_payload_segment_time)
+{
+  State *state;
+  guint32 timestamp_base = 0;
+  guint segment_time = 10;
+  GstEvent *event;
+  GstSegment *segment = gst_segment_new ();
+
+  state =
+      create_payloader
+      ("application/x-rtp",
+      &sinktmpl, "onvif-no-rate-control", TRUE, "timestamp-offset",
+      timestamp_base, NULL);
+
+  set_state (state, GST_STATE_PLAYING);
+
+  gst_segment_init (segment, GST_FORMAT_TIME);
+  segment->time = segment_time * GST_SECOND;
+  event = gst_event_new_segment (segment);
+  fail_unless (gst_pad_push_event (state->srcpad, event));
+
+  push_buffer (state, "pts", 0 * GST_SECOND, NULL);
+  push_buffer (state, "pts", 1 * GST_SECOND, NULL);
+  push_buffer (state, "pts", 2 * GST_SECOND, NULL);
+  push_buffer (state, "pts", 3 * GST_SECOND, NULL);
+
+  set_state (state, GST_STATE_NULL);
+
+  validate_buffers_received (4);
+
+  validate_buffer (0, "rtptime",
+      timestamp_base + (segment_time) * DEFAULT_CLOCK_RATE, NULL);
+  validate_buffer (1, "rtptime",
+      timestamp_base + (1 + segment_time) * DEFAULT_CLOCK_RATE, NULL);
+  validate_buffer (2, "rtptime",
+      timestamp_base + (2 + segment_time) * DEFAULT_CLOCK_RATE, NULL);
+  validate_buffer (3, "rtptime",
+      timestamp_base + (3 + segment_time) * DEFAULT_CLOCK_RATE, NULL);
+
+  destroy_payloader (state);
+  gst_segment_free (segment);
+}
+
+GST_END_TEST;
+
+#define TWCC_EXTMAP_STR "http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01"
+
+GST_START_TEST (rtp_base_payload_property_twcc_ext_id_test)
+{
+  GstHarness *h;
+  GstRtpDummyPay *pay;
+  GstBuffer *buf;
+  GstRTPBuffer rtp = GST_RTP_BUFFER_INIT;
+  guint8 ext_id = 10;
+  gpointer data;
+  guint size;
+  guint16 seqnum, twcc_seqnum;
+  GstCaps *caps, *expected_caps;
+
+  pay = rtp_dummy_pay_new ();
+  g_object_set (pay, "twcc-ext-id", ext_id, NULL);
+
+  h = gst_harness_new_with_element (GST_ELEMENT_CAST (pay), "sink", "src");
+  gst_harness_set_src_caps_str (h, "application/x-rtp");
+
+  /* verify the presence of the twcc-seqnum */
+  buf = gst_harness_push_and_pull (h, gst_buffer_new ());
+  gst_rtp_buffer_map (buf, GST_MAP_READWRITE, &rtp);
+  fail_unless (gst_rtp_buffer_get_extension_onebyte_header (&rtp, ext_id,
+          0, &data, &size));
+  fail_unless_equals_int (2, size);
+  twcc_seqnum = GST_READ_UINT16_BE (data);
+  seqnum = gst_rtp_buffer_get_seq (&rtp);
+  fail_unless_equals_int (twcc_seqnum, seqnum);
+  gst_rtp_buffer_unmap (&rtp);
+  gst_buffer_unref (buf);
+
+  /* verify the presence of the twcc in caps */
+  caps = gst_pad_get_current_caps (GST_PAD_PEER (h->sinkpad));
+  expected_caps = gst_caps_from_string ("application/x-rtp, "
+      "extmap-10=" TWCC_EXTMAP_STR "");
+  fail_unless (gst_caps_is_subset (caps, expected_caps));
+  gst_caps_unref (caps);
+  gst_caps_unref (expected_caps);
+
+  g_object_unref (pay);
+  gst_harness_teardown (h);
+}
+
+GST_END_TEST;
+
+
 static Suite *
 rtp_basepayloading_suite (void)
 {
@@ -1959,9 +2050,12 @@ rtp_basepayloading_suite (void)
   tcase_add_test (tc_chain, rtp_base_payload_property_ptime_multiple_test);
   tcase_add_test (tc_chain, rtp_base_payload_property_stats_test);
   tcase_add_test (tc_chain, rtp_base_payload_property_source_info_test);
+  tcase_add_test (tc_chain, rtp_base_payload_property_twcc_ext_id_test);
 
   tcase_add_test (tc_chain, rtp_base_payload_framerate_attribute);
   tcase_add_test (tc_chain, rtp_base_payload_max_framerate_attribute);
+
+  tcase_add_test (tc_chain, rtp_base_payload_segment_time);
 
   return s;
 }

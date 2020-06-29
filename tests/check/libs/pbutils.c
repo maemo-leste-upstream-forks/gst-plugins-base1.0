@@ -867,6 +867,441 @@ GST_START_TEST (test_pb_utils_aac_get_profile)
 
 GST_END_TEST;
 
+#define SPS_LEN 3
+#define SPS_CONSTRAINT_SET_FLAG_0 1 << 7
+#define SPS_CONSTRAINT_SET_FLAG_1 (1 << 6)
+#define SPS_CONSTRAINT_SET_FLAG_2 (1 << 5)
+#define SPS_CONSTRAINT_SET_FLAG_3 (1 << 4)
+#define SPS_CONSTRAINT_SET_FLAG_4 (1 << 3)
+#define SPS_CONSTRAINT_SET_FLAG_5 (1 << 2)
+
+static void
+fill_h264_sps (guint8 * sps,
+    guint8 profile_idc, guint constraint_set_flags, guint8 level_idc)
+{
+  memset (sps, 0x0, SPS_LEN);
+  /*
+   * * Bit 0:7   - Profile indication
+   * * Bit 8     - constraint_set0_flag
+   * * Bit 9     - constraint_set1_flag
+   * * Bit 10    - constraint_set2_flag
+   * * Bit 11    - constraint_set3_flag
+   * * Bit 12    - constraint_set4_flag
+   * * Bit 13    - constraint_set5_flag
+   * * Bit 14:15 - Reserved
+   * * Bit 16:24 - Level indication
+   * */
+  sps[0] = profile_idc;
+  sps[1] |= constraint_set_flags;
+  sps[2] = level_idc;
+}
+
+GST_START_TEST (test_pb_utils_h264_profiles)
+{
+  guint8 sps[SPS_LEN] = { 0, };
+  const gchar *profile;
+
+  fill_h264_sps (sps, 66, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "baseline");
+
+  fill_h264_sps (sps, 66, SPS_CONSTRAINT_SET_FLAG_1, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "constrained-baseline");
+
+  fill_h264_sps (sps, 77, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "main");
+
+  fill_h264_sps (sps, 88, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "extended");
+
+  fill_h264_sps (sps, 100, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "high");
+
+  fill_h264_sps (sps, 100,
+      SPS_CONSTRAINT_SET_FLAG_4 | SPS_CONSTRAINT_SET_FLAG_5, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "constrained-high");
+
+  fill_h264_sps (sps, 100, SPS_CONSTRAINT_SET_FLAG_4, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "progressive-high");
+
+  fill_h264_sps (sps, 110, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "high-10");
+
+  fill_h264_sps (sps, 110, SPS_CONSTRAINT_SET_FLAG_3, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "high-10-intra");
+
+  fill_h264_sps (sps, 110, SPS_CONSTRAINT_SET_FLAG_4, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "progressive-high-10");
+
+  fill_h264_sps (sps, 122, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "high-4:2:2");
+
+  fill_h264_sps (sps, 122, SPS_CONSTRAINT_SET_FLAG_3, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "high-4:2:2-intra");
+
+  fill_h264_sps (sps, 244, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "high-4:4:4");
+
+  fill_h264_sps (sps, 244, SPS_CONSTRAINT_SET_FLAG_3, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "high-4:4:4-intra");
+
+  fill_h264_sps (sps, 44, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "cavlc-4:4:4-intra");
+
+  fill_h264_sps (sps, 118, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "multiview-high");
+
+  fill_h264_sps (sps, 128, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "stereo-high");
+
+  fill_h264_sps (sps, 83, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "scalable-baseline");
+
+  fill_h264_sps (sps, 83, SPS_CONSTRAINT_SET_FLAG_5, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "scalable-constrained-baseline");
+
+  fill_h264_sps (sps, 86, 0, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "scalable-high");
+
+  fill_h264_sps (sps, 86, SPS_CONSTRAINT_SET_FLAG_3, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "scalable-high-intra");
+
+  fill_h264_sps (sps, 86, SPS_CONSTRAINT_SET_FLAG_5, 0);
+  profile = gst_codec_utils_h264_get_profile (sps, SPS_LEN);
+  fail_unless_equals_string (profile, "scalable-constrained-high");
+
+}
+
+GST_END_TEST;
+
+#define PROFILE_TIER_LEVEL_LEN 11
+
+static void
+fill_h265_profile (guint8 * profile_tier_level,
+    guint8 profile_idc, guint8 max_14bit_flag, guint8 max_12bit_flag,
+    guint8 max_10bit_flag, guint8 max_8bit_flag, guint8 max_422_flag,
+    guint8 max_420_flag, guint8 max_mono_flag, guint8 intra_flag,
+    guint8 one_pic_flag, guint8 lower_bit_rate_flag)
+{
+  /* Bit 0:1   - general_profile_space
+   * Bit 2     - general_tier_flag
+   * Bit 3:7   - general_profile_idc
+   * Bit 8:39  - gernal_profile_compatibility_flags
+   * Bit 40    - general_progressive_source_flag
+   * Bit 41    - general_interlaced_source_flag
+   * Bit 42    - general_non_packed_constraint_flag
+   * Bit 43    - general_frame_only_constraint_flag
+   */
+
+  memset (profile_tier_level, 0x0, PROFILE_TIER_LEVEL_LEN);
+
+  profile_tier_level[0] = profile_idc;
+
+  if (profile_idc < 4)
+    return;
+
+  profile_tier_level[5] |= (max_12bit_flag << 3);
+  profile_tier_level[5] |= (max_10bit_flag << 2);
+  profile_tier_level[5] |= (max_8bit_flag << 1);
+  profile_tier_level[5] |= max_422_flag;
+  profile_tier_level[6] |= (max_420_flag << 7);
+  profile_tier_level[6] |= (max_mono_flag << 6);
+  profile_tier_level[6] |= (intra_flag << 5);
+  profile_tier_level[6] |= (one_pic_flag << 4);
+  profile_tier_level[6] |= (lower_bit_rate_flag << 3);
+  profile_tier_level[6] |= (max_14bit_flag << 2);
+}
+
+GST_START_TEST (test_pb_utils_h265_profiles)
+{
+  guint8 profile_tier_level[PROFILE_TIER_LEVEL_LEN] = { 0, };
+  const gchar *profile;
+
+  fill_h265_profile (profile_tier_level, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main");
+
+  fill_h265_profile (profile_tier_level, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-10");
+
+  fill_h265_profile (profile_tier_level, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-still-picture");
+
+  /* Format range extensions profiles */
+  fill_h265_profile (profile_tier_level, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless (profile == NULL);
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "monochrome");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "monochrome-10");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "monochrome-12");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "monochrome-16");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-12");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-422-10");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-422-12");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-444");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-444-10");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-444-12");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-intra");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-10-intra");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-12-intra");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-422-10-intra");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-422-12-intra");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-444-intra");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-444-10-intra");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-444-12-intra");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-444-16-intra");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-444-still-picture");
+
+  fill_h265_profile (profile_tier_level, 4, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "main-444-16-still-picture");
+
+  /* High Throughput profiles */
+  fill_h265_profile (profile_tier_level, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless (profile == NULL);
+
+  fill_h265_profile (profile_tier_level, 5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "high-throughput-444");
+
+  fill_h265_profile (profile_tier_level, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "high-throughput-444-10");
+
+  fill_h265_profile (profile_tier_level, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "high-throughput-444-14");
+
+  fill_h265_profile (profile_tier_level, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "high-throughput-444-16-intra");
+
+  /* Multiview Main profile */
+  fill_h265_profile (profile_tier_level, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless (profile == NULL);
+
+  fill_h265_profile (profile_tier_level, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "multiview-main");
+
+  /* Scalable Main profiles */
+  fill_h265_profile (profile_tier_level, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless (profile == NULL);
+
+  fill_h265_profile (profile_tier_level, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "scalable-main");
+
+  fill_h265_profile (profile_tier_level, 7, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "scalable-main-10");
+
+  /* 3D Main profile */
+  fill_h265_profile (profile_tier_level, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless (profile == NULL);
+
+  fill_h265_profile (profile_tier_level, 8, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "3d-main");
+
+  /* Screen content coding extensions profiles */
+  fill_h265_profile (profile_tier_level, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless (profile == NULL);
+
+  fill_h265_profile (profile_tier_level, 9, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "screen-extended-main");
+
+  fill_h265_profile (profile_tier_level, 9, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "screen-extended-main-10");
+
+  fill_h265_profile (profile_tier_level, 9, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "screen-extended-main-444");
+
+  fill_h265_profile (profile_tier_level, 9, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "screen-extended-main-444-10");
+
+  fill_h265_profile (profile_tier_level, 9, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "screen-extended-high-throughput-444-14");
+
+  /* Scalable format range extensions profiles */
+  fill_h265_profile (profile_tier_level, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless (profile == NULL);
+
+  fill_h265_profile (profile_tier_level, 10, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "scalable-monochrome");
+
+  fill_h265_profile (profile_tier_level, 10, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "scalable-monochrome-12");
+
+  fill_h265_profile (profile_tier_level, 10, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "scalable-monochrome-16");
+
+  fill_h265_profile (profile_tier_level, 10, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "scalable-main-444");
+
+  fill_h265_profile (profile_tier_level, 11, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "screen-extended-main-444-10");
+
+  fill_h265_profile (profile_tier_level, 11, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "screen-extended-main-444");
+
+  fill_h265_profile (profile_tier_level, 11, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1);
+  profile = gst_codec_utils_h265_get_profile (profile_tier_level,
+      sizeof (profile_tier_level));
+  fail_unless_equals_string (profile, "screen-extended-high-throughput-444-14");
+}
+
+GST_END_TEST;
+
 static Suite *
 libgstpbutils_suite (void)
 {
@@ -882,6 +1317,8 @@ libgstpbutils_suite (void)
   tcase_add_test (tc_chain, test_pb_utils_installer_details);
   tcase_add_test (tc_chain, test_pb_utils_versions);
   tcase_add_test (tc_chain, test_pb_utils_aac_get_profile);
+  tcase_add_test (tc_chain, test_pb_utils_h264_profiles);
+  tcase_add_test (tc_chain, test_pb_utils_h265_profiles);
   return s;
 }
 
