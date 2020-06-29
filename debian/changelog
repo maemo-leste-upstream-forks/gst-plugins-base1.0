@@ -1,3 +1,10 @@
+gst-plugins-base1.0 (1.17.1-1) experimental; urgency=medium
+
+  * New upstream development release.
+  * Completely redo and modernize the packaging.
+
+ -- Sebastian Dröge <slomo@debian.org>  Mon, 29 Jun 2020 16:43:06 +0300
+
 gst-plugins-base1.0 (1.16.2-4) unstable; urgency=medium
 
   [ Iain Lane ]
