@@ -142,7 +142,8 @@ enum
   PROP_0,
   PROP_LATENCY,
   PROP_TOLERANCE,
-  PROP_PLC
+  PROP_PLC,
+  PROP_MAX_ERRORS
 };
 
 #define DEFAULT_LATENCY    0
@@ -150,6 +151,7 @@ enum
 #define DEFAULT_PLC        FALSE
 #define DEFAULT_DRAINABLE  TRUE
 #define DEFAULT_NEEDS_FORMAT  FALSE
+#define DEFAULT_MAX_ERRORS GST_AUDIO_DECODER_MAX_ERRORS
 
 typedef struct _GstAudioDecoderContext
 {
@@ -270,6 +272,10 @@ struct _GstAudioDecoderPrivate
   /* flags */
   gboolean use_default_pad_acceptcaps;
 };
+
+/* cached quark to avoid contention on the global quark table lock */
+#define META_TAG_AUDIO meta_tag_audio_quark
+static GQuark meta_tag_audio_quark;
 
 static void gst_audio_decoder_finalize (GObject * object);
 static void gst_audio_decoder_set_property (GObject * object,
@@ -408,6 +414,20 @@ gst_audio_decoder_class_init (GstAudioDecoderClass * klass)
           "Perform packet loss concealment (if supported)",
           DEFAULT_PLC, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  /**
+   * GstAudioDecoder:max-errors:
+   *
+   * Maximum number of tolerated consecutive decode errors. See
+   * gst_audio_decoder_set_max_errors() for more details.
+   *
+   * Since: 1.18
+   */
+  g_object_class_install_property (gobject_class, PROP_MAX_ERRORS,
+      g_param_spec_int ("max-errors", "Max errors",
+          "Max consecutive decoder errors before returning flow error",
+          -1, G_MAXINT, DEFAULT_MAX_ERRORS,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
   audiodecoder_class->sink_event =
       GST_DEBUG_FUNCPTR (gst_audio_decoder_sink_eventfunc);
   audiodecoder_class->src_event =
@@ -424,6 +444,8 @@ gst_audio_decoder_class_init (GstAudioDecoderClass * klass)
       GST_DEBUG_FUNCPTR (gst_audio_decoder_src_query_default);
   audiodecoder_class->transform_meta =
       GST_DEBUG_FUNCPTR (gst_audio_decoder_transform_meta_default);
+
+  meta_tag_audio_quark = g_quark_from_static_string (GST_META_TAG_AUDIO_STR);
 }
 
 static void
@@ -1190,8 +1212,7 @@ gst_audio_decoder_transform_meta_default (GstAudioDecoder *
   tags = gst_meta_api_type_get_tags (info->api);
 
   if (!tags || (g_strv_length ((gchar **) tags) == 1
-          && gst_meta_api_type_has_tag (info->api,
-              g_quark_from_string (GST_META_TAG_AUDIO_STR))))
+          && gst_meta_api_type_has_tag (info->api, META_TAG_AUDIO)))
     return TRUE;
 
   return FALSE;
@@ -3104,6 +3125,9 @@ gst_audio_decoder_get_property (GObject * object, guint prop_id,
     case PROP_PLC:
       g_value_set_boolean (value, dec->priv->plc);
       break;
+    case PROP_MAX_ERRORS:
+      g_value_set_int (value, gst_audio_decoder_get_max_errors (dec));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -3127,6 +3151,9 @@ gst_audio_decoder_set_property (GObject * object, guint prop_id,
       break;
     case PROP_PLC:
       dec->priv->plc = g_value_get_boolean (value);
+      break;
+    case PROP_MAX_ERRORS:
+      gst_audio_decoder_set_max_errors (dec, g_value_get_int (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
