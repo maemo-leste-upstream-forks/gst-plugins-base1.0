@@ -2708,18 +2708,18 @@ gst_video_converter_frame (GstVideoConverter * convert,
    * we were configured for or we might go out of bounds */
   if (G_UNLIKELY (GST_VIDEO_INFO_FORMAT (&convert->in_info) !=
           GST_VIDEO_FRAME_FORMAT (src)
-          || GST_VIDEO_INFO_WIDTH (&convert->in_info) !=
+          || GST_VIDEO_INFO_WIDTH (&convert->in_info) >
           GST_VIDEO_FRAME_WIDTH (src)
-          || GST_VIDEO_INFO_HEIGHT (&convert->in_info) !=
+          || GST_VIDEO_INFO_HEIGHT (&convert->in_info) >
           GST_VIDEO_FRAME_HEIGHT (src))) {
     g_critical ("Input video frame does not match configuration");
     return;
   }
   if (G_UNLIKELY (GST_VIDEO_INFO_FORMAT (&convert->out_info) !=
           GST_VIDEO_FRAME_FORMAT (dest)
-          || GST_VIDEO_INFO_WIDTH (&convert->out_info) !=
+          || GST_VIDEO_INFO_WIDTH (&convert->out_info) >
           GST_VIDEO_FRAME_WIDTH (dest)
-          || GST_VIDEO_INFO_HEIGHT (&convert->out_info) !=
+          || GST_VIDEO_INFO_HEIGHT (&convert->out_info) >
           GST_VIDEO_FRAME_HEIGHT (dest))) {
     g_critical ("Output video frame does not match configuration");
     return;
@@ -5965,6 +5965,8 @@ get_scale_format (GstVideoFormat format, gint plane)
     case GST_VIDEO_FORMAT_GBRA_12BE:
     case GST_VIDEO_FORMAT_GBRA_12LE:
     case GST_VIDEO_FORMAT_NV12_64Z32:
+    case GST_VIDEO_FORMAT_NV12_4L4:
+    case GST_VIDEO_FORMAT_NV12_32L32:
     case GST_VIDEO_FORMAT_A420_10BE:
     case GST_VIDEO_FORMAT_A420_10LE:
     case GST_VIDEO_FORMAT_A422_10BE:
@@ -6682,6 +6684,8 @@ static const VideoTransform transforms[] = {
   /* scalers */
   {GST_VIDEO_FORMAT_GBR, GST_VIDEO_FORMAT_GBR, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
+  {GST_VIDEO_FORMAT_GBRA, GST_VIDEO_FORMAT_GBRA, TRUE, FALSE, FALSE, TRUE,
+      TRUE, TRUE, FALSE, FALSE, 0, 0, convert_scale_planes},
 
   {GST_VIDEO_FORMAT_YVYU, GST_VIDEO_FORMAT_YVYU, TRUE, FALSE, FALSE, TRUE,
       TRUE, FALSE, FALSE, FALSE, 0, 0, convert_scale_planes},
@@ -6741,12 +6745,16 @@ video_converter_lookup_fastpath (GstVideoConverter * convert)
   gboolean interlaced, same_matrix, same_primaries, same_size, crop, border;
   gboolean need_copy, need_set, need_mult;
   gint width, height;
+  guint in_bpp, out_bpp;
 
   width = GST_VIDEO_INFO_WIDTH (&convert->in_info);
   height = GST_VIDEO_INFO_HEIGHT (&convert->in_info);
 
   if (GET_OPT_DITHER_QUANTIZATION (convert) != 1)
     return FALSE;
+
+  in_bpp = convert->in_info.finfo->bits;
+  out_bpp = convert->out_info.finfo->bits;
 
   /* we don't do gamma conversion in fastpath */
   in_transf = convert->in_info.colorimetry.transfer;
@@ -6755,7 +6763,9 @@ video_converter_lookup_fastpath (GstVideoConverter * convert)
   same_size = (width == convert->out_width && height == convert->out_height);
 
   /* fastpaths don't do gamma */
-  if (CHECK_GAMMA_REMAP (convert) && (!same_size || in_transf != out_transf))
+  if (CHECK_GAMMA_REMAP (convert) && (!same_size
+          || !gst_video_color_transfer_is_equivalent (in_transf, in_bpp,
+              out_transf, out_bpp)))
     return FALSE;
 
   need_copy = (convert->alpha_mode & ALPHA_MODE_COPY) == ALPHA_MODE_COPY;
