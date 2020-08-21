@@ -28,7 +28,7 @@ debian/tmp/usr/lib/*/pkgconfig/gstreamer-allocators-1.0.pc
 debian/tmp/usr/lib/*/pkgconfig/gstreamer-app-1.0.pc
 debian/tmp/usr/lib/*/pkgconfig/gstreamer-audio-1.0.pc
 debian/tmp/usr/lib/*/pkgconfig/gstreamer-fft-1.0.pc
-debian/tmp/usr/lib/*/pkgconfig/gstreamer-gl-1.0.pc
+debian/tmp/usr/lib/*/pkgconfig/gstreamer-gl*-1.0.pc
 debian/tmp/usr/lib/*/pkgconfig/gstreamer-pbutils-1.0.pc
 debian/tmp/usr/lib/*/pkgconfig/gstreamer-plugins-base-1.0.pc
 debian/tmp/usr/lib/*/pkgconfig/gstreamer-riff-1.0.pc
@@ -40,7 +40,7 @@ debian/tmp/usr/lib/*/pkgconfig/gstreamer-video-1.0.pc
 debian/tmp/usr/share/gir-*/GstAllocators-1.0.gir
 debian/tmp/usr/share/gir-*/GstApp-1.0.gir
 debian/tmp/usr/share/gir-*/GstAudio-1.0.gir
-debian/tmp/usr/share/gir-*/GstGL-1.0.gir
+debian/tmp/usr/share/gir-*/GstGL*-1.0.gir
 debian/tmp/usr/share/gir-*/GstPbutils-1.0.gir
 debian/tmp/usr/share/gir-*/GstRtp-1.0.gir
 debian/tmp/usr/share/gir-*/GstRtsp-1.0.gir
