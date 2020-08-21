@@ -948,8 +948,8 @@ GST_START_TEST (test_parse_colorimetry)
 {
   ColorimetryTest tests[] = {
     MAKE_COLORIMETRY_TEST ("bt601", "bt601", "bt601",
-        _16_235, BT601, BT709, SMPTE170M),
-    MAKE_COLORIMETRY_TEST ("2:4:5:4", "bt601", "bt601",
+        _16_235, BT601, BT601, SMPTE170M),
+    MAKE_COLORIMETRY_TEST ("2:4:5:4", "2:4:5:4", NULL,
         _16_235, BT601, BT709, SMPTE170M),
     MAKE_COLORIMETRY_TEST ("bt709", "bt709", "bt709",
         _16_235, BT709, BT709, BT709),
@@ -3048,6 +3048,8 @@ GST_START_TEST (test_video_formats_pstrides)
         || fmt == GST_VIDEO_FORMAT_IYU1
         || fmt == GST_VIDEO_FORMAT_GRAY10_LE32
         || fmt == GST_VIDEO_FORMAT_NV12_64Z32
+        || fmt == GST_VIDEO_FORMAT_NV12_4L4
+        || fmt == GST_VIDEO_FORMAT_NV12_32L32
         || fmt == GST_VIDEO_FORMAT_NV12_10LE32
         || fmt == GST_VIDEO_FORMAT_NV16_10LE32
         || fmt == GST_VIDEO_FORMAT_NV12_10LE40

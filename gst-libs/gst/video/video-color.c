@@ -64,7 +64,7 @@ typedef struct
 #define GST_VIDEO_COLORIMETRY_NONAME  NULL
 
 static const ColorimetryInfo colorimetry[] = {
-  MAKE_COLORIMETRY (BT601, _16_235, BT601, BT709, SMPTE170M),
+  MAKE_COLORIMETRY (BT601, _16_235, BT601, BT601, SMPTE170M),
   MAKE_COLORIMETRY (BT709, _16_235, BT709, BT709, BT709),
   MAKE_COLORIMETRY (SMPTE240M, _16_235, SMPTE240M, SMPTE240M, SMPTE240M),
   MAKE_COLORIMETRY (SRGB, _0_255, RGB, SRGB, BT709),
@@ -435,6 +435,7 @@ gst_video_color_transfer_encode (GstVideoTransferFunction func, gdouble val)
     case GST_VIDEO_TRANSFER_GAMMA22:
       res = pow (val, 1.0 / 2.2);
       break;
+    case GST_VIDEO_TRANSFER_BT601:
     case GST_VIDEO_TRANSFER_BT709:
     case GST_VIDEO_TRANSFER_BT2020_10:
       if (val < 0.018)
@@ -552,6 +553,7 @@ gst_video_color_transfer_decode (GstVideoTransferFunction func, gdouble val)
     case GST_VIDEO_TRANSFER_GAMMA22:
       res = pow (val, 2.2);
       break;
+    case GST_VIDEO_TRANSFER_BT601:
     case GST_VIDEO_TRANSFER_BT709:
     case GST_VIDEO_TRANSFER_BT2020_10:
       if (val < 0.081)
@@ -689,6 +691,8 @@ gst_video_color_transfer_to_iso (GstVideoTransferFunction func)
       return 4;
     case GST_VIDEO_TRANSFER_GAMMA28:
       return 5;
+    case GST_VIDEO_TRANSFER_BT601:
+      return 6;
     case GST_VIDEO_TRANSFER_SMPTE240M:
       return 7;
     case GST_VIDEO_TRANSFER_GAMMA10:
@@ -818,12 +822,13 @@ gst_video_color_transfer_from_iso (guint value)
 {
   switch (value) {
     case 1:
-    case 6:
       return GST_VIDEO_TRANSFER_BT709;
     case 4:
       return GST_VIDEO_TRANSFER_GAMMA22;
     case 5:
       return GST_VIDEO_TRANSFER_GAMMA28;
+    case 6:
+      return GST_VIDEO_TRANSFER_BT601;
     case 7:
       return GST_VIDEO_TRANSFER_SMPTE240M;
     case 8:
@@ -891,4 +896,52 @@ gst_video_color_primaries_from_iso (guint value)
     default:
       return GST_VIDEO_COLOR_PRIMARIES_UNKNOWN;
   }
+}
+
+static GstVideoTransferFunction
+map_equivalent_transfer (GstVideoTransferFunction func, guint bpp)
+{
+  switch (func) {
+    case GST_VIDEO_TRANSFER_BT2020_12:
+      if (bpp >= 12)
+        break;
+      /* fallthrough */
+    case GST_VIDEO_TRANSFER_BT709:
+    case GST_VIDEO_TRANSFER_BT601:
+    case GST_VIDEO_TRANSFER_BT2020_10:
+      return GST_VIDEO_TRANSFER_BT709;
+    default:
+      break;
+  }
+
+  return func;
+}
+
+/**
+ * gst_video_color_transfer_is_equivalent:
+ * @from_func: #GstVideoTransferFunction to convert from
+ * @from_bpp: bits per pixel to convert from
+ * @to_func: #GstVideoTransferFunction to convert into
+ * @to_bpp: bits per pixel to convert into
+ *
+ * Returns whether @from_func and @to_func are equivalent. There are cases
+ * (e.g. BT601, BT709, and BT2020_10) where several functions are functionally
+ * identical. In these cases, when doing conversion, we should consider them
+ * as equivalent. Also, BT2020_12 is the same as the aforementioned three for
+ * less than 12 bits per pixel.
+ *
+ * Returns: TRUE if @from_func and @to_func can be considered equivalent.
+ *
+ * Since: 1.18
+ */
+gboolean
+gst_video_color_transfer_is_equivalent (GstVideoTransferFunction from_func,
+    guint from_bpp, GstVideoTransferFunction to_func, guint to_bpp)
+{
+  from_func = map_equivalent_transfer (from_func, from_bpp);
+  to_func = map_equivalent_transfer (to_func, to_bpp);
+  if (from_func == GST_VIDEO_TRANSFER_BT2020_12 && to_bpp < 12 &&
+      to_func == GST_VIDEO_TRANSFER_BT709)
+    return TRUE;
+  return from_func == to_func;
 }

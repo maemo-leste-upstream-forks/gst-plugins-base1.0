@@ -1,5 +1,5 @@
 project('gst-plugins-base', 'c',
-  version : '1.17.2',
+  version : '1.17.90',
   meson_version : '>= 0.48',
   default_options : [ 'warning_level=1',
                       'buildtype=debugoptimized' ])
@@ -16,8 +16,15 @@ else
 endif
 gst_version_is_dev = gst_version_minor % 2 == 1 and gst_version_micro < 90
 
+host_system = host_machine.system()
+
 have_cxx = add_languages('cpp', native: false, required: false)
-have_objc = add_languages('objc', native: false, required: false)
+
+if host_system in ['ios', 'darwin']
+  have_objc = add_languages('objc', native: false)
+else
+  have_objc = false
+endif
 
 glib_req = '>= 2.44.0'
 orc_req = '>= 0.4.24'
@@ -35,7 +42,6 @@ plugins_install_dir = join_paths(get_option('libdir'), 'gstreamer-1.0')
 plugins = []
 
 cc = meson.get_compiler('c')
-host_system = host_machine.system()
 
 if cc.get_id() == 'msvc'
   # Ignore several spurious warnings for things gstreamer does very commonly
@@ -317,6 +323,7 @@ gst_controller_dep = dependency('gstreamer-controller-1.0', version : gst_req,
 
 have_orcc = false
 orcc_args = []
+orc_targets = []
 # Used by various libraries/elements that use Orc code
 orc_dep = dependency('orc-0.4', version : orc_req, required : get_option('orc'),
     fallback : ['orc', 'orc_dep'])
@@ -417,7 +424,59 @@ if find_program('xgettext', required : get_option('nls')).found()
 endif
 subdir('docs')
 
+if have_orcc
+  update_orc_dist_files = find_program('scripts/update-orc-dist-files.py')
+
+  orc_update_targets = []
+  foreach t : orc_targets
+    orc_name = t.get('name')
+    orc_file = t.get('orc-source')
+    header = t.get('header')
+    source = t.get('source')
+    # alias_target() only works with build targets, so can't use run_target() here
+    orc_update_targets += [
+      custom_target('update-orc-@0@'.format(orc_name),
+        input: [header, source],
+        command: [update_orc_dist_files, orc_file, header, source],
+        output: ['@0@-dist.c'.format(orc_name)]) # not entirely true
+    ]
+  endforeach
+
+  if meson.version().version_compare('>= 0.52')
+    update_orc_dist_target = alias_target('update-orc-dist', orc_update_targets)
+  endif
+endif
+
+# Set release date
+if gst_version_nano == 0
+  extract_release_date = find_program('scripts/extract-release-date-from-doap-file.py')
+  run_result = run_command(extract_release_date, gst_version, files('gst-plugins-base.doap'))
+  if run_result.returncode() == 0
+    release_date = run_result.stdout().strip()
+    core_conf.set_quoted('GST_PACKAGE_RELEASE_DATETIME', release_date)
+    message('Package release date: ' + release_date)
+  else
+    # Error out if our release can't be found in the .doap file
+    error(run_result.stderr())
+  endif
+endif
+
 # Use core_conf after all subdirs have set values
 configure_file(output : 'config.h', configuration : core_conf)
 
 run_command(python3, '-c', 'import shutil; shutil.copy("hooks/pre-commit.hook", ".git/hooks/pre-commit")')
+
+if meson.version().version_compare('>= 0.54')
+  plugin_names = []
+  foreach plugin: plugins
+    # FIXME: Use str.subtring() when we can depend on Meson 0.56
+    split = plugin.name().split('gst')
+    if split.length() == 2
+      plugin_names += [split[1]]
+    else
+      warning('Need substring API in meson >= 0.56 to properly parse plugin name: ' + plugin.name())
+      plugin_names += [plugin.name()]
+    endif
+  endforeach
+  summary({'Plugins':plugin_names}, list_sep: ', ')
+endif

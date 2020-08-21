@@ -153,7 +153,7 @@ gst_video_info_init (GstVideoInfo * info)
 #define DEFAULT_YUV_UHD 5
 
 static const GstVideoColorimetry default_color[] = {
-  MAKE_COLORIMETRY (_16_235, BT601, BT709, SMPTE170M),
+  MAKE_COLORIMETRY (_16_235, BT601, BT601, SMPTE170M),
   MAKE_COLORIMETRY (_16_235, BT709, BT709, BT709),
   MAKE_COLORIMETRY (_0_255, RGB, SRGB, BT709),
   MAKE_COLORIMETRY (_0_255, BT601, UNKNOWN, UNKNOWN),
@@ -1045,8 +1045,27 @@ fill_planes (GstVideoInfo * info, gsize plane_size[GST_VIDEO_MAX_PLANES])
       info->offset[0] = 0;
       info->offset[1] = GST_ROUND_UP_128 (width) * GST_ROUND_UP_32 (height);
       info->size = info->offset[1] +
-          GST_ROUND_UP_128 (width) * GST_ROUND_UP_64 (height) / 2;
+          GST_ROUND_UP_128 (width) * (GST_ROUND_UP_64 (height) / 2);
       break;
+    case GST_VIDEO_FORMAT_NV12_4L4:
+    case GST_VIDEO_FORMAT_NV12_32L32:
+    {
+      gint ws = GST_VIDEO_FORMAT_INFO_TILE_WS (info->finfo);
+      gint hs = GST_VIDEO_FORMAT_INFO_TILE_HS (info->finfo);
+      info->stride[0] =
+          GST_VIDEO_TILE_MAKE_STRIDE (GST_ROUND_UP_N (width, 1 << ws) >> ws,
+          GST_ROUND_UP_N (height, 1 << hs) >> hs);
+      info->stride[1] =
+          GST_VIDEO_TILE_MAKE_STRIDE (GST_ROUND_UP_N (width, 1 << ws) >> ws,
+          GST_ROUND_UP_N (height, 1 << (hs + 1)) >> (hs + 1));
+      info->offset[0] = 0;
+      info->offset[1] =
+          GST_ROUND_UP_N (width, 1 << ws) * GST_ROUND_UP_N (height, 1 << hs);
+      info->size = info->offset[1] +
+          GST_ROUND_UP_N (width, 1 << ws) *
+          (GST_ROUND_UP_N (height, 1 << (hs + 1)) / 2);
+      break;
+    }
     case GST_VIDEO_FORMAT_A420_10LE:
     case GST_VIDEO_FORMAT_A420_10BE:
       info->stride[0] = GST_ROUND_UP_4 (width * 2);

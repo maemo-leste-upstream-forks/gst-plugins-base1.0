@@ -705,13 +705,15 @@ gst_video_rate_push_buffer (GstVideoRate * videorate, GstBuffer * outbuf,
           videorate->to_rate_denominator * GST_SECOND,
           videorate->to_rate_numerator);
       GST_BUFFER_DURATION (outbuf) = videorate->next_ts - push_ts;
-    } else if (GST_CLOCK_TIME_IS_VALID (GST_BUFFER_DURATION (outbuf))) {
-      videorate->next_ts =
-          GST_BUFFER_PTS (outbuf) + GST_BUFFER_DURATION (outbuf);
     } else {
       /* There must always be a valid duration on prevbuf if rate > 0,
        * it is ensured in the transform_ip function */
-      GST_FIXME_OBJECT (videorate, "No buffer duration known");
+      g_assert (GST_BUFFER_PTS_IS_VALID (outbuf));
+      g_assert (GST_BUFFER_DURATION_IS_VALID (outbuf));
+      g_assert (GST_BUFFER_DURATION (outbuf) != 0);
+
+      videorate->next_ts
+          = GST_BUFFER_PTS (outbuf) + GST_BUFFER_DURATION (outbuf);
     }
   }
 
@@ -1467,6 +1469,14 @@ gst_video_rate_transform_ip (GstBaseTransform * trans, GstBuffer * buffer)
 
   if (videorate->to_rate_numerator == 0 && videorate->prevbuf &&
       !videorate->force_variable_rate) {
+    if (!GST_BUFFER_PTS_IS_VALID (buffer) ||
+        !GST_BUFFER_PTS_IS_VALID (videorate->prevbuf)) {
+      GST_ELEMENT_ERROR (videorate, STREAM, FAILED, (NULL),
+          ("videorate requires a non-variable framerate on the output caps or the"
+              " two first consecutive buffers to have valid timestamps to guess the"
+              " framerate."));
+      return GST_FLOW_ERROR;
+    }
     gst_video_rate_check_variable_rate (videorate, buffer);
   }
 
