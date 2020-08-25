@@ -10,7 +10,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  (arch=linux-any kfreebsd-any)gst_egl_image_export_dmabuf@Base 1.14.0
  (arch=linux-any kfreebsd-any)gst_egl_image_from_dmabuf@Base 1.14.0
  (arch=linux-any kfreebsd-any)gst_egl_image_from_dmabuf_direct@Base 1.16.0
- gst_egl_image_from_dmabuf_direct_target@Base 1.17.90
+ (arch=linux-any kfreebsd-any)gst_egl_image_from_dmabuf_direct_target@Base 1.17.90
  gst_egl_image_from_texture@Base 1.14.0
  gst_egl_image_get_image@Base 1.14.0
  gst_egl_image_get_type@Base 1.14.0
