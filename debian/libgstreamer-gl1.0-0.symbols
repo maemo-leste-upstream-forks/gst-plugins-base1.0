@@ -10,7 +10,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  (arch=linux-any kfreebsd-any)gst_egl_image_export_dmabuf@Base 1.14.0
  (arch=linux-any kfreebsd-any)gst_egl_image_from_dmabuf@Base 1.14.0
  (arch=linux-any kfreebsd-any)gst_egl_image_from_dmabuf_direct@Base 1.16.0
- (arch=linux-any kfreebsd-any)gst_egl_image_from_dmabuf_direct_target@Base 1.17.90
+ (arch=linux-any kfreebsd-any)gst_egl_image_from_dmabuf_direct_target@Base 1.18.0
  gst_egl_image_from_texture@Base 1.14.0
  gst_egl_image_get_image@Base 1.14.0
  gst_egl_image_get_type@Base 1.14.0
@@ -34,7 +34,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_async_debug_thaw@Base 1.14.0
  gst_gl_async_debug_unset@Base 1.14.0
  gst_gl_base_filter_find_gl_context@Base 1.16.0
- gst_gl_base_filter_get_gl_context@Base 1.17.90
+ gst_gl_base_filter_get_gl_context@Base 1.18.0
  gst_gl_base_filter_get_type@Base 1.14.0
  gst_gl_base_memory_alloc@Base 1.14.0
  gst_gl_base_memory_alloc_data@Base 1.14.0
@@ -46,7 +46,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_base_memory_init_once@Base 1.14.0
  gst_gl_base_memory_memcpy@Base 1.14.0
  gst_gl_base_memory_transfer_get_type@Base 1.16.0
- gst_gl_base_src_get_type@Base 1.17.90
+ gst_gl_base_src_get_type@Base 1.18.0
  gst_gl_buffer_allocation_params_get_type@Base 1.14.0
  gst_gl_buffer_allocation_params_new@Base 1.14.0
  gst_gl_buffer_allocator_get_type@Base 1.14.0
@@ -101,9 +101,9 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_display_add_context@Base 1.14.0
  gst_gl_display_create_context@Base 1.14.0
  gst_gl_display_create_window@Base 1.14.0
- gst_gl_display_egl_device_get_type@Base 1.17.90
- gst_gl_display_egl_device_new@Base 1.17.90
- gst_gl_display_egl_device_new_with_egl_device@Base 1.17.90
+ gst_gl_display_egl_device_get_type@Base 1.18.0
+ gst_gl_display_egl_device_new@Base 1.18.0
+ gst_gl_display_egl_device_new_with_egl_device@Base 1.18.0
  gst_gl_display_egl_from_gl_display@Base 1.14.0
  gst_gl_display_egl_get_from_native@Base 1.14.0
  gst_gl_display_egl_get_type@Base 1.14.0
@@ -118,9 +118,9 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_display_get_handle_type@Base 1.14.0
  gst_gl_display_get_type@Base 1.14.0
  gst_gl_display_new@Base 1.14.0
- gst_gl_display_remove_context@Base 1.17.90
+ gst_gl_display_remove_context@Base 1.18.0
  gst_gl_display_remove_window@Base 1.14.0
- gst_gl_display_retrieve_window@Base 1.17.90
+ gst_gl_display_retrieve_window@Base 1.18.0
  gst_gl_display_type_get_type@Base 1.16.0
  (arch=linux-any)gst_gl_display_wayland_get_type@Base 1.14.0
  (arch=linux-any)gst_gl_display_wayland_new@Base 1.14.0
@@ -315,7 +315,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_window_get_type@Base 1.14.0
  gst_gl_window_get_window_handle@Base 1.14.0
  gst_gl_window_handle_events@Base 1.14.0
- gst_gl_window_has_output_surface@Base 1.17.90
+ gst_gl_window_has_output_surface@Base 1.18.0
  gst_gl_window_new@Base 1.14.0
  gst_gl_window_queue_resize@Base 1.14.0
  gst_gl_window_quit@Base 1.14.0
@@ -325,7 +325,7 @@ libgstgl-1.0.so.0 libgstreamer-gl1.0-0 #MINVER#
  gst_gl_window_send_message@Base 1.14.0
  gst_gl_window_send_message_async@Base 1.14.0
  gst_gl_window_send_mouse_event@Base 1.14.0
- gst_gl_window_send_scroll_event@Base 1.17.90
+ gst_gl_window_send_scroll_event@Base 1.18.0
  gst_gl_window_set_close_callback@Base 1.14.0
  gst_gl_window_set_draw_callback@Base 1.14.0
  gst_gl_window_set_preferred_size@Base 1.14.0

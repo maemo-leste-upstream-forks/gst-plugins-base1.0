@@ -1,3 +1,12 @@
+gst-plugins-base1.0 (1.18.0-1) unstable; urgency=medium
+
+  * New upstream stable release.
+  * Upload to unstable (Closes: #963307).
+  * debian/control:
+    + (Build-) Depend on the vendor neutral GL header packages (Closes: #945967).
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 08 Sep 2020 11:00:08 +0300
+
 gst-plugins-base1.0 (1.17.90-1) experimental; urgency=medium
 
   * New upstream release candidate.
