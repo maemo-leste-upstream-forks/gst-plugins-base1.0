@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-08 00:03+0100\n"
+"POT-Creation-Date: 2020-10-26 11:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -196,7 +196,7 @@ msgstr ""
 msgid "No URI handler implemented for \"%s\"."
 msgstr ""
 
-#: gst/playback/gsturidecodebin.c:2335 gst/playback/gsturisourcebin.c:2229
+#: gst/playback/gsturidecodebin.c:2335 gst/playback/gsturisourcebin.c:2228
 msgid "Source element is invalid."
 msgstr ""
 
