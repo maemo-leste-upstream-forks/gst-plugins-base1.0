@@ -1,3 +1,11 @@
+gst-plugins-base1.0 (1.18.1-1) unstable; urgency=medium
+
+  * New upstream bugfix release (Closes: #972937).
+  * debian/control:
+    + Add dependency on libwayland-dev on Linux (Closes: #970324).
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 27 Oct 2020 17:14:05 +0200
+
 gst-plugins-base1.0 (1.18.0-2) unstable; urgency=medium
 
   * debian/rules:

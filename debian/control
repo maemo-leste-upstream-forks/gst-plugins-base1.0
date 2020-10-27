@@ -109,6 +109,7 @@ Depends: ${misc:Depends},
          libegl-dev,
          libgles-dev,
          libx11-xcb-dev,
+         libwayland-dev (>= 1.11) [linux-any],
          gir1.2-gst-plugins-base-1.0 (= ${binary:Version})
 Breaks: libgstreamer-plugins-bad1.0-dev (<< 1.15.1)
 Conflicts: libgstreamer-plugins-bad1.0-dev (<< 1.15.1)
