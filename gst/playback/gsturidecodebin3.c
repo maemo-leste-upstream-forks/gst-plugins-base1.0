@@ -345,6 +345,8 @@ static GstSourceHandler *new_source_handler (GstURIDecodeBin3 * uridecodebin,
 
 static GstStateChangeReturn gst_uri_decode_bin3_change_state (GstElement *
     element, GstStateChange transition);
+static gboolean gst_uri_decodebin3_send_event (GstElement * element,
+    GstEvent * event);
 
 static gboolean
 _gst_int_accumulator (GSignalInvocationHint * ihint,
@@ -515,6 +517,8 @@ gst_uri_decode_bin3_class_init (GstURIDecodeBin3Class * klass)
       "Edward Hervey <edward@centricular.com>, Jan Schmidt <jan@centricular.com>");
 
   gstelement_class->change_state = gst_uri_decode_bin3_change_state;
+  gstelement_class->send_event =
+      GST_DEBUG_FUNCPTR (gst_uri_decodebin3_send_event);
 
   klass->select_stream = gst_uridecodebin3_select_stream;
 }
@@ -537,6 +541,7 @@ add_output_pad (GstURIDecodeBin3 * dec, GstPad * target_pad)
 {
   OutputPad *output;
   gchar *pad_name;
+  GstEvent *stream_start;
 
   output = g_slice_new0 (OutputPad);
 
@@ -550,6 +555,17 @@ add_output_pad (GstURIDecodeBin3 * dec, GstPad * target_pad)
   g_free (pad_name);
 
   gst_pad_set_active (output->ghost_pad, TRUE);
+
+  stream_start = gst_pad_get_sticky_event (target_pad,
+      GST_EVENT_STREAM_START, 0);
+  if (stream_start) {
+    gst_pad_store_sticky_event (output->ghost_pad, stream_start);
+    gst_event_unref (stream_start);
+  } else {
+    GST_WARNING_OBJECT (target_pad,
+        "Exposing pad without stored stream-start event");
+  }
+
   gst_element_add_pad (GST_ELEMENT (dec), output->ghost_pad);
 
   output->probe_id =
@@ -1118,6 +1134,16 @@ failure:
   }
 }
 
+static gboolean
+gst_uri_decodebin3_send_event (GstElement * element, GstEvent * event)
+{
+  GstURIDecodeBin3 *self = GST_URI_DECODE_BIN3 (element);
+
+  if (GST_EVENT_IS_UPSTREAM (event) && self->decodebin)
+    return gst_element_send_event (self->decodebin, event);
+
+  return GST_ELEMENT_CLASS (parent_class)->send_event (element, event);
+}
 
 gboolean
 gst_uri_decode_bin3_plugin_init (GstPlugin * plugin)
