@@ -116,7 +116,7 @@ static GstStaticPadTemplate src_factory = GST_STATIC_PAD_TEMPLATE ("src",
 static GstStaticPadTemplate sink_factory = GST_STATIC_PAD_TEMPLATE ("sink_%u",
     GST_PAD_SINK,
     GST_PAD_REQUEST,
-    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (FORMATS))
+    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (GST_VIDEO_FORMATS_ALL))
     );
 
 static void gst_compositor_child_proxy_init (gpointer g_iface,
@@ -416,7 +416,10 @@ gst_compositor_pad_prepare_frame (GstVideoAggregatorPad * pad,
   /* Check if this frame is obscured by a higher-zorder frame
    * TODO: Also skip a frame if it's obscured by a combination of
    * higher-zorder frames */
-  l = g_list_find (GST_ELEMENT (vagg)->sinkpads, pad)->next;
+  l = g_list_find (GST_ELEMENT (vagg)->sinkpads, pad);
+  /* The pad might've just been removed */
+  if (l)
+    l = l->next;
   for (; l; l = l->next) {
     if (_pad_obscures_rectangle (vagg, l->data, frame_rect)) {
       frame_obscured = TRUE;
