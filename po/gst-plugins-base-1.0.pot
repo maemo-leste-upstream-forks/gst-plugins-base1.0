@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gst-plugins-base-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-06 13:22+0000\n"
+"POT-Creation-Date: 2021-01-13 21:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,7 +83,7 @@ msgstr ""
 msgid "Could not read CD."
 msgstr ""
 
-#: gst/encoding/gstencodebin.c:1793 gst/playback/gstplaybin2.c:3468
+#: gst/encoding/gstencodebin.c:1802 gst/playback/gstplaybin2.c:3468
 #: gst/playback/gstplaysink.c:1515 gst/playback/gstplaysink.c:1528
 #: gst/playback/gstplaysink.c:1864 gst/playback/gstplaysink.c:1896
 #: gst/playback/gstplaysink.c:2480 gst/playback/gstplaysink.c:2529
@@ -471,7 +471,7 @@ msgstr ""
 msgid "Plugin or element of unknown type"
 msgstr ""
 
-#: gst-libs/gst/tag/gsttagdemux.c:1243
+#: gst-libs/gst/tag/gsttagdemux.c:1257
 msgid "Failed to read tag: not enough data"
 msgstr ""
 
