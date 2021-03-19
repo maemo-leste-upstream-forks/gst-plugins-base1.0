@@ -1,3 +1,9 @@
+gst-plugins-base1.0 (1.18.4-1) experimental; urgency=medium
+
+  * New upstream version 1.18.4
+
+ -- Marc Leeman <m.leeman@televic.com>  Fri, 19 Mar 2021 10:03:12 +0100
+
 gst-plugins-base1.0 (1.18.3-1) unstable; urgency=medium
 
   * New upstream bugfix release.
@@ -1083,7 +1089,7 @@ gst-plugins-base0.10 (0.10.30.5-2) experimental; urgency=low
 
 gst-plugins-base0.10 (0.10.30.4-1) experimental; urgency=low
 
-  * New upstream pre-release: 
+  * New upstream pre-release:
     + debian/libgstreamer-plugins-base.symbols:
       - Update symbols file.
     + debian/gstreamer-plugins-base-apps.install:
@@ -1095,7 +1101,7 @@ gst-plugins-base0.10 (0.10.30.4-1) experimental; urgency=low
 
 gst-plugins-base0.10 (0.10.30.3-1) experimental; urgency=low
 
-  * New upstream pre-release: 
+  * New upstream pre-release:
     + debian/libgstreamer-plugins-base.symbols:
       - Update symbols file.
 
@@ -1103,7 +1109,7 @@ gst-plugins-base0.10 (0.10.30.3-1) experimental; urgency=low
 
 gst-plugins-base0.10 (0.10.30.2-1) experimental; urgency=low
 
-  * New upstream pre-release: 
+  * New upstream pre-release:
     + debian/rules,
       debian/build-deps.in:
       - Require GStreamer >= 0.10.30.1.
@@ -1312,7 +1318,7 @@ gst-plugins-base0.10 (0.10.25.2-1) experimental; urgency=low
     + debian/build-deps.in,
       debian/rules,
       debian/control.in:
-      - Build depend on Pango 1.16.0, GLib 2.18.0, iso-codes, 
+      - Build depend on Pango 1.16.0, GLib 2.18.0, iso-codes,
         GStreamer 0.10.25.2.
     + debian/gstreamer-plugins-base.install:
       - Drop queue2 plugin, it's in core now.
@@ -1397,7 +1403,7 @@ gst-plugins-base0.10 (0.10.24.4-1) experimental; urgency=low
 
   [ Sebastian Dröge ]
   * debian/rules:
-    + Use libgudev on Linux for v4l device detection. 
+    + Use libgudev on Linux for v4l device detection.
   * New upstream pre-release.
 
  -- Sebastian Dröge <slomo@debian.org>  Fri, 02 Oct 2009 07:42:27 +0200
@@ -1414,7 +1420,7 @@ gst-plugins-base0.10 (0.10.24.2-2) experimental; urgency=low
 
   * debian/rules:
     + Set HOME to a fake home directory to prevent writing
-      to a non-writable buildd home which results in FTBFS. 
+      to a non-writable buildd home which results in FTBFS.
 
  -- Sebastian Dröge <slomo@debian.org>  Sun, 13 Sep 2009 11:30:27 +0200
 
@@ -1496,7 +1502,7 @@ gst-plugins-base0.10 (0.10.23.2-1) experimental; urgency=low
 gst-plugins-base0.10 (0.10.23-4) UNRELEASED; urgency=low
 
   * debian/control.in:
-    + Fix section of debug package. 
+    + Fix section of debug package.
 
  -- Sebastian Dröge <slomo@debian.org>  Thu, 18 Jun 2009 13:35:45 +0200
 
@@ -2834,7 +2840,7 @@ gst-plugins0.8 (0.8.1-3) unstable; urgency=low
 
   * rerun autoget.sh to fix arm builds (Closes: #251592)
   * gconf/gstreamer.schemas.in, gcon/gstreamer-0.8.schemas:
-    s/xvideosink/xvimagesink/ (Closes: #250575) 
+    s/xvideosink/xvimagesink/ (Closes: #250575)
 
  -- David I. Lehn <dlehn@debian.org>  Tue,  1 Jun 2004 10:10:37 -0400
 
@@ -2860,7 +2866,7 @@ gst-plugins0.8 (0.8.0-2) unstable; urgency=low
 
   * Bump to -2 to ease upgrades for early -1 testers
   * debian/build-deps.in:
-    * Add libgtk2.0-dev 
+    * Add libgtk2.0-dev
 
  -- David I. Lehn <dlehn@debian.org>  Thu, 15 Apr 2004 17:50:14 -0400
 
