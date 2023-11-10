@@ -1,0 +1,2 @@
+0001-gl-x11-Issue-XSync-to-close-our-top-level-window.patch
+0002-gstglwindow_x11.c-Fix-colormap-leak.patch
